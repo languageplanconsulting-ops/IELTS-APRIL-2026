@@ -278,11 +278,11 @@ export const isReadingLetterSummaryFill = (block: string, question: FillQuestion
   const answer = String(question.correctAnswer || '')
     .trim()
     .toUpperCase()
-  if (!/^[A-J]$/.test(answer)) return false
+  if (!/^[A-L]$/.test(answer)) return false
   return (
     /complete the summary using the list of (?:words|phrases)/i.test(block) ||
     /list of (?:words|phrases)/i.test(block) ||
-    /write the correct letters?,\s*[A-J]/i.test(block)
+    /write the correct letters?,\s*[A-L]/i.test(block)
   )
 }
 
@@ -318,7 +318,7 @@ const isReadingFillBoilerplateLine = (line: string) => {
     /^Write the correct/i.test(line) ||
     /^Reading Passage \d+/i.test(line) ||
     /^In boxes \d+/i.test(line) ||
-    /^[A-J]\s+/.test(line) ||
+    /^[A-L]\s+/.test(line) ||
     /^\d+\.\s*Drop heading here/i.test(line) ||
     /^\d+\.\s*Drop answer here\s*(?:…|\.{2,})?\s*$/i.test(line) ||
     /^>\|\s*p\.\s*\d+/i.test(line)

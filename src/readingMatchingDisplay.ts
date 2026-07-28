@@ -2,7 +2,9 @@ export type ReadingMatchingChoiceOption = { letter: string; text: string }
 
 export type ReadingMatchingGroupKind = 'heading' | 'information' | 'statement'
 
-export const READING_LETTER_OPTION_LINE = /^([A-J])\s*(?:[-–—.:_]|\s+)\s*(.+)$/i
+// Some Cambridge summary word banks run to 11 options (A-K), so the range
+// extends a little past J to avoid silently dropping the tail of the bank.
+export const READING_LETTER_OPTION_LINE = /^([A-L])\s*(?:[-–—.:_]|\s+)\s*(.+)$/i
 
 const LIST_OF_OPTIONS_HEADER =
   /List of (?:Headings|Ideas|Researchers|People|Statements|Companies|Dates|Words|Phrases|Endings)\b/i
@@ -12,6 +14,7 @@ const readingBlockHasPerQuestionLetterOptions = (sourceText: string) => {
   const questionStarts = [...text.matchAll(/(?:^|\n)\s*(\d+)\s*[.)]?\s+/gm)]
   if (!questionStarts.length) return false
 
+  const chunksWithOptions: number[] = []
   for (let index = 0; index < questionStarts.length; index += 1) {
     const start = questionStarts[index].index ?? 0
     const end = questionStarts[index + 1]?.index ?? text.length
@@ -20,14 +23,31 @@ const readingBlockHasPerQuestionLetterOptions = (sourceText: string) => {
       .split('\n')
       .map((line) => line.trim())
       .filter((line) => READING_LETTER_OPTION_LINE.test(line)).length
-    if (optionCount >= 2) return true
+    if (optionCount >= 2) chunksWithOptions.push(index)
   }
 
-  return false
+  if (!chunksWithOptions.length) return false
+  // A shared word/idea bank tacked on after the last numbered item lands
+  // entirely in the final chunk — that's one bank shared by every question
+  // in the range, not per-question options, so a lone match on the last
+  // chunk of a multi-question block doesn't count.
+  if (
+    questionStarts.length >= 2 &&
+    chunksWithOptions.length === 1 &&
+    chunksWithOptions[0] === questionStarts.length - 1
+  ) {
+    return false
+  }
+
+  return true
 }
 
 const extractSharedReadingLetterOptionBank = (sourceText: string): ReadingMatchingChoiceOption[] => {
-  if (readingBlockHasPerQuestionLetterOptions(sourceText)) return []
+  // A block that explicitly announces a shared word/phrase bank ("Complete the
+  // summary using the list of words, A-F, below") always has one bank, even when
+  // only a single numbered gap happens to begin a line.
+  const declaresSharedBank = /list of (?:words|phrases)/i.test(String(sourceText || ''))
+  if (!declaresSharedBank && readingBlockHasPerQuestionLetterOptions(sourceText)) return []
 
   const lines = String(sourceText || '')
     .split('\n')
@@ -36,7 +56,11 @@ const extractSharedReadingLetterOptionBank = (sourceText: string): ReadingMatchi
   const bankLines: string[] = []
 
   for (let index = lines.length - 1; index >= 0; index -= 1) {
-    if (READING_LETTER_OPTION_LINE.test(lines[index])) {
+    const match = lines[index].match(READING_LETTER_OPTION_LINE)
+    // Cap the option text length: genuine word/phrase bank entries are short.
+    // A summary sentence that happens to start with "A " (indefinite article)
+    // or similar can otherwise be misread as a bogus bank entry.
+    if (match && match[2].trim().length <= 90) {
       bankLines.unshift(lines[index])
     } else if (bankLines.length >= 3) {
       break
@@ -73,7 +97,7 @@ export const extractReadingMatchingListOptions = (sourceText: string): ReadingMa
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
-      const match = line.match(/^((?:i|ii|iii|iv|v|vi|vii|viii|ix|x))[\).:\-]?\s+(.+)$/i)
+      const match = line.match(/^((?:xiii|xii|xiv|xv|viii|vii|iii|xi|ix|iv|vi|ii|x|v|i))[\).:\-]?\s+(.+)$/i)
       if (!match) return null
       return { letter: match[1].toLowerCase(), text: match[2].trim() }
     })

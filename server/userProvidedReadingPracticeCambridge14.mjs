@@ -38,7 +38,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "building a ‘magical kingdom’ may help develop … …",
+              "prompt": "• building a 'magical kingdom' may help develop.",
               "correctAnswer": "creativity",
               "acceptedAnswers": [
                 "creativity"
@@ -46,12 +46,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "this fantasy is helping her take her first steps towards her capacity for creativity",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"building a ‘magical kingdom’ may help develop … …\" บทความมีถ้อยคำที่ตรงกันคือ \"this fantasy is helping her take her first steps towards her capacity for creativity\" จึงคำตอบคือ \"creativity\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "magical kingdom help = fantasy helping towards capacity = creativity"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• building a 'magical kingdom' may help develop.\" บทความมีถ้อยคำที่ตรงกันคือ \"this fantasy is helping her take her first steps towards her capacity for creativity\" จึงคำตอบคือ \"creativity\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "building 'magical kingdom' help = fantasy helping take first = creativity"
             },
             {
               "number": 2,
-              "prompt": "board games involve … … and turn-taking.",
+              "prompt": "• board games involve … … and turn-taking.",
               "correctAnswer": "rules",
               "acceptedAnswers": [
                 "rules"
@@ -59,12 +59,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "she's learning about the need to follow rules and take turns with a partner",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"board games involve … … and turn-taking.\" บทความมีถ้อยคำที่ตรงกันคือ \"when they tire of this and settle down with a board game, she’s learning about the need to foll…\" จึงคำตอบคือ \"rules\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "board games involve = settle learning follow partner = rules"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• board games involve … … and turn-taking.\" บทความมีถ้อยคำที่ตรงกันคือ \"she's learning about the need to follow rules and take turns with a partner\" จึงคำตอบคือ \"rules\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "board games involve turn-taking = she's learning need follow = rules"
             },
             {
               "number": 3,
-              "prompt": "population of … … have grown.",
+              "prompt": "• population of … … have grown.",
               "correctAnswer": "cities",
               "acceptedAnswers": [
                 "cities"
@@ -72,12 +72,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "over half the people in the world now live in cities",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"population of … … have grown.\" บทความมีถ้อยคำที่ตรงกันคือ \"over half the people in the world now live in cities\" จึงคำตอบคือ \"cities\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "population of … … have grown. = over half the people in the world now live in cities = cities"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• population of … … have grown.\" บทความมีถ้อยคำที่ตรงกันคือ \"over half the people in the world now live in cities\" จึงคำตอบคือ \"cities\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "population grown = half people world now = cities"
             },
             {
               "number": 4,
-              "prompt": "fear of … …",
+              "prompt": "Outdoor play is curtailed by perceptions of risk to do with … ….",
               "correctAnswer": "traffic",
               "acceptedAnswers": [
                 "traffic"
@@ -90,7 +90,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "fear of … …",
+              "prompt": "parents' increased wish to protect their children from being the victims of … ….",
               "correctAnswer": "crime",
               "acceptedAnswers": [
                 "crime"
@@ -103,7 +103,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "increased … … in schools.",
+              "prompt": "– increased … … in schools.",
               "correctAnswer": "competition",
               "acceptedAnswers": [
                 "competition"
@@ -111,12 +111,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "the emphasis on 'earlier is better' which is leading to greater competition in academic learning and schools",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"increased … … in schools.\" บทความมีถ้อยคำที่ตรงกันคือ \"greater competition in academic learning and schools\" จึงคำตอบคือ \"competition\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "increased schools = greater academic learning schools = competition"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"– increased … … in schools.\" บทความมีถ้อยคำที่ตรงกันคือ \"the emphasis on 'earlier is better' which is leading to greater competition in academic le…\" จึงคำตอบคือ \"competition\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "increased schools = emphasis 'earlier better' leading = competition"
             },
             {
               "number": 7,
-              "prompt": "it is difficult to find … … to support new policies.",
+              "prompt": "• it is difficult to find … … to support new policies.",
               "correctAnswer": "evidence",
               "acceptedAnswers": [
                 "evidence"
@@ -124,12 +124,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "But what they often lack is the evidence to base policies on",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"it is difficult to find … … to support new policies.\" บทความมีถ้อยคำที่ตรงกันคือ \"what they often lack is the evidence to base policies o\" จึงคำตอบคือ \"evidence\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "difficult support policies = policies = evidence"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• it is difficult to find … … to support new policies.\" บทความมีถ้อยคำที่ตรงกันคือ \"But what they often lack is the evidence to base policies on\" จึงคำตอบคือ \"evidence\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "difficult find support new = often lack evidence base = evidence"
             },
             {
               "number": 8,
-              "prompt": "research needs to study the impact of play on the rest of the child’s … …",
+              "prompt": "• research needs to study the impact of play on the rest of the child's.",
               "correctAnswer": "life",
               "acceptedAnswers": [
                 "life"
@@ -137,8 +137,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "there is very little data on the impact it has on the child's later life",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"research needs to study the impact of play on the rest of the child’s … …\" บทความมีถ้อยคำที่ตรงกันคือ \"there is very little data on the impact it has on the child’s later life\" จึงคำตอบคือ \"life\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "research needs study = little impact = life"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• research needs to study the impact of play on the rest of the child's.\" บทความมีถ้อยคำที่ตรงกันคือ \"there is very little data on the impact it has on the child's later life\" จึงคำตอบคือ \"life\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "research needs study impact = very little data impact = life"
             },
             {
               "number": 9,
@@ -217,7 +217,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
     "id": "cambridge-14-test1-passage2",
     "title": "Cambridge 14 Test 1 Passage 2 - The growth of bike-sharing schemes around the world",
     "category": "normal",
-    "rawPassageText": "READING PASSAGE 2\nThe growth of bike-sharing schemes around the world\n\nThe growth of bike-sharing schemes around the world How Dutch engineer Luud Schimmelpennink helped to devise urban bike-sharing schemes A The original idea for an urban bike-sharing scheme dates back to a summer's day in Amsterdam in 1965.\n\nProvo, the organization that came up with the idea, was a group of Dutch activists who wanted to change society.\n\nThey believed the scheme, which was known as the Witte Fietsenplan, was an answer to the perceived threats of air pollution and consumerism.\n\nIn the centre of Amsterdam, they painted a small number of used bikes white.\n\nThey also distributed leaflets describing the dangers of cars and inviting people to use the white bikes.\n\nThe bikes were then left unlocked at various locations around the city, to be used by anyone in need of transport.\n\nB Luud Schimmelpennink, a Dutch industrial engineer who still lives and cycles in Amsterdam, was heavily involved in the original scheme.\n\nHe recalls how the scheme succeeded in attracting a great deal of attention – particularly when it came to publicising Provo's aims – but struggled to get off the ground.\n\nThe police were opposed to Provo's initiatives and almost as soon as the white bikes were distributed around the city, they removed them.\n\nHowever, for Schimmelpennink and for bike-sharing schemes in general, this was just the beginning.\n\n'The first Witte Fietsenplan was just a symbolic thing,' he says.\n\n'We painted a few bikes white, that was all.\n\nThings got more serious when I became a member of the Amsterdam city council two years later.'\n\nC Schimmelpennink seized this opportunity to present a more elaborate Witte Fietsenplan to the city council.\n\n'My idea was that the municipality of Amsterdam would distribute 10,000 white bikes over the city, for everyone to use,' he explains.\n\nIt turned out that a white bicycle – per person, per kilometer – would cost the municipality only 10% of what it contributed to public transport per person per kilometer.'\n\nNevertheless, the council unanimously rejected the plan.\n\n'They said that the bicycle belongs to the past.\n\nThey saw a glorious future for the car,' says Schimmelpennink.\n\nD Schimmelpennink never stopped believing in bike-sharing, and in the mid-90s, two Danes asked for his help to set up a system in Copenhagen.\n\nThe result was the world's first large-scale bike-share programme.\n\nIt worked on a deposit: 'You dropped a coin in the bike and when you returned it, you got your money back.'\n\nAfter setting up the Danish system, Schimmelpennink decided to try his luck again in the Netherlands – and this time he succeeded in arousing the interest of the Dutch Ministry of Transport.\n\n'People had become more environmentally conscious, and the Danish experiment had proved that bike-sharing was a real possibility.'\n\nA new Witte Fietsenplan was launched in 1999 in Amsterdam.\n\nHowever, riding a white bike was no longer free; it cost one guilder per trip and payment was made with a chip card developed by the Dutch bank Postbank.\n\nSchimmelpennink designed conspicuous, sturdy white bikes locked in special racks which could be opened with the chip card – the plan started with 250 bikes, distributed over five stations.\n\nE Theo Molenaar, who was a system designer for the project, worked alongside Schimmelpennink.\n\n'I remember when we were testing the bike racks, he announced that he had already designed better ones.\n\nBut of course, we had to go through with the ones we had.'\n\nThe system, however, was prone to vandalism and theft.\n\n'After every weekend there would always be a couple of bikes missing,' Molenaar says.\n\n'I really have no idea what people did with them, because they could instantly be recognised as white bikes.'\n\nBut the biggest blow came when Postbank decided to abolish the chip card, because it wasn't profitable.\n\n'That chip card was pivotal to the system,' Molenaar says.\n\n'To continue the project we would have needed to set up another system, but the business partner had lost interest.'\n\nF Schimmelpennink was disappointed, but – characteristically – not for long.\n\nIn 2002 he got a call from the French advertising corporation JC Decaux, who wanted to set up his bike-sharing scheme in Vienna.\n\nAfter Vienna, they set up a system in Lyon.\n\nThat was a decisive moment in the history of bike-sharing.'\n\nThe huge and unexpected success of the Parisian bike-sharing programme, which now boasts more than 20,000 bicycles, inspired cities all over the world to set up their own schemes, all modelled on Schimmelpennink's.\n\n'It's wonderful that this happened,' he says.\n\n'But financially I didn't really benefit from it, because I never filed for a patent.'\n\nG In Amsterdam today, 38% of all trips are made by bike and, along with Copenhagen, it is regarded as one of the two most cycle-friendly capitals in the world – but the city never got another Witte Fietsenplan.\n\nMolenaar believes this may be because everybody in Amsterdam already has a bike.\n\nSchimmelpennink, however, cannot see that this changes Amsterdam's need for a bike-sharing scheme.\n\n'People who travel on the underground don't carry their bikes around.\n\nBut often they need additional transport to reach their final destination.'\n\nAlthough he thinks it is strange that a city like Amsterdam does not have a successful bike-sharing scheme, he is optimistic about the future.\n\n'In the '60s we didn't stand a chance because people were prepared to give their lives to keep cars in the city.\n\nToday everybody longs for cities that are not dominated by cars.' <div\n\nQuestions 21-22\nQuestions 19-20\nQuestions 14-18\nReading Passage 2 has seven paragraphs, A-G.\nWhich paragraph contains the following information?\nWrite the correct letter, A-G, in boxes 14-18 on your answer sheet.\nNB You may use any letter more than once.\n14 adescription of how people misused a bike-sharing scheme\n15 an explanation of why a proposed bike-sharing scheme was turned down\n16 areference to a person being unable to profit from their work\n17 an explanation of the potential savings a bike-sharing scheme would bring\n18 areference to the problems a bike-sharing scheme was intended to solve\nQuestions 19 and 20\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 19 and 20 on your answer sheet.\nWhich TWO of the following statements are made in the text about the Amsterdam\nbike-sharing scheme of 1999?\nA It was initially opposed by a government department.\nBlt failed when a partner in the scheme withdrew support.\nC It aimed to be more successful than the Copenhagen scheme.\nD  Itwas made possible by a change in people’s attitudes.\nE It attracted interest from a range of bike designers.\n\nEd\n\nOE _ A A_t______€___HéH _ HH ____HHHHHH_HHHsHHfHHHHHkfoHkHH_H_-\n\nQuestions 21 and 22\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 21 and 22 on your answer sheet.\nWhich TWO of the following statements are made in the text about Amsterdam today?\nA The majority of residents would like to prevent all cars from entering the city.\nB There is little likelihood of the city having another bike-sharing scheme.\nC More trips in the city are made by bike than by any other form of transport.\nD  Abike-sharing scheme would benefit residents who use public transport.\nE The city has a reputation as a place that welcomes cyclists.\n|\n|\n|\n=) 7S BO DEH THAT LISTENINGEREADING CK we\n\nEj\n\nQuestions 23-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 23-26 on your answer sheet.\n\nThe first urban bike-sharing scheme\nThe first bike-sharing scheme was the idea of the Dutch group Provo. The people who\nbelonged to this Group WEE 23 …wssssninnenne » THEY were concerned about damage\nto the environment and about 24 wuss » aNd believed that the bike-sharing\nscheme would draw attention to these issues. As well as painting some bikes white, they\nhanded Out 25 ccs: that condemned the use of cars.\nHowever, the scheme was not a great success: almost as quickly as Provo left\nthe bikes around the City, thE 26 oo... COOK them away. According to\nschimmelpennink, the scheme was intended to be symbolic. The idea was to get people\nthinking about the issues.\n24 : BOJDUJDOANMIKVINANGICHINEDXAG ere of a\ni :",
+    "rawPassageText": "READING PASSAGE 2\nThe growth of bike-sharing schemes around the world\n\nThe growth of bike-sharing schemes around the world How Dutch engineer Luud Schimmelpennink helped to devise urban bike-sharing schemes A The original idea for an urban bike-sharing scheme dates back to a summer's day in Amsterdam in 1965.\n\nProvo, the organization that came up with the idea, was a group of Dutch activists who wanted to change society.\n\nThey believed the scheme, which was known as the Witte Fietsenplan, was an answer to the perceived threats of air pollution and consumerism.\n\nIn the centre of Amsterdam, they painted a small number of used bikes white.\n\nThey also distributed leaflets describing the dangers of cars and inviting people to use the white bikes.\n\nThe bikes were then left unlocked at various locations around the city, to be used by anyone in need of transport.\n\nB Luud Schimmelpennink, a Dutch industrial engineer who still lives and cycles in Amsterdam, was heavily involved in the original scheme.\n\nHe recalls how the scheme succeeded in attracting a great deal of attention – particularly when it came to publicising Provo's aims – but struggled to get off the ground.\n\nThe police were opposed to Provo's initiatives and almost as soon as the white bikes were distributed around the city, they removed them.\n\nHowever, for Schimmelpennink and for bike-sharing schemes in general, this was just the beginning.\n\n'The first Witte Fietsenplan was just a symbolic thing,' he says.\n\n'We painted a few bikes white, that was all.\n\nThings got more serious when I became a member of the Amsterdam city council two years later.'\n\nC Schimmelpennink seized this opportunity to present a more elaborate Witte Fietsenplan to the city council.\n\n'My idea was that the municipality of Amsterdam would distribute 10,000 white bikes over the city, for everyone to use,' he explains.\n\nIt turned out that a white bicycle – per person, per kilometer – would cost the municipality only 10% of what it contributed to public transport per person per kilometer.'\n\nNevertheless, the council unanimously rejected the plan.\n\n'They said that the bicycle belongs to the past.\n\nThey saw a glorious future for the car,' says Schimmelpennink.\n\nD Schimmelpennink never stopped believing in bike-sharing, and in the mid-90s, two Danes asked for his help to set up a system in Copenhagen.\n\nThe result was the world's first large-scale bike-share programme.\n\nIt worked on a deposit: 'You dropped a coin in the bike and when you returned it, you got your money back.'\n\nAfter setting up the Danish system, Schimmelpennink decided to try his luck again in the Netherlands – and this time he succeeded in arousing the interest of the Dutch Ministry of Transport.\n\n'People had become more environmentally conscious, and the Danish experiment had proved that bike-sharing was a real possibility.'\n\nA new Witte Fietsenplan was launched in 1999 in Amsterdam.\n\nHowever, riding a white bike was no longer free; it cost one guilder per trip and payment was made with a chip card developed by the Dutch bank Postbank.\n\nSchimmelpennink designed conspicuous, sturdy white bikes locked in special racks which could be opened with the chip card – the plan started with 250 bikes, distributed over five stations.\n\nE Theo Molenaar, who was a system designer for the project, worked alongside Schimmelpennink.\n\n'I remember when we were testing the bike racks, he announced that he had already designed better ones.\n\nBut of course, we had to go through with the ones we had.'\n\nThe system, however, was prone to vandalism and theft.\n\n'After every weekend there would always be a couple of bikes missing,' Molenaar says.\n\n'I really have no idea what people did with them, because they could instantly be recognised as white bikes.'\n\nBut the biggest blow came when Postbank decided to abolish the chip card, because it wasn't profitable.\n\n'That chip card was pivotal to the system,' Molenaar says.\n\n'To continue the project we would have needed to set up another system, but the business partner had lost interest.'\n\nF Schimmelpennink was disappointed, but – characteristically – not for long.\n\nIn 2002 he got a call from the French advertising corporation JC Decaux, who wanted to set up his bike-sharing scheme in Vienna.\n\nAfter Vienna, they set up a system in Lyon.\n\nThat was a decisive moment in the history of bike-sharing.'\n\nThe huge and unexpected success of the Parisian bike-sharing programme, which now boasts more than 20,000 bicycles, inspired cities all over the world to set up their own schemes, all modelled on Schimmelpennink's.\n\n'It's wonderful that this happened,' he says.\n\n'But financially I didn't really benefit from it, because I never filed for a patent.'\n\nG In Amsterdam today, 38% of all trips are made by bike and, along with Copenhagen, it is regarded as one of the two most cycle-friendly capitals in the world – but the city never got another Witte Fietsenplan.\n\nMolenaar believes this may be because everybody in Amsterdam already has a bike.\n\nSchimmelpennink, however, cannot see that this changes Amsterdam's need for a bike-sharing scheme.\n\n'People who travel on the underground don't carry their bikes around.\n\nBut often they need additional transport to reach their final destination.'\n\nAlthough he thinks it is strange that a city like Amsterdam does not have a successful bike-sharing scheme, he is optimistic about the future.\n\n'In the '60s we didn't stand a chance because people were prepared to give their lives to keep cars in the city.\n\nToday everybody longs for cities that are not dominated by cars.' <div\n\nQuestions 21-22\nQuestions 19-20\nQuestions 14-18\nReading Passage 2 has seven paragraphs, A-G.\nWhich paragraph contains the following information?\nWrite the correct letter, A-G, in boxes 14-18 on your answer sheet.\nNB You may use any letter more than once.\n14 adescription of how people misused a bike-sharing scheme\n15 an explanation of why a proposed bike-sharing scheme was turned down\n16 areference to a person being unable to profit from their work\n17 an explanation of the potential savings a bike-sharing scheme would bring\n18 areference to the problems a bike-sharing scheme was intended to solve\nQuestions 19 and 20\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 19 and 20 on your answer sheet.\nWhich TWO of the following statements are made in the text about the Amsterdam\nbike-sharing scheme of 1999?\nA It was initially opposed by a government department.\nB It failed when a partner in the scheme withdrew support.\nC It aimed to be more successful than the Copenhagen scheme.\nD It was made possible by a change in people’s attitudes.\nE It attracted interest from a range of bike designers.\n\nQuestions 21 and 22\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 21 and 22 on your answer sheet.\nWhich TWO of the following statements are made in the text about Amsterdam today?\nA The majority of residents would like to prevent all cars from entering the city.\nB There is little likelihood of the city having another bike-sharing scheme.\nC More trips in the city are made by bike than by any other form of transport.\nD A bike-sharing scheme would benefit residents who use public transport.\nE The city has a reputation as a place that welcomes cyclists.\n\nQuestions 23-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 23-26 on your answer sheet.\n\nThe first urban bike-sharing scheme\nThe first bike-sharing scheme was the idea of the Dutch group Provo. The people who\nbelonged to this Group WEE 23 …wssssninnenne » THEY were concerned about damage\nto the environment and about 24 wuss » aNd believed that the bike-sharing\nscheme would draw attention to these issues. As well as painting some bikes white, they\nhanded Out 25 ccs: that condemned the use of cars.\nHowever, the scheme was not a great success: almost as quickly as Provo left\nthe bikes around the City, thE 26 oo... COOK them away. According to\nschimmelpennink, the scheme was intended to be symbolic. The idea was to get people\nthinking about the issues.\n24 : BOJDUJDOANMIKVINANGICHINEDXAG ere of a\ni :",
     "rawAnswerKey": "READING PASSAGE 2: The growth of bike-sharing schemes around the world\n\nQuestion 14: a description of how people misused\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"The system, however, was prone to vandalism and theft\"\n\nShort Thai Explanation: คำถาม: \"a description of how people misused\" หลักฐานในบทความคือ \"The system, however, was prone to vandalism and theft\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E\n\nParaphrased Vocabulary: description misused = system however vandalism = E\n\nQuestion 15: an explanation of why\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"the council unanimously rejected the plan. ‘They said that the bicycle belongs to the past. They saw a glorious future for the car,’ says Schimmelpennink.\"\n\nShort Thai Explanation: คำถาม: \"an explanation of why\" หลักฐานในบทความคือ \"the council unanimously rejected the plan. ‘They said that the bicycle belongs to the past. The…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: explanation = council unanimously rejected bicycle = C\n\nQuestion 16: a reference to\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"But financially I didn’t really benefit from it, because I never filed for a patent\"\n\nShort Thai Explanation: คำถาม: \"a reference to\" หลักฐานในบทความคือ \"But financially I didn’t really benefit from it, because I never filed for a patent\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F\n\nParaphrased Vocabulary: a reference to = But financially I didn’t really benefit from it, because I n… = F\n\nQuestion 17: an explanation of the potential savings\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"It turned out that a white bicycle – per person, per kilometer – would cost the municipality only 10% of what it contributed to public transport per person per kilometer\"\n\nShort Thai Explanation: คำถาม: \"an explanation of the potential savings\" หลักฐานในบทความคือ \"It turned out that a white bicycle – per person, per kilometer – would cost the municipality on…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: explanation potential savings = turned bicycle person kilometer = C\n\nQuestion 18: a reference to the problems\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"They believed the scheme, which was known as the Witte Fietsenplan, was an answer to the perceived threats of air pollution and consumerism\"\n\nShort Thai Explanation: คำถาม: \"a reference to the problems\" หลักฐานในบทความคือ \"They believed the scheme, which was known as the Witte Fietsenplan, was an answer to the percei…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: problems = believed scheme fietsenplan perceived = A\n\nQuestion 19: Which TWO of the following statements are made in the text about the Amsterdam bike-sharing scheme of 1999?\n\nCorrect Answer: D\n\nAccepted Answers: B|D\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"To continue the project we would have needed to set up another system, but the business partner had lost interest\r\nPeople had become more environmentally conscious, and the Danish experiment had proved that bike-sharing was a real possibility\"\n\nShort Thai Explanation: คำถามถามว่า \"Which TWO of the following statements are made in the text about the Amsterdam bike-sharing scheme of 1999?\" ตัวเลือก D มีหลักฐานในบทความ (เช่น \"To continue the project we would have needed to set up another system, but the business partner…\") จึงเลือก D เป็นหนึ่งในสองคำตอบ\n\nParaphrased Vocabulary: amsterdam bike-sharing scheme = continue project needed another = D\n\nQuestion 20: Which TWO of the following statements are made in the text about the Amsterdam bike-sharing scheme of 1999?\n\nCorrect Answer: B\n\nAccepted Answers: B|D\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"To continue the project we would have needed to set up another system, but the business partner had lost interest\r\nPeople had become more environmentally conscious, and the Danish experiment had proved that bike-sharing was a real possibility\"\n\nShort Thai Explanation: คำถามถามว่า \"Which TWO of the following statements are made in the text about the Amsterdam bike-sharing scheme of 1999?\" ตัวเลือก B มีหลักฐานในบทความ (เช่น \"To continue the project we would have needed to set up another system, but the business partner…\") จึงเลือก B เป็นหนึ่งในสองคำตอบ\n\nParaphrased Vocabulary: amsterdam bike-sharing scheme = continue project needed another = B\n\nQuestion 21: Which TWO of the following statements are made in the text about Amsterdam today?\n\nCorrect Answer: E\n\nAccepted Answers: D|E\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"People who travel on the underground don’t carry their bikes around. But often they need additional transport to reach their final destination.\r\nit is regarded as one of the two most cycle-friendly capitals in the world\"\n\nShort Thai Explanation: คำถามถามว่า \"Which TWO of the following statements are made in the text about Amsterdam today?\" ตัวเลือก E มีหลักฐานในบทความ (เช่น \"People who travel on the underground don’t carry their bikes around. But often they need additi…\") จึงเลือก E เป็นหนึ่งในสองคำตอบ\n\nParaphrased Vocabulary: amsterdam today = travel underground around additional = E\n\nQuestion 22: Which TWO of the following statements are made in the text about Amsterdam today?\n\nCorrect Answer: D\n\nAccepted Answers: D|E\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"People who travel on the underground don’t carry their bikes around. But often they need additional transport to reach their final destination.\r\nit is regarded as one of the two most cycle-friendly capitals in the world\"\n\nShort Thai Explanation: คำถามถามว่า \"Which TWO of the following statements are made in the text about Amsterdam today?\" ตัวเลือก D มีหลักฐานในบทความ (เช่น \"People who travel on the underground don’t carry their bikes around. But often they need additi…\") จึงเลือก D เป็นหนึ่งในสองคำตอบ\n\nParaphrased Vocabulary: amsterdam today = travel underground around additional = D\n\nQuestion 23: … . They were concerned about damage to the environment and about\n\nCorrect Answer: activists\n\nAccepted Answers: activists\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"Provo, the organization that came up with the idea, was a group of Dutch activists who wanted to change society\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… . They were concerned about damage to the environment and about\" บทความมีถ้อยคำที่ตรงกันคือ \"Provo, the organization that came up with the idea, was a group of Dutch activists who wanted t…\" จึงคำตอบคือ \"activists\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: concerned damage environment = organization wanted change society = activists\n\nQuestion 24: … , and believed that the bike-sharing scheme would draw attention to these issues. As well as painting some bikes white, they handed out\n\nCorrect Answer: consumerism\n\nAccepted Answers: consumerism\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"an answer to the perceived threats of air pollution and consumerism\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… , and believed that the bike-sharing scheme would draw attention to these issues. As well as painting some bikes white, they han…\" บทความมีถ้อยคำที่ตรงกันคือ \"an answer to the perceived threats of air pollution and consumerism\" จึงคำตอบคือ \"consumerism\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: believed bike-sharing scheme = perceived threats pollution = consumerism\n\nQuestion 25: … that condemned the use of cars. However, the scheme was not\n\nCorrect Answer: leaflets\n\nAccepted Answers: leaflets\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"They also distributed leaflets describing the dangers of cars and inviting people to use the white bikes\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… that condemned the use of cars. However, the scheme was not\" บทความมีถ้อยคำที่ตรงกันคือ \"They also distributed leaflets describing the dangers of cars and inviting people to use the wh…\" จึงคำตอบคือ \"leaflets\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: condemned however scheme = distributed describing dangers inviting = leaflets\n\nQuestion 26: … Took them away. According to Schimmelpennink, the scheme was intended to be symbolic. The idea was to get people thinking about the issues. Questions 27-31 Look at the following statements and the list of researchers below. Match each statement with the correct researcher,\n\nCorrect Answer: police\n\nAccepted Answers: police\n\nAnswer Group: Cambridge 14 Test 1 Passage 2\n\nExact Portion: \"The police were opposed to Provo’s initiatives and almost as soon as the white bikes were distributed around the city, they removed them\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… Took them away. According to Schimmelpennink, the scheme was intended to be symbolic. The idea was to get people thinking about …\" บทความมีถ้อยคำที่ตรงกันคือ \"The police were opposed to Provo’s initiatives and almost as soon as the white bikes were distr…\" จึงคำตอบคือ \"police\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: thinking issues questions = opposed initiatives almost distributed = police",
     "parsedPayload": {
       "title": "Cambridge 14 Test 1 Passage 2 - The growth of bike-sharing schemes around the world",
@@ -235,7 +235,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             "Schimmelpennink was disappointed, but – characteristically – not for long. In 2002 he got a call from the French advertising corporation JC Decaux, who wanted to set up his bike-sharing scheme in Vienna. 'That went really well. After Vienna, they set up a system in Lyon. Then in 2007, Paris followed. That was a decisive moment in the history of bike-sharing.' The huge and unexpected success of the Parisian bike-sharing programme, which now boasts more than 20,000 bicycles, inspired cities all over the world to set up their own schemes, all modelled on Schimmelpennink's. 'It's wonderful that this happened,' he says. 'But financially I didn't really benefit from it, because I never filed for a patent.'",
             "In Amsterdam today, 38% of all trips are made by bike and, along with Copenhagen, it is regarded as one of the two most cycle-friendly capitals in the world – but the city never got another Witte Fietsenplan. Molenaar believes this may be because everybody in Amsterdam already has a bike. Schimmelpennink, however, cannot see that this changes Amsterdam's need for a bike-sharing scheme. 'People who travel on the underground don't carry their bikes around. But often they need additional transport to reach their final destination.' Although he thinks it is strange that a city like Amsterdam does not have a successful bike-sharing scheme, he is optimistic about the future. 'In the '60s we didn't stand a chance because people were prepared to give their lives to keep cars in the city. But that mentality has totally changed. Today everybody longs for cities that are not dominated by cars.'"
           ],
-          "questionSectionText": "Questions 21-22\nQuestions 19-20\nQuestions 14-18\nReading Passage 2 has seven paragraphs, A-G.\nWhich paragraph contains the following information?\nWrite the correct letter, A-G, in boxes 14-18 on your answer sheet.\nNB You may use any letter more than once.\n14 adescription of how people misused a bike-sharing scheme\n15 an explanation of why a proposed bike-sharing scheme was turned down\n16 areference to a person being unable to profit from their work\n17 an explanation of the potential savings a bike-sharing scheme would bring\n18 areference to the problems a bike-sharing scheme was intended to solve\nQuestions 19 and 20\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 19 and 20 on your answer sheet.\nWhich TWO of the following statements are made in the text about the Amsterdam\nbike-sharing scheme of 1999?\nA It was initially opposed by a government department.\nBlt failed when a partner in the scheme withdrew support.\nC It aimed to be more successful than the Copenhagen scheme.\nD  Itwas made possible by a change in people’s attitudes.\nE It attracted interest from a range of bike designers.\n\nEd\n\nOE _ A A_t______€___HéH _ HH ____HHHHHH_HHHsHHfHHHHHkfoHkHH_H_-\n\nQuestions 21 and 22\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 21 and 22 on your answer sheet.\nWhich TWO of the following statements are made in the text about Amsterdam today?\nA The majority of residents would like to prevent all cars from entering the city.\nB There is little likelihood of the city having another bike-sharing scheme.\nC More trips in the city are made by bike than by any other form of transport.\nD  Abike-sharing scheme would benefit residents who use public transport.\nE The city has a reputation as a place that welcomes cyclists.\n|\n|\n|\n=) 7S BO DEH THAT LISTENINGEREADING CK we\n\nEj\n\nQuestions 23-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 23-26 on your answer sheet.\n\nThe first urban bike-sharing scheme\nThe first bike-sharing scheme was the idea of the Dutch group Provo. The people who\nbelonged to this Group WEE 23 …wssssninnenne » THEY were concerned about damage\nto the environment and about 24 wuss » aNd believed that the bike-sharing\nscheme would draw attention to these issues. As well as painting some bikes white, they\nhanded Out 25 ccs: that condemned the use of cars.\nHowever, the scheme was not a great success: almost as quickly as Provo left\nthe bikes around the City, thE 26 oo... COOK them away. According to\nschimmelpennink, the scheme was intended to be symbolic. The idea was to get people\nthinking about the issues.\n24 : BOJDUJDOANMIKVINANGICHINEDXAG ere of a\ni :",
+          "questionSectionText": "Questions 14-18\nReading Passage 2 has seven paragraphs, A-G.\nWhich paragraph contains the following information?\nWrite the correct letter, A-G, in boxes 14-18 on your answer sheet.\nNB You may use any letter more than once.\n14 adescription of how people misused a bike-sharing scheme\n15 an explanation of why a proposed bike-sharing scheme was turned down\n16 areference to a person being unable to profit from their work\n17 an explanation of the potential savings a bike-sharing scheme would bring\n18 areference to the problems a bike-sharing scheme was intended to solve\nQuestions 19 and 20\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 19 and 20 on your answer sheet.\nWhich TWO of the following statements are made in the text about the Amsterdam\nbike-sharing scheme of 1999?\nA It was initially opposed by a government department.\nB It failed when a partner in the scheme withdrew support.\nC It aimed to be more successful than the Copenhagen scheme.\nD It was made possible by a change in people’s attitudes.\nE It attracted interest from a range of bike designers.\n\nQuestions 21 and 22\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 21 and 22 on your answer sheet.\nWhich TWO of the following statements are made in the text about Amsterdam today?\nA The majority of residents would like to prevent all cars from entering the city.\nB There is little likelihood of the city having another bike-sharing scheme.\nC More trips in the city are made by bike than by any other form of transport.\nD A bike-sharing scheme would benefit residents who use public transport.\nE The city has a reputation as a place that welcomes cyclists.\n\nQuestions 23-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 23-26 on your answer sheet.\n\nThe first urban bike-sharing scheme\nThe first bike-sharing scheme was the idea of the Dutch group Provo. The people who\nbelonged to this Group WEE 23 …wssssninnenne » THEY were concerned about damage\nto the environment and about 24 wuss » aNd believed that the bike-sharing\nscheme would draw attention to these issues. As well as painting some bikes white, they\nhanded Out 25 ccs: that condemned the use of cars.\nHowever, the scheme was not a great success: almost as quickly as Provo left\nthe bikes around the City, thE 26 oo... COOK them away. According to\nschimmelpennink, the scheme was intended to be symbolic. The idea was to get people\nthinking about the issues.\n24 : BOJDUJDOANMIKVINANGICHINEDXAG ere of a\ni :",
           "questionRanges": [
             {
               "start": 14,
@@ -265,8 +265,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "The system, however, was prone to vandalism and theft. 'After every weekend there would always be a couple of bikes missing,' Molenaar says.",
-              "explanationThai": "คำถาม: \"a description of how people misused\" หลักฐานในบทความคือ \"The system, however, was prone to vandalism and theft\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "description misused = system however vandalism = E"
+              "explanationThai": "คำถาม: \"adescription of how people misused a bike-sharing scheme\" หลักฐานในบทความคือ \"The system, however, was prone to vandalism and theft. 'After every weekend there would al…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "adescription people misused bike-sharing = system however prone vandalism = E"
             },
             {
               "number": 15,
@@ -291,8 +291,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "'But financially I didn't really benefit from it, because I never filed for a patent.'",
-              "explanationThai": "คำถาม: \"a reference to\" หลักฐานในบทความคือ \"But financially I didn’t really benefit from it, because I never filed for a patent\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "a reference to = But financially I didn’t really benefit from it, because I n… = F"
+              "explanationThai": "คำถาม: \"areference to a person being unable to profit from their work\" หลักฐานในบทความคือ \"'But financially I didn't really benefit from it, because I never filed for a patent.'\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "areference person being unable = 'but financially didn't really = F"
             },
             {
               "number": 17,
@@ -317,8 +317,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "They believed the scheme, which was known as the Witte Fietsenplan, was an answer to the perceived threats of air pollution and consumerism.",
-              "explanationThai": "คำถาม: \"a reference to the problems\" หลักฐานในบทความคือ \"They believed the scheme, which was known as the Witte Fietsenplan, was an answer to the percei…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "problems = believed scheme fietsenplan perceived = A"
+              "explanationThai": "คำถาม: \"areference to the problems a bike-sharing scheme was intended to solve\" หลักฐานในบทความคือ \"They believed the scheme, which was known as the Witte Fietsenplan, was an answer to the p…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "areference problems bike-sharing scheme = believed scheme known witte = A"
             },
             {
               "number": 19,
@@ -386,12 +386,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "Provo, the organization that came up with the idea, was a group of Dutch activists who wanted to change society.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . They were concerned about damage to the environment and about\" บทความมีถ้อยคำที่ตรงกันคือ \"Provo, the organization that came up with the idea, was a group of Dutch activists who wanted t…\" จึงคำตอบคือ \"activists\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "concerned damage environment = organization wanted change society = activists"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Complete the summary. The first bike-sharing scheme was the idea of the Dutch group Provo. The people who belonged to this group were ________ (23).\" บทความมีถ้อยคำที่ตรงกันคือ \"Provo, the organization that came up with the idea, was a group of Dutch activists who wan…\" จึงคำตอบคือ \"activists\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "complete summary first bike-sharing = provo organization came idea = activists"
             },
             {
               "number": 24,
-              "prompt": "to the environment and about 24 wuss » aNd believed that the bike-sharing",
+              "prompt": "to the environment and about … … » aNd believed that the bike-sharing.",
               "correctAnswer": "consumerism",
               "acceptedAnswers": [
                 "consumerism"
@@ -399,8 +399,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "They believed the scheme, which was known as the Witte Fietsenplan, was an answer to the perceived threats of air pollution and consumerism.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… , and believed that the bike-sharing scheme would draw attention to these issues. As well as painting some bikes white, they han…\" บทความมีถ้อยคำที่ตรงกันคือ \"an answer to the perceived threats of air pollution and consumerism\" จึงคำตอบคือ \"consumerism\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "believed bike-sharing scheme = perceived threats pollution = consumerism"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"to the environment and about … … » aNd believed that the bike-sharing.\" บทความมีถ้อยคำที่ตรงกันคือ \"They believed the scheme, which was known as the Witte Fietsenplan, was an answer to the p…\" จึงคำตอบคือ \"consumerism\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "environment believed bike-sharing = believed scheme known witte = consumerism"
             },
             {
               "number": 25,
@@ -412,8 +412,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "They also distributed leaflets describing the dangers of cars and inviting people to use the white bikes.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… that condemned the use of cars. However, the scheme was not\" บทความมีถ้อยคำที่ตรงกันคือ \"They also distributed leaflets describing the dangers of cars and inviting people to use the wh…\" จึงคำตอบคือ \"leaflets\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "condemned however scheme = distributed describing dangers inviting = leaflets"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"handed Out 25 ccs: that condemned the use of cars.\" บทความมีถ้อยคำที่ตรงกันคือ \"They also distributed leaflets describing the dangers of cars and inviting people to use t…\" จึงคำตอบคือ \"leaflets\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "handed out ccs condemned = also distributed leaflets describing = leaflets"
             },
             {
               "number": 26,
@@ -425,8 +425,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "The police were opposed to Provo's initiatives and almost as soon as the white bikes were distributed around the city, they removed them.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Took them away. According to Schimmelpennink, the scheme was intended to be symbolic. The idea was to get people thinking about …\" บทความมีถ้อยคำที่ตรงกันคือ \"The police were opposed to Provo’s initiatives and almost as soon as the white bikes were distr…\" จึงคำตอบคือ \"police\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "thinking issues questions = opposed initiatives almost distributed = police"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Questions 23-26 Complete the summary below.\" บทความมีถ้อยคำที่ตรงกันคือ \"The police were opposed to Provo's initiatives and almost as soon as the white bikes were …\" จึงคำตอบคือ \"police\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "questions 23-26 complete summary = police opposed provo's initiatives = police"
             }
           ]
         }
@@ -440,7 +440,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
     "id": "cambridge-14-test1-passage3",
     "title": "Cambridge 14 Test 1 Passage 3 - Motivational factors and the hospitality industry",
     "category": "advanced",
-    "rawPassageText": "READING PASSAGE 3\nMotivational factors and the hospitality industry A critical\n\nMotivational factors and the hospitality industry A critical ingredient in the success of hotels is developing and maintaining superior performance from their employees.\n\nWhat Human Resource Management (HRM) practices should organizations invest in to acquire and retain great employees?\n\nSome hotels aim to provide superior working conditions for their employees.\n\nThe idea originated from workplaces – usually in the non-service sector – that emphasized fun and enjoyment as part of work-life balance.\n\nBy contrast, the service sector, and more specifically hotels, has traditionally not extended these practices to address basic employee needs, such as good working conditions.\n\nPfeffer (1994) emphasizes that in order to succeed in a global business environment, organizations must make investment in Human Resource Management (HRM) to allow them to acquire employees who possess better skills and capabilities than their competitors.\n\nThis investment will be to their competitive advantage.\n\nDespite this recognition of the importance of employee development, the hospitality industry has historically been dominated by underdeveloped HR practices (Lucas, 2002).\n\nLucas also points out that 'the substance of HRM practices does not appear to be designed to foster constructive relations with employees or to represent a managerial approach that enables developing and drawing out the full potential of people, even though employees may be broadly satisfied with many aspects of their work' (Lucas, 2002).\n\nIn addition, or maybe as a result, high employee turnover has been a recurring problem throughout the hospitality industry.\n\nAmong the many cited reasons are low compensation, inadequate benefits, poor working conditions and compromised employee morale and attitudes (Maroudas et al., 2008).\n\nNg and Sorensen (2008) demonstrated that when managers provide recognition to employees, motivate employees to work together, and remove obstacles preventing effective performance, employees feel more obligated to stay with the company.\n\nThis was succinctly summarized by Michel et al.\n\n(2013): '[P]roviding support to employees gives them the confidence to perform their jobs better and the motivation to stay with the organization.'\n\nHospitality organizations can therefore enhance employee motivation and retention through the development and improvement of their working conditions.\n\nThese conditions are inherently linked to the working environment.\n\nWhile it seems likely that employees' reactions to their job characteristics could be affected by a predisposition to view their work environment negatively, no evidence exists to support this hypothesis (Spector et al., 2000).\n\nHowever, given the opportunity, many people will find something to complain about in relation to their workplace (Poulston, 2009).\n\nThere is a strong link between the perceptions of employees and particular factors of their work environment that are separate from the work itself, including company policies, salary and vacations.\n\nSuch conditions are particularly troubling for the luxury hotel market, where high-quality service, requiring a sophisticated approach to HRM, is recognized as a critical source of competitive advantage (Maroudas et al., 2008).\n\nIn a real sense, the services of hotel employees represent their industry (Schneider and Bowen, 1993).\n\nThis representation has commonly been limited to guest experiences.\n\nThis suggests that there has been a dichotomy between the guest environment provided in luxury hotels and the working conditions of their employees.\n\nIt is therefore essential for hotel management to develop HRM practices that enable them to inspire and retain competent employees.\n\nThis requires an understanding of what motivates employees at different levels of management and different stages of their careers (Enz and Siguaw, 2000).\n\nThis implies that it is beneficial for hotel managers to understand what practices are most favorable to increase employee satisfaction and retention.\n\nHerzberg (1966) proposes that people have two major types of needs, the first being extrinsic motivation factors relating to the context in which work is performed, rather than the work itself.\n\nThese include working conditions and job security.\n\nWhen these factors are unfavorable, job dissatisfaction may result.\n\nSignificantly, though, just fulfilling these needs does not result in satisfaction, but only in the reduction of dissatisfaction (Maroudas et al., 2008).\n\nEmployees also have intrinsic motivation needs or motivators, which include such factors as achievement and recognition.\n\nUnlike extrinsic factors, motivator factors may ideally result in job satisfaction (Maroudas et al., 2008).\n\nHerzberg's (1966) theory discusses the need for a 'balance' of these two types of needs.\n\nThe impact of fun as a motivating factor at work has also been explored.\n\nFor example, Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed restaurants in the United States.\n\nIt was found that fun activities had a favorable impact on performance and manager support for fun had a favorable impact in reducing turnover.\n\nTheir findings support the view that fun may indeed have a beneficial effect, but the framing of that fun must be carefully aligned with both organizational goals and employee characteristics.\n\n'Managers must learn how to achieve the delicate balance of allowing employees the freedom to enjoy themselves at work while simultaneously high levels of performance' (Tews et al., 2013).\n\nDeery (2008) has recommended several actions that can be adopted at the organizational level to retain good staff as well as assist in balancing work and family life.\n\nThose particularly appropriate to the hospitality industry include allowing adequate breaks during the working day, staff functions that involve families, and providing health and well-being opportunities. <form id =\"\n\nQuestions 27-31\n) Look at the following statements (Questions 27-31) and the list of researchers below.\nMatch each statement with the correct researcher, A-F.\nWrite the correct letter, A-F, in boxes 27-31 on your answer sheet.\nNB You may use any letter more than once.\n2 27 Hotel managers need to know what would encourage good staff to remain.\n28 The actions of managers may make staff feel they shouldn't move to a different\nemployer.\n29 Little is done in the hospitality industry to help workers improve their skills.\n30 Staff are less likely to change jobs if cooperation is encouraged.\n31 Dissatisfaction with pay is not the only reason why hospitality workers change jobs.\nList of Researchers.\nA Pfeffer\n\nB Lucas\nG  Maroudas et al.\nD Ngand Sorensen\nE Enz and Siguaw\n\nF __Deery\n\nEd\n\nQuestions 32-35\nDo the following statements agree with the claims of the writer in Reading Passage 3?\nIn boxes 32-35 on your answer sheet, write\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n32 One reason for high staff turnover in the hospitality industry is poor morale.\n33 Research has shown that staff have a tendency to dislike their workplace.\n34 An improvement in working conditions and job security makes staff satisfied with\ntheir jobs.\n35 Staff should be allowed to choose when they take breaks during the working day.\nQuestions 36-40\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 36-40 on your answer sheet.\nFun at work\nTews, Michel and Stafford carried out research on staff in an American chain of\nBG ocean + LNey discovered that activities designed for staff to have fun\nIMPrOVEed their B7 ou... sss » ANd that management involvement led to lower\nStaff BB occ « [HEY also found that the activities needed to fit with both the\nCOMPANY'S $9 ooo AN The 40 oo OF the staff. A balance was\nrequired between a degree of freedom and maintaining work standards.\n28 .\neXO}ie t= [Ln NAT LISTIENING+READING a",
+    "rawPassageText": "READING PASSAGE 3\nMotivational factors and the hospitality industry A critical\n\nMotivational factors and the hospitality industry A critical ingredient in the success of hotels is developing and maintaining superior performance from their employees.\n\nWhat Human Resource Management (HRM) practices should organizations invest in to acquire and retain great employees?\n\nSome hotels aim to provide superior working conditions for their employees.\n\nThe idea originated from workplaces – usually in the non-service sector – that emphasized fun and enjoyment as part of work-life balance.\n\nBy contrast, the service sector, and more specifically hotels, has traditionally not extended these practices to address basic employee needs, such as good working conditions.\n\nPfeffer (1994) emphasizes that in order to succeed in a global business environment, organizations must make investment in Human Resource Management (HRM) to allow them to acquire employees who possess better skills and capabilities than their competitors.\n\nThis investment will be to their competitive advantage.\n\nDespite this recognition of the importance of employee development, the hospitality industry has historically been dominated by underdeveloped HR practices (Lucas, 2002).\n\nLucas also points out that 'the substance of HRM practices does not appear to be designed to foster constructive relations with employees or to represent a managerial approach that enables developing and drawing out the full potential of people, even though employees may be broadly satisfied with many aspects of their work' (Lucas, 2002).\n\nIn addition, or maybe as a result, high employee turnover has been a recurring problem throughout the hospitality industry.\n\nAmong the many cited reasons are low compensation, inadequate benefits, poor working conditions and compromised employee morale and attitudes (Maroudas et al., 2008).\n\nNg and Sorensen (2008) demonstrated that when managers provide recognition to employees, motivate employees to work together, and remove obstacles preventing effective performance, employees feel more obligated to stay with the company.\n\nThis was succinctly summarized by Michel et al.\n\n(2013): '[P]roviding support to employees gives them the confidence to perform their jobs better and the motivation to stay with the organization.'\n\nHospitality organizations can therefore enhance employee motivation and retention through the development and improvement of their working conditions.\n\nThese conditions are inherently linked to the working environment.\n\nWhile it seems likely that employees' reactions to their job characteristics could be affected by a predisposition to view their work environment negatively, no evidence exists to support this hypothesis (Spector et al., 2000).\n\nHowever, given the opportunity, many people will find something to complain about in relation to their workplace (Poulston, 2009).\n\nThere is a strong link between the perceptions of employees and particular factors of their work environment that are separate from the work itself, including company policies, salary and vacations.\n\nSuch conditions are particularly troubling for the luxury hotel market, where high-quality service, requiring a sophisticated approach to HRM, is recognized as a critical source of competitive advantage (Maroudas et al., 2008).\n\nIn a real sense, the services of hotel employees represent their industry (Schneider and Bowen, 1993).\n\nThis representation has commonly been limited to guest experiences.\n\nThis suggests that there has been a dichotomy between the guest environment provided in luxury hotels and the working conditions of their employees.\n\nIt is therefore essential for hotel management to develop HRM practices that enable them to inspire and retain competent employees.\n\nThis requires an understanding of what motivates employees at different levels of management and different stages of their careers (Enz and Siguaw, 2000).\n\nThis implies that it is beneficial for hotel managers to understand what practices are most favorable to increase employee satisfaction and retention.\n\nHerzberg (1966) proposes that people have two major types of needs, the first being extrinsic motivation factors relating to the context in which work is performed, rather than the work itself.\n\nThese include working conditions and job security.\n\nWhen these factors are unfavorable, job dissatisfaction may result.\n\nSignificantly, though, just fulfilling these needs does not result in satisfaction, but only in the reduction of dissatisfaction (Maroudas et al., 2008).\n\nEmployees also have intrinsic motivation needs or motivators, which include such factors as achievement and recognition.\n\nUnlike extrinsic factors, motivator factors may ideally result in job satisfaction (Maroudas et al., 2008).\n\nHerzberg's (1966) theory discusses the need for a 'balance' of these two types of needs.\n\nThe impact of fun as a motivating factor at work has also been explored.\n\nFor example, Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed restaurants in the United States.\n\nIt was found that fun activities had a favorable impact on performance and manager support for fun had a favorable impact in reducing turnover.\n\nTheir findings support the view that fun may indeed have a beneficial effect, but the framing of that fun must be carefully aligned with both organizational goals and employee characteristics.\n\n'Managers must learn how to achieve the delicate balance of allowing employees the freedom to enjoy themselves at work while simultaneously high levels of performance' (Tews et al., 2013).\n\nDeery (2008) has recommended several actions that can be adopted at the organizational level to retain good staff as well as assist in balancing work and family life.\n\nThose particularly appropriate to the hospitality industry include allowing adequate breaks during the working day, staff functions that involve families, and providing health and well-being opportunities. <form id =\"\n\nQuestions 27-31\n) Look at the following statements (Questions 27-31) and the list of researchers below.\nMatch each statement with the correct researcher, A-F.\nWrite the correct letter, A-F, in boxes 27-31 on your answer sheet.\nNB You may use any letter more than once.\n2 27 Hotel managers need to know what would encourage good staff to remain.\n28 The actions of managers may make staff feel they shouldn't move to a different\nemployer.\n29 Little is done in the hospitality industry to help workers improve their skills.\n30 Staff are less likely to change jobs if cooperation is encouraged.\n31 Dissatisfaction with pay is not the only reason why hospitality workers change jobs.\nList of Researchers.\nA Pfeffer\n\nB Lucas\nC Maroudas et al.\nD Ng and Sorensen\nE Enz and Siguaw\n\nF __Deery\n\nEd\n\nQuestions 32-35\nDo the following statements agree with the claims of the writer in Reading Passage 3?\nIn boxes 32-35 on your answer sheet, write\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n32 One reason for high staff turnover in the hospitality industry is poor morale.\n33 Research has shown that staff have a tendency to dislike their workplace.\n34 An improvement in working conditions and job security makes staff satisfied with\ntheir jobs.\n35 Staff should be allowed to choose when they take breaks during the working day.\nQuestions 36-40\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 36-40 on your answer sheet.\nFun at work\nTews, Michel and Stafford carried out research on staff in an American chain of\nBG ocean + LNey discovered that activities designed for staff to have fun\nIMPrOVEed their B7 ou... sss » ANd that management involvement led to lower\nStaff BB occ « [HEY also found that the activities needed to fit with both the\nCOMPANY'S $9 ooo AN The 40 oo OF the staff. A balance was\nrequired between a degree of freedom and maintaining work standards.\n28 .\neXO}ie t= [Ln NAT LISTIENING+READING a",
     "rawAnswerKey": "READING PASSAGE 3: Motivational factors and the hospitality industry\n\nQuestion 27: Hotel managers need to know what would encourage good staff to remain.\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"This requires an understanding of what motivates employees at different levels of management and different stages of their careers (Enz and Siguaw, 2000). This implies that it is beneficial for hotel managers to understand what practices are most favorable to increase employee satisfaction and retention.\"\n\nShort Thai Explanation: คำถาม: \"Hotel managers need to know what would encourage good staff to remain. … … … … … …\" หลักฐานในบทความคือ \"This requires an understanding of what motivates employees at different levels of management an…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E\n\nParaphrased Vocabulary: hotel managers encourage = requires understanding motivates employees = E\n\nQuestion 28: The actions of managers may make staff feel they shouldn't move to a different\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"Ng and Sorensen (2008) demonstrated that when managers provide recognition to employees, motivate employees to work together, and remove obstacles preventing effective performance, employees feel more obligated to stay with the company.\"\n\nShort Thai Explanation: คำถาม: \"The actions of managers may make staff feel they shouldn't move to\" หลักฐานในบทความคือ \"Ng and Sorensen (2008) demonstrated that when managers provide recognition to employees, motiva…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: actions managers staff = sorensen demonstrated managers provide = D\n\nQuestion 29: Little is done in the hospitality industry to help workers improve their skills.\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"the hospitality industry has historically been dominated by underdeveloped HR practices (Lucas, 2002)\"\n\nShort Thai Explanation: คำถาม: \"Little is done in the hospitality industry to help workers improve their skills. … … … … … …\" หลักฐานในบทความคือ \"the hospitality industry has historically been dominated by underdeveloped HR practices (Lucas,…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: little hospitality industry = hospitality industry historically dominated = B\n\nQuestion 30: Staff are less likely to change jobs if cooperation is encouraged.\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"employees feel more obligated to stay with the company\"\n\nShort Thai Explanation: คำถาม: \"Staff are less likely to change jobs if cooperation is encouraged. … … … … … …\" หลักฐานในบทความคือ \"employees feel more obligated to stay with the company\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: staff likely change = employees obligated company = D\n\nQuestion 31: Dissatisfaction with pay is not the only reason why hospitality workers change jobs.\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"Among the many cited reasons are low compensation, inadequate benefits, poor working conditions\"\n\nShort Thai Explanation: คำถาม: \"Dissatisfaction with pay is not the only reason why hospitality workers change jobs. … … … … … … Questions 32-35 Do the following …\" หลักฐานในบทความคือ \"Among the many cited reasons are low compensation, inadequate benefits, poor working conditions\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: dissatisfaction reason hospitality = reasons compensation inadequate benefits = C\n\nQuestion 32: One reason for high staff turnover in the hospitality industry is poor morale.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"compromised employee morale and attitudes\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"One reason for high staff turnover in the hospitality industry is poor morale.\" โดยเฉพาะจากข้อความ \"compromised employee morale and attitudes\" จึงตอบ YES\n\nParaphrased Vocabulary: reason staff turnover = compromised employee morale attitudes = YES\n\nQuestion 33: Research has shown that staff have a tendency to dislike their workplace.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"While it seems likely that employees’ reactions to their job characteristics could be affected by a predisposition to view their work environment negatively, no evidence exists to support this hypothesis\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"Research has shown that staff have\" โดยเฉพาะจากข้อความ \"While it seems likely that employees’ reactions to their job characteristics could be affected …\" จึงตอบ NO\n\nParaphrased Vocabulary: research shown staff = likely employees reactions characteristics = NO\n\nQuestion 34: An improvement in working conditions and job security makes staff satisfied with their jobs.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"just fulfilling these needs does not result in satisfaction, but only in the reduction of dissatisfaction\"\n\nShort Thai Explanation: มุมมองของผู้เขียนในบทความขัดกับข้อที่ว่า \"An improvement in working conditions and job security makes staff satisfied with their jobs.\" โดยเฉพาะจากข้อความ \"just fulfilling these needs does not result in satisfaction, but only in the reduction of dissa…\" จึงตอบ NO\n\nParaphrased Vocabulary: improvement working conditions = fulfilling result satisfaction reduction = NO\n\nQuestion 35: Staff should be allowed to choose when they take breaks during the working day.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"Those particularly appropriate to the hospitality industry include allowing adequate breaks during the working day\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Staff should be allowed to choose when they take breaks during the working day.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Those particularly appropriate to the hospitality industry include allowing adequate breaks dur…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: staff should allowed = particularly appropriate hospitality industry = NOT GIVEN\n\nQuestion 36: … . They discovered that activities designed for staff to have fun improved their\n\nCorrect Answer: restaurants\n\nAccepted Answers: restaurants\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed restaurants in the United States.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… . They discovered that activities designed for staff to have fun improved their\" บทความมีถ้อยคำที่ตรงกันคือ \"Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed res…\" จึงคำตอบคือ \"restaurants\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: discovered activities designed = michel stafford conducted focusing = restaurants\n\nQuestion 37: … . They discovered that activities designed for staff to have fun improved their\n\nCorrect Answer: performance\n\nAccepted Answers: performance\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"It was found that fun activities had a favorable impact on performance\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… . They discovered that activities designed for staff to have fun improved their\" บทความมีถ้อยคำที่ตรงกันคือ \"It was found that fun activities had a favorable impact on performance\" จึงคำตอบคือ \"performance\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: discovered activities designed fun improved = activities favorable impact = performance\n\nQuestion 38: … , and that management involvement led to lower staff\n\nCorrect Answer: turnover\n\nAccepted Answers: turnover\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"manager support for fun had a favorable impact in reducing turnover\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… , and that management involvement led to lower staff\" บทความมีถ้อยคำที่ตรงกันคือ \"manager support for fun had a favorable impact in reducing turnover\" จึงคำตอบคือ \"turnover\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: management involvement lower = manager support favorable impact = turnover\n\nQuestion 39: … and the\n\nCorrect Answer: goals\n\nAccepted Answers: goals\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"the framing of that fun must be carefully aligned with both organizational goals\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… and the\" บทความมีถ้อยคำที่ตรงกันคือ \"the framing of that fun must be carefully aligned with both organizational goals\" จึงคำตอบคือ \"goals\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: … and the = the framing of that fun must be carefully aligned with both … = goals\n\nQuestion 40: … Of the staff.\n\nCorrect Answer: characteristics\n\nAccepted Answers: characteristics\n\nAnswer Group: Cambridge 14 Test 1 Passage 3\n\nExact Portion: \"employee characteristics\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… Of the staff.\" บทความมีถ้อยคำที่ตรงกันคือ \"employee characteristics\" จึงคำตอบคือ \"characteristics\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: staff = employee = characteristics",
     "parsedPayload": {
       "title": "Cambridge 14 Test 1 Passage 3 - Motivational factors and the hospitality industry",
@@ -459,7 +459,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             "It was found that fun activities had a favorable impact on performance and manager support for fun had a favorable impact in reducing turnover. Their findings support the view that fun may indeed have a beneficial effect, but the framing of that fun must be carefully aligned with both organizational goals and employee characteristics. , 2013). Deery (2008) has recommended several actions that can be adopted at the organizational level to retain good staff as well as assist in balancing work and family life.",
             "Those particularly appropriate to the hospitality industry include allowing adequate breaks during the working day, staff functions that involve families, and providing health and well-being opportunities."
           ],
-          "questionSectionText": "Questions 27-31\n) Look at the following statements (Questions 27-31) and the list of researchers below.\nMatch each statement with the correct researcher, A-F.\nWrite the correct letter, A-F, in boxes 27-31 on your answer sheet.\nNB You may use any letter more than once.\n2 27 Hotel managers need to know what would encourage good staff to remain.\n28 The actions of managers may make staff feel they shouldn't move to a different\nemployer.\n29 Little is done in the hospitality industry to help workers improve their skills.\n30 Staff are less likely to change jobs if cooperation is encouraged.\n31 Dissatisfaction with pay is not the only reason why hospitality workers change jobs.\nList of Researchers.\nA Pfeffer\n\nB Lucas\nG  Maroudas et al.\nD Ngand Sorensen\nE Enz and Siguaw\n\nF __Deery\n\nEd\n\nQuestions 32-35\nDo the following statements agree with the claims of the writer in Reading Passage 3?\nIn boxes 32-35 on your answer sheet, write\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n32 One reason for high staff turnover in the hospitality industry is poor morale.\n33 Research has shown that staff have a tendency to dislike their workplace.\n34 An improvement in working conditions and job security makes staff satisfied with\ntheir jobs.\n35 Staff should be allowed to choose when they take breaks during the working day.\nQuestions 36-40\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 36-40 on your answer sheet.\nFun at work\nTews, Michel and Stafford carried out research on staff in an American chain of\nBG ocean + LNey discovered that activities designed for staff to have fun\nIMPrOVEed their B7 ou... sss » ANd that management involvement led to lower\nStaff BB occ « [HEY also found that the activities needed to fit with both the\nCOMPANY'S $9 ooo AN The 40 oo OF the staff. A balance was\nrequired between a degree of freedom and maintaining work standards.\n28 .\neXO}ie t= [Ln NAT LISTIENING+READING a",
+          "questionSectionText": "Questions 27-31\n) Look at the following statements (Questions 27-31) and the list of researchers below.\nMatch each statement with the correct researcher, A-F.\nWrite the correct letter, A-F, in boxes 27-31 on your answer sheet.\nNB You may use any letter more than once.\n2 27 Hotel managers need to know what would encourage good staff to remain.\n28 The actions of managers may make staff feel they shouldn't move to a different\nemployer.\n29 Little is done in the hospitality industry to help workers improve their skills.\n30 Staff are less likely to change jobs if cooperation is encouraged.\n31 Dissatisfaction with pay is not the only reason why hospitality workers change jobs.\nList of Researchers.\nA Pfeffer\n\nB Lucas\nC Maroudas et al.\nD Ng and Sorensen\nE Enz and Siguaw\n\nF __Deery\n\nEd\n\nQuestions 32-35\nDo the following statements agree with the claims of the writer in Reading Passage 3?\nIn boxes 32-35 on your answer sheet, write\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n32 One reason for high staff turnover in the hospitality industry is poor morale.\n33 Research has shown that staff have a tendency to dislike their workplace.\n34 An improvement in working conditions and job security makes staff satisfied with\ntheir jobs.\n35 Staff should be allowed to choose when they take breaks during the working day.\nQuestions 36-40\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 36-40 on your answer sheet.\nFun at work\nTews, Michel and Stafford carried out research on staff in an American chain of\nBG ocean + LNey discovered that activities designed for staff to have fun\nIMPrOVEed their B7 ou... sss » ANd that management involvement led to lower\nStaff BB occ « [HEY also found that the activities needed to fit with both the\nCOMPANY'S $9 ooo AN The 40 oo OF the staff. A balance was\nrequired between a degree of freedom and maintaining work standards.\n28 .\neXO}ie t= [Ln NAT LISTIENING+READING a",
           "questionRanges": [
             {
               "start": 27,
@@ -485,8 +485,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "This implies that it is beneficial for hotel managers to understand what practices are most favorable to increase employee satisfaction and retention.",
-              "explanationThai": "คำถาม: \"Hotel managers need to know what would encourage good staff to remain. … … … … … …\" หลักฐานในบทความคือ \"This requires an understanding of what motivates employees at different levels of management an…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "hotel managers encourage = requires understanding motivates employees = E"
+              "explanationThai": "คำถาม: \"Hotel managers need to know what would encourage good staff to remain.\" หลักฐานในบทความคือ \"This implies that it is beneficial for hotel managers to understand what practices are mos…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "hotel managers need know = implies beneficial hotel managers = E"
             },
             {
               "number": 28,
@@ -511,8 +511,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "the hospitality industry has historically been dominated by underdeveloped HR practices (Lucas, 2002)",
-              "explanationThai": "คำถาม: \"Little is done in the hospitality industry to help workers improve their skills. … … … … … …\" หลักฐานในบทความคือ \"the hospitality industry has historically been dominated by underdeveloped HR practices (Lucas,…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "little hospitality industry = hospitality industry historically dominated = B"
+              "explanationThai": "คำถาม: \"Little is done in the hospitality industry to help workers improve their skills.\" หลักฐานในบทความคือ \"the hospitality industry has historically been dominated by underdeveloped HR practices (L…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "little done hospitality industry = hospitality industry historically dominated = B"
             },
             {
               "number": 30,
@@ -524,12 +524,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "employees feel more obligated to stay with the company",
-              "explanationThai": "คำถาม: \"Staff are less likely to change jobs if cooperation is encouraged. … … … … … …\" หลักฐานในบทความคือ \"employees feel more obligated to stay with the company\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "staff likely change = employees obligated company = D"
+              "explanationThai": "คำถาม: \"Staff are less likely to change jobs if cooperation is encouraged.\" หลักฐานในบทความคือ \"employees feel more obligated to stay with the company\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "staff less likely change = employees feel obligated stay = D"
             },
             {
               "number": 31,
-              "prompt": "Dissatisfaction with pay is not the only reason why hospitality workers change jobs. … … … … … … Questions 32-35 Do the following statements agree with the claims of the writer in the Reading Passage? In boxes on your answer sheet, write",
+              "prompt": "Dissatisfaction with pay is not the only reason why hospitality workers change jobs.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -537,8 +537,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Among the many cited reasons are low compensation, inadequate benefits, poor working conditions",
-              "explanationThai": "คำถาม: \"Dissatisfaction with pay is not the only reason why hospitality workers change jobs. … … … … … … Questions 32-35 Do the following …\" หลักฐานในบทความคือ \"Among the many cited reasons are low compensation, inadequate benefits, poor working conditions\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "dissatisfaction reason hospitality = reasons compensation inadequate benefits = C"
+              "explanationThai": "คำถาม: \"Dissatisfaction with pay is not the only reason why hospitality workers change jobs.\" หลักฐานในบทความคือ \"Among the many cited reasons are low compensation, inadequate benefits, poor working condi…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "dissatisfaction pay only reason = among many cited reasons = C"
             },
             {
               "number": 32,
@@ -581,7 +581,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "Staff should be allowed to choose when they take breaks during the working day.\nQuestions 36-40\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 36-40 on your answer sheet.\nFun at work\nTews, Michel and Stafford carried out research on staff in an American chain of\nBG ocean + LNey discovered that activities designed for staff to have fun\nIMPrOVEed their B7 ou... sss » ANd that management involvement led to lower\nStaff BB occ « [HEY also found that the activities needed to fit with both the\nCOMPANY'S $9 ooo AN The 40 oo OF the staff. A balance was\nrequired between a degree of freedom and maintaining work standards.",
+              "prompt": "Staff should be allowed to choose when they take breaks during the working day.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
@@ -594,7 +594,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "… . They discovered that activities designed for staff to have fun improved their",
+              "prompt": "Tews, Michel and Stafford carried out research on staff in an American chain of … …. They discovered that activities designed for staff to have fun improved their.",
               "correctAnswer": "restaurants",
               "acceptedAnswers": [
                 "restaurants"
@@ -602,12 +602,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed restaurants in the United States.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . They discovered that activities designed for staff to have fun improved their\" บทความมีถ้อยคำที่ตรงกันคือ \"Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of themed res…\" จึงคำตอบคือ \"restaurants\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "discovered activities designed = michel stafford conducted focusing = restaurants"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Tews, Michel and Stafford carried out research on staff in an American chain of … …. They discovered that activities designed for staff to have fun improved their.\" บทความมีถ้อยคำที่ตรงกันคือ \"Tews, Michel and Stafford (2013) conducted a study focusing on staff from a chain of theme…\" จึงคำตอบคือ \"restaurants\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "tews michel stafford carried = tews michel stafford 2013 = restaurants"
             },
             {
               "number": 37,
-              "prompt": "… . They discovered that activities designed for staff to have fun improved their",
+              "prompt": "It was found that fun activities had a favorable impact on … ….",
               "correctAnswer": "performance",
               "acceptedAnswers": [
                 "performance"
@@ -615,12 +615,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "It was found that fun activities had a favorable impact on performance",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . They discovered that activities designed for staff to have fun improved their\" บทความมีถ้อยคำที่ตรงกันคือ \"It was found that fun activities had a favorable impact on performance\" จึงคำตอบคือ \"performance\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "discovered activities designed fun improved = activities favorable impact = performance"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"It was found that fun activities had a favorable impact on … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"It was found that fun activities had a favorable impact on performance\" จึงคำตอบคือ \"performance\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "found fun activities favorable = found fun activities favorable = performance"
             },
             {
               "number": 38,
-              "prompt": "… , and that management involvement led to lower staff",
+              "prompt": "manager support for fun had a favorable impact in reducing … ….",
               "correctAnswer": "turnover",
               "acceptedAnswers": [
                 "turnover"
@@ -628,12 +628,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "manager support for fun had a favorable impact in reducing turnover",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… , and that management involvement led to lower staff\" บทความมีถ้อยคำที่ตรงกันคือ \"manager support for fun had a favorable impact in reducing turnover\" จึงคำตอบคือ \"turnover\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "management involvement lower = manager support favorable impact = turnover"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"manager support for fun had a favorable impact in reducing … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"manager support for fun had a favorable impact in reducing turnover\" จึงคำตอบคือ \"turnover\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "manager support fun favorable = manager support fun favorable = turnover"
             },
             {
               "number": 39,
-              "prompt": "… and the",
+              "prompt": "the framing of that fun must be carefully aligned with both organizational … ….",
               "correctAnswer": "goals",
               "acceptedAnswers": [
                 "goals"
@@ -654,8 +654,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "employee characteristics",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Of the staff.\" บทความมีถ้อยคำที่ตรงกันคือ \"employee characteristics\" จึงคำตอบคือ \"characteristics\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "staff = employee = characteristics"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Questions 36-40 Complete the summary below.\" บทความมีถ้อยคำที่ตรงกันคือ \"employee characteristics\" จึงคำตอบคือ \"characteristics\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "questions 36-40 complete summary = employee characteristics = characteristics"
             }
           ]
         }
@@ -807,7 +807,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "was born in Scotland in 1831 – father was a … …",
+              "prompt": "was born in Scotland in 1831 – father was a.",
               "correctAnswer": "merchant",
               "acceptedAnswers": [
                 "merchant"
@@ -846,7 +846,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "took many trips along eastern rivers in a … …",
+              "prompt": "took many trips along eastern rivers in a.",
               "correctAnswer": "canoe",
               "acceptedAnswers": [
                 "canoe"
@@ -916,7 +916,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "why some people avoided hospitals in the 19th century … … … … … … … … …",
+              "prompt": "why some people avoided hospitals in the 19th century",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -924,12 +924,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Foul air, rather than germs, was believed to be the main driver of 'hospital fever', leading to disease and frequent death. The prosperous steered clear of hospitals.",
-              "explanationThai": "คำถาม: \"why some people avoided hospitals in the 19th century … … … … … … … … …\" หลักฐานในบทความคือ \"Foul air, rather than germs, was believed to be the main driver of ‘hospital fever’, leading to…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "avoided hospitals century = rather believed driver hospital = F"
+              "explanationThai": "คำถาม: \"why some people avoided hospitals in the 19th century\" หลักฐานในบทความคือ \"Foul air, rather than germs, was believed to be the main driver of 'hospital fever', leadi…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "people avoided hospitals 19th = foul air rather germs = F"
             },
             {
               "number": 15,
-              "prompt": "a suggestion that the popularity of tall buildings is linked to prestige … … … … … … … … …",
+              "prompt": "a suggestion that the popularity of tall buildings is linked to prestige",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -937,12 +937,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Short regards glass, steel and air-conditioned skyscrapers as symbols of status, rather than practical ways of meeting our requirements.",
-              "explanationThai": "คำถาม: \"a suggestion that the popularity of tall buildings is linked to prestige … … … … … … … … …\" หลักฐานในบทความคือ \"Short regards glass, steel and air-conditioned skyscrapers as symbols of status, rather than pr…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "suggestion popularity tall = regards air-conditioned skyscrapers symbols = C"
+              "explanationThai": "คำถาม: \"a suggestion that the popularity of tall buildings is linked to prestige\" หลักฐานในบทความคือ \"Short regards glass, steel and air-conditioned skyscrapers as symbols of status, rather th…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "suggestion popularity tall buildings = short regards glass steel = C"
             },
             {
               "number": 16,
-              "prompt": "a comparison between the circulation of air in a 19th-century building and modern standards … … … … … … … … …",
+              "prompt": "a comparison between the circulation of air in a 19th-century building and modern standards",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -950,12 +950,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "We discovered that 19th-century hospital wards could generate up to 24 air changes an hour – that's similar to the performance of a modern-day, computer-controlled operating theatre",
-              "explanationThai": "คำถาม: \"a comparison between the circulation of air in a 19th-century building and modern standards … … … … … … … … …\" หลักฐานในบทความคือ \"We discovered that 19th-century hospital wards could generate up to 24 air changes an hour – th…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "comparison between circulation = discovered 19th-century hospital generate = E"
+              "explanationThai": "คำถาม: \"a comparison between the circulation of air in a 19th-century building and modern standards\" หลักฐานในบทความคือ \"We discovered that 19th-century hospital wards could generate up to 24 air changes an hour…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "comparison between circulation air = discovered 19th-century hospital wards = E"
             },
             {
               "number": 17,
-              "prompt": "how Short tested the circulation of air in a 19th-century building … … … … … … … … …",
+              "prompt": "how Short tested the circulation of air in a 19th-century building",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -963,12 +963,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "‘We put pathogens* in the airstreams, modelled for someone with tuberculosis (TB) coughing in the wards and we found the ventilation systems in the room would have kept other patients safe from harm.",
-              "explanationThai": "คำถาม: \"how Short tested the circulation of air in a 19th-century building … … … … … … … … …\" หลักฐานในบทความคือ \"‘We put pathogens* in the airstreams, modelled for someone with tuberculosis (TB) coughing in t…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "19th-century building = pathogens airstreams modelled someone = D"
+              "explanationThai": "คำถาม: \"how Short tested the circulation of air in a 19th-century building\" หลักฐานในบทความคือ \"‘We put pathogens* in the airstreams, modelled for someone with tuberculosis (TB) coughing…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "short tested circulation air = put pathogens airstreams modelled = D"
             },
             {
               "number": 18,
-              "prompt": "an implication that advertising led to the large increase in the use of air conditioning … … … … … … … … … Questions 19-26 Complete the summary below. Choose",
+              "prompt": "an implication that advertising led to the large increase in the use of air conditioning",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -976,12 +976,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "the widespread introduction of air conditioning systems, which were 'relentlessly and aggressively marketed' by their inventors",
-              "explanationThai": "คำถาม: \"an implication that advertising led to the large increase in the use of air conditioning … … … … … … … … … Questions 19-26 Complet…\" หลักฐานในบทความคือ \"the widespread introduction of air conditioning systems, which were ‘relentlessly and aggressiv…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "implication advertising large = widespread introduction conditioning systems = B"
+              "explanationThai": "คำถาม: \"an implication that advertising led to the large increase in the use of air conditioning\" หลักฐานในบทความคือ \"the widespread introduction of air conditioning systems, which were 'relentlessly and aggr…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "implication advertising led large = widespread introduction air conditioning = B"
             },
             {
               "number": 19,
-              "prompt": "… of hospitals to ensure they had good ventilation 19 … He calculated that",
+              "prompt": "Professor Alan Short examined the work of John Shaw Billings, who influenced the … … of hospitals to ensure they had good ventilation.",
               "correctAnswer": "designs",
               "acceptedAnswers": [
                 "design",
@@ -990,12 +990,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "Short’s book highlights a developing and sophisticated art and science of ventilating buildings through the 19th and earlier-20th centuries, including the design of ingeniously ventilated hospitals. Of particular interest were those built to the designs of John Shaw Billings",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of hospitals to ensure they had good ventilation. He calculated that\" บทความมีถ้อยคำที่ตรงกันคือ \"Short’s book highlights a developing and sophisticated art and science of ventilating buildings…\" จึงคำตอบคือ \"designs\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "hospitals ensure ventilation = highlights developing sophisticated science = designs"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Professor Alan Short examined the work of John Shaw Billings, who influenced the … … of hospitals to ensure they had good ventilation.\" บทความมีถ้อยคำที่ตรงกันคือ \"Short’s book highlights a developing and sophisticated art and science of ventilating buil…\" จึงคำตอบคือ \"designs\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "professor alan short examined = short’s book highlights developing = designs"
             },
             {
               "number": 20,
-              "prompt": "He calculated that 20 …ccoccsmsisiiaen.... IN the alr coming from patients suffering from",
+              "prompt": "He calculated that 20 … … ccoccsmsisiiaen … … IN the alr coming from patients suffering from.",
               "correctAnswer": "pathogens",
               "acceptedAnswers": [
                 "pathogens"
@@ -1003,12 +1003,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "We put pathogens* in the airstreams",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… in the air coming from patients suffering form\" บทความมีถ้อยคำที่ตรงกันคือ \"We put pathogens* in the airstreams\" จึงคำตอบคือ \"pathogens\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "coming patients suffering = airstreams = pathogens"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"He calculated that 20 … … ccoccsmsisiiaen … … IN the alr coming from patients suffering from.\" บทความมีถ้อยคำที่ตรงกันคือ \"We put pathogens* in the airstreams\" จึงคำตอบคือ \"pathogens\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "calculated ccoccsmsisiiaen alr coming = put pathogens airstreams = pathogens"
             },
             {
               "number": 21,
-              "prompt": "orecssssremriunnnnaen WOUIA Not have harmed other patients. He also found that the air theatre. He suggests that energy use could be reduced by locating more patients in Hd iissilsisiaasssinccsiacnacalecss Cl THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote These were blamed for the spread of disease for hundreds of years, including epidemics Of 26 coos if London and Paris in the middle of the 19th century.",
+              "prompt": "orecssssremriunnnnaen WOUIA Not have harmed other patients. He also found that the air theatre. He suggests that energy use could be reduced by locating more patients in Hd iissilsisiaasssinccsiacnacalecss Cl THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote These were blamed for the spread of disease for hundreds of years, including epidemics Of 26 coos if London and Paris in the middle of the 19th century … … WOUIA Not have harmed other patients. He also found that the air.",
               "correctAnswer": "tuberculosis",
               "acceptedAnswers": [
                 "tuberculosis"
@@ -1016,12 +1016,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "modelled for someone with tuberculosis",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… would not have harmed other patients. He also found that the air in\" บทความมีถ้อยคำที่ตรงกันคือ \"modelled for someone with tuberculosis\" จึงคำตอบคือ \"tuberculosis\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "harmed patients found = modelled someone = tuberculosis"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"orecssssremriunnnnaen WOUIA Not have harmed other patients. He also found that the air theatre. He suggests that energy use could be reduced by locating more patients in Hd iissilsisiaasssinccsiacnacalecss Cl THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote These were blamed for the spread of disease for hundreds of years, including epidemics Of 26 coos if London and Paris in the middle of the 19th century.\" บทความมีถ้อยคำที่ตรงกันคือ \"modelled for someone with tuberculosis\" จึงคำตอบคือ \"tuberculosis\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "orecssssremriunnnnaen wouia harmed patients = modelled someone tuberculosis = tuberculosis"
             },
             {
               "number": 22,
-              "prompt": "I 22 vooccssssssusussuussan I MOspitals could change as often as in a modern operating",
+              "prompt": "I 22 vooccssssssusussuussan I MOspitals could change as often as in a modern operating.",
               "correctAnswer": "wards",
               "acceptedAnswers": [
                 "wards"
@@ -1029,12 +1029,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "19th-century hospital wards could generate up to 24 air changes an hour",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . In hospitals could change as often as in\" บทความมีถ้อยคำที่ตรงกันคือ \"19th-century hospital wards could generate up to 24 air changes an hour\" จึงคำตอบคือ \"wards\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "hospitals change often = 19th-century hospital generate changes = wards"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"I 22 vooccssssssusussuussan I MOspitals could change as often as in a modern operating\" บทความมีถ้อยคำที่ตรงกันคือ \"19th-century hospital wards could generate up to 24 air changes an hour\" จึงคำตอบคือ \"wards\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "vooccssssssusussuussan mospitals change often = 19th-century hospital wards generate = wards"
             },
             {
               "number": 23,
-              "prompt": "… areas.",
+              "prompt": "… … wards appropriate for certain patients – older people with dementia, for example – would work.",
               "correctAnswer": "communal",
               "acceptedAnswers": [
                 "communal"
@@ -1047,7 +1047,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote",
+              "prompt": "THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote.",
               "correctAnswer": "public",
               "acceptedAnswers": [
                 "public"
@@ -1055,12 +1055,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "Much of the ingenuity present in 19th-century hospital and building design was driven by a panicked public",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… for protection against bad air, known as\" บทความมีถ้อยคำที่ตรงกันคือ \"Much of the ingenuity present in 19th-century hospital and building design was driven by a pani…\" จึงคำตอบคือ \"public\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "protection against known = ingenuity present 19th-century hospital = public"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote\" บทความมีถ้อยคำที่ตรงกันคือ \"Much of the ingenuity present in 19th-century hospital and building design was driven by a…\" จึงคำตอบคือ \"public\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "vvccsssncmmecnanen fof protection against = much ingenuity present 19th-century = public"
             },
             {
               "number": 25,
-              "prompt": "THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote These were blamed for the spread of disease for hundreds of years, including epi",
+              "prompt": "THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote These were blamed for the spread of disease for hundreds of years, including epi.",
               "correctAnswer": "miasmas",
               "acceptedAnswers": [
                 "miasmas"
@@ -1068,8 +1068,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "protect against what was thought to be the lethal threat of miasmas",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . These were blamed for the spread of disease for hundreds of years, including epidemics of\" บทความมีถ้อยคำที่ตรงกันคือ \"protect against what was thought to be the lethal threat of miasmas\" จึงคำตอบคือ \"miasmas\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "blamed spread disease = protect against thought lethal = miasmas"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"THE 24 vvccsssncmmecnanen fOF protection against bad air, KNOWN AS 25 ote These were blamed for the spread of disease for hundreds of years, including epi\" บทความมีถ้อยคำที่ตรงกันคือ \"protect against what was thought to be the lethal threat of miasmas\" จึงคำตอบคือ \"miasmas\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "vvccsssncmmecnanen fof protection against = protect against thought lethal = miasmas"
             },
             {
               "number": 26,
@@ -1081,8 +1081,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "the spread of infection from the Middle Ages right through to the cholera outbreaks in London and Paris during the 1850s",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… in London and Paris in the middle of the 19th century. Questions 27-34 The Reading Passage has eight sections,\" บทความมีถ้อยคำที่ตรงกันคือ \"the spread of infection from the Middle Ages right through to the cholera outbreaks in London a…\" จึงคำตอบคือ \"cholera\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "london paris middle = spread infection middle outbreaks = cholera"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Questions 19-26 Complete the summary below.\" บทความมีถ้อยคำที่ตรงกันคือ \"the spread of infection from the Middle Ages right through to the cholera outbreaks in Lon…\" จึงคำตอบคือ \"cholera\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "questions 19-26 complete summary = spread infection middle ages = cholera"
             }
           ]
         }
@@ -1140,8 +1140,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "We are told that we ought to organise our company, our home life, our week, our day and even our sleep, all as a means to becoming more productive",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"We are told that we ought to organize our company, our home life, our week, our day and even ou…\" จึงคำตอบคือ \"vi\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = organize company becoming productive = vi"
+              "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"We are told that we ought to organise our company, our home life, our week, our day and ev…\" จึงเลือกหัวข้อ vi",
+              "paraphrasedVocabulary": "section = told ought organise company = vi"
             },
             {
               "number": 28,
@@ -1153,8 +1153,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "A large proportion of workers from all demographics claim to be dissatisfied with the way their work is structured and the way they are managed.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"A large proportion of workers from all demographics claim to be dissatisfied with the way their…\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = proportion workers demographics dissatisfied = i"
+              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"A large proportion of workers from all demographics claim to be dissatisfied with the way …\" จึงเลือกหัวข้อ i",
+              "paraphrasedVocabulary": "section = large proportion workers demographics = i"
             },
             {
               "number": 29,
@@ -1166,8 +1166,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "he designed a number of principles to improve the efficiency of the work process, which have since become widespread in modern companies",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"he designed a number of principles to improve the efficiency of the work process, which have si…\" จึงคำตอบคือ \"iii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = designed number principles improve = iii"
+              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"he designed a number of principles to improve the efficiency of the work process, which ha…\" จึงเลือกหัวข้อ iii",
+              "paraphrasedVocabulary": "section = designed number principles improve = iii"
             },
             {
               "number": 30,
@@ -1179,8 +1179,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "This assumption has also-fostered the idea that disorder must be detrimental to organisational productivity. The result is that businesses and people spend time and money organising themselves for the sake of organising, rather than actually looking at the end goal and usefulness of such an effort.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"This assumption has also fostered the idea that disorder must be detrimental to organizational …\" จึงคำตอบคือ \"ii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = assumption fostered disorder detrimental = ii"
+              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"This assumption has also-fostered the idea that disorder must be detrimental to organisati…\" จึงเลือกหัวข้อ ii",
+              "paraphrasedVocabulary": "section = assumption also-fostered idea disorder = ii"
             },
             {
               "number": 31,
@@ -1192,8 +1192,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "recent studies show that order actually has diminishing returns",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"recent studies show that order actually has diminishing returns\" จึงคำตอบคือ \"ix\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = recent studies actually diminishing = ix"
+              "explanationThai": "ย่อหน้า E มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"recent studies show that order actually has diminishing returns\" จึงเลือกหัวข้อ ix",
+              "paraphrasedVocabulary": "section = recent studies show order = ix"
             },
             {
               "number": 32,
@@ -1205,8 +1205,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "These environments can lead to new solutions that, under conventionally structured environments (filled with bottlenecks in terms of information flow, power structures, rules, and routines) would never be reached",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"These environments can lead to new solutions that, under conventionally structured environments…\" จึงคำตอบคือ \"vii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = environments solutions conventionally structured = vii"
+              "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"These environments can lead to new solutions that, under conventionally structured environ…\" จึงเลือกหัวข้อ vii",
+              "paraphrasedVocabulary": "section = environments lead new solutions = vii"
             },
             {
               "number": 33,
@@ -1218,8 +1218,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "For example, Oticon, a large Danish manufacturer of hearing aids, used what it called a ‘spaghetti’ structure in order to reduce the organisation’s rigid hierarchies.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"For example, Oticon, a large Danish manufacturer of hearing aids, used what it called a ‘spaghe…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = example oticon danish manufacturer = iv"
+              "explanationThai": "ย่อหน้า G มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"For example, Oticon, a large Danish manufacturer of hearing aids, used what it called a ‘s…\" จึงเลือกหัวข้อ iv",
+              "paraphrasedVocabulary": "section = example oticon large danish = iv"
             },
             {
               "number": 34,
@@ -1231,12 +1231,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "the evidence so far suggests disorder, much like order, also seems to have diminishing utility, and can also have detrimental effects on performance if overused",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"the evidence so far suggests disorder, much like order, also seems to have diminishing utility,…\" จึงคำตอบคือ \"viii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = evidence suggests disorder diminishing = viii"
+              "explanationThai": "ย่อหน้า H มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"the evidence so far suggests disorder, much like order, also seems to have diminishing uti…\" จึงเลือกหัวข้อ viii",
+              "paraphrasedVocabulary": "section = evidence far suggests disorder = viii"
             },
             {
               "number": 35,
-              "prompt": "Numerous training sessions are aimed at people who feel they are not … enough.",
+              "prompt": "Numerous training sessions are aimed at people who feel they are not … … enough.",
               "correctAnswer": "productive",
               "acceptedAnswers": [
                 "productive"
@@ -1249,7 +1249,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "Being organised appeals to people who regard themselves as … …",
+              "prompt": "Being organised appeals to people who regard themselves as.",
               "correctAnswer": "perfectionists",
               "acceptedAnswers": [
                 "perfectionists"
@@ -1363,7 +1363,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "information about how non-scientists' assumptions about intelligence influence their behavior towards others … … … … … … … … … …",
+              "prompt": "information about how non-scientists' assumptions about intelligence influence their behavior towards others",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1371,8 +1371,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "implicit theories of intelligence drive the way in which people perceive and evaluate their own intelligence and that of others",
-              "explanationThai": "คำถาม: \"information about how non-scientists' assumptions about intelligence influence their behavior towards others … … … … … … … … … …\" หลักฐานในบทความคือ \"implicit theories of intelligence drive the way in which people perceive and evaluate their own…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "non-scientists' assumptions intelligence = implicit theories intelligence perceive = B"
+              "explanationThai": "คำถาม: \"information about how non-scientists' assumptions about intelligence influence their behavior towards others\" หลักฐานในบทความคือ \"implicit theories of intelligence drive the way in which people perceive and evaluate thei…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "information non-scientists' assumptions intelligence = implicit theories intelligence drive = B"
             },
             {
               "number": 2,
@@ -1384,8 +1384,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "In other words, people all have unconscious notions – known as 'implicit theories' – of intelligence, but no one knows for certain what it actually is.",
-              "explanationThai": "คำถาม: \"a reference to lack of clarity over the definition of intelligence … … … … … … … … … …\" หลักฐานในบทความคือ \"In other words, people all have unconscious notions – known as ‘implicit theories’ – of intelli…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "lack clarity definition = unconscious notions implicit theories = A"
+              "explanationThai": "คำถาม: \"areference to lack of clarity over the definition of intelligence 3 _ the point that a researcher's implicit and explicit theories may be very different\" หลักฐานในบทความคือ \"In other words, people all have unconscious notions – known as 'implicit theories' – of in…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "areference lack clarity definition = words people unconscious notions = A"
             },
             {
               "number": 3,
@@ -1428,7 +1428,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "Scholars may discuss theories without fully understanding each other.\nMEL BO)DU; BoA AIKYINANGICHINMXAG Nas ore of ot = 664\n\nEd\n\nQuestions 7-13\nLook at the following statements (Questions 7-13) and the list of theories below.\nMatch each statement with the correct theory, A, B, or C.\nWrite the correct letter, A, B, or C, in boxes 7-13 on your answer sheet.\nNB You may use any letter more than once.",
+              "prompt": "Scholars may discuss theories without fully understanding each other. MEL BO)DU; BoA AIKYINANGICHINMXAG Nas ore of ot = 664 Ed",
               "correctAnswer": "YES",
               "acceptedAnswers": [
                 "YES"
@@ -1441,7 +1441,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "It is desirable for the same possibilities to be open to everyone. … … …",
+              "prompt": "It is desirable for the same possibilities to be open to everyone.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1449,12 +1449,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "The Jeffersonian view is that people should have equal opportunities",
-              "explanationThai": "คำถาม: \"It is desirable for the same possibilities to be open to everyone. … … …\" หลักฐานในบทความคือ \"The Jeffersonian view is that people should have equal opportunities\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "desirable possibilities everyone = jeffersonian should opportunities = B"
+              "explanationThai": "คำถาม: \"It is desirable for the same possibilities to be open to everyone.\" หลักฐานในบทความคือ \"The Jeffersonian view is that people should have equal opportunities\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "desirable same possibilities open = jeffersonian view people equal = B"
             },
             {
               "number": 8,
-              "prompt": "No section of society should have preferential treatment at the expense of another. … … …",
+              "prompt": "No section of society should have preferential treatment at the expense of another.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1462,12 +1462,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "In this view, we do not need or want any institutions that might lead to favoring one group over another.",
-              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (No section of society should have preferential treatment at the expense of another. … … …) โดยเฉพาะประโยค \"In this view, we do not need or want any institutions that might lead to favoring one group ove…\" จึงเลือก C",
-              "paraphrasedVocabulary": "section society should = institutions favoring another = C"
+              "explanationThai": "คำถาม: \"No section of society should have preferential treatment at the expense of another.\" หลักฐานในบทความคือ \"In this view, we do not need or want any institutions that might lead to favoring one grou…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "section society preferential treatment = view need want institutions = C"
             },
             {
               "number": 9,
-              "prompt": "People should only gain benefits on the basis of what they actually achieve. … … …",
+              "prompt": "People should only gain benefits on the basis of what they actually achieve.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1475,12 +1475,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "People are rewarded for what they accomplish",
-              "explanationThai": "คำถาม: \"People should only gain benefits on the basis of what they actually achieve. … … …\" หลักฐานในบทความคือ \"People are rewarded for what they accomplish\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "should benefits basis = rewarded accomplish = B"
+              "explanationThai": "คำถาม: \"People should only gain benefits on the basis of what they actually achieve.\" หลักฐานในบทความคือ \"People are rewarded for what they accomplish\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "people only gain benefits = people rewarded accomplish = B"
             },
             {
               "number": 10,
-              "prompt": "Variation in intelligence begins at birth. … … …",
+              "prompt": "Variation in intelligence begins at birth.",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1488,12 +1488,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "people are born with different levels of intelligence",
-              "explanationThai": "คำถาม: \"Variation in intelligence begins at birth. … … …\" หลักฐานในบทความคือ \"people are born with different levels of intelligence\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "variation intelligence begins = different levels intelligence = A"
+              "explanationThai": "คำถาม: \"Variation in intelligence begins at birth.\" หลักฐานในบทความคือ \"people are born with different levels of intelligence\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "variation intelligence begins birth = people born different levels = A"
             },
             {
               "number": 11,
-              "prompt": "The more intelligent people should be in positions of power. … … …",
+              "prompt": "The more intelligent people should be in positions of power.",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1501,12 +1501,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "those who are less intelligent need the good offices of the more intelligent to keep them in line",
-              "explanationThai": "คำถาม: \"The more intelligent people should be in positions of power. … … …\" หลักฐานในบทความคือ \"those who are less intelligent need the good offices of the more intelligent to keep them in li…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "intelligent should positions = intelligent offices intelligent = A"
+              "explanationThai": "คำถาม: \"The more intelligent people should be in positions of power.\" หลักฐานในบทความคือ \"those who are less intelligent need the good offices of the more intelligent to keep them …\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "intelligent people positions power = less intelligent need good = A"
             },
             {
               "number": 12,
-              "prompt": "Everyone can develop the same abilities. … … …",
+              "prompt": "Everyone can develop the same abilities.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1514,8 +1514,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "The Jacksonian view is that all people are equal, not only as human beings but in terms of their competencies",
-              "explanationThai": "คำถาม: \"Everyone can develop the same abilities. … … …\" หลักฐานในบทความคือ \"The Jacksonian view is that all people are equal, not only as human beings but in terms of thei…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "develop same abilities = jacksonian beings competencies = C"
+              "explanationThai": "คำถาม: \"Everyone can develop the same abilities.\" หลักฐานในบทความคือ \"The Jacksonian view is that all people are equal, not only as human beings but in terms of…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "everyone develop same abilities = jacksonian view people equal = C"
             },
             {
               "number": 13,
@@ -1527,8 +1527,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "Left to themselves, the unintelligent would create, as they always have created, a kind of chaos",
-              "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (People of low intelligence are likely to lead uncontrolled lives. … … … Questions 14-20 The Reading Passage has nine paragraphs,) โดยเฉพาะประโยค \"Left to themselves, the unintelligent would create, as they always have created, a kind of chao…\" จึงเลือก A",
-              "paraphrasedVocabulary": "intelligence likely uncontrolled = themselves unintelligent create always = A"
+              "explanationThai": "คำถาม: \"People of low intelligence are likely to lead uncontrolled lives. 62 : BOIDUDDOANMIKVANANGICHINE XAG ere of a fi = BO DEMHITHAT\" หลักฐานในบทความคือ \"Left to themselves, the unintelligent would create, as they always have created, a kind of…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "people low intelligence likely = left themselves unintelligent create = A"
             }
           ]
         }
@@ -1562,7 +1562,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             "Although natural history knowledge points us in the right direction, it doesn't solve the problems associated with obtaining useful compounds from insects. Fortunately, it is now possible to snip out the stretches of the insect's DNA that carry the codes for the interesting compounds and insert them into cell lines that allow larger quantities to be produced. And although the road from isolating and characterising compounds with desirable qualities to developing a commercial product is very long and full of pitfalls, the variety of successful animal-derived pharmaceuticals on the market demonstrates there is a precedent here that is worth exploring.",
             "With every bit of wilderness that disappears, we deprive ourselves of potential medicines. As much as I'd love to help develop a groundbreaking insect-derived medicine, my main motivation for looking at insects in this way is conservation. I sincerely believe that all species, however small and seemingly insignificant, have a right to exist for their own sake. If we can shine a light on the darker recesses of nature's medicine cabinet, exploring the useful chemistry of the most diverse animals on the planet, I believe we can make people think differently about the value of nature."
           ],
-          "questionSectionText": "Questions 21-22\nQuestions 14-20\nReading Passage 2 has nine paragraphs, A-I.\nWhich paragraph contains the following information?\nWrite the correct letter, A-I, in boxes 14-20 on your answer sheet.\n14 mention of factors driving a renewed interest in natural medicinal compounds\n15 how recent technological advances have made insect research easier\n16 examples of animals which use medicinal substances from nature\n17 reasons why it is challenging to use insects in drug research\n18 reference to how interest in drug research may benefit wildlife\n19 areason why nature-based medicines fell out of favour for a period\n20 anexample of an insect-derived medicine in use at the moment\nQuestions 21 and 22\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 21 and 22 on your answer sheet.\nWhich TWO of the following make insects interesting for drug research?\nA the huge number of individual insects in the world\nB the variety of substances insects have developed to protect themselves\nC the potential to éxtract.and make use of insects’.genetic codes\nD the similarities between different species of insect\nE the manageable size of most insects\n,\n/\nMED BO)DU\nJOANIZTKY/NANGICHINH XAG Naf ore od ot 65\n\nEd\n\nQuestions 23-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 23-26 on your answer sheet.\nResearch at Aberystwyth University\nRoss Piper and fellow zoologists at Aberystwyth University are using their expertise\nIN 23 ose When Undertaking bioprospecting with insects. They are\nespecially interested in the compounds that insects produce to overpower and\npreserve thei 24 o.com » Hey are also interested in compounds which\ninsects use to protect themselves from pathogenic bacteria and fungi found in their\n25 vooitisnnasien » PIPer hopes that these substances will be useful in the\ndevelopment of Crugs SUCH AS 26 o..ccscscssssussssssesne «\n66 :\ni :",
+          "questionSectionText": "Questions 14-20\nReading Passage 2 has nine paragraphs, A-I.\nWhich paragraph contains the following information?\nWrite the correct letter, A-I, in boxes 14-20 on your answer sheet.\n14 mention of factors driving a renewed interest in natural medicinal compounds\n15 how recent technological advances have made insect research easier\n16 examples of animals which use medicinal substances from nature\n17 reasons why it is challenging to use insects in drug research\n18 reference to how interest in drug research may benefit wildlife\n19 areason why nature-based medicines fell out of favour for a period\n20 anexample of an insect-derived medicine in use at the moment\nQuestions 21 and 22\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 21 and 22 on your answer sheet.\nWhich TWO of the following make insects interesting for drug research?\nA the huge number of individual insects in the world\nB the variety of substances insects have developed to protect themselves\nC the potential to éxtract.and make use of insects’.genetic codes\nD the similarities between different species of insect\nE the manageable size of most insects\n,\n/\nMED BO)DU\nJOANIZTKY/NANGICHINH XAG Naf ore od ot 65\n\nEd\n\nQuestions 23-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 23-26 on your answer sheet.\nResearch at Aberystwyth University\nRoss Piper and fellow zoologists at Aberystwyth University are using their expertise\nIN 23 ose When Undertaking bioprospecting with insects. They are\nespecially interested in the compounds that insects produce to overpower and\npreserve thei 24 o.com » Hey are also interested in compounds which\ninsects use to protect themselves from pathogenic bacteria and fungi found in their\n25 vooitisnnasien » PIPer hopes that these substances will be useful in the\ndevelopment of Crugs SUCH AS 26 o..ccscscssssussssssesne «\n66 :\ni :",
           "questionRanges": [
             {
               "start": 14,
@@ -1593,7 +1593,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "how recent technological advances have made insect research easier … … … … … … … … …",
+              "prompt": "how recent technological advances have made insect research easier",
               "correctAnswer": "H",
               "acceptedAnswers": [
                 "H"
@@ -1601,12 +1601,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "it is now possible to snip out the stretches of the insect's DNA that carry the codes for the interesting compounds and insert them into cell lines that allow larger quantities to be produced.",
-              "explanationThai": "คำถาม: \"how recent technological advances have made insect research easier … … … … … … … … …\" หลักฐานในบทความคือ \"it is now possible to snip out the stretches of the insect’s DNA that carry the codes for the i…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
-              "paraphrasedVocabulary": "recent technological advances = possible stretches insect interesting = H"
+              "explanationThai": "คำถาม: \"how recent technological advances have made insect research easier\" หลักฐานในบทความคือ \"it is now possible to snip out the stretches of the insect's DNA that carry the codes for …\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
+              "paraphrasedVocabulary": "recent technological advances made = now possible snip out = H"
             },
             {
               "number": 16,
-              "prompt": "examples of animals which use medicinal substances from nature … … … … … … … … …",
+              "prompt": "examples of animals which use medicinal substances from nature",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1614,12 +1614,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "the capuchin monkeys who rub themselves with toxin-oozing millipedes to deter mosquitoes, or the chimpanzees who use noxious forest plants to rid themselves of intestinal parasites",
-              "explanationThai": "คำถาม: \"examples of animals which use medicinal substances from nature … … … … … … … … …\" หลักฐานในบทความคือ \"the capuchin monkeys who rub themselves with toxin-oozing millipedes to deter mosquitoes, or th…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "animals medicinal substances = capuchin monkeys themselves toxin-oozing = A"
+              "explanationThai": "คำถาม: \"examples of animals which use medicinal substances from nature\" หลักฐานในบทความคือ \"the capuchin monkeys who rub themselves with toxin-oozing millipedes to deter mosquitoes, …\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "examples animals use medicinal = capuchin monkeys rub themselves = A"
             },
             {
               "number": 17,
-              "prompt": "reasons why it is challenging to use insects in drug research … … … … … … … … …",
+              "prompt": "reasons why it is challenging to use insects in drug research",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -1627,12 +1627,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "there are so many insects that, without some manner of targeted approach, investigating this huge variety of species is a daunting task.",
-              "explanationThai": "คำถาม: \"reasons why it is challenging to use insects in drug research … … … … … … … … …\" หลักฐานในบทความคือ \"Why is it that insects have received relatively little attention in bioprospecting? Firstly, th…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "reasons challenging insects = insects received relatively little = F"
+              "explanationThai": "คำถาม: \"reasons why it is challenging to use insects in drug research\" หลักฐานในบทความคือ \"there are so many insects that, without some manner of targeted approach, investigating th…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "reasons challenging use insects = many insects without manner = F"
             },
             {
               "number": 18,
-              "prompt": "reference to how interest in drug research may benefit wildlife … … … … … … … … …",
+              "prompt": "reference to how interest in drug research may benefit wildlife",
               "correctAnswer": "i",
               "acceptedAnswers": [
                 "i"
@@ -1640,8 +1640,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "my main motivation for looking at insects in this way is conservation. I sincerely believe that all species, however small and seemingly insignificant, have a right to exist for their own sake.",
-              "explanationThai": "ข้อความในข้อว่า \"reference to how interest in drug research may benefit wildlife … … … … … … … … …\" ตรงกับรายการ i ในบทความ เพราะบทความระบุว่า \"my main motivation for looking at insects in this way is conservation. I sincerely believe that…\" จึงตอบ I",
-              "paraphrasedVocabulary": "interest drug research = motivation looking insects conservation = I"
+              "explanationThai": "เนื้อหาย่อหน้าที่เกี่ยวกับ \"my main motivation for looking at insects in this way is conservation. I sincerely believe…\" ตรงกับหัวข้อ i มากที่สุด จึงตอบ i",
+              "paraphrasedVocabulary": "reference interest drug research = main motivation looking insects = i"
             },
             {
               "number": 19,
@@ -1658,7 +1658,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "an example of an insect-derived medicine in use at the moment … … … … … … … … … Questions 21-22 Choose",
+              "prompt": "an example of an insect-derived medicine in use at the moment",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -1666,8 +1666,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "alloferon, an antimicrobial compound produced by blow fly larvae, is used as an antiviral and antitumor agent in South Korea and Russia.",
-              "explanationThai": "คำถาม: \"an example of an insect-derived medicine in use at the moment … … … … … … … … … Questions 21-22 Choose\" หลักฐานในบทความคือ \"For example, alloferon, an antimicrobial compound produced by blow fly larvae, is used as an an…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "example insect-derived medicine = example alloferon antimicrobial compound = E"
+              "explanationThai": "คำถาม: \"an example of an insect-derived medicine in use at the moment\" หลักฐานในบทความคือ \"alloferon, an antimicrobial compound produced by blow fly larvae, is used as an antiviral …\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "example insect-derived medicine use = alloferon antimicrobial compound produced = E"
             },
             {
               "number": 21,
@@ -1699,7 +1699,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "IN 23 ose When Undertaking bioprospecting with insects. They are",
+              "prompt": "IN 23 ose When Undertaking bioprospecting with insects. They are.",
               "correctAnswer": "ecology",
               "acceptedAnswers": [
                 "ecology"
@@ -1707,12 +1707,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "we use our knowledge of ecology as a guide to target our efforts.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… when undertaking bioprospecting with insects. They are especially interested in the compounds that insects produce to overpower …\" บทความมีถ้อยคำที่ตรงกันคือ \"My colleagues and I at Aberystwyth University in the UK have developed an approach in which we …\" จึงคำตอบคือ \"ecology\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "undertaking bioprospecting insects = colleagues aberystwyth university developed = ecology"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"IN 23 ose When Undertaking bioprospecting with insects. They are\" บทความมีถ้อยคำที่ตรงกันคือ \"we use our knowledge of ecology as a guide to target our efforts.\" จึงคำตอบคือ \"ecology\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "ose undertaking bioprospecting insects = use knowledge ecology guide = ecology"
             },
             {
               "number": 24,
-              "prompt": "preserve thei 24 o.com » Hey are also interested in compounds which",
+              "prompt": "preserve thei 24 o.com » Hey are also interested in compounds which.",
               "correctAnswer": "prey",
               "acceptedAnswers": [
                 "prey"
@@ -1720,8 +1720,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "the many insects that secrete powerful poison for subduing prey and keeping it fresh for future consumption.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . They are also interested in compounds which insects use to protect themselves from pathogenic bacteria and fungi found in thei…\" บทความมีถ้อยคำที่ตรงกันคือ \"The creatures that particularly interest us are the many insects that secrete powerful poison f…\" จึงคำตอบคือ \"prey\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "fungi found = creatures particularly interest insects = prey"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"preserve thei 24 o.com » Hey are also interested in compounds which\" บทความมีถ้อยคำที่ตรงกันคือ \"the many insects that secrete powerful poison for subduing prey and keeping it fresh for f…\" จึงคำตอบคือ \"prey\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "preserve thei com hey = many insects secrete powerful = prey"
             },
             {
               "number": 25,
@@ -1733,8 +1733,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "masters of exploiting filthy habitats, such as faeces and carcasses, where they are regularly challenged by thousands of micro-organisms.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . Piper hopes that these substances will be useful in the development of drugs such as\" บทความมีถ้อยคำที่ตรงกันคือ \"There are even more insects that are masters of exploiting filthy habitats, such as faeces and …\" จึงคำตอบคือ \"habitats\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "piper hopes substances = insects masters exploiting filthy = habitats"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"They are also interested in compounds which insects use to protect themselves from pathogenic bacteria and fungi found in their ________.\" บทความมีถ้อยคำที่ตรงกันคือ \"masters of exploiting filthy habitats, such as faeces and carcasses, where they are regula…\" จึงคำตอบคือ \"habitats\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "also interested compounds insects = masters exploiting filthy habitats = habitats"
             },
             {
               "number": 26,
@@ -1746,8 +1746,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "there is certainly potential to find many compounds that can serve as or inspire new antibiotics.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Questions 27-31 Look at the following statements and the list of researchers below. Match each statement with the correct resear…\" บทความมีถ้อยคำที่ตรงกันคือ \"there is certainly potential to find many compounds that can serve as or inspire new antibiotic…\" จึงคำตอบคือ \"antibiotics\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "questions 27-31 researchers = certainly potential compounds inspire = antibiotics"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Questions 23-26 Complete the summary below.\" บทความมีถ้อยคำที่ตรงกันคือ \"there is certainly potential to find many compounds that can serve as or inspire new antib…\" จึงคำตอบคือ \"antibiotics\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "questions 23-26 complete summary = certainly potential find many = antibiotics"
             }
           ]
         }
@@ -1820,8 +1820,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "The adult’s role in play varies as a function of their educational goals and the child’s developmental level (Hirsch-Pasek et al. 2009)",
-              "explanationThai": "คำถาม: \"Adults' intended goals affect how they play with children. … … … … … … …\" หลักฐานในบทความคือ \"The adult’s role in play varies as a function of their educational goals and the child’s develo…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
-              "paraphrasedVocabulary": "adults' intended goals = varies function educational developmental = G"
+              "explanationThai": "คำถาม: \"Adults' intended goals affect how they play with children.\" หลักฐานในบทความคือ \"The adult’s role in play varies as a function of their educational goals and the child’s d…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "adults' intended goals affect = adult’s role play varies = G"
             },
             {
               "number": 29,
@@ -1833,8 +1833,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Researcher Joan Goodman (1994) suggested that hybrid forms of work and play are not a detriment to learning; rather, they can provide optimal contexts for learning.",
-              "explanationThai": "คำถาม: \"Combining work with play may be the best way for children to learn. … … … … … … …\" หลักฐานในบทความคือ \"Researcher Joan Goodman (1994) suggested that hybrid forms of work and play are not a detriment…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "combining children learn = researcher goodman suggested hybrid = F"
+              "explanationThai": "คำถาม: \"Combining work with play may be the best way for children to learn.\" หลักฐานในบทความคือ \"Researcher Joan Goodman (1994) suggested that hybrid forms of work and play are not a detr…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "combining work play best = researcher joan goodman 1994 = F"
             },
             {
               "number": 30,
@@ -1846,8 +1846,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Rubin and colleagues did not assign greater weight to any one dimension in determining playfulness; however, other researchers have suggested that process orientation and a lack of obvious functional purpose may be the most important aspects of play (e.g. Pellegrini 2009)",
-              "explanationThai": "คำถาม: \"Certain elements of play are more significant than others. … … … … … … …\" หลักฐานในบทความคือ \"Rubin and colleagues did not assign greater weight to any one dimension in determining playfuln…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "others = colleagues assign greater weight = E"
+              "explanationThai": "คำถาม: \"Certain elements of play are more significant than others.\" หลักฐานในบทความคือ \"Rubin and colleagues did not assign greater weight to any one dimension in determining pla…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "certain elements play significant = rubin colleagues assign greater = E"
             },
             {
               "number": 31,
@@ -1929,7 +1929,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 37,
-              "prompt": "for instance by 37.0 … te child to investigate different aspects of their",
+              "prompt": "In the simplest form of guided play, an adult contributes to the environment in which the child is playing. Alternatively, an adult can play with a child and develop the play, for instance by … … the child to investigate different aspects of their game. Adults can help children to learn through play, and may make the activity rather structured, but it should still be based on the child's.",
               "correctAnswer": "encouraging",
               "acceptedAnswers": [
                 "encouraging"
@@ -1937,12 +1937,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "text",
               "exactPortion": "encouraging further exploration or new facets to the child's activity",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… the child to investigate different aspects of their game. Adults can help children to learn through play, and may make the activ…\" บทความมีถ้อยคำที่ตรงกันคือ \"encouraging further exploration or new facets to the child’s activity\" จึงคำตอบคือ \"encouraging\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "help children learn = further exploration facets activity = encouraging"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"In the simplest form of guided play, an adult contributes to the environment in which the child is playing. Alternatively, an adult can play with a child and develop the play, for instance by … … the child to investigate different aspects of their game. Adults can help children to learn through play, and may make the activity rather structured, but it should still be based on the child's.\" บทความมีถ้อยคำที่ตรงกันคือ \"encouraging further exploration or new facets to the child's activity\" จึงคำตอบคือ \"encouraging\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "simplest form guided play = encouraging further exploration new = encouraging"
             },
             {
               "number": 38,
-              "prompt": "Adults can help children to learn through play, and may make the activity rather structured, but it should still be based on the child’s …",
+              "prompt": "Adults can help children to learn through play, and may make the activity rather structured, but it should still be based on the child’s.",
               "correctAnswer": "desire",
               "acceptedAnswers": [
                 "desire"
@@ -1950,8 +1950,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "text",
               "exactPortion": "Play should stem from the child’s own desire",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"…based on the child’s …\" บทความมีถ้อยคำที่ตรงกันคือ \"Play should stem from the child’s own desire\" จึงคำตอบคือ \"desire\"",
-              "paraphrasedVocabulary": "without intervention adults = should = desire"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Adults can help children to learn through play, and may make the activity rather structured, but it should still be based on the child’s …\" บทความมีถ้อยคำที่ตรงกันคือ \"Play should stem from the child’s own desire\" จึงคำตอบคือ \"desire\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "adults help children learn = play stem child’s own = desire"
             },
             {
               "number": 39,
@@ -1963,8 +1963,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "text",
               "exactPortion": "Intrinsically motivated free play provides the child with true autonomy",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… ; with adults, play can be\" บทความมีถ้อยคำที่ตรงกันคือ \"Intrinsically motivated free play provides the child with true autonomy\" จึงคำตอบคือ \"autonomy\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "… ; with adults, play can be = Intrinsically motivated free play provides the child with tr… = autonomy"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Play without the intervention of adults gives children real 39 wu.\" บทความมีถ้อยคำที่ตรงกันคือ \"Intrinsically motivated free play provides the child with true autonomy\" จึงคำตอบคือ \"autonomy\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "play without intervention adults = intrinsically motivated free play = autonomy"
             },
             {
               "number": 40,
@@ -1976,8 +1976,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 3 Passage 3",
               "answerType": "text",
               "exactPortion": "while guided play is an avenue through which parents and educators can provide more targeted learning experiences. In either case, play should be actively engaged, it should be predominantly child-directed, and it must be fun.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… at particular goals. However, all forms of play should be an opportunity for children to have fun.\" บทความมีถ้อยคำที่ตรงกันคือ \"while guided play is an avenue through which parents and educators can provide more targeted le…\" จึงคำตอบคือ \"targeted\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "opportunity children = guided avenue parents educators = targeted"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Questions 37-40 Complete the summary below.\" บทความมีถ้อยคำที่ตรงกันคือ \"while guided play is an avenue through which parents and educators can provide more target…\" จึงคำตอบคือ \"targeted\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "questions 37-40 complete summary = while guided play avenue = targeted"
             }
           ]
         }
@@ -2022,7 +2022,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "… different age groups of ants, analyzing",
+              "prompt": "Write your answer in boxes … … different age groups of ants, analyzing .",
               "correctAnswer": "four",
               "acceptedAnswers": [
                 "four",
@@ -2031,12 +2031,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "Giraldo focused on ants at four age ranges",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… different age groups of ants, analyzing\" บทความมีถ้อยคำที่ตรงกันคือ \"Giraldo focused on ants at four age ranges\" จึงคำตอบคือ \"four\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "different groups analyzing = giraldo focused ranges = four"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Write your answer in boxes … … different age groups of ants, analyzing .\" บทความมีถ้อยคำที่ตรงกันคือ \"Giraldo focused on ants at four age ranges\" จึงคำตอบคือ \"four\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "write answer boxes different = giraldo focused ants four = four"
             },
             {
               "number": 2,
-              "prompt": "how well ants looked after their … …",
+              "prompt": "how well ants looked after their.",
               "correctAnswer": "young",
               "acceptedAnswers": [
                 "young"
@@ -2049,7 +2049,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "their ability to locate … … using a scent trail",
+              "prompt": "their ability to locate … … using a scent trail.",
               "correctAnswer": "food",
               "acceptedAnswers": [
                 "food"
@@ -2062,7 +2062,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "the effect that … … had on them.",
+              "prompt": "Focused On a total OF … … different age groups of ants, analysing.",
               "correctAnswer": "light",
               "acceptedAnswers": [
                 "light"
@@ -2070,8 +2070,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "She tested how ants responded to light",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"the effect that … … had on them.\" บทความมีถ้อยคำที่ตรงกันคือ \"She tested how ants responded to light\" จึงคำตอบคือ \"light\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "effect = tested responded = light"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Focused On a total OF … … different age groups of ants, analysing.\" บทความมีถ้อยคำที่ตรงกันคือ \"She tested how ants responded to light\" จึงคำตอบคือ \"light\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "focused total different age = tested ants responded light = light"
             },
             {
               "number": 5,
@@ -2101,7 +2101,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "condition of synaptic complexes (areas in which … … meet) in the brain’s ‘mushroom bodies’",
+              "prompt": "* condition of synaptic complexes (areas iN WHICH … … meet) in the brain’s ‘mushroom bodies’ the brain's ‘mushroom bodies’.",
               "correctAnswer": "neurons",
               "acceptedAnswers": [
                 "neurons"
@@ -2109,8 +2109,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "She also wanted to see if aging affects the density of synaptic complexes within these structures – regions where neurons come together",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"condition of synaptic complexes (areas in which … … meet) in the brain’s ‘mushroom bodies’\" บทความมีถ้อยคำที่ตรงกันคือ \"She also wanted to see if aging affects the density of synaptic complexes within these structur…\" จึงคำตอบคือ \"neurons\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "condition synaptic complexes = wanted affects density synaptic = neurons"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"* condition of synaptic complexes (areas iN WHICH … … meet) in the brain’s ‘mushroom bodies’ the brain's ‘mushroom bodies’.\" บทความมีถ้อยคำที่ตรงกันคือ \"She also wanted to see if aging affects the density of synaptic complexes within these str…\" จึงคำตอบคือ \"neurons\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "condition synaptic complexes areas = also wanted see aging = neurons"
             },
             {
               "number": 8,
@@ -2216,7 +2216,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             "D. In addition to this, there is also the education that can take place in zoos through signs, talks and presentations which directly communicate information to visitors about the animals they are seeing and their place in the world. This was an area where zoos used to be lacking, but they are now increasingly sophisticated in their communication and outreach work. Many zoos also work directly to educate conservation workers in other countries, or send their animal keepers abroad to contribute their knowledge and skills to those working in zoos and reserves, thereby helping to improve conditions and reintroductions all over the world. If we are to save wild species and restore and repair ecosystems we need to know about how key species live, act and react. Being able to undertake research on animals in zoos where there is less risk and fewer variables means real changes can be effected on wild populations. Finding out about, for example, the oestrus cycle of an animal of its breeding rate helps us manage wild populations. Procedures such as capturing and moving at-risk or dangerous individuals are bolstered by knowledge gained in zoos about doses for anaesthetics, and by experience in handling and transporting animals. This can make a real difference to conservation efforts and to the reduction of human-animal conflicts, and can provide a knowledge base for helping with the increasing threats of habitat destruction and other problems.",
             "F. In conclusion, considering the many ongoing global threats to the environment, it is hard for me to see zoos as anything other than essential to the long-term survival of numerous species. They are vital not just in terms of protecting animals, but as a means of learning about them to aid those still in the wild, as well as educating and informing the general population about these animals and their world so that they can assist or at least accept the need to be more environmentally conscious. Without them, the world would be, and would increasingly become, a much poorer place."
           ],
-          "questionSectionText": "Questions 25-26\nQuestions 23-24\nQuestions 14-17\nReading Passage 2 has six paragraphs, A-F.\nWhich paragraph contains the following information?\nWrite the correct letter, A-F, in boxes 14-17 on your answer sheet.\n14 areference to how quickly animal species can die out\n15 reasons why it is preferable to study animals in captivity rather than in the wild\n16 mention of two ways of learning about animals other than visiting them in zoos\n17 reasons why animals in zoos may be healthier than those in the wild\nQuestions 18-22\nDo the following statements agree with the information given in Reading Passage 2?\nIn boxes 18-22 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this\n18 An animal is likely to live longer in a zoo than in the wild.\n19 There are some species in zoos which can no longer be found in the wild.\n… … in the quality of TV wildlife … … have resulted in increased numbers of zoo visitors …\nnumbers of zoo visitors.\n21 Zoos have always excelled at transmitting information about animals to the public.\n22 Studying animals in zoos is less stressful for the animals than studying them in\nthe wild.\n88 : BOIDUJDOANDIKVINANGICHINHpXAC fore of a\n5 BO|DE THI THAT\n\nEd\n= .\n\na _ ___________________#£€@__£  __£ _-_-_ HH __-_HHHHHHHHHHHHHHHHsHs_kHHkskHoHHkHkHsékHséHH___d_-\nQuestions 23 and 24\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 23 and 24 on your answer sheet.\nWhich TWO of the following are stated about zoo staff in the text’?\nA Some take part in television documentaries about animals.\nB Some travel to overseas locations to join teams in zoos.\nC Some get experience with species in the wild before taking up zoo jobs.\nD Some teach people who are involved with conservation projects.\nE Some specialise in caring for species which are under threat.\nQuestions 25 and 26\nChoose TWO letters, A-E\nWrite the correct letters in boxes 25 and 26 on your answer sheet.\nWhich TWO of these beliefs about zoos does the writer mention in the text?\nA They can help children overcome their fears of wild animals.\nB They can increase public awareness of environmental issues.\nC They can provide employment for a range of professional people.\nD They can generate. income to support wildlife conservation projects.\nE They can raise animals which can later be released into the wild.",
+          "questionSectionText": "Questions 14-17\nReading Passage 2 has six paragraphs, A-F.\nWhich paragraph contains the following information?\nWrite the correct letter, A-F, in boxes 14-17 on your answer sheet.\n14 areference to how quickly animal species can die out\n15 reasons why it is preferable to study animals in captivity rather than in the wild\n16 mention of two ways of learning about animals other than visiting them in zoos\n17 reasons why animals in zoos may be healthier than those in the wild\nQuestions 18-22\nDo the following statements agree with the information given in Reading Passage 2?\nIn boxes 18-22 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this\n18 An animal is likely to live longer in a zoo than in the wild.\n19 There are some species in zoos which can no longer be found in the wild.\n… … in the quality of TV wildlife … … have resulted in increased numbers of zoo visitors …\nnumbers of zoo visitors.\n21 Zoos have always excelled at transmitting information about animals to the public.\n22 Studying animals in zoos is less stressful for the animals than studying them in\nthe wild.\n88 : BOIDUJDOANDIKVINANGICHINHpXAC fore of a\n5 BO|DE THI THAT\n\nEd\n= .\n\na _ ___________________#£€@__£  __£ _-_-_ HH __-_HHHHHHHHHHHHHHHHsHs_kHHkskHoHHkHkHsékHséHH___d_-\nQuestions 23 and 24\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 23 and 24 on your answer sheet.\nWhich TWO of the following are stated about zoo staff in the text’?\nA Some take part in television documentaries about animals.\nB Some travel to overseas locations to join teams in zoos.\nC Some get experience with species in the wild before taking up zoo jobs.\nD Some teach people who are involved with conservation projects.\nE Some specialise in caring for species which are under threat.\nQuestions 25 and 26\nChoose TWO letters, A-E\nWrite the correct letters in boxes 25 and 26 on your answer sheet.\nWhich TWO of these beliefs about zoos does the writer mention in the text?\nA They can help children overcome their fears of wild animals.\nB They can increase public awareness of environmental issues.\nC They can provide employment for a range of professional people.\nD They can generate. income to support wildlife conservation projects.\nE They can raise animals which can later be released into the wild.",
           "questionRanges": [
             {
               "start": 14,
@@ -2238,7 +2238,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "a reference to how quickly animal species can die out … … … … … …",
+              "prompt": "a reference to how quickly animal species can die out",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -2246,12 +2246,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Colossal numbers of species are becoming extinct across the world, and many more are increasingly threatened and therefore risk extinction. Moreover, some of these collapses have been sudden, dramatic and unexpected",
-              "explanationThai": "คำถาม: \"a reference to how quickly animal species can die out … … … … … …\" หลักฐานในบทความคือ \"Colossal numbers of species are becoming extinct across the world, and many more are increasing…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "quickly animal species = colossal numbers species becoming = B"
+              "explanationThai": "คำถาม: \"a reference to how quickly animal species can die out\" หลักฐานในบทความคือ \"Colossal numbers of species are becoming extinct across the world, and many more are incre…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "reference quickly animal species = colossal numbers species becoming = B"
             },
             {
               "number": 15,
-              "prompt": "reasons why it is preferable to study animals in captivity rather than in the wild … … … … … …",
+              "prompt": "reasons why it is preferable to study animals in captivity rather than in the wild",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -2259,12 +2259,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Being able to undertake research on animals in zoos where there is less risk and fewer variables means real changes can be effected on wild populations",
-              "explanationThai": "คำถาม: \"reasons why it is preferable to study animals in captivity rather than in the wild … … … … … …\" หลักฐานในบทความคือ \"Being able to undertake research on animals in zoos where there is less risk and fewer variable…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "wild = undertake research animals variables = E"
+              "explanationThai": "คำถาม: \"reasons why it is preferable to study animals in captivity rather than in the wild\" หลักฐานในบทความคือ \"Being able to undertake research on animals in zoos where there is less risk and fewer var…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "reasons preferable study animals = being able undertake research = E"
             },
             {
               "number": 16,
-              "prompt": "mention of two ways of learning about animals other than visiting them in zoos … … … … … …",
+              "prompt": "mention of two ways of learning about animals other than visiting them in zoos",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -2272,12 +2272,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "television documentaries are becoming ever more detailed and impressive, and many natural history specimens are on display in museums",
-              "explanationThai": "คำถาม: \"mention of two ways of learning about animals other than visiting them in zoos … … … … … …\" หลักฐานในบทความคือ \"television documentaries are becoming ever more detailed and impressive, and many natural histo…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "visiting zoos = television documentaries becoming detailed = C"
+              "explanationThai": "คำถาม: \"mention of two ways of learning about animals other than visiting them in zoos\" หลักฐานในบทความคือ \"television documentaries are becoming ever more detailed and impressive, and many natural …\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "mention two ways learning = television documentaries becoming ever = C"
             },
             {
               "number": 17,
-              "prompt": "reasons why animals in zoos may by healthier than those in the wild … … … … … … Questions 18-22 Do the following statements agree with the information given in the Reading Passage? In boxes on you answer sheet, write",
+              "prompt": "reasons why animals in zoos may be healthier than those in the wild",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -2285,8 +2285,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Animals in good zoos get a varied and high-quality diet with all the supplements required, and any illnesses they might have will be treated.",
-              "explanationThai": "คำถาม: \"reasons why animals in zoos may by healthier than those in the wild … … … … … … Questions 18-22 Do the following statements agree …\" หลักฐานในบทความคือ \"it is perfectly possible for many species of animals living in zoos or wildlife parks to have a…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "wild questions 18-22 = perfectly possible species animals = A"
+              "explanationThai": "คำถาม: \"reasons why animals in zoos may be healthier than those in the wild\" หลักฐานในบทความคือ \"Animals in good zoos get a varied and high-quality diet with all the supplements required,…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "reasons animals zoos healthier = animals good zoos get = A"
             },
             {
               "number": 18,
@@ -2303,7 +2303,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "There are some species in zoos which can no longer be found in the wild.\n… … in the quality of TV wildlife … … have resulted in increased numbers of zoo visitors …\nnumbers of zoo visitors.",
+              "prompt": "There are some species in zoos which can no longer be found in the wild.",
               "correctAnswer": "TRUE",
               "acceptedAnswers": [
                 "TRUE"
@@ -2421,7 +2421,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
     "id": "cambridge-14-test4-passage3",
     "title": "Cambridge 14 Test 4 Passage 3 - How Bad Is Ocean Garbage, Really?",
     "category": "advanced",
-    "rawPassageText": "READING PASSAGE 3\nHow Bad Is Ocean Garbage, Really? Chelsea Rochman,\n\nChelsea Rochman, an ecologist at the University of California, Davis, has been trying to answer a dismal question: Is everything terrible, or are things just very, very bad?\n\nRochman is a member of the National Center for Ecological Analysis and Synthesis's marine-debris working group, a collection of scientists who study, among other things, the growing problem of marine debris, also known as ocean trash.\n\nPlenty of studies have sounded alarm bells about the state of marine debris; in a recent paper published in the journal Ecology, Rochman and her colleagues set out to determine how many of those perceived risks are real.\n\nOften, Rochman says, scientists will end a paper by speculating about the broader impacts of what they've found.\n\nFor example, a study could show that certain seabirds eat plastic bags, and go on to warn that whole bird populations are at risk of dying out.\n\n'But the truth was that nobody had yet tested those perceived threats,' Rochman says.\n\nRochman and her colleagues examined more than a hundred papers on the impacts of marine debris that were published through 2013.\n\nWithin each paper, they asked what threats scientists had studied – 366 perceived threats in all – and what they'd actually found.\n\nIn 83 percent of cases, the perceived dangers of ocean trash were proven true.\n\nIn the remaining cases, the working group found the studies had weaknesses in design and content which affected the validity of their conclusions – they lacked a control group, for example, or used faulty statistics.\n\nStrikingly, Rochman says, only one well-designed study failed to find the effect it was looking for, an investigation of mussels ingesting microscopic bits.\n\nThe plastic moved from the mussels' stomachs to their bloodstreams, scientists found, and stayed there for weeks – but didn't seem to stress out the shellfish.\n\nWhile mussels may be fine eating trash, though, the analysis also gave a clearer picture of the many ways that ocean debris is bothersome.\n\nWithin the studies they looked at, most of the proven threats came from plastic debris, rather than other materials like metal or wood.\n\nMost of the dangers also involved large pieces of debris – animals getting entangled in trash, for example, or eating it and severely injuring themselves.\n\nBut a lot of ocean debris is 'microplastic', or pieces smaller than five millimeters.\n\nThese may be ingredients used in cosmetics and toiletries, fibers shed by synthetic clothing in the wash, or eroded remnants of larger debris.\n\nCompared to the number of studies investigating large-scale debris, Rochman's group found little research on the effects of these tiny bits.\n\n'There are a lot of open questions still for microplastic,' Rochman says, though she notes that more papers on the subject have been published since 2013, the cutoff point for the group's analysis.\n\nThere are also, she adds, a lot of open questions about the ways that ocean debris can lead to sea-creature death.\n\nMany studies have looked at how plastic affects an individual animal, or that animal's tissues or cells, rather than whole populations.\n\nAnd in the lab, scientists often use higher concentrations of plastic than what's really in the ocean.\n\nNone of that tells us how many birds or fish or sea turtles could die from plastic pollution – or how deaths in one species could affect that animal's predators, or the rest of the ecosystem.\n\n'We need to be asking more ecologically relevant questions,' Rochman says.\n\nUsually, scientists don't know exactly how disasters such as a tanker accidentally spilling its whole cargo of oil and polluting huge areas of the ocean will affect the environment until after they've happened.\n\n'We don't ask the right questions early enough,' she says.\n\nBut if ecologists can understand how the slow-moving effect of ocean trash is damaging ecosystems, they might be able to prevent things from getting worse.\n\nAsking the right questions can help policy makers, and the public, figure out where to focus their attention.\n\nThe problems that look or sound most dramatic may not be the best places to start.\n\nFor example, the name of the 'Great Pacific Garbage Patch' – a collection of marine debris in the northern Pacific Ocean – might conjure up a vast, floating trash island.\n\nIn reality though, much of the debris is tiny or below the surface; a person could sail through the area without seeing any trash at all.\n\nA Dutch group called 'The Ocean Cleanup' is currently working on plans to put mechanical devices in the Pacific Garbage Patch and similar areas to suck up plastic.\n\nBut a recent paper used simulations to show that strategically positioning the cleanup devices closer to shore would more effectively reduce pollution over the long term.\n\n'I think clearing up some of these misperceptions is really important,' Rochman says.\n\nAmong scientists as well as in the media, she says, 'A lot of the images about strandings and entanglement and all of that cause the perception that plastic debris is killing everything in the ocean.'\n\nInterrogating the existing scientific literature can help ecologists figure out which problems really need addressing, and which ones they'd be better off – like the mussels – absorbing and ignoring. <form id =\"\n\nQuestions 40-40\nQuestions 27-33\nDo the following statements agree with the information given in Reading Passage 3?\nIn boxes 27-33 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN _if there is no information on this\n27 Rochman and her colleagues were the first people to research the problem of\nmarine debris.\n28 The creatures most in danger from ocean trash are certain seabirds.\n29 The studies Rochman has reviewed have already proved that populations of some\nbirds will soon become extinct.\n30 Rochman analysed papers on the different kinds of danger caused by ocean trash.\n31 Most of the research analysed by Rochman and her colleagues was badly\ndesigned.\n32 One study examined by Rochman was expecting to find that mussels were harmed\nby eating plastic.\n33 Some mussels choose to eat plastic in preference to their natural diet.\n92 : ie \\ WREGIDUZDOANIZTKVANANGICHINEDXAC ra at ot i\n= BO DEMHITHAT\n\n£\n\nFn _ mm l_______________£ __é HH _ HH ___HHHHHHHHHHHHsHHHHHHHHH-H se\nQuestions 34-39\nComplete the notes below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 34-39 on your answer sheet.\nFindings related to marine debris\nStudies of marine debris found the biggest threats were\ne - plastic (not metal or wood)\ne bits of debris that were 34 …c.direnninnn. (Harmful to animals)\nThere was little research Into BB occ @.Q. from synthetic fibres.\nDrawbacks of the studies examined\ne most of them focused on individual animals, NOt ENTE BB onesie\n© tHE 87 ccacsncsumnmnmmnean OF Plastic used in the lab did not always reflect those\nin the ocean\ne there was insufficient information on\n-numbers of animals which could be affected\n-the impact of a reduction in numbers on the 38 …ccsmscsisccmsmenen OF that\n, species\n-the impact on the ecosystem\nRochman says more information isneeded on the possible impact of future\nBY oocccossetmsntunnnen (8.9. Involving oil).\nQuestion 40\nChoose the correct /etter, A, B, C or D.\nWrite the correct letter in box 40 on your answer sheet.\n40 What would be the best title for this passage?\nA Assessing the threat of marine debris\nB Marine debris: who is to blame?\nC Anew solution to the problem of marine debris\nD Marine debris: the need for international action\nBED.",
+    "rawPassageText": "READING PASSAGE 3\nHow Bad Is Ocean Garbage, Really? Chelsea Rochman,\n\nChelsea Rochman, an ecologist at the University of California, Davis, has been trying to answer a dismal question: Is everything terrible, or are things just very, very bad?\n\nRochman is a member of the National Center for Ecological Analysis and Synthesis's marine-debris working group, a collection of scientists who study, among other things, the growing problem of marine debris, also known as ocean trash.\n\nPlenty of studies have sounded alarm bells about the state of marine debris; in a recent paper published in the journal Ecology, Rochman and her colleagues set out to determine how many of those perceived risks are real.\n\nOften, Rochman says, scientists will end a paper by speculating about the broader impacts of what they've found.\n\nFor example, a study could show that certain seabirds eat plastic bags, and go on to warn that whole bird populations are at risk of dying out.\n\n'But the truth was that nobody had yet tested those perceived threats,' Rochman says.\n\nRochman and her colleagues examined more than a hundred papers on the impacts of marine debris that were published through 2013.\n\nWithin each paper, they asked what threats scientists had studied – 366 perceived threats in all – and what they'd actually found.\n\nIn 83 percent of cases, the perceived dangers of ocean trash were proven true.\n\nIn the remaining cases, the working group found the studies had weaknesses in design and content which affected the validity of their conclusions – they lacked a control group, for example, or used faulty statistics.\n\nStrikingly, Rochman says, only one well-designed study failed to find the effect it was looking for, an investigation of mussels ingesting microscopic bits.\n\nThe plastic moved from the mussels' stomachs to their bloodstreams, scientists found, and stayed there for weeks – but didn't seem to stress out the shellfish.\n\nWhile mussels may be fine eating trash, though, the analysis also gave a clearer picture of the many ways that ocean debris is bothersome.\n\nWithin the studies they looked at, most of the proven threats came from plastic debris, rather than other materials like metal or wood.\n\nMost of the dangers also involved large pieces of debris – animals getting entangled in trash, for example, or eating it and severely injuring themselves.\n\nBut a lot of ocean debris is 'microplastic', or pieces smaller than five millimeters.\n\nThese may be ingredients used in cosmetics and toiletries, fibers shed by synthetic clothing in the wash, or eroded remnants of larger debris.\n\nCompared to the number of studies investigating large-scale debris, Rochman's group found little research on the effects of these tiny bits.\n\n'There are a lot of open questions still for microplastic,' Rochman says, though she notes that more papers on the subject have been published since 2013, the cutoff point for the group's analysis.\n\nThere are also, she adds, a lot of open questions about the ways that ocean debris can lead to sea-creature death.\n\nMany studies have looked at how plastic affects an individual animal, or that animal's tissues or cells, rather than whole populations.\n\nAnd in the lab, scientists often use higher concentrations of plastic than what's really in the ocean.\n\nNone of that tells us how many birds or fish or sea turtles could die from plastic pollution – or how deaths in one species could affect that animal's predators, or the rest of the ecosystem.\n\n'We need to be asking more ecologically relevant questions,' Rochman says.\n\nUsually, scientists don't know exactly how disasters such as a tanker accidentally spilling its whole cargo of oil and polluting huge areas of the ocean will affect the environment until after they've happened.\n\n'We don't ask the right questions early enough,' she says.\n\nBut if ecologists can understand how the slow-moving effect of ocean trash is damaging ecosystems, they might be able to prevent things from getting worse.\n\nAsking the right questions can help policy makers, and the public, figure out where to focus their attention.\n\nThe problems that look or sound most dramatic may not be the best places to start.\n\nFor example, the name of the 'Great Pacific Garbage Patch' – a collection of marine debris in the northern Pacific Ocean – might conjure up a vast, floating trash island.\n\nIn reality though, much of the debris is tiny or below the surface; a person could sail through the area without seeing any trash at all.\n\nA Dutch group called 'The Ocean Cleanup' is currently working on plans to put mechanical devices in the Pacific Garbage Patch and similar areas to suck up plastic.\n\nBut a recent paper used simulations to show that strategically positioning the cleanup devices closer to shore would more effectively reduce pollution over the long term.\n\n'I think clearing up some of these misperceptions is really important,' Rochman says.\n\nAmong scientists as well as in the media, she says, 'A lot of the images about strandings and entanglement and all of that cause the perception that plastic debris is killing everything in the ocean.'\n\nInterrogating the existing scientific literature can help ecologists figure out which problems really need addressing, and which ones they'd be better off – like the mussels – absorbing and ignoring. <form id =\"\n\nQuestions 40-40\nQuestions 27-33\nDo the following statements agree with the information given in Reading Passage 3?\nIn boxes 27-33 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN _if there is no information on this\n27 Rochman and her colleagues were the first people to research the problem of\nmarine debris.\n28 The creatures most in danger from ocean trash are certain seabirds.\n29 The studies Rochman has reviewed have already proved that populations of some\nbirds will soon become extinct.\n30 Rochman analysed papers on the different kinds of danger caused by ocean trash.\n31 Most of the research analysed by Rochman and her colleagues was badly\ndesigned.\n32 One study examined by Rochman was expecting to find that mussels were harmed\nby eating plastic.\n33 Some mussels choose to eat plastic in preference to their natural diet.\n92 : ie \\ WREGIDUZDOANIZTKVANANGICHINEDXAC ra at ot i\n= BO DEMHITHAT\n\n£\n\nFn _ mm l_______________£ __é HH _ HH ___HHHHHHHHHHHHsHHHHHHHHH-H se\nQuestions 34-39\nComplete the notes below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 34-39 on your answer sheet.\nFindings related to marine debris\nStudies of marine debris found the biggest threats were\ne - plastic (not metal or wood)\ne bits of debris that were 34 …c.direnninnn. (Harmful to animals)\nThere was little research Into BB occ @.Q. from synthetic fibres.\nDrawbacks of the studies examined\ne most of them focused on individual animals, NOt ENTE BB onesie\n© tHE 87 ccacsncsumnmnmmnean OF Plastic used in the lab did not always reflect those\nin the ocean\ne there was insufficient information on\n-numbers of animals which could be affected\n-the impact of a reduction in numbers on the 38 …ccsmscsisccmsmenen OF that\n, species\n-the impact on the ecosystem\nRochman says more information isneeded on the possible impact of future\nBY oocccossetmsntunnnen (8.9. Involving oil).\nQuestion 40\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in box 40 on your answer sheet.\n40 What would be the best title for this passage?\nA Assessing the threat of marine debris\nB Marine debris: who is to blame?\nC A new solution to the problem of marine debris\nD Marine debris: the need for international action",
     "rawAnswerKey": "READING PASSAGE 3: How Bad Is Ocean Garbage, Really?\n\nQuestion 27: Rochman and her colleagues were the first people to research the problem of marine debris.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"Plenty of studies have sounded alarm bells about the state of marine debris\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Rochman and her colleagues were the first people to research the problem of marine debris.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Plenty of studies have sounded alarm bells about the state of marine debris\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: colleagues research problem = plenty studies sounded marine = FALSE\n\nQuestion 28: The creatures most in danger from ocean trash are certain seabirds.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"certain seabirds eat plastic bags, and go on to warn that whole bird populations are at risk of dying out\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The creatures most in danger from ocean trash are certain seabirds.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"certain seabirds eat plastic bags, and go on to warn that whole bird populations are at risk of…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: trash certain seabirds = certain seabirds plastic populations = NOT GIVEN\n\nQuestion 29: The studies Rochman has reviewed have already proved that populations of some birds will soon become extinct.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"‘But the truth was that nobody had yet tested those perceived threats,’ Rochman says. ‘There wasn’t a lot of information.’\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The studies Rochman has reviewed have already proved that populations of some birds will soon become extinct.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"‘But the truth was that nobody had yet tested those perceived threats,’ Rochman says. ‘There wa…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: reviewed already proved = nobody tested perceived threats = FALSE\n\nQuestion 30: Rochman analysed papers on the different kinds of danger caused by ocean trash.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"Rochman and her colleagues examined more than a hundred papers on the impacts of marine debris\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Rochman analysed papers on the different kinds of danger caused by ocean trash.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Rochman and her colleagues examined more than a hundred papers on the impacts of marine debris\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: analysed papers different = rochman colleagues examined hundred = TRUE\n\nQuestion 31: Most of the research analysed by Rochman and her colleagues was badly designed.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"In 83 percent of cases, the perceived dangers of ocean trash were proven true. In the remaining cases, the working group found the studies had weaknesses in design\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Most of the research analysed by Rochman and her colleagues was badly designed.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"In 83 percent of cases, the perceived dangers of ocean trash were proven true. In the remaining…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: colleagues badly designed = percent perceived dangers proven = FALSE\n\nQuestion 32: One study examined by Rochman was expecting to find that mussels were harmed by eating plastic.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"only one well-designed study failed to find the effect it was looking for, an investigation of mussels ingesting microscopic bits. The plastic moved from the mussels’ stomachs to their bloodstreams, scientists found, and stayed there for weeks – but didn’t seem to stress out the shellfish.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"One study examined by Rochman was expecting to find that mussels were harmed by eating plastic.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"only one well-designed study failed to find the effect it was looking for, an investigation of …\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: expecting find mussels = well-designed failed effect looking = TRUE\n\nQuestion 33: Some mussels choose to eat plastic in preference to their natural diet.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"mussels may be fine eating trash\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Some mussels choose to eat plastic in preference to their natural diet.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"mussels may be fine eating trash\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: natural diet = mussels eating = NOT GIVEN\n\nQuestion 34: bits of debris that were … (harmful to animals)\n\nCorrect Answer: large\n\nAccepted Answers: large\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"Most of the dangers also involved large pieces of debris\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"bits of debris that were … … (harmful to animals)\" บทความมีถ้อยคำที่ตรงกันคือ \"Most of the dangers also involved large pieces of debris\" จึงคำตอบคือ \"large\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: debris harmful animals = dangers involved pieces debris = large\n\nQuestion 35: There was little research into … … e.g. from synthetic fibres.\n\nCorrect Answer: microplastic\n\nAccepted Answers: microplastic\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"Rochman’s group found little research on the effects of these tiny bits. ‘There are a lot of open questions still for microplastic,’\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"There was little research into … … e.g. from synthetic fibres.\" บทความมีถ้อยคำที่ตรงกันคือ \"Rochman’s group found little research on the effects of these tiny bits. ‘There are a lot of op…\" จึงคำตอบคือ \"microplastic\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: synthetic fibres = rochman little research effects = microplastic\n\nQuestion 36: most of them focused on individual animals, not entire\n\nCorrect Answer: populations\n\nAccepted Answers: populations\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"Many studies have looked at how plastic affects an individual animal, or that animal’s tissues or cells, rather than whole populations.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"most of them focused on individual animals, not entire … …\" บทความมีถ้อยคำที่ตรงกันคือ \"Many studies have looked at how plastic affects an individual animal, or that animal’s tissues …\" จึงคำตอบคือ \"populations\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: focused individual animals = studies looked plastic affects = populations\n\nQuestion 37: the … of plastic used in the lab did not always reflect those in the ocean\n\nCorrect Answer: concentrations\n\nAccepted Answers: concentrations\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"in the lab, scientists often use higher concentrations of plastic than what’s really in the ocean\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"the … … of plastic used in the lab did not always reflect those in the ocean\" บทความมีถ้อยคำที่ตรงกันคือ \"in the lab, scientists often use higher concentrations of plastic than what’s really in the oce…\" จึงคำตอบคือ \"concentrations\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: plastic always reflect = scientists higher plastic really = concentrations\n\nQuestion 38: the impact of\n\nCorrect Answer: predators\n\nAccepted Answers: predators\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"how deaths in one species could affect that animal’s predators\"\n\nShort Thai Explanation: ในข้อ: \"the impact of\" หลักฐานในบทความคือ \"how deaths in one species could affect that animal’s predators\" จึงตอบ predators\n\nParaphrased Vocabulary: impact = deaths species affect animal = predators\n\nQuestion 39: … (e.g. involving oil).\n\nCorrect Answer: disasters\n\nAccepted Answers: disasters\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"‘We need to be asking more ecologically relevant questions,’ Rochman says. Usually, scientists don’t know exactly how disasters such as a tanker accidentally spilling its whole cargo of oil and polluting huge areas of the ocean will affect the environment until after they’ve happened.\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… (e.g. involving oil). Questions 40-40 Choose the correct letter,\" บทความมีถ้อยคำที่ตรงกันคือ \"‘We need to be asking more ecologically relevant questions,’ Rochman says. Usually, scientists …\" จึงคำตอบคือ \"disasters\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: involving questions 40-40 = asking ecologically relevant questions = disasters\n\nQuestion 40: What would be the best title for this passage?\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 14 Test 4 Passage 3\n\nExact Portion: \"‘I think clearing up some of these misperceptions is really important,’ Rochman says. Among scientists as well as in the media, she says, ‘A lot of the images about strandings and entanglement and all of that cause the perception that plastic debris is killing everything in the ocean.’\"\n\nShort Thai Explanation: คำถาม: \"What would be the best title for this passage?\" หลักฐานในบทความคือ \"‘I think clearing up some of these misperceptions is really important,’ Rochman says. Among sci…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: title = clearing misperceptions really important = A",
     "parsedPayload": {
       "title": "Cambridge 14 Test 4 Passage 3 - How Bad Is Ocean Garbage, Really?",
@@ -2431,10 +2431,21 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
           "number": 3,
           "title": "How Bad Is Ocean Garbage, Really?",
           "bodyParagraphs": [
-            "Chelsea Rochman, an ecologist at the University of California, Davis, has been trying to answer a dismal question: Is everything terrible, or are things just very, very bad? Rochman is a member of the National Center for Ecological Analysis and Synthesis's marine-debris working group, a collection of scientists who study, among other things, the growing problem of marine debris, also known as ocean trash. Plenty of studies have sounded alarm bells about the state of marine debris; in a recent paper published in the journal Ecology, Rochman and her colleagues set out to determine how many of those perceived risks are real. Often, Rochman says, scientists will end a paper by speculating about the broader impacts of what they've found. For example, a study could show that certain seabirds eat plastic bags, and go on to warn that whole bird populations are at risk of dying out. 'But the truth was that nobody had yet tested those perceived threats,' Rochman says. Rochman and her colleagues examined more than a hundred papers on the impacts of marine debris that were published through 2013. Within each paper, they asked what threats scientists had studied – 366 perceived threats in all – and what they'd actually found. In 83 percent of cases, the perceived dangers of ocean trash were proven true. In the remaining cases, the working group found the studies had weaknesses in design and content which affected the validity of their conclusions – they lacked a control group, for example, or used faulty statistics. Strikingly, Rochman says, only one well-designed study failed to find the effect it was looking for, an investigation of mussels ingesting microscopic bits. The plastic moved from the mussels' stomachs to their bloodstreams, scientists found, and stayed there for weeks – but didn't seem to stress out the shellfish. While mussels may be fine eating trash, though, the analysis also gave a clearer picture of the many ways that ocean debris is bothersome. Within the studies they looked at, most of the proven threats came from plastic debris, rather than other materials like metal or wood. Most of the dangers also involved large pieces of debris – animals getting entangled in trash, for example, or eating it and severely injuring themselves. But a lot of ocean debris is 'microplastic', or pieces smaller than five millimeters. These may be ingredients used in cosmetics and toiletries, fibers shed by synthetic clothing in the wash, or eroded remnants of larger debris. Compared to the number of studies investigating large-scale debris, Rochman's group found little research on the effects of these tiny bits. 'There are a lot of open questions still for microplastic,' Rochman says, though she notes that more papers on the subject have been published since 2013, the cutoff point for the group's analysis. There are also, she adds, a lot of open questions about the ways that ocean debris can lead to sea-creature death. Many studies have looked at how plastic affects an individual animal, or that animal's tissues or cells, rather than whole populations. And in the lab, scientists often use higher concentrations of plastic than what's really in the ocean. None of that tells us how many birds or fish or sea turtles could die from plastic pollution – or how deaths in one species could affect that animal's predators, or the rest of the ecosystem. 'We need to be asking more ecologically relevant questions,' Rochman says. Usually, scientists don't know exactly how disasters such as a tanker accidentally spilling its whole cargo of oil and polluting huge areas of the ocean will affect the environment until after they've happened. 'We don't ask the right questions early enough,' she says. But if ecologists can understand how the slow-moving effect of ocean trash is damaging ecosystems, they might be able to prevent things from getting worse. Asking the right questions can help policy makers, and the public, figure out where to focus their attention. The problems that look or sound most dramatic may not be the best places to start. For example, the name of the 'Great Pacific Garbage Patch' – a collection of marine debris in the northern Pacific Ocean – might conjure up a vast, floating trash island. In reality though, much of the debris is tiny or below the surface; a person could sail through the area without seeing any trash at all.",
-            "A. Dutch group called 'The Ocean Cleanup' is currently working on plans to put mechanical devices in the Pacific Garbage Patch and similar areas to suck up plastic. But a recent paper used simulations to show that strategically positioning the cleanup devices closer to shore would more effectively reduce pollution over the long term. 'I think clearing up some of these misperceptions is really important,' Rochman says. Among scientists as well as in the media, she says, 'A lot of the images about strandings and entanglement and all of that cause the perception that plastic debris is killing everything in the ocean.' Interrogating the existing scientific literature can help ecologists figure out which problems really need addressing, and which ones they'd be better off – like the mussels – absorbing and ignoring."
+            "Chelsea Rochman, an ecologist at the University of California, Davis, has been trying to answer a dismal question: Is everything terrible, or are things just very, very bad?",
+            "Rochman is a member of the National Center for Ecological Analysis and Synthesis's marine-debris working group, a collection of scientists who study, among other things, the growing problem of marine debris, also known as ocean trash. Plenty of studies have sounded alarm bells about the state of marine debris; in a recent paper published in the journal Ecology, Rochman and her colleagues set out to determine how many of those perceived risks are real.",
+            "Often, Rochman says, scientists will end a paper by speculating about the broader impacts of what they've found. For example, a study could show that certain seabirds eat plastic bags, and go on to warn that whole bird populations are at risk of dying out. 'But the truth was that nobody had yet tested those perceived threats,' Rochman says. 'There wasn't a lot of information.'",
+            "Rochman and her colleagues examined more than a hundred papers on the impacts of marine debris that were published through 2013. Within each paper, they asked what threats scientists had studied – 366 perceived threats in all – and what they'd actually found.",
+            "In 83 percent of cases, the perceived dangers of ocean trash were proven true. In the remaining cases, the working group found the studies had weaknesses in design and content which affected the validity of their conclusions – they lacked a control group, for example, or used faulty statistics.",
+            "Strikingly, Rochman says, only one well-designed study failed to find the effect it was looking for, an investigation of mussels ingesting microscopic bits. The plastic moved from the mussels' stomachs to their bloodstreams, scientists found, and stayed there for weeks – but didn't seem to stress out the shellfish.",
+            "While mussels may be fine eating trash, though, the analysis also gave a clearer picture of the many ways that ocean debris is bothersome.",
+            "Within the studies they looked at, most of the proven threats came from plastic debris, rather than other materials like metal or wood. Most of the dangers also involved large pieces of debris – animals getting entangled in trash, for example, or eating it and severely injuring themselves.",
+            "But a lot of ocean debris is 'microplastic', or pieces smaller than five millimeters. These may be ingredients used in cosmetics and toiletries, fibers shed by synthetic clothing in the wash, or eroded remnants of larger debris. Compared to the number of studies investigating large-scale debris, Rochman's group found little research on the effects of these tiny bits. 'There are a lot of open questions still for microplastic,' Rochman says, though she notes that more papers on the subject have been published since 2013, the cutoff point for the group's analysis.",
+            "There are also, she adds, a lot of open questions about the ways that ocean debris can lead to sea-creature death. Many studies have looked at how plastic affects an individual animal, or that animal's tissues or cells, rather than whole populations. And in the lab, scientists often use higher concentrations of plastic than what's really in the ocean. None of that tells us how many birds or fish or sea turtles could die from plastic pollution – or how deaths in one species could affect that animal's predators, or the rest of the ecosystem.",
+            "'We need to be asking more ecologically relevant questions,' Rochman says. Usually, scientists don't know exactly how disasters such as a tanker accidentally spilling its whole cargo of oil and polluting huge areas of the ocean will affect the environment until after they've happened. 'We don't ask the right questions early enough,' she says. But if ecologists can understand how the slow-moving effect of ocean trash is damaging ecosystems, they might be able to prevent things from getting worse.",
+            "Asking the right questions can help policy makers, and the public, figure out where to focus their attention. The problems that look or sound most dramatic may not be the best places to start. For example, the name of the 'Great Pacific Garbage Patch' – a collection of marine debris in the northern Pacific Ocean – might conjure up a vast, floating trash island. In reality though, much of the debris is tiny or below the surface; a person could sail through the area without seeing any trash at all. A Dutch group called 'The Ocean Cleanup' is currently working on plans to put mechanical devices in the Pacific Garbage Patch and similar areas to suck up plastic. But a recent paper used simulations to show that strategically positioning the cleanup devices closer to shore would more effectively reduce pollution over the long term.",
+            "'I think clearing up some of these misperceptions is really important,' Rochman says. Among scientists as well as in the media, she says, 'A lot of the images about strandings and entanglement and all of that cause the perception that plastic debris is killing everything in the ocean.' Interrogating the existing scientific literature can help ecologists figure out which problems really need addressing, and which ones they'd be better off – like the mussels – absorbing and ignoring."
           ],
-          "questionSectionText": "Questions 40-40\nQuestions 27-33\nDo the following statements agree with the information given in Reading Passage 3?\nIn boxes 27-33 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN _if there is no information on this\n27 Rochman and her colleagues were the first people to research the problem of\nmarine debris.\n28 The creatures most in danger from ocean trash are certain seabirds.\n29 The studies Rochman has reviewed have already proved that populations of some\nbirds will soon become extinct.\n30 Rochman analysed papers on the different kinds of danger caused by ocean trash.\n31 Most of the research analysed by Rochman and her colleagues was badly\ndesigned.\n32 One study examined by Rochman was expecting to find that mussels were harmed\nby eating plastic.\n33 Some mussels choose to eat plastic in preference to their natural diet.\n92 : ie \\ WREGIDUZDOANIZTKVANANGICHINEDXAC ra at ot i\n= BO DEMHITHAT\n\n£\n\nFn _ mm l_______________£ __é HH _ HH ___HHHHHHHHHHHHsHHHHHHHHH-H se\nQuestions 34-39\nComplete the notes below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 34-39 on your answer sheet.\nFindings related to marine debris\nStudies of marine debris found the biggest threats were\ne - plastic (not metal or wood)\ne bits of debris that were 34 …c.direnninnn. (Harmful to animals)\nThere was little research Into BB occ @.Q. from synthetic fibres.\nDrawbacks of the studies examined\ne most of them focused on individual animals, NOt ENTE BB onesie\n© tHE 87 ccacsncsumnmnmmnean OF Plastic used in the lab did not always reflect those\nin the ocean\ne there was insufficient information on\n-numbers of animals which could be affected\n-the impact of a reduction in numbers on the 38 …ccsmscsisccmsmenen OF that\n, species\n-the impact on the ecosystem\nRochman says more information isneeded on the possible impact of future\nBY oocccossetmsntunnnen (8.9. Involving oil).\nQuestion 40\nChoose the correct /etter, A, B, C or D.\nWrite the correct letter in box 40 on your answer sheet.\n40 What would be the best title for this passage?\nA Assessing the threat of marine debris\nB Marine debris: who is to blame?\nC Anew solution to the problem of marine debris\nD Marine debris: the need for international action\nBED.",
+          "questionSectionText": "Questions 27-33\nDo the following statements agree with the information given in Reading Passage 3?\nIn boxes 27-33 on your answer sheet, write\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN _if there is no information on this\n27 Rochman and her colleagues were the first people to research the problem of\nmarine debris.\n28 The creatures most in danger from ocean trash are certain seabirds.\n29 The studies Rochman has reviewed have already proved that populations of some\nbirds will soon become extinct.\n30 Rochman analysed papers on the different kinds of danger caused by ocean trash.\n31 Most of the research analysed by Rochman and her colleagues was badly\ndesigned.\n32 One study examined by Rochman was expecting to find that mussels were harmed\nby eating plastic.\n33 Some mussels choose to eat plastic in preference to their natural diet.\n92 : ie \\ WREGIDUZDOANIZTKVANANGICHINEDXAC ra at ot i\n= BO DEMHITHAT\n\n£\n\nFn _ mm l_______________£ __é HH _ HH ___HHHHHHHHHHHHsHHHHHHHHH-H se\nQuestions 34-39\nComplete the notes below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 34-39 on your answer sheet.\nFindings related to marine debris\nStudies of marine debris found the biggest threats were\ne - plastic (not metal or wood)\ne bits of debris that were 34 …c.direnninnn. (Harmful to animals)\nThere was little research Into BB occ @.Q. from synthetic fibres.\nDrawbacks of the studies examined\ne most of them focused on individual animals, NOt ENTE BB onesie\n© tHE 87 ccacsncsumnmnmmnean OF Plastic used in the lab did not always reflect those\nin the ocean\ne there was insufficient information on\n-numbers of animals which could be affected\n-the impact of a reduction in numbers on the 38 …ccsmscsisccmsmenen OF that\n, species\n-the impact on the ecosystem\nRochman says more information isneeded on the possible impact of future\nBY oocccossetmsntunnnen (8.9. Involving oil).\nQuestion 40\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in box 40 on your answer sheet.\n40 What would be the best title for this passage?\nA Assessing the threat of marine debris\nB Marine debris: who is to blame?\nC A new solution to the problem of marine debris\nD Marine debris: the need for international action",
           "questionRanges": [
             {
               "start": 27,
@@ -2543,7 +2554,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "bits of debris that were … (harmful to animals)",
+              "prompt": "• bits of debris that were … … (harmful to animals).",
               "correctAnswer": "large",
               "acceptedAnswers": [
                 "large"
@@ -2551,8 +2562,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "text",
               "exactPortion": "Most of the dangers also involved large pieces of debris",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"bits of debris that were … … (harmful to animals)\" บทความมีถ้อยคำที่ตรงกันคือ \"Most of the dangers also involved large pieces of debris\" จึงคำตอบคือ \"large\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "debris harmful animals = dangers involved pieces debris = large"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• bits of debris that were … … (harmful to animals).\" บทความมีถ้อยคำที่ตรงกันคือ \"Most of the dangers also involved large pieces of debris\" จึงคำตอบคือ \"large\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "bits debris harmful animals = dangers also involved large = large"
             },
             {
               "number": 35,
@@ -2569,7 +2580,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "most of them focused on individual animals, not entire",
+              "prompt": "• most of them focused on individual animals, not entire.",
               "correctAnswer": "populations",
               "acceptedAnswers": [
                 "populations"
@@ -2577,12 +2588,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "text",
               "exactPortion": "Many studies have looked at how plastic affects an individual animal, or that animal's tissues or cells, rather than whole populations.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"most of them focused on individual animals, not entire … …\" บทความมีถ้อยคำที่ตรงกันคือ \"Many studies have looked at how plastic affects an individual animal, or that animal’s tissues …\" จึงคำตอบคือ \"populations\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "focused individual animals = studies looked plastic affects = populations"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• most of them focused on individual animals, not entire.\" บทความมีถ้อยคำที่ตรงกันคือ \"Many studies have looked at how plastic affects an individual animal, or that animal's tis…\" จึงคำตอบคือ \"populations\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "focused individual animals entire = many studies looked plastic = populations"
             },
             {
               "number": 37,
-              "prompt": "the … of plastic used in the lab did not always reflect those in the ocean",
+              "prompt": "• the … … of plastic used in the lab did not always reflect those in the ocean.",
               "correctAnswer": "concentrations",
               "acceptedAnswers": [
                 "concentrations"
@@ -2590,12 +2601,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "text",
               "exactPortion": "in the lab, scientists often use higher concentrations of plastic than what's really in the ocean",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"the … … of plastic used in the lab did not always reflect those in the ocean\" บทความมีถ้อยคำที่ตรงกันคือ \"in the lab, scientists often use higher concentrations of plastic than what’s really in the oce…\" จึงคำตอบคือ \"concentrations\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "plastic always reflect = scientists higher plastic really = concentrations"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• the … … of plastic used in the lab did not always reflect those in the ocean.\" บทความมีถ้อยคำที่ตรงกันคือ \"in the lab, scientists often use higher concentrations of plastic than what's really in th…\" จึงคำตอบคือ \"concentrations\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "plastic used lab always = lab scientists often use = concentrations"
             },
             {
               "number": 38,
-              "prompt": "the impact of",
+              "prompt": "- the impact of a reduction in numbers on the … … of that species.",
               "correctAnswer": "predators",
               "acceptedAnswers": [
                 "predators"
@@ -2603,8 +2614,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "text",
               "exactPortion": "how deaths in one species could affect that animal's predators",
-              "explanationThai": "ในข้อ: \"the impact of\" หลักฐานในบทความคือ \"how deaths in one species could affect that animal’s predators\" จึงตอบ predators",
-              "paraphrasedVocabulary": "impact = deaths species affect animal = predators"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"- the impact of a reduction in numbers on the … … of that species.\" บทความมีถ้อยคำที่ตรงกันคือ \"how deaths in one species could affect that animal's predators\" จึงคำตอบคือ \"predators\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "impact reduction numbers species = deaths one species affect = predators"
             },
             {
               "number": 39,
@@ -2616,8 +2627,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_14_EXAMS = [
               "answerGroup": "Cambridge 14 Test 4 Passage 3",
               "answerType": "text",
               "exactPortion": "‘We need to be asking more ecologically relevant questions,’ Rochman says. Usually, scientists don’t know exactly how disasters such as a tanker accidentally spilling its whole cargo of oil and polluting huge areas of the ocean will affect the environment until after they’ve happened.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… (e.g. involving oil). Questions 40-40 Choose the correct letter,\" บทความมีถ้อยคำที่ตรงกันคือ \"‘We need to be asking more ecologically relevant questions,’ Rochman says. Usually, scientists …\" จึงคำตอบคือ \"disasters\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "involving questions 40-40 = asking ecologically relevant questions = disasters"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Questions 34-39 Complete the notes below.\" บทความมีถ้อยคำที่ตรงกันคือ \"‘We need to be asking more ecologically relevant questions,’ Rochman says. Usually, scient…\" จึงคำตอบคือ \"disasters\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "questions 34-39 complete notes = need asking ecologically relevant = disasters"
             },
             {
               "number": 40,

@@ -52,7 +52,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "the … … surrounds the fruit and breaks open when the fruit is ripe.",
+              "prompt": "surrounds the fruit and breaks open when the fruit is ripe.",
               "correctAnswer": "husk",
               "acceptedAnswers": [
                 "husk"
@@ -60,12 +60,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "The fruit is encased in a fleshy husk. When the fruit is ripe, this husk splits into two halves along a ridge running the length of the fruit.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"the … … surrounds the fruit and breaks open when the fruit is ripe.\" บทความมีถ้อยคำที่ตรงกันคือ \"When the fruit is ripe, this husk splits into two halves along a ridge running the length of th…\" จึงคำตอบคือ \"husk\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "surrounds fruit breaks = splits halves running length = husk"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"surrounds the fruit and breaks open when the fruit is ripe.\" บทความมีถ้อยคำที่ตรงกันคือ \"The fruit is encased in a fleshy husk. When the fruit is ripe, this husk splits into two h…\" จึงคำตอบคือ \"husk\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "surrounds fruit breaks open = fruit encased fleshy husk = husk"
             },
             {
               "number": 3,
-              "prompt": "the … … is used to produce the spice nutmeg.",
+              "prompt": "• the … … IS USEd to produce the spice nutmeg.",
               "correctAnswer": "seed",
               "acceptedAnswers": [
                 "seed"
@@ -73,12 +73,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "These are the sources of the two spices nutmeg and mace, the former being produced from the dried seed",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"the … … is used to produce the spice nutmeg.\" บทความมีถ้อยคำที่ตรงกันคือ \"the former being produced from the dried seed and the latter from the aril\" จึงคำตอบคือ \"seed\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "produce spice nutmeg = former produced latter = seed"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"• the … … IS USEd to produce the spice nutmeg.\" บทความมีถ้อยคำที่ตรงกันคือ \"These are the sources of the two spices nutmeg and mace, the former being produced from th…\" จึงคำตอบคือ \"seed\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "used produce spice nutmeg = sources two spices nutmeg = seed"
             },
             {
               "number": 4,
-              "prompt": "the covering known as the aril is used to produce … …",
+              "prompt": "e the covering known as the aril is Used to PrOdUCE … … mace e the tree has yellow flowers and fruit.",
               "correctAnswer": "mace",
               "acceptedAnswers": [
                 "mace"
@@ -86,8 +86,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "the latter from the aril",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"the covering known as the aril is used to produce … …\" บทความมีถ้อยคำที่ตรงกันคือ \"These are the sources of the two spices nutmeg and mace\" จึงคำตอบคือ \"mace\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "covering known produce = sources spices nutmeg = mace"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"e the covering known as the aril is Used to PrOdUCE … … mace e the tree has yellow flowers and fruit.\" บทความมีถ้อยคำที่ตรงกันคือ \"the latter from the aril\" จึงคำตอบคือ \"mace\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "covering known aril used = latter aril = mace"
             },
             {
               "number": 5,
@@ -130,7 +130,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "… 16th century European nations took control of the nutmeg trade 17th century Demand for nutmeg grew, as it was believed to be effective against the disease known as the",
+              "prompt": "Nutmeg was brought to Europe by the … … 16th century European nations took control of the nutmeg trade 17th century Demand for nutmeg grew, as it was believed to be effective against the disease known as the.",
               "correctAnswer": "Arabs",
               "acceptedAnswers": [
                 "Arabs"
@@ -138,12 +138,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "the Arabs were the exclusive importers of the spice to Europe",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… 16th century European nations took control of the nutmeg trade 17th century Demand for nutmeg grew, as it was believed to be eff…\" บทความมีถ้อยคำที่ตรงกันคือ \"Throughout this period, the Arabs were the exclusive importers of the spice to Europe\" จึงคำตอบคือ \"Arabs\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "nations took control = throughout period exclusive importers = Arabs"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Nutmeg was brought to Europe by the … … 16th century European nations took control of the nutmeg trade 17th century Demand for nutmeg grew, as it was believed to be effective against the disease known as the.\" บทความมีถ้อยคำที่ตรงกันคือ \"the Arabs were the exclusive importers of the spice to Europe\" จึงคำตอบคือ \"Arabs\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "nutmeg brought europe 16th = arabs exclusive importers spice = Arabs"
             },
             {
               "number": 9,
-              "prompt": "… The Dutch – took control of the Banda Islands – restricted nutmeg production to",
+              "prompt": "against the disease known as the … … The Dutch – took control of the Banda Islands – restricted nutmeg production to.",
               "correctAnswer": "plague",
               "acceptedAnswers": [
                 "plague"
@@ -151,12 +151,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "thousands of people across Europe were dying of the plague, a highly contagious and deadly disease. Doctors were desperate for a way to stop the spread of this disease, and they decided nutmeg held the cure.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… The Dutch – took control of the Banda Islands – restricted nutmeg production to\" บทความมีถ้อยคำที่ตรงกันคือ \"At the same time, thousands of people across Europe were dying of the plague, a highly contagio…\" จึงคำตอบคือ \"plague\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "islands restricted nutmeg = thousands across europe highly = plague"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"against the disease known as the … … The Dutch – took control of the Banda Islands – restricted nutmeg production to.\" บทความมีถ้อยคำที่ตรงกันคือ \"thousands of people across Europe were dying of the plague, a highly contagious and deadly…\" จึงคำตอบคือ \"plague\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "against disease known dutch = thousands people across europe = plague"
             },
             {
               "number": 10,
-              "prompt": "… on nutmeg to avoid it being cultivated outside the islands – finally obtained the island of",
+              "prompt": "-put … … on nutmeg to avoid it being cultivated outside the islands – finally obtained the island of.",
               "correctAnswer": "lime",
               "acceptedAnswers": [
                 "lime"
@@ -164,12 +164,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "all exported nutmeg was covered with lime to make sure there was no chance a fertile seed which could be grown elsewhere would leave the islands",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… on nutmeg to avoid it being cultivated outside the islands – finally obtained the island of\" บทความมีถ้อยคำที่ตรงกันคือ \"In addition, all exported nutmeg was covered with lime to make sure there was no chance a ferti…\" จึงคำตอบคือ \"lime\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "nutmeg avoid cultivated = addition exported nutmeg covered = lime"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"-put … … on nutmeg to avoid it being cultivated outside the islands – finally obtained the island of.\" บทความมีถ้อยคำที่ตรงกันคือ \"all exported nutmeg was covered with lime to make sure there was no chance a fertile seed …\" จึงคำตอบคือ \"lime\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "-put nutmeg avoid being = exported nutmeg covered lime = lime"
             },
             {
               "number": 11,
-              "prompt": "… from the British Late 18th century 1770 – nutmeg plants were secretly taken to",
+              "prompt": "-finally obtained the island of … … from the British Late 18th century 1770 – nutmeg plants were secretly taken to the British.",
               "correctAnswer": "Run",
               "acceptedAnswers": [
                 "Run"
@@ -177,12 +177,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "One of the Banda Islands, a sliver of land called Run, only 3 km long by less than 1 km wide, was under the control of the British.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… from the British Late 18th century 1770 – nutmeg plants were secretly taken to\" บทความมีถ้อยคำที่ตรงกันคือ \"the Dutch offered a trade: if the British would give them the island of Run, they would in turn…\" จึงคำตอบคือ \"Run\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "british century nutmeg = offered british island britain = Run"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"-finally obtained the island of … … from the British Late 18th century 1770 – nutmeg plants were secretly taken to the British.\" บทความมีถ้อยคำที่ตรงกันคือ \"One of the Banda Islands, a sliver of land called Run, only 3 km long by less than 1 km wi…\" จึงคำตอบคือ \"Run\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "-finally obtained island british = one banda islands sliver = Run"
             },
             {
               "number": 12,
-              "prompt": "… 1778 – half the Banda Islands’ nutmeg plantations were destroyed by a",
+              "prompt": "1770 - nutmeg plants were secretly taken to … … 1778 – half the Banda Islands’ nutmeg plantations were destroyed by a.",
               "correctAnswer": "Mauritius",
               "acceptedAnswers": [
                 "Mauritius"
@@ -190,12 +190,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "in 1770, a Frenchman named Pierre Poivre successfully smuggled nutmeg plants to safety in Mauritius",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… 1778 – half the Banda Islands’ nutmeg plantations were destroyed by a\" บทความมีถ้อยคำที่ตรงกันคือ \"Then, in 1770, a Frenchman named Pierre Poivre successfully smuggled nutmeg plants to safety in…\" จึงคำตอบคือ \"Mauritius\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "islands nutmeg plantations = frenchman pierre poivre successfully = Mauritius"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"1770 - nutmeg plants were secretly taken to … … 1778 – half the Banda Islands’ nutmeg plantations were destroyed by a.\" บทความมีถ้อยคำที่ตรงกันคือ \"in 1770, a Frenchman named Pierre Poivre successfully smuggled nutmeg plants to safety in …\" จึงคำตอบคือ \"Mauritius\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "1770 nutmeg plants secretly = 1770 frenchman named pierre = Mauritius"
             },
             {
               "number": 13,
-              "prompt": "… Questions 14-18 The Reading Passage has seven paragraphs,",
+              "prompt": "1778 - half the Banda Islands'nutmeg plantations were destroyed by a.",
               "correctAnswer": "tsunami",
               "acceptedAnswers": [
                 "tsunami"
@@ -203,8 +203,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the nutmeg groves",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Questions 14-18 The Reading Passage has seven paragraphs,\" บทความมีถ้อยคำที่ตรงกันคือ \"Next, in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the…\" จึงคำตอบคือ \"tsunami\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "questions 14-18 seven = volcanic eruption region caused = tsunami"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"1778 - half the Banda Islands'nutmeg plantations were destroyed by a.\" บทความมีถ้อยคำที่ตรงกันคือ \"in 1778, a volcanic eruption in the Banda region caused a tsunami that wiped out half the …\" จึงคำตอบคือ \"tsunami\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "1778 half banda islands'nutmeg = 1778 volcanic eruption banda = tsunami"
             }
           ]
         }
@@ -236,7 +236,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             "There are a number of hurdles to overcome in delivering automated vehicles to our roads. These include the technical difficulties in ensuring that the vehicle works reliably in the infinite range of traffic, weather and road situations it might encounter; the regulatory challenges in understanding how liability and enforcement might change when drivers are no longer essential for vehicle operation; and the societal changes that may be required for communities to trust and accept automated vehicles as being a valuable part of the mobility landscape.",
             "It's clear that there are many challenges that need to be addressed but, through robust and targeted research, these can most probably be conquered within the next 10 years. Mobility will change in such potentially significant ways and in association with so many other technological developments, such as telepresence and virtual reality, that it is hard to make concrete predictions about the future. However, one thing is certain: change is coming, and the need to be flexible in response to this will be vital for those involved in manufacturing the vehicles that will deliver future mobility."
           ],
-          "questionSectionText": "Questions 25-26\nQuestions 23-24\nQuestions 14-18\nReading Passage 2 has seven sections, A-G.\nWhich section contains the following information?\nWrite the correct letter, A-G, in boxes 14-18 on your answer sheet.\n14 reference to the amount of time when a car is not in use\n15 mention of several advantages of driverless vehicles for individual road-users\n16 reference to the opportunity of choosing the most appropriate vehicle for each trip\n17 anestimate of how long it will take to overcome a number of problems\n18 a suggestion that the use of driverless cars may have no effect on the number of\n\nvehicles manufactured\nQuestions 19-22\nComplete the summary below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.\nWrite your answers in boxes 19-22 on your answer sheet.\n\nThe impact of driverless cars\n\nFigures from the Transport Research Laboratory indicate that most motor accidents\n… , so the introduction of driverless vehicles will result in greater safety 19 … In addition to the direct benefits of automation, it may bring other advantages 19 … For example, schemes for\nwill result in greater safety. In addition to the direct benefits of automation, it may bring\nother advantages. For example, schemes fr 20 uu... Will be more\nworkable, especially in towns and cities, resulting in fewer cars on the road.\nAccording to the University of Michigan Transportation Research Institute, there could\nbe a 43 percent drop in 24 oe ecnncnnnnnnennnanmnnen OF Cars. However, this would mean\nthat the yearly 22 Qn munnnnununnunune OF @ach car would, on average, be twice as\nhigh as it currently is. This would lead to a higher turnover of vehicles, and therefore no\nreduction in automotive manufacturing.\n\nQuestions 23 and 24\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 23 and 24 on your answer sheet.\nWhich TWO benefits of automated vehicles does the writer mention?\nA Car travellers could enjoy considerable cost savings.\nB__ It would be easier to find parking spaces in urban areas.\nC Travellers could spend journeys doing something other than driving.\nD People who find driving physically difficult could travel independently.\nE  Areduction in the number of cars would mean a reduction in pollution.\n\nQuestions 25 and 26\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 25 and 26 on your answer sheet.\nWhich TWO challenges to automated vehicle development does the writer mention?\nA making sure the general public has confidence in automated vehicles\nB_ managing the pace of transition from conventional to automated vehicles\nC deciding how to compensate professional drivers who become redundant\nD _ setting up the infrastructure to make roads suitable for automated vehicles\nE getting automated vehicles to adapt to various different driving conditions\n\n>| p.120| 23\n! !",
+          "questionSectionText": "Questions 14-18\nReading Passage 2 has seven sections, A-G.\nWhich section contains the following information?\nWrite the correct letter, A-G, in boxes 14-18 on your answer sheet.\n14 reference to the amount of time when a car is not in use\n15 mention of several advantages of driverless vehicles for individual road-users\n16 reference to the opportunity of choosing the most appropriate vehicle for each trip\n17 anestimate of how long it will take to overcome a number of problems\n18 a suggestion that the use of driverless cars may have no effect on the number of\n\nvehicles manufactured\nQuestions 19-22\nComplete the summary below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.\nWrite your answers in boxes 19-22 on your answer sheet.\n\nThe impact of driverless cars\n\nFigures from the Transport Research Laboratory indicate that most motor accidents\n… , so the introduction of driverless vehicles will result in greater safety 19 … In addition to the direct benefits of automation, it may bring other advantages 19 … For example, schemes for\nwill result in greater safety. In addition to the direct benefits of automation, it may bring\nother advantages. For example, schemes fr 20 uu... Will be more\nworkable, especially in towns and cities, resulting in fewer cars on the road.\nAccording to the University of Michigan Transportation Research Institute, there could\nbe a 43 percent drop in 24 oe ecnncnnnnnnennnanmnnen OF Cars. However, this would mean\nthat the yearly 22 Qn munnnnununnunune OF @ach car would, on average, be twice as\nhigh as it currently is. This would lead to a higher turnover of vehicles, and therefore no\nreduction in automotive manufacturing.\n\nQuestions 23 and 24\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 23 and 24 on your answer sheet.\nWhich TWO benefits of automated vehicles does the writer mention?\nA Car travellers could enjoy considerable cost savings.\nB__ It would be easier to find parking spaces in urban areas.\nC Travellers could spend journeys doing something other than driving.\nD People who find driving physically difficult could travel independently.\nE  Areduction in the number of cars would mean a reduction in pollution.\n\nQuestions 25 and 26\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 25 and 26 on your answer sheet.\nWhich TWO challenges to automated vehicle development does the writer mention?\nA making sure the general public has confidence in automated vehicles\nB_ managing the pace of transition from conventional to automated vehicles\nC deciding how to compensate professional drivers who become redundant\nD _ setting up the infrastructure to make roads suitable for automated vehicles\nE getting automated vehicles to adapt to various different driving conditions\n\n>| p.120| 23\n! !",
           "questionRanges": [
             {
               "start": 14,
@@ -271,7 +271,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "mention of several advantages of driverless vehicles for individual road-users … … … … … … …",
+              "prompt": "mention of several advantages of driverless vehicles for individual road-users",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -279,12 +279,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "it may be possible to be productive, to socialise or simply to relax while automation systems have responsibility for safe control of the vehicle",
-              "explanationThai": "คำถาม: \"mention of several advantages of driverless vehicles for individual road-users … … … … … … …\" หลักฐานในบทความคือ \"Another aim is to free the time people spend driving for other purposes\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "several advantages driverless = another driving purposes = B"
+              "explanationThai": "คำถาม: \"mention of several advantages of driverless vehicles for individual road-users\" หลักฐานในบทความคือ \"it may be possible to be productive, to socialise or simply to relax while automation syst…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "mention several advantages driverless = possible productive socialise simply = B"
             },
             {
               "number": 16,
-              "prompt": "reference to the opportunity of choosing the most appropriate vehicle for each trip … … … … … … …",
+              "prompt": "reference to the opportunity of choosing the most appropriate vehicle for each trip",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -292,8 +292,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "drivers will have the freedom to select one that best suits their needs for a particular journey, rather than making a compromise across all their requirements",
-              "explanationThai": "คำถาม: \"reference to the opportunity of choosing the most appropriate vehicle for each trip … … … … … … …\" หลักฐานในบทความคือ \"drivers will have the freedom to select one that best suits their needs for a particular journe…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "opportunity choosing appropriate = drivers freedom select particular = E"
+              "explanationThai": "คำถาม: \"reference to the opportunity of choosing the most appropriate vehicle for each trip\" หลักฐานในบทความคือ \"drivers will have the freedom to select one that best suits their needs for a particular j…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "reference opportunity choosing appropriate = drivers freedom select one = E"
             },
             {
               "number": 17,
@@ -310,7 +310,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured … … … … … … … Questions 19-22 Complete the summary below. Choose",
+              "prompt": "a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -318,12 +318,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "This faster rate of turnover may mean that vehicle production will not necessarily decrease",
-              "explanationThai": "คำถาม: \"a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured … … … … … … … Questions 19-…\" หลักฐานในบทความคือ \"This faster rate of turnover may mean that vehicle production will not necessarily decrease\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "suggestion driverless cars = faster turnover vehicle production = D"
+              "explanationThai": "คำถาม: \"a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured\" หลักฐานในบทความคือ \"This faster rate of turnover may mean that vehicle production will not necessarily decreas…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "suggestion use driverless cars = faster rate turnover mean = D"
             },
             {
               "number": 19,
-              "prompt": "… , so the introduction of driverless vehicles will result in greater safety. In addition to the direct benefits of automation, it may bring other advantages. For example, schemes for",
+              "prompt": "more than 90 percent of road collisions involve … … as a contributory factor.",
               "correctAnswer": "human error",
               "acceptedAnswers": [
                 "human error"
@@ -331,12 +331,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "more than 90 percent of road collisions involve human error as a contributory factor",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… , so the introduction of driverless vehicles will result in greater safety. In addition to the direct benefits of automation, it…\" บทความมีถ้อยคำที่ตรงกันคือ \"research at the UK’s Transport Research Laboratory has demonstrated that more than 90 percent o…\" จึงคำตอบคือ \"human error\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "introduction driverless vehicles = research transport research laboratory = human error"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"more than 90 percent of road collisions involve … … as a contributory factor.\" บทความมีถ้อยคำที่ตรงกันคือ \"more than 90 percent of road collisions involve human error as a contributory factor\" จึงคำตอบคือ \"human error\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "percent road collisions involve = percent road collisions involve = human error"
             },
             {
               "number": 20,
-              "prompt": "… will be more workable, especially in towns and cities, resulting in fewer cars on the road. According to the University of Michigan Transportation Research Institute, there could be a 43 percent drop in",
+              "prompt": "Initiatives for … … become much more viable, particularly in urban areas with significant travel demand.",
               "correctAnswer": "car sharing",
               "acceptedAnswers": [
                 "car sharing",
@@ -345,12 +345,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "initiatives for car-sharing become much more viable, particularly in urban areas with significant travel demand",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… will be more workable, especially in towns and cities, resulting in fewer cars on the road. According to the University of Michi…\" บทความมีถ้อยคำที่ตรงกันคือ \"Automation means that initiatives for car-sharing become much more viable, particularly in urba…\" จึงคำตอบคือ \"car sharing\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "transportation research institute = automation initiatives car-sharing become = car sharing"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Initiatives for … … become much more viable, particularly in urban areas with significant travel demand.\" บทความมีถ้อยคำที่ตรงกันคือ \"initiatives for car-sharing become much more viable, particularly in urban areas with sign…\" จึงคำตอบคือ \"car sharing\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "initiatives become much viable = initiatives car-sharing become much = car sharing"
             },
             {
               "number": 21,
-              "prompt": "… of cars. However, this would mean that the yearly",
+              "prompt": "automated vehicles might reduce vehicle … … by 43 percent.",
               "correctAnswer": "ownership",
               "acceptedAnswers": [
                 "ownership"
@@ -358,12 +358,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "automated vehicles might reduce vehicle ownership by 43 percent",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of cars. However, this would mean that the yearly\" บทความมีถ้อยคำที่ตรงกันคือ \"Modelling work by the University of Michigan Transportation Research Institute suggests automat…\" จึงคำตอบคือ \"ownership\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "yearly = modelling university michigan transportation = ownership"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"automated vehicles might reduce vehicle … … by 43 percent.\" บทความมีถ้อยคำที่ตรงกันคือ \"automated vehicles might reduce vehicle ownership by 43 percent\" จึงคำตอบคือ \"ownership\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "automated vehicles reduce vehicle = automated vehicles reduce vehicle = ownership"
             },
             {
               "number": 22,
-              "prompt": "… of each car would, on average, be twice as high as it currently is. this would lead to",
+              "prompt": "vehicles' average annual … … double as a result.",
               "correctAnswer": "mileage",
               "acceptedAnswers": [
                 "mileage"
@@ -371,12 +371,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "vehicles' average annual mileage double as a result",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of each car would, on average, be twice as high as it currently is. this would lead to\" บทความมีถ้อยคำที่ตรงกันคือ \"but that vehicles’ average annual mileage double as a result\" จึงคำตอบคือ \"mileage\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "average twice currently = vehicles average annual double = mileage"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"vehicles' average annual … … double as a result.\" บทความมีถ้อยคำที่ตรงกันคือ \"vehicles' average annual mileage double as a result\" จึงคำตอบคือ \"mileage\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "vehicles' average annual double = vehicles' average annual mileage = mileage"
             },
             {
               "number": 23,
-              "prompt": "Which TWO benefits of automated vehicles does the writer mention? (choose two answers from A-E)",
+              "prompt": "Which TWO benefits of automated vehicles does the writer mention? (",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "C",
@@ -390,7 +390,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "Which TWO benefits of automated vehicles does the writer mention? (choose two answers from A-E)",
+              "prompt": "Which TWO benefits of automated vehicles does the writer mention? (",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C",
@@ -404,7 +404,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "Which TWO challenges to automated vehicle development does the writer mention? (choose two answers from A-E)",
+              "prompt": "Which TWO challenges to automated vehicle development does the writer mention? (",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "A",
@@ -418,7 +418,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "Which TWO challenges to automated vehicle development does the writer mention? (choose two answers from A-E)",
+              "prompt": "Which TWO challenges to automated vehicle development does the writer mention? (",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A",
@@ -565,8 +565,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "If I’d gone across by camel when I could have gone by car, it would have been a stunt",
-              "explanationThai": "คำถาม: \"He referred to the relevance of the form of transport used. … … … … …\" หลักฐานในบทความคือ \"If I’d gone across by camel when I could have gone by car, it would have been a stunt\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "referred relevance transport = across = E"
+              "explanationThai": "คำถาม: \"He referred to the relevance of the form of transport used.\" หลักฐานในบทความคือ \"If I’d gone across by camel when I could have gone by car, it would have been a stunt\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "referred relevance form transport = i’d gone across camel = E"
             },
             {
               "number": 34,
@@ -591,8 +591,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "a campaigner on behalf of remote so-called 'tribal' peoples",
-              "explanationThai": "คำถาม: \"He worked for the benefit of specific groups of people. … … … … …\" หลักฐานในบทความคือ \"a campaigner on behalf of remote so-called ‘tribal’ peoples\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "worked benefit specific = campaigner behalf remote so-called = D"
+              "explanationThai": "คำถาม: \"He worked for the benefit of specific groups of people.\" หลักฐานในบทความคือ \"a campaigner on behalf of remote so-called 'tribal' peoples\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "worked benefit specific groups = campaigner behalf remote so-called = D"
             },
             {
               "number": 36,
@@ -604,12 +604,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "To him, exploration meant bringing back information from a remote place regardless of any great self-discovery",
-              "explanationThai": "คำถาม: \"He did not consider learning about oneself an essential part of exploration. … … … … …\" หลักฐานในบทความคือ \"To him, exploration meant bringing back information from a remote place regardless of any great…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "essential part exploration = exploration bringing remote regardless = E"
+              "explanationThai": "คำถาม: \"He did not consider learning about oneself an essential part of exploration.\" หลักฐานในบทความคือ \"To him, exploration meant bringing back information from a remote place regardless of any …\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "consider learning oneself essential = him exploration meant bringing = E"
             },
             {
               "number": 37,
-              "prompt": "He defined exploration as being both unique and of value to others. … … … … … Questions 38-40 Complete the summary below. Choose",
+              "prompt": "He defined exploration as being both unique and of value to others.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -617,12 +617,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "An explorer is someone who has done something that no human has done before – and also done something scientifically useful",
-              "explanationThai": "คำถาม: \"He defined exploration as being both unique and of value to others. … … … … … Questions 38-40 Complete the summary below. Choose\" หลักฐานในบทความคือ \"An explorer is someone who has done something that no human has done before – and also done som…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "defined exploration unique = explorer someone something something = B"
+              "explanationThai": "คำถาม: \"He defined exploration as being both unique and of value to others.\" หลักฐานในบทความคือ \"An explorer is someone who has done something that no human has done before – and also don…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "defined exploration being both = explorer someone done something = B"
             },
             {
               "number": 38,
-              "prompt": "… , and was the first stranger that certain previously",
+              "prompt": "The writer has experience of a large number of … … and was the first stranger that certain previously.",
               "correctAnswer": "expeditions",
               "acceptedAnswers": [
                 "expeditions",
@@ -631,12 +631,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "I’ve done a great many expeditions and each one was unique",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"I’ve done a great many ___ and each one was unique\" บทความมีถ้อยคำที่ตรงกันคือ \"I’ve done a great many expeditions and each one was unique\" จึงตอบ \"expeditions\" (คำว่า unique อยู่ในอนุประโยคถัดไป ไม่ใช่คำตอบของช่องว่าง)",
-              "paraphrasedVocabulary": "stranger certain previously = expeditions unique = unique expeditions"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The writer has experience of a large number of … … and was the first stranger that certain previously.\" บทความมีถ้อยคำที่ตรงกันคือ \"I’ve done a great many expeditions and each one was unique\" จึงคำตอบคือ \"expeditions\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "writer experience large number = i’ve done great many = expeditions"
             },
             {
               "number": 39,
-              "prompt": "… people had encountered. He believes there is no need for further exploration of Earth’s",
+              "prompt": "I’ve lived for months alone with isolated groups of people all around the world, even two ‘ … … tribes’.",
               "correctAnswer": "uncontacted",
               "acceptedAnswers": [
                 "uncontacted",
@@ -645,12 +645,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "I’ve lived for months alone with isolated groups of people all around the world, even two ‘uncontacted tribes’",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… people had encountered. He believes there is no need for further exploration of Earth’s\" บทความมีถ้อยคำที่ตรงกันคือ \"I’ve lived for months alone with isolated groups of people all around the world, even two ‘unco…\" จึงคำตอบคือ \"uncontacted\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "encountered believes further = months isolated groups around = uncontacted"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"I’ve lived for months alone with isolated groups of people all around the world, even two ‘ … … tribes’.\" บทความมีถ้อยคำที่ตรงกันคือ \"I’ve lived for months alone with isolated groups of people all around the world, even two …\" จึงคำตอบคือ \"uncontacted\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "i’ve lived months alone = i’ve lived months alone = uncontacted"
             },
             {
               "number": 40,
-              "prompt": "… , except to answer specific questions such as how buffalo eat.",
+              "prompt": "We know how the land … … of our planet lies; exploration of it is now down to the details – the habits of microbes,.",
               "correctAnswer": "surface",
               "acceptedAnswers": [
                 "surface",
@@ -659,8 +659,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 1 Passage 3",
               "answerType": "text",
               "exactPortion": "We know how the land surface of our planet lies; exploration of it is now down to the details – the habits of microbes, say, or the grazing behaviour of buffalo",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"We know how the land ___ of our planet lies\" บทความมีถ้อยคำที่ตรงกันคือ \"We know how the land surface of our planet lies; exploration of it is now down to the details\" คำตอบหลักคือ \"surface\" (ยอมรับ land surface ด้วย)",
-              "paraphrasedVocabulary": "except specific questions = surface planet exploration details = land surface"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"We know how the land … … of our planet lies; exploration of it is now down to the details – the habits of microbes,.\" บทความมีถ้อยคำที่ตรงกันคือ \"We know how the land surface of our planet lies; exploration of it is now down to the deta…\" จึงคำตอบคือ \"surface\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "know land planet lies = know land surface planet = surface"
             }
           ]
         }
@@ -705,7 +705,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "reference to an appealing way of using dance that the writer is not proposing … … … … … … …",
+              "prompt": "reference to an appealing way of using dance that the writer is not proposing",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -713,8 +713,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "That is not to suggest everyone should dance their way to work, however healthy and happy it might make us, but rather that the techniques used by choreographers to experiment with and design movement in dance could provide engineers with tools to stimulate new ideas in city-making",
-              "explanationThai": "คำถาม: \"reference to an appealing way of using dance that the writer is not proposing … … … … … … …\" หลักฐานในบทความคือ \"That is not to suggest everyone should dance their way to work, however healthy and happy it mi…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "appealing using dance = suggest everyone should however = B"
+              "explanationThai": "คำถาม: \"reference to an appealing way of using dance that the writer is not proposing\" หลักฐานในบทความคือ \"That is not to suggest everyone should dance their way to work, however healthy and happy …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "reference appealing way using = suggest everyone dance way = B"
             },
             {
               "number": 2,
@@ -731,7 +731,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "mention of an objective of both dance and engineering … … … … … … …",
+              "prompt": "mention of an objective of both dance and engineering",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -739,12 +739,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "Choreography may not seem an obvious choice for tackling this problem. Yet it shares with engineering the aim of designing patterns of movement within limitations of space",
-              "explanationThai": "คำถาม: \"mention of an objective of both dance and engineering … … … … … … …\" หลักฐานในบทความคือ \"Choreography may not seem an obvious choice for tackling this problem. Yet it shares with engin…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "objective dance engineering = choreography obvious choice tackling = F"
+              "explanationThai": "คำถาม: \"mention of an objective of both dance and engineering\" หลักฐานในบทความคือ \"Choreography may not seem an obvious choice for tackling this problem. Yet it shares with …\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "mention objective both dance = choreography seem obvious choice = F"
             },
             {
               "number": 4,
-              "prompt": "reference to an unforeseen problem arising from ignoring the climate … … … … … … …",
+              "prompt": "reference to an unforeseen problem arising from ignoring the climate",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -752,12 +752,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "They failed to take into account that purpose-built street cafés could not operate in the hot sun without the protective awnings common in older buildings",
-              "explanationThai": "คำถาม: \"reference to an unforeseen problem arising from ignoring the climate … … … … … … …\" หลักฐานในบทความคือ \"They failed to take into account that purpose-built street cafés could not operate in the hot s…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "unforeseen problem arising = failed account purpose-built street = D"
+              "explanationThai": "คำถาม: \"reference to an unforeseen problem arising from ignoring the climate\" หลักฐานในบทความคือ \"They failed to take into account that purpose-built street cafés could not operate in the …\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "reference unforeseen problem arising = failed take account purpose-built = D"
             },
             {
               "number": 5,
-              "prompt": "why some measures intended to help people are being reversed … … … … … … …",
+              "prompt": "why some measures intended to help people are being reversed",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -765,12 +765,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "Designs that seem logical in models appear counter-intuitive in the actual experience of their users",
-              "explanationThai": "คำถาม: \"why some measures intended to help people are being reversed … … … … … … …\" หลักฐานในบทความคือ \"Designs that seem logical in models appear counter-intuitive in the actual experience of their …\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "measures intended reversed = designs logical models appear = E"
+              "explanationThai": "คำถาม: \"why some measures intended to help people are being reversed\" หลักฐานในบทความคือ \"Designs that seem logical in models appear counter-intuitive in the actual experience of t…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "measures intended help people = designs seem logical models = E"
             },
             {
               "number": 6,
-              "prompt": "reference to how transport has an impact on human lives … … … … … … … Questions 7-13 Complete the summary below. Choose",
+              "prompt": "reference to how transport has an impact on human lives",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -778,12 +778,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "The way we travel around cities has a major impact on whether they are sustainable",
-              "explanationThai": "คำถาม: \"reference to how transport has an impact on human lives … … … … … … … Questions 7-13 Complete the summary below. Choose\" หลักฐานในบทความคือ \"The way we travel around cities has a major impact on whether they are sustainable\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "transport impact human = travel around cities impact = A"
+              "explanationThai": "คำถาม: \"reference to how transport has an impact on human lives\" หลักฐานในบทความคือ \"The way we travel around cities has a major impact on whether they are sustainable\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "reference transport impact human = way travel around cities = A"
             },
             {
               "number": 7,
-              "prompt": "… of pedestrians, while ensuring that the movement of",
+              "prompt": "Guard rails were introduced on British roads to iMprove the … … of pedestrians, while ensuring that the movement of.",
               "correctAnswer": "safety",
               "acceptedAnswers": [
                 "safety"
@@ -791,12 +791,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "text",
               "exactPortion": "The guard rails that will be familiar to anyone who has attempted to cross a British road, for example, were an engineering solution to pedestrian safety",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of pedestrians, while ensuring that the movement of\" บทความมีถ้อยคำที่ตรงกันคือ \"The guard rails that will be familiar to anyone who has attempted to cross a British road, for …\" จึงคำตอบคือ \"safety\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "pedestrians ensuring movement = familiar anyone attempted british = safety"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Guard rails were introduced on British roads to iMprove the … … of pedestrians, while ensuring that the movement of.\" บทความมีถ้อยคำที่ตรงกันคือ \"The guard rails that will be familiar to anyone who has attempted to cross a British road,…\" จึงคำตอบคือ \"safety\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "guard rails introduced british = guard rails familiar anyone = safety"
             },
             {
               "number": 8,
-              "prompt": "… is not disrupted. Pedestrians are led to access points, and encouraged to cross one",
+              "prompt": "of pedestrians, while ensuring that the MOVEMENt Of … … is not disrupted. Pedestrians are led to access points, and encouraged to cross one.",
               "correctAnswer": "traffic",
               "acceptedAnswers": [
                 "traffic"
@@ -804,8 +804,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "text",
               "exactPortion": "based on models that prioritise the smooth flow of traffic",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… is not disrupted. Pedestrians are led to access points, and encouraged to cross one\" บทความมีถ้อยคำที่ตรงกันคือ \"based on models that prioritise the smooth flow of traffic\" จึงคำตอบคือ \"traffic\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "disrupted pedestrians access = models prioritise smooth = traffic"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"of pedestrians, while ensuring that the MOVEMENt Of … … is not disrupted. Pedestrians are led to access points, and encouraged to cross one.\" บทความมีถ้อยคำที่ตรงกันคือ \"based on models that prioritise the smooth flow of traffic\" จึงคำตอบคือ \"traffic\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "pedestrians while ensuring movement = based models prioritise smooth = traffic"
             },
             {
               "number": 9,
@@ -822,7 +822,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "… people. Another result is that some people cross the road in a",
+              "prompt": "feel longer, introducing psychological barriers greatly impacting those that are the least … ….",
               "correctAnswer": "mobile",
               "acceptedAnswers": [
                 "mobile"
@@ -830,12 +830,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "text",
               "exactPortion": "In doing so they make crossings feel longer, introducing psychological barriers greatly impacting those that are the least mobile",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… people. Another result is that some people cross the road in a\" บทความมีถ้อยคำที่ตรงกันคือ \"In doing so they make crossings feel longer, introducing psychological barriers greatly impacti…\" จึงคำตอบคือ \"mobile\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "another result cross = crossings longer introducing psychological = mobile"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"feel longer, introducing psychological barriers greatly impacting those that are the least … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"In doing so they make crossings feel longer, introducing psychological barriers greatly im…\" จึงคำตอบคือ \"mobile\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "feel longer introducing psychological = doing make crossings feel = mobile"
             },
             {
               "number": 11,
-              "prompt": "… way. The guard rails separate",
+              "prompt": "and encouraging others to make … … crossings to get around the guard rails.",
               "correctAnswer": "dangerous",
               "acceptedAnswers": [
                 "dangerous"
@@ -843,12 +843,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "text",
               "exactPortion": "and encouraging others to make dangerous crossings to get around the guard rails",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… way. The guard rails separate\" บทความมีถ้อยคำที่ตรงกันคือ \"and encouraging others to make dangerous crossings to get around the guard rails\" จึงคำตอบคือ \"dangerous\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "guard rails separate = encouraging others crossings around = dangerous"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"and encouraging others to make … … crossings to get around the guard rails.\" บทความมีถ้อยคำที่ตรงกันคือ \"and encouraging others to make dangerous crossings to get around the guard rails\" จึงคำตอบคือ \"dangerous\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "encouraging others make crossings = encouraging others make dangerous = dangerous"
             },
             {
               "number": 12,
-              "prompt": "… , and make it more difficult to introduce forms of transport that are",
+              "prompt": "These barriers don't just make it harder to cross the road: they divide … ….",
               "correctAnswer": "communities",
               "acceptedAnswers": [
                 "communities"
@@ -856,12 +856,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "text",
               "exactPortion": "These barriers don't just make it harder to cross the road: they divide communities",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… , and make it more difficult to introduce forms of transport that are\" บทความมีถ้อยคำที่ตรงกันคือ \"These barriers don’t just make it harder to cross the road: they divide communities\" จึงคำตอบคือ \"communities\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "difficult introduce forms = barriers harder divide = communities"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"These barriers don't just make it harder to cross the road: they divide … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"These barriers don't just make it harder to cross the road: they divide communities\" จึงคำตอบคือ \"communities\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "barriers don't just make = barriers don't just make = communities"
             },
             {
               "number": 13,
-              "prompt": "… Questions 14-17 The Reading Passage has six paragraphs,",
+              "prompt": "and decrease opportunities for … … transport.",
               "correctAnswer": "healthy",
               "acceptedAnswers": [
                 "healthy"
@@ -869,8 +869,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 1",
               "answerType": "text",
               "exactPortion": "and decrease opportunities for healthy transport",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Questions 14-17 The Reading Passage has six paragraphs,\" บทความมีถ้อยคำที่ตรงกันคือ \"and decrease opportunities for healthy transport\" จึงคำตอบคือ \"healthy\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "questions 14-17 paragraphs = decrease opportunities transport = healthy"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"and decrease opportunities for … … transport.\" บทความมีถ้อยคำที่ตรงกันคือ \"and decrease opportunities for healthy transport\" จึงคำตอบคือ \"healthy\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "decrease opportunities transport = decrease opportunities healthy transport = healthy"
             }
           ]
         }
@@ -919,7 +919,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "a reference to how further disappearance of multiple species could be avoided. … … … … … …",
+              "prompt": "a reference to how further disappearance of multiple species could be avoided.",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -927,8 +927,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "how we could use it to make genetic modifications which could prevent mass extinctions in the future",
-              "explanationThai": "คำถาม: \"a reference to how further disappearance of multiple species could be avoided. … … … … … …\" หลักฐานในบทความคือ \"how we could use it to make genetic modifications which could prevent mass extinctions in the f…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "further disappearance multiple = genetic modifications prevent extinctions = F"
+              "explanationThai": "คำถาม: \"a reference to how further disappearance of multiple species could be avoided.\" หลักฐานในบทความคือ \"how we could use it to make genetic modifications which could prevent mass extinctions in …\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "reference further disappearance multiple = use make genetic modifications = F"
             },
             {
               "number": 15,
@@ -971,7 +971,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "… which enabled mammoths to live in the tundra. The findings could help preserve the mammoth’s close relative, the endangered Asian elephant. According to Church, introducing Asian elephants to the tundra would involve certain physical adaptations to minimise",
+              "prompt": "By pinpointing which … … made it possible for mammoths to survive the icy climate of the tundra, the project's goal is.",
               "correctAnswer": "genetic traits",
               "acceptedAnswers": [
                 "genetic traits"
@@ -979,12 +979,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "By pinpointing which genetic traits made it possible for mammoths to survive the icy climate of the tundra, the project's goal is to return mammoths, or a mammoth-like species, to the area",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… which enabled mammoths to live in the tundra. The findings could help preserve the mammoth’s close relative, the endangered Asia…\" บทความมีถ้อยคำที่ตรงกันคือ \"By pinpointing which genetic traits made it possible for mammoths to survive the icy climate of…\" จึงคำตอบคือ \"genetic traits\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "elephant according church = pinpointing genetic traits possible = genetic traits"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"By pinpointing which … … made it possible for mammoths to survive the icy climate of the tundra, the project's goal is.\" บทความมีถ้อยคำที่ตรงกันคือ \"By pinpointing which genetic traits made it possible for mammoths to survive the icy clima…\" จึงคำตอบคือ \"genetic traits\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "pinpointing made possible mammoths = pinpointing genetic traits made = genetic traits"
             },
             {
               "number": 19,
-              "prompt": "… . To survive in the tundra, the species would need to have the mammoth-like features of thicker hair,",
+              "prompt": "physical adaptations to MINIMISE … …. To survive in the tundra, the species would need to have the mammoth-like features of thicker hair,.",
               "correctAnswer": "heat loss",
               "acceptedAnswers": [
                 "heat loss"
@@ -992,8 +992,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "all for the purpose of reducing heat loss in the tundra",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . To survive in the tundra, the species would need to have the mammoth-like features of thicker hair,\" บทความมีถ้อยคำที่ตรงกันคือ \"all for the purpose of reducing heat loss in the tundra\" จึงคำตอบคือ \"heat loss\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "survive tundra species = purpose reducing tundra = heat loss"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"physical adaptations to MINIMISE … …. To survive in the tundra, the species would need to have the mammoth-like features of thicker hair,.\" บทความมีถ้อยคำที่ตรงกันคือ \"all for the purpose of reducing heat loss in the tundra\" จึงคำตอบคือ \"heat loss\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "physical adaptations minimise survive = purpose reducing heat loss = heat loss"
             },
             {
               "number": 20,
@@ -1010,7 +1010,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "… Repopulating the tundra with mammoths or Asian elephant/mammoth hybrids would also have an impact on the environment, which could help to reduce temperatures and decrease",
+              "prompt": "To survive in the tundra the species would need mammoth-like features such as thicker hair and extra … ….",
               "correctAnswer": "insulating fat",
               "acceptedAnswers": [
                 "fat",
@@ -1019,12 +1019,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "extra insulating fat",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Repopulating the tundra with mammoths or Asian elephant/mammoth hybrids would also have an impact on the environment, which coul…\" บทความมีถ้อยคำที่ตรงกันคือ \"extra insulating fat\" จึงคำตอบคือ \"insulating fat\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "mammoths asian elephant = insulating = insulating fat"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"To survive in the tundra the species would need mammoth-like features such as thicker hair and extra … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"extra insulating fat\" จึงคำตอบคือ \"insulating fat\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "survive tundra species need = extra insulating fat = insulating fat"
             },
             {
               "number": 22,
-              "prompt": "… Questions 23-26 Look at the following statements and the",
+              "prompt": "a useful factor in reducing … ….",
               "correctAnswer": "carbon emissions",
               "acceptedAnswers": [
                 "emissions",
@@ -1033,8 +1033,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "text",
               "exactPortion": "a useful factor in reducing carbon emissions",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"could also be a useful factor in reducing ___\" บทความมีถ้อยคำที่ตรงกันคือ \"could also be a useful factor in reducing carbon emissions\" จึงตอบ \"carbon emissions\" (ยอมรับ emissions ด้วย)",
-              "paraphrasedVocabulary": "questions 23-26 below = growth reduce temperature mitigate = emissions"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"a useful factor in reducing … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"a useful factor in reducing carbon emissions\" จึงคำตอบคือ \"carbon emissions\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "useful factor reducing = useful factor reducing carbon = carbon emissions"
             },
             {
               "number": 23,
@@ -1051,7 +1051,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "It is important to concentrate on the causes of an animal's extinction. … … …",
+              "prompt": "It is important to concentrate on the causes of an animal's extinction.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1059,12 +1059,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "She prefers to focus the debate on how this emerging technology could be used to fully understand why various species went extinct in the first place",
-              "explanationThai": "คำถาม: \"It is important to concentrate on the causes of an animal's extinction. … … …\" หลักฐานในบทความคือ \"She prefers to focus the debate on how this emerging technology could be used to fully understa…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "animal's extinction = prefers debate emerging technology = C"
+              "explanationThai": "คำถาม: \"It is important to concentrate on the causes of an animal's extinction.\" หลักฐานในบทความคือ \"She prefers to focus the debate on how this emerging technology could be used to fully und…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "important concentrate causes animal's = prefers focus debate emerging = C"
             },
             {
               "number": 25,
-              "prompt": "A species brought back from extinction could have an important beneficial impact on the vegetation of its habitat. … … …",
+              "prompt": "A species brought back from extinction could have an important beneficial impact on the vegetation of its habitat.",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1072,12 +1072,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "According to Novak, a hybridized band-tailed pigeon, with the added nesting habits of a passenger pigeon, could, in theory, re-establish that forest disturbance, thereby creating a habitat necessary for a great many other native species to thrive",
-              "explanationThai": "คำถาม: \"A species brought back from extinction could have an important beneficial impact on the vegetation of its habitat. … … …\" หลักฐานในบทความคือ \"According to Novak, a hybridized band-tailed pigeon, with the added nesting habits of a passeng…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "species brought back = according hybridized band-tailed pigeon = A"
+              "explanationThai": "คำถาม: \"A species brought back from extinction could have an important beneficial impact on the vegetation of its habitat.\" หลักฐานในบทความคือ \"According to Novak, a hybridized band-tailed pigeon, with the added nesting habits of a pa…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "species brought back extinction = according novak hybridized band-tailed = A"
             },
             {
               "number": 26,
-              "prompt": "Our current efforts at preserving biodiversity are insufficient. … … … Questions 27-31 Choose the correct letter,",
+              "prompt": "Our current efforts at preserving biodiversity are insufficient.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1085,8 +1085,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "We know that what we are doing today is not enough",
-              "explanationThai": "คำถาม: \"Our current efforts at preserving biodiversity are insufficient. … … … Questions 27-31 Choose the correct letter,\" หลักฐานในบทความคือ \"We know that what we are doing today is not enough\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "current efforts preserving = enough = C"
+              "explanationThai": "คำถาม: \"Our current efforts at preserving biodiversity are insufficient.\" หลักฐานในบทความคือ \"We know that what we are doing today is not enough\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "current efforts preserving biodiversity = know doing today enough = C"
             }
           ]
         }
@@ -1100,7 +1100,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
     "id": "cambridge-15-test2-passage3",
     "title": "Cambridge 15 Test 2 Passage 3 - Having a laugh",
     "category": "advanced",
-    "rawPassageText": "READING PASSAGE 3\nHaving a laugh The findings of psychological scientists\n\nHaving a laugh The findings of psychological scientists reveal the importance of humour Humans start developing a sense of humour as early as six weeks old, when babies begin to laugh and smile in response to stimuli.\n\nLaughter is universal across all human cultures and even exists in some form in rats, chimps, and bonobos.\n\nLike other human emotions and expressions, laughter and humour provide psychological scientists with rich resources for studying human psychology, ranging from the development of language to the neuroscience of social perception.\n\nTheories focusing on the evolution of laughter point to it as an important adaptation for social communication.\n\nTake, for example, the recorded laughter in TV comedy shows.\n\nBack in 1950, US sound engineer Charley Douglass hated dealing with the unpredictable laughter of live audiences, so started recording his own 'laugh tracks'.\n\nThese were intended to help people at home feel like they were in a social situation, such as a crowded theatre.\n\nDouglass even recorded various types of laughter, as well as mixtures of laugher from men, women, and children.\n\nIn doing so, he picked up on a quality of laughter that is now interesting researchers: a simple 'haha' communicates a remarkable amount of socially relevant information.\n\nIn one study conducted in 2016, samples of laughter from pairs of English-speaking students were recorded at the University of California, Santa Cruz.\n\nA team made up of more than 30 psychological scientists, anthropologists, and biologists then played these recording to listeners from 24 diverse societies, from indigenous tribes in New Guinea to city-dwellers in India and Europe.\n\nParticipants were asked whether they thought the people laughing were friends or strangers.\n\nOn average, the results were remarkably consistent: worldwide, people's guesses were correct approximately 60% of the time.\n\nResearchers have also found that different types of laughter serve as codes to complex human social hierarchies.\n\nA team led by Christopher Oveis from the University of California, San Diego, found that high-status individuals had different laughs from low-status individuals, and that strangers' judgements of an individual's social status were influenced by the dominant or submissive quality of their laughter.\n\nIn their study, 48 male college students were randomly assigned to groups of four, with each group composed of two low-status members, who had just joined their college fraternity group, and two high-status members, older student took a turn at being teased by the others, involving the use of mildly insulting nicknames.\n\nAnalysis revealed that, as expected, high-status individuals produced more dominant laughs and fewer submissive laughs relative to the low-status individuals.\n\nMeanwhile, low-status individuals were more likely to change their laughter based on their position of power; that is, the newcomers produced more dominant laughs when they were in the 'powerful' role of teasers.\n\nDominant laughter was higher in pitch, louder, and more variable in tone than submissive laughter.\n\nA random group of volunteers then listened to an equal number of dominant and submissive laughs from both the high-and low-status individuals, and were asked to estimate the social status of the laughter.\n\nIn line with predictions, laughers producing dominant laughs were perceived to be significantly higher in status than laughers producing submissive laughs.\n\n'This was particularly true for low-status individuals, who were rated as significantly higher in status when displaying a dominant versus submissive laugh,' Oveis and colleagues note.\n\n'Thus, by strategically displaying more dominant laughter when the context allows, low-status individuals may achieve higher status in the eyes of others.'\n\nHowever, high-status individuals were rated as high-status whether they produced their natural dominant laugh or tried to do a submissive one.\n\nAnother study, conducted by David Cheng and Lu Wang of Australian National University, was based on the hypothesis that humour might provide a respite from tedious situations in the workplace.\n\nThis 'mental break' might facilitate the replenishment of mental resources.\n\nTo test this theory, the researchers recruited 74 business students, ostensibly for an experiment on perception.\n\nFirst, the students performed a tedious task in which they had to cross out every instance of the letter 'e' over two pages of text.\n\nThe students then were randomly assigned to watch a video clip eliciting either humour, contentment, or neutral feelings.\n\nSome watched a clip of the BBC comedy Mr.\n\nBean, others a relaxing scene with dolphins swimming in the ocean, and others a factual video about the management profession.\n\nThe students then completed a task requiring persistence in which they were asked to guess the potential performance of employees based on provided profiles, and were told that making 10 correct assessments in a row would lead to a win.\n\nHowever, the software was programmed such that is was nearly impossible to achieve 10 consecutive correct answers.\n\nParticipants were allowed to quit the task at any point.\n\nBean video ended up spending significantly more time working on the task, making twice as many predictions as the other two groups.\n\nCheng and Wang then replicated these results in a second study, during which they had participants complete long multiplication questions by hand.\n\nAgain, participants who watched the humorous video spent significantly more time working on this tedious task and completed more questions correctly than did the students in either of the other groups.\n\n'Although humour has been found to help relieve stress and facilitate social relationships, traditional view of task performance implies that individuals should avoid things such as humour that may distract them from the accomplishment of task goals,' Cheng and Wang conclude.\n\n'We suggest that humour is not only enjoyable but more importantly, energising.' <form id =\"\n\nQuestions 27-31\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 27-31 on your answer sheet.\n27 When referring to laughter in the first paragraph, the writer emphasises\nA __ its impact on language.\nB _ its function in human culture.\nC _ its value to scientific research.\nD its universality in animal societies.\n28 What does the writer suggest about Charley Douglass?\nA He understood the importance of enjoying humour in a group setting.\nB_ He believed that TV viewers at home needed to be told when to laugh.\nC He wanted his shows to appeal to audiences across the social spectrum.\nD He preferred shows where audiences were present in the recording studio.\n29 What makes the Santa Cruz study particularly significant?\nA _ the various different types of laughter that were studied\nB the similar results produced by a wide range of cultures\nC the number of different academic disciplines involved\nD__ the many kinds of people whose laughter was recorded\n30 Which of the following happened in the San Diego study?\nA Some participants became very upset.\nB Participants exchanged roles.\nC Participants who had not met before became friends.\nD_ Some participants were unable to laugh.\n31 Inthe fifth paragraph, what did the results of the San Diego study suggest?\nA tis clear whether a dominant laugh is produced by a high-or low-status\nperson.\nB__Low-status individuals in a position of power will still produce submissive\nlaughs.\nC The submissive laughs of low-and high-status individuals are surprisingly\nsimilar.\nD_ High-status individuals can always be identified by their way of laughing.\n\nQuestions 32-36\n\nComplete the summary using the list of words, A-H, below. j\n\nWrite the correct letter, A-H, in boxes 32-36 on your answer sheet.\n\nThe benefits of humour\n\nIn one study at Australian National University, randomly chosen groups of participants\n\nwere shown one of three videos, each designed to generate a different kind of\n\nveccsonenmnntnnnannnnnn + When all participants were then given a deliberately frustrating 32 …\n\ntask to do, it was found that those who had watched the 33 …wsscsuunennnene VICEO\n\npersisted with the task for longer and tried harder to accomplish the task than either of 1\n\nthe other two groups.\n\nAsecond study in which … … were asked to perform a … …\n\n34 oo eenrnnnnnnnnnee taSk produced similar results. According to researchers David j\n\nCheng and Lu Wang, these findings suggest that humour not only reduces\n\n35 ooccsssistnnnann AND helps build social connections but it may also have a\n\n36 octane Cffect on the body and mind.\n\nA laughter B relaxing C boring\n\nD anxiety E _ stimulating F emotion ]\n\nG enjoyment H = amusing\n\nj\n\n47 1\n\n(fa) eens\n\nQuestions 37-40\nDo the following statements agree with the claims of the writer in Reading Passage 3?\nIn boxes 37-40 on your answer sheet, write\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n37 Participants in the Santa Cruz study were more accurate at identifying the laughs of\nfriends than those of strangers.\n38 The researchers in the San Diego study were correct in their predictions regarding\nthe behaviour of the high-status individuals.\n39 The participants in the Australian National University study were given a fixed\namount of time to complete the task focusing on employee profiles.\n40 Cheng and Wang’s conclusions were in line with established notions regarding task\nperformance.\n48/0 p. 122",
+    "rawPassageText": "READING PASSAGE 3\nHaving a laugh The findings of psychological scientists\n\nHaving a laugh The findings of psychological scientists reveal the importance of humour Humans start developing a sense of humour as early as six weeks old, when babies begin to laugh and smile in response to stimuli.\n\nLaughter is universal across all human cultures and even exists in some form in rats, chimps, and bonobos.\n\nLike other human emotions and expressions, laughter and humour provide psychological scientists with rich resources for studying human psychology, ranging from the development of language to the neuroscience of social perception.\n\nTheories focusing on the evolution of laughter point to it as an important adaptation for social communication.\n\nTake, for example, the recorded laughter in TV comedy shows.\n\nBack in 1950, US sound engineer Charley Douglass hated dealing with the unpredictable laughter of live audiences, so started recording his own 'laugh tracks'.\n\nThese were intended to help people at home feel like they were in a social situation, such as a crowded theatre.\n\nDouglass even recorded various types of laughter, as well as mixtures of laugher from men, women, and children.\n\nIn doing so, he picked up on a quality of laughter that is now interesting researchers: a simple 'haha' communicates a remarkable amount of socially relevant information.\n\nIn one study conducted in 2016, samples of laughter from pairs of English-speaking students were recorded at the University of California, Santa Cruz.\n\nA team made up of more than 30 psychological scientists, anthropologists, and biologists then played these recording to listeners from 24 diverse societies, from indigenous tribes in New Guinea to city-dwellers in India and Europe.\n\nParticipants were asked whether they thought the people laughing were friends or strangers.\n\nOn average, the results were remarkably consistent: worldwide, people's guesses were correct approximately 60% of the time.\n\nResearchers have also found that different types of laughter serve as codes to complex human social hierarchies.\n\nA team led by Christopher Oveis from the University of California, San Diego, found that high-status individuals had different laughs from low-status individuals, and that strangers' judgements of an individual's social status were influenced by the dominant or submissive quality of their laughter.\n\nIn their study, 48 male college students were randomly assigned to groups of four, with each group composed of two low-status members, who had just joined their college fraternity group, and two high-status members, older student took a turn at being teased by the others, involving the use of mildly insulting nicknames.\n\nAnalysis revealed that, as expected, high-status individuals produced more dominant laughs and fewer submissive laughs relative to the low-status individuals.\n\nMeanwhile, low-status individuals were more likely to change their laughter based on their position of power; that is, the newcomers produced more dominant laughs when they were in the 'powerful' role of teasers.\n\nDominant laughter was higher in pitch, louder, and more variable in tone than submissive laughter.\n\nA random group of volunteers then listened to an equal number of dominant and submissive laughs from both the high-and low-status individuals, and were asked to estimate the social status of the laughter.\n\nIn line with predictions, laughers producing dominant laughs were perceived to be significantly higher in status than laughers producing submissive laughs.\n\n'This was particularly true for low-status individuals, who were rated as significantly higher in status when displaying a dominant versus submissive laugh,' Oveis and colleagues note.\n\n'Thus, by strategically displaying more dominant laughter when the context allows, low-status individuals may achieve higher status in the eyes of others.'\n\nHowever, high-status individuals were rated as high-status whether they produced their natural dominant laugh or tried to do a submissive one.\n\nAnother study, conducted by David Cheng and Lu Wang of Australian National University, was based on the hypothesis that humour might provide a respite from tedious situations in the workplace.\n\nThis 'mental break' might facilitate the replenishment of mental resources.\n\nTo test this theory, the researchers recruited 74 business students, ostensibly for an experiment on perception.\n\nFirst, the students performed a tedious task in which they had to cross out every instance of the letter 'e' over two pages of text.\n\nThe students then were randomly assigned to watch a video clip eliciting either humour, contentment, or neutral feelings.\n\nSome watched a clip of the BBC comedy Mr.\n\nBean, others a relaxing scene with dolphins swimming in the ocean, and others a factual video about the management profession.\n\nThe students then completed a task requiring persistence in which they were asked to guess the potential performance of employees based on provided profiles, and were told that making 10 correct assessments in a row would lead to a win.\n\nHowever, the software was programmed such that is was nearly impossible to achieve 10 consecutive correct answers.\n\nParticipants were allowed to quit the task at any point.\n\nBean video ended up spending significantly more time working on the task, making twice as many predictions as the other two groups.\n\nCheng and Wang then replicated these results in a second study, during which they had participants complete long multiplication questions by hand.\n\nAgain, participants who watched the humorous video spent significantly more time working on this tedious task and completed more questions correctly than did the students in either of the other groups.\n\n'Although humour has been found to help relieve stress and facilitate social relationships, traditional view of task performance implies that individuals should avoid things such as humour that may distract them from the accomplishment of task goals,' Cheng and Wang conclude.\n\n'We suggest that humour is not only enjoyable but more importantly, energising.' <form id =\"\n\nQuestions 27-31\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 27-31 on your answer sheet.\n27 When referring to laughter in the first paragraph, the writer emphasises\nA __ its impact on language.\nB _ its function in human culture.\nC _ its value to scientific research.\nD its universality in animal societies.\n28 What does the writer suggest about Charley Douglass?\nA He understood the importance of enjoying humour in a group setting.\nB_ He believed that TV viewers at home needed to be told when to laugh.\nC He wanted his shows to appeal to audiences across the social spectrum.\nD He preferred shows where audiences were present in the recording studio.\n29 What makes the Santa Cruz study particularly significant?\nA _ the various different types of laughter that were studied\nB the similar results produced by a wide range of cultures\nC the number of different academic disciplines involved\nD__ the many kinds of people whose laughter was recorded\n30 Which of the following happened in the San Diego study?\nA Some participants became very upset.\nB Participants exchanged roles.\nC Participants who had not met before became friends.\nD_ Some participants were unable to laugh.\n31 Inthe fifth paragraph, what did the results of the San Diego study suggest?\nA tis clear whether a dominant laugh is produced by a high-or low-status\nperson.\nB__Low-status individuals in a position of power will still produce submissive\nlaughs.\nC The submissive laughs of low-and high-status individuals are surprisingly\nsimilar.\nD_ High-status individuals can always be identified by their way of laughing.\n\nQuestions 32-36\n\nComplete the summary using the list of words, A-H, below. j\n\nWrite the correct letter, A-H, in boxes 32-36 on your answer sheet.\n\nThe benefits of humour\n\nIn one study at Australian National University, randomly chosen groups of participants\n\nwere shown one of three videos, each designed to generate a different kind of\n\nveccsonenmnntnnnannnnnn + When all participants were then given a deliberately frustrating 32 …\n\ntask to do, it was found that those who had watched the 33 …wsscsuunennnene VICEO\n\npersisted with the task for longer and tried harder to accomplish the task than either of 1\n\nthe other two groups.\n\nAsecond study in which participants were asked to perform a particularly\n34 oo eenrnnnnnnnnnee taSk produced similar results. According to researchers David j\n\nCheng and Lu Wang, these findings suggest that humour not only reduces\n\n35 ooccsssistnnnann AND helps build social connections but it may also have a\n\n36 octane Cffect on the body and mind.\n\nA laughter\nB relaxing\nC boring\nD anxiety\nE stimulating\nF emotion\nG enjoyment\nH amusing\n\nj\n\n47 1\n\n(fa) eens\n\nQuestions 37-40\nDo the following statements agree with the claims of the writer in Reading Passage 3?\nIn boxes 37-40 on your answer sheet, write\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n37 Participants in the Santa Cruz study were more accurate at identifying the laughs of\nfriends than those of strangers.\n38 The researchers in the San Diego study were correct in their predictions regarding\nthe behaviour of the high-status individuals.\n39 The participants in the Australian National University study were given a fixed\namount of time to complete the task focusing on employee profiles.\n40 Cheng and Wang’s conclusions were in line with established notions regarding task\nperformance.\n48/0 p. 122",
     "rawAnswerKey": "READING PASSAGE 3: Having a laugh\n\nQuestion 27: When referring to laughter in the first paragraphs, the writer emphasises\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"Like other human emotions and expressions, laughter and humour provide psychological scientists with rich resources for studying human psychology, ranging from the development of language to the neuroscience of social perception\"\n\nShort Thai Explanation: ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (When referring to laughter in the first paragraphs, the writer emphasises) โดยเฉพาะประโยค \"Like other human emotions and expressions, laughter and humour provide psychological scientists…\" จึงเลือก C\n\nParaphrased Vocabulary: referring laughter paragraphs = emotions expressions laughter humour = C\n\nQuestion 28: What does the writer suggest about Charley Douglass?\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"Back in 1950, US sound engineer Charley Douglass hated dealing with the unpredictable laughter of live audiences, so started recording his own ‘laugh tracks’. These were intended to help people at home feel like they were in a social situation, such as a crowded theatre.\"\n\nShort Thai Explanation: คำถาม: \"What does the writer suggest about Charley Douglass?\" หลักฐานในบทความคือ \"Back in 1950, US sound engineer Charley Douglass hated dealing with the unpredictable laughter …\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A\n\nParaphrased Vocabulary: suggest charley douglass = engineer charley douglass dealing = A\n\nQuestion 29: What makes the Santa Cruz study particularly significant?\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"the results were remarkably consistent\"\n\nShort Thai Explanation: คำถาม: \"What makes the Santa Cruz study particularly significant?\" หลักฐานในบทความคือ \"the results were remarkably consistent\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: cruz study particularly = results remarkably consistent = B\n\nQuestion 30: Which of the following happened in the San Diego study?\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"older student took a turn at being teased by the others, involving the use of mildly insulting nicknames\"\n\nShort Thai Explanation: คำถาม: \"Which of the following happened in the San Diego study?\" หลักฐานในบทความคือ \"older student took a turn at being teased by the others, involving the use of mildly insulting …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B\n\nParaphrased Vocabulary: diego study = student teased others involving = B\n\nQuestion 31: In the fifth paragraph, what did the results of the San Diego study suggest?\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"high-status individuals were rated as high-status whether they produced their natural dominant laugh or tried to do a submissive one\"\n\nShort Thai Explanation: ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (In the fifth paragraph, what did the results of the San Diego study suggest?) โดยเฉพาะประโยค \"high-status individuals were rated as high-status whether they produced their natural dominant …\" จึงเลือก D\n\nParaphrased Vocabulary: diego study suggest = high-status individuals high-status whether = D\n\nQuestion 32: veccsonenmnntnnnannnnnn + When all participants were then given a deliberately frustrating\n\nCorrect Answer: F\n\nAccepted Answers: F\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"The students then were randomly assigned to watch a video clip eliciting either humour, contentment, or neutral feelings\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … . When all participants were then given\" หลักฐานในบทความคือ \"The students then were randomly assigned to watch a video clip eliciting either humour, content…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F\n\nParaphrased Vocabulary: participants = students randomly assigned eliciting = F\n\nQuestion 33: video persisted with the task for longer and tried harder to accomplish the task than either of the other two groups.\n\nCorrect Answer: H\n\nAccepted Answers: H\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"Students who had watched the Mr. Bean video ended up spending significantly more time working on the task\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … video persisted with the task for longer and tried harder to accomplish the task than either of the other two g…\" หลักฐานในบทความคือ \"Students who had watched the Mr. Bean video ended up spending significantly more time working o…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H\n\nParaphrased Vocabulary: either groups = students watched spending significantly = H\n\nQuestion 34: task produced similar results. According to researchers David Cheng and Lu Wang, these findings suggest that humour not only reduces\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"participants who watched the humorous video spent significantly more time working on this tedious task\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … task produced similar results. According to researchers David Cheng and Lu Wang, these findings suggest that hu…\" หลักฐานในบทความคือ \"participants who watched the humorous video spent significantly more time working on this tedio…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C\n\nParaphrased Vocabulary: produced similar results = participants watched humorous significantly = C\n\nQuestion 35: ooccsssistnnnann AND helps build social connections but it may also have a |\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"humour has been found to help relieve stress and facilitate social relationships\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … and helps build social connections but it may also have a\" หลักฐานในบทความคือ \"humour has been found to help relieve stress and facilitate social relationships\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D\n\nParaphrased Vocabulary: helps build social = humour relieve stress facilitate = D\n\nQuestion 36: octane Cffect on the body and mind.\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"We suggest that humour is not only enjoyable but more importantly, energising.\"\n\nShort Thai Explanation: คำถาม: \"Drop answer here … Effect on the body and mind. Drag and drop an option to fill in each blank. A. laughter B. relaxing C. boring D…\" หลักฐานในบทความคือ \"We suggest that humour is not only enjoyable but more importantly, energising.\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E\n\nParaphrased Vocabulary: option fill blank = suggest humour enjoyable importantly = E\n\nQuestion 37: Participants in the Santa Cruz study were more accurate at identifying the laughs of friends than those of strangers.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"worldwide, people’s guesses were correct approximately 60% of the time\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Participants in the Santa Cruz study were more accurate at identifying the laughs of friends than those of strangers.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"worldwide, people’s guesses were correct approximately 60% of the time\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: cruz study accurate = worldwide guesses approximately = NOT GIVEN\n\nQuestion 38: The researchers in the San Diego study were correct in their predictions regarding the behaviour of the high-status individuals.\n\nCorrect Answer: TRUE\n\nAccepted Answers: TRUE\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"Analysis revealed that, as expected, high-status individuals produced more dominant laughs and fewer submissive laughs relative to the low-status individuals.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The researchers in the San Diego study were correct in their predictions regarding the behaviour of the high-status individuals.\" ตรงกับข้อมูลในบทความ เพราะบทความระบุว่า \"Analysis revealed that, as expected, high-status individuals produced more dominant laughs and …\" ซึ่งยืนยันสิ่งที่ข้อกล่าวถึงได้ชัดเจน จึงตอบ TRUE\n\nParaphrased Vocabulary: diego study predictions = analysis revealed expected high-status = TRUE\n\nQuestion 39: The participants in the Australian National University study were given a fixed\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"Participants were allowed to quit the task at any point\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"The participants in the Australian National University study were given\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"Participants were allowed to quit the task at any point\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: national university study = participants allowed = FALSE\n\nQuestion 40: Cheng and Wang's conclusions were in line with established notions regarding task performance.\n\nCorrect Answer: FALSE\n\nAccepted Answers: FALSE\n\nAnswer Group: Cambridge 15 Test 2 Passage 3\n\nExact Portion: \"traditional view of task performance implies that individuals should avoid things such as humour that may distract them from the accomplishment of task goals,’ Cheng and Wang conclude. ‘We suggest that humour is not only enjoyable but more importantly, energising.\"\n\nShort Thai Explanation: ข้อความในข้อว่า \"Cheng and Wang's conclusions were in line with established notions regarding task performance.\" ไม่ตรงกับบทความ เพราะบทความระบุว่า \"traditional view of task performance implies that individuals should avoid things such as humou…\" ซึ่งขัดกับสิ่งที่ข้ออ้าง (หรือให้ข้อมูลตรงข้าม) จึงตอบ FALSE\n\nParaphrased Vocabulary: cheng wang's conclusions = traditional performance implies individuals = FALSE",
     "parsedPayload": {
       "title": "Cambridge 15 Test 2 Passage 3 - Having a laugh",
@@ -1212,8 +1212,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "The students then were randomly assigned to watch a video clip eliciting either humour, contentment, or neutral feelings",
-              "explanationThai": "คำถาม: \"Drop answer here … . When all participants were then given\" หลักฐานในบทความคือ \"The students then were randomly assigned to watch a video clip eliciting either humour, content…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "participants = students randomly assigned eliciting = F"
+              "explanationThai": "คำถาม: \"veccsonenmnntnnnannnnnn + When all participants were then given a deliberately frustrating task to do, it was found that those who had watched the 33 …wsscsuunennnene VICEO | persisted with the task for longer and tried harder to accomplish the task than either of 1 the other two groups. | Asecond study in which participants were asked to perform a particularly\" หลักฐานในบทความคือ \"The students then were randomly assigned to watch a video clip eliciting either humour, co…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "veccsonenmnntnnnannnnnn participants given deliberately = students randomly assigned watch = F"
             },
             {
               "number": 33,
@@ -1225,8 +1225,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Students who had watched the Mr. Bean video ended up spending significantly more time working on the task",
-              "explanationThai": "คำถาม: \"Drop answer here … video persisted with the task for longer and tried harder to accomplish the task than either of the other two g…\" หลักฐานในบทความคือ \"Students who had watched the Mr. Bean video ended up spending significantly more time working o…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
-              "paraphrasedVocabulary": "either groups = students watched spending significantly = H"
+              "explanationThai": "คำถาม: \"video persisted with the task for longer and tried harder to accomplish the task than either of the other two groups.\" หลักฐานในบทความคือ \"Students who had watched the Mr. Bean video ended up spending significantly more time work…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
+              "paraphrasedVocabulary": "video persisted task longer = students watched bean video = H"
             },
             {
               "number": 34,
@@ -1238,8 +1238,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "participants who watched the humorous video spent significantly more time working on this tedious task",
-              "explanationThai": "คำถาม: \"Drop answer here … task produced similar results. According to researchers David Cheng and Lu Wang, these findings suggest that hu…\" หลักฐานในบทความคือ \"participants who watched the humorous video spent significantly more time working on this tedio…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "produced similar results = participants watched humorous significantly = C"
+              "explanationThai": "คำถาม: \"oo eenrnnnnnnnnnee taSk produced similar results. According to researchers David j Cheng and Lu Wang, these findings suggest that humour not only reduces |\" หลักฐานในบทความคือ \"participants who watched the humorous video spent significantly more time working on this …\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "eenrnnnnnnnnnee task produced similar = participants watched humorous video = C"
             },
             {
               "number": 35,
@@ -1251,8 +1251,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "humour has been found to help relieve stress and facilitate social relationships",
-              "explanationThai": "คำถาม: \"Drop answer here … and helps build social connections but it may also have a\" หลักฐานในบทความคือ \"humour has been found to help relieve stress and facilitate social relationships\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "helps build social = humour relieve stress facilitate = D"
+              "explanationThai": "คำถาม: \"ooccsssistnnnann AND helps build social connections but it may also have a |\" หลักฐานในบทความคือ \"humour has been found to help relieve stress and facilitate social relationships\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "ooccsssistnnnann helps build social = humour found help relieve = D"
             },
             {
               "number": 36,
@@ -1264,8 +1264,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 2 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "We suggest that humour is not only enjoyable but more importantly, energising.",
-              "explanationThai": "คำถาม: \"Drop answer here … Effect on the body and mind. Drag and drop an option to fill in each blank. A. laughter B. relaxing C. boring D…\" หลักฐานในบทความคือ \"We suggest that humour is not only enjoyable but more importantly, energising.\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "option fill blank = suggest humour enjoyable importantly = E"
+              "explanationThai": "คำถาม: \"octane Cffect on the body and mind.\" หลักฐานในบทความคือ \"We suggest that humour is not only enjoyable but more importantly, energising.\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "octane cffect body mind = suggest humour only enjoyable = E"
             },
             {
               "number": 37,
@@ -1484,7 +1484,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "While visiting his hometown, Moore does some drawings of … …",
+              "prompt": "While visiting his hometown, Moore does some drawings of.",
               "correctAnswer": "miners",
               "acceptedAnswers": [
                 "miners"
@@ -1497,7 +1497,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Moore is employed to produce …",
+              "prompt": "Moore is employed to produce.",
               "correctAnswer": "family",
               "acceptedAnswers": [
                 "family"
@@ -1510,7 +1510,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "… … start to buy Moore’s work.",
+              "prompt": "Moore's work became available to … … all over the world.",
               "correctAnswer": "collectors",
               "acceptedAnswers": [
                 "collectors"
@@ -1518,8 +1518,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 1",
               "answerType": "text",
               "exactPortion": "Moore's work became available to collectors all over the world",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… … start to buy Moore’s work.\" บทความมีถ้อยคำที่ตรงกันคือ \"In this way, Moore’s work became available to collectors all over the world\" จึงคำตอบคือ \"collectors\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "start moore = became available = collectors"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Moore's work became available to … … all over the world.\" บทความมีถ้อยคำที่ตรงกันคือ \"Moore's work became available to collectors all over the world\" จึงคำตอบคือ \"collectors\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "moore's work became available = moore's work became available = collectors"
             },
             {
               "number": 13,
@@ -1546,7 +1546,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
     "id": "cambridge-15-test3-passage2",
     "title": "Cambridge 15 Test 3 Passage 2 - The Desolenator: producing clean water",
     "category": "normal",
-    "rawPassageText": "READING PASSAGE 2\n! (8) SIIB Reading | The Desolenator: producing clean water\n\n! (8) SIIB Reading | The Desolenator: producing clean water\n\nA Travelling around Thailand in the 1990s, William Janssen was impressed with the |\n\nbasic rooftop solar heating systems that were on many homes, where energy from the sun was absorbed by a plate and then used to heat water for domestic use. Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portable device that uses the power from the sun to purify water.\n\nB The Desolenator operates as a mobile desalination unit that can take water from\n\ndifferent places, such as the sea, rivers, boreholes and rain, and purify it for human consumption. It is particularly valuable in regions where natural groundwater | reserves have been polluted, or where seawater is the only water source available. Janssen saw that there was a need for a sustainable way to clean water in both the developing and the developed countries when he moved to the United Arab Emirates and saw large-scale water processing. ‘I was confronted with the enormous carbon footprint that the Gulf nations have because of all of the desalination that they do,’ he says.\n\nC The Desolenator can produce 15 litres of drinking water per day, enough to sustain\n\na family for cooking and drinking. Its main selling point is that unlike standard | desalination techniques, it doesn’t require a generated power supply: just sunlight. It measures 120cm by 90cm, and is easy to transport, thanks to its two wheels. Water | enters through a pipe, and flows as a thin film between a sheet of double glazing and the surface of a solar panel, where it is heated by the sun. The warm water flows into a small boiler (heated by a solar-powered battery) where it is converted to steam. | When the steam cools, it becomes distilled water. The device has a very simple filter to trap particles, and this can easily be shaken to remove them. There are two tubes | for liquid coming out: one for the waste - salt from seawater, fluoride, etc. - and another for the distilled water. The performance of the unit is shown on an LCD | screen and transmitted to the company which provides servicing when necessary. DA recent analysis found that at least two-thirds of the world’s population lives with severe water scarcity for at least a month every year. Janssen says that by 2030 half of the world’s population will be living with water stress - where the demand exceeds the supply over a certain period of time. ‘It is really important that a sustainable solution is brought to the market that is able to help these people, he says. Many countries ‘don’t have the money for desalination plants, which are very expensive to build. They don’t have the money to operate them, they are very maintenance intensive, and they don’t have the money to buy the diesel to run the | desalination plants, so it is a really bad situation.’ | 63 |\n\nE The device is aimed at a wide variety of users - from homeowners in the developing\n\nworld who do not have a constant supply of water to people living off the grid in rural parts of the US. The first commercial versions of the Desolenator are expected to be in operation in India early next year, after field tests are carried out. The market for the self-sufficient devices in developing countries is twofold - those who cannot afford the money for the device outright and pay through microfinance, and middle-income homes that can lease their own equipment. ‘People in India don’t pay for a fridge outright; they pay for it over six months. They would put the Desolenator on their roof and hook it up to their municipal supply and they would get very reliable drinking water on a daily basis,’ Janssen says. In the developed world, it is aimed at niche markets where tap water is unavailable - for camping, on boats, or for the military, for instance.\n\nF Prices will vary according to where it is bought. In the developing world, the price\n\nwill depend on what deal aid organisations can negotiate. In developed countries, it is likely to come in at $1,000 (£685) a unit, said Janssen. “We are a venture with a social mission. We are aware that the product we have envisioned is mainly finding application in the developing world and humanitarian sector and that this is the way we will proceed. We do realise, though, that to be a viable company there is a bottom line to keep in mind,’ he says.\n\nG The company itself is based at Imperial College London, although Janssen, its chief\n\nexecutive, still lives in the UAE. It has raised £340,000 in funding so far. Within two years, he says, the company aims to be selling 1,000 units a month, mainly in the humanitarian field. They are expected to be sold in areas such as Australia, northern Chile, Peru, Texas and California.\n\nQuestions 14-20\nReading Passage 2 has seven sections, A-G.\nChoose the correct heading for each section from the list of headings below.\nWrite the correct number, i-x, in boxes 14-20 on your answer sheet.\nList of Headings\n\ni Getting the finance for production\n\nii An unexpected benefit\n\niii From initial inspiration to new product\n\niv The range of potential customers for the device\n\nv_ What makes the device different from alternatives\n\nvi Cleaning water from a range of sources\n\nvii Overcoming production difficulties\n\nviii Profit not the primary goal\n\nix Awarm welcome for the device\n\nx The number of people affected by water shortages\n14 SectionA\n15 Section B\n16 Section C\n17 Section D\n18 Section E\n19 Section F\n20 SectionG\n\nQuestions 21-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 21-26 on your answer sheet.\nHow the Desolenator works\nThe energy required to operate the Desolenator comes from sunlight. The device can\n\nbe used in different locations, aS it NAS 21 oo. « Water is fed into\n\nA PIPE, AN A 22 ocean OF Water flows over a solar panel. The water H\nthen enters a boiler, where it turns into steam. Any particles in the water are caught in\nFQ vovccmrmnniinnunnnnnnn « Te purified water comes out through one tube, and all\ntyPe OF 24 niente COME Out through another. A screen displays the\n25 eros Of the device, and transmits the information to the company\nso that they know when the Desolenator requires 26 …cnnccssscneniseenenueinn «\ni\ni\n}\ni\n\\|\ni\ni\nj\n3/0 p.124] 65",
+    "rawPassageText": "READING PASSAGE 2\n! (8) SIIB Reading | The Desolenator: producing clean water\n\n! (8) SIIB Reading | The Desolenator: producing clean water\n\nA Travelling around Thailand in the 1990s, William Janssen was impressed with the |\n\nbasic rooftop solar heating systems that were on many homes, where energy from the sun was absorbed by a plate and then used to heat water for domestic use. Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portable device that uses the power from the sun to purify water.\n\nB The Desolenator operates as a mobile desalination unit that can take water from\n\ndifferent places, such as the sea, rivers, boreholes and rain, and purify it for human consumption. It is particularly valuable in regions where natural groundwater | reserves have been polluted, or where seawater is the only water source available. Janssen saw that there was a need for a sustainable way to clean water in both the developing and the developed countries when he moved to the United Arab Emirates and saw large-scale water processing. ‘I was confronted with the enormous carbon footprint that the Gulf nations have because of all of the desalination that they do,’ he says.\n\nC The Desolenator can produce 15 litres of drinking water per day, enough to sustain\n\na family for cooking and drinking. Its main selling point is that unlike standard | desalination techniques, it doesn’t require a generated power supply: just sunlight. It measures 120cm by 90cm, and is easy to transport, thanks to its two wheels. Water | enters through a pipe, and flows as a thin film between a sheet of double glazing and the surface of a solar panel, where it is heated by the sun. The warm water flows into a small boiler (heated by a solar-powered battery) where it is converted to steam. | When the steam cools, it becomes distilled water. The device has a very simple filter to trap particles, and this can easily be shaken to remove them. There are two tubes | for liquid coming out: one for the waste - salt from seawater, fluoride, etc. - and another for the distilled water. The performance of the unit is shown on an LCD | screen and transmitted to the company which provides servicing when necessary. DA recent analysis found that at least two-thirds of the world’s population lives with severe water scarcity for at least a month every year. Janssen says that by 2030 half of the world’s population will be living with water stress - where the demand exceeds the supply over a certain period of time. ‘It is really important that a sustainable solution is brought to the market that is able to help these people, he says. Many countries ‘don’t have the money for desalination plants, which are very expensive to build. They don’t have the money to operate them, they are very maintenance intensive, and they don’t have the money to buy the diesel to run the | desalination plants, so it is a really bad situation.’ | 63 |\n\nE The device is aimed at a wide variety of users - from homeowners in the developing\n\nworld who do not have a constant supply of water to people living off the grid in rural parts of the US. The first commercial versions of the Desolenator are expected to be in operation in India early next year, after field tests are carried out. The market for the self-sufficient devices in developing countries is twofold - those who cannot afford the money for the device outright and pay through microfinance, and middle-income homes that can lease their own equipment. ‘People in India don’t pay for a fridge outright; they pay for it over six months. They would put the Desolenator on their roof and hook it up to their municipal supply and they would get very reliable drinking water on a daily basis,’ Janssen says. In the developed world, it is aimed at niche markets where tap water is unavailable - for camping, on boats, or for the military, for instance.\n\nF Prices will vary according to where it is bought. In the developing world, the price\n\nwill depend on what deal aid organisations can negotiate. In developed countries, it is likely to come in at $1,000 (£685) a unit, said Janssen. “We are a venture with a social mission. We are aware that the product we have envisioned is mainly finding application in the developing world and humanitarian sector and that this is the way we will proceed. We do realise, though, that to be a viable company there is a bottom line to keep in mind,’ he says.\n\nG The company itself is based at Imperial College London, although Janssen, its chief\n\nexecutive, still lives in the UAE. It has raised £340,000 in funding so far. Within two years, he says, the company aims to be selling 1,000 units a month, mainly in the humanitarian field. They are expected to be sold in areas such as Australia, northern Chile, Peru, Texas and California.\n\nQuestions 14-20\nReading Passage 2 has seven sections, A-G.\nChoose the correct heading for each section from the list of headings below.\nWrite the correct number, i-x, in boxes 14-20 on your answer sheet.\nList of Headings\n\ni Getting the finance for production\n\nii An unexpected benefit\n\niii From initial inspiration to new product\n\niv The range of potential customers for the device\n\nv What makes the device different from alternatives\n\nvi Cleaning water from a range of sources\n\nvii Overcoming production difficulties\n\nviii Profit not the primary goal\n\nix Awarm welcome for the device\n\nx The number of people affected by water shortages\n14 SectionA\n15 Section B\n16 Section C\n17 Section D\n18 Section E\n19 Section F\n20 SectionG\n\nQuestions 21-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 21-26 on your answer sheet.\nHow the Desolenator works\nThe energy required to operate the Desolenator comes from sunlight. The device can\n\nbe used in different locations, aS it NAS 21 oo. « Water is fed into\n\nA PIPE, AN A 22 ocean OF Water flows over a solar panel. The water H\nthen enters a boiler, where it turns into steam. Any particles in the water are caught in\nFQ vovccmrmnniinnunnnnnnn « Te purified water comes out through one tube, and all\ntyPe OF 24 niente COME Out through another. A screen displays the\n25 eros Of the device, and transmits the information to the company\nso that they know when the Desolenator requires 26 …cnnccssscneniseenenueinn «\ni\ni\n}\ni\n\\|\ni\ni\nj\n3/0 p.124] 65",
     "rawAnswerKey": "READING PASSAGE 2: The Desolenator: producing clean water\n\nQuestion 14: Drop heading here …\n\nCorrect Answer: iii\n\nAccepted Answers: iii\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portable device that uses the power from the sun to purify water\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portable de…\" จึงคำตอบคือ \"iii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = decades janssen developed southeast = iii\n\nQuestion 15: Drop heading here …\n\nCorrect Answer: vi\n\nAccepted Answers: vi\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"The Desolenator operates as a mobile desalination unit that can take water from different places, such as the sea, rivers, boreholes and rain, and purify it for human consumption.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The Desolenator operates as a mobile desalination unit that can take water from different place…\" จึงคำตอบคือ \"vi\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = desolenator operates mobile desalination = vi\n\nQuestion 16: Drop heading here …\n\nCorrect Answer: v\n\nAccepted Answers: v\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"Its main selling point is that unlike standard desalination techniques, it doesn’t require a generated power supply\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Its main selling point is that unlike standard desalination techniques, it doesn’t require a ge…\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = selling unlike standard desalination = v\n\nQuestion 17: Drop heading here …\n\nCorrect Answer: x\n\nAccepted Answers: x\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"A recent analysis found that at least two-thirds of the world’s population lives with severe water scarcity for at least a month every year\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"A recent analysis found that at least two-thirds of the world’s population lives with severe wa…\" จึงคำตอบคือ \"x\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = recent analysis two-thirds population = x\n\nQuestion 18: Drop heading here …\n\nCorrect Answer: iv\n\nAccepted Answers: iv\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"The device is aimed at a wide variety of users – from homeowners in the developing world who do not have a constant supply of water to people living off the grid in rural parts of the US.\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The device is aimed at a wide variety of users – from homeowners in the developing world who do…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = device variety homeowners developing = iv\n\nQuestion 19: Drop heading here …\n\nCorrect Answer: viii\n\nAccepted Answers: viii\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"We are a venture with a social mission. We are aware that the product we have envisioned is mainly finding application in the developing world and humanitarian sector and that this is the way we will proceed\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"We are a venture with a social mission. We are aware that the product we have envisioned is mai…\" จึงคำตอบคือ \"viii\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = venture social mission product = viii\n\nQuestion 20: Drop heading here …\n\nCorrect Answer: i\n\nAccepted Answers: i\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"It has raised £340,000 in funding so far\"\n\nShort Thai Explanation: ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"It has raised £340,000 in funding so far\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: heading = raised funding = i\n\nQuestion 21: … . Water is fed into\n\nCorrect Answer: wheels\n\nAccepted Answers: wheels\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"It measures 120 cm by 90 cm, and it easy to transport, thanks to its two wheels\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… . Water is fed into\" บทความมีถ้อยคำที่ตรงกันคือ \"It measures 120 cm by 90 cm, and it easy to transport, thanks to its two wheels\" จึงคำตอบคือ \"wheels\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: water = measures transport thanks = wheels\n\nQuestion 22: … of water flows over\n\nCorrect Answer: film\n\nAccepted Answers: film\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"Water enters through a pipe, and flows as a thin film between a sheet of double glazing and the surface of a solar panel\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… of water flows over\" บทความมีถ้อยคำที่ตรงกันคือ \"Water enters through a pipe, and flows as a thin film between a sheet of double glazing and the…\" จึงคำตอบคือ \"film\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: water flows = enters between double glazing = film\n\nQuestion 23: … . The purified water comes out through one tube, and all types of\n\nCorrect Answer: filter\n\nAccepted Answers: filter\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"The device has a very simple filter to trap particles\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… . The purified water comes out through one tube, and all types of\" บทความมีถ้อยคำที่ตรงกันคือ \"The device has a very simple filter to trap particles\" จึงคำตอบคือ \"filter\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: purified water comes = device simple particles = filter\n\nQuestion 24: … come out through another.\n\nCorrect Answer: waste\n\nAccepted Answers: waste\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"There are two tubes for liquid coming out: one for the waste – salt from seawater, fluoride, etc. – and another for the distilled water\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… come out through another.\" บทความมีถ้อยคำที่ตรงกันคือ \"There are two tubes for liquid coming out: one for the waste – salt from seawater, fluoride, et…\" จึงคำตอบคือ \"waste\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: another = liquid coming seawater fluoride = waste\n\nQuestion 25: … of the device, and transmits the information to the company so that they know when the Desolenator requires\n\nCorrect Answer: performance\n\nAccepted Answers: performance\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"The performance of the unit is shown on an LCD screen\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… of the device, and transmits the information to the company so that they know when the Desolenator requires\" บทความมีถ้อยคำที่ตรงกันคือ \"The performance of the unit is shown on an LCD screen\" จึงคำตอบคือ \"performance\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: device transmits company = screen = performance\n\nQuestion 26: … . Questions 27-31 Complete each sentence with the correct ending,\n\nCorrect Answer: servicing\n\nAccepted Answers: servicing\n\nAnswer Group: Cambridge 15 Test 3 Passage 2\n\nExact Portion: \"transmitted to the company which provides servicing when necessary\"\n\nShort Thai Explanation: ในข้อให้เติมคำในช่องว่าง: \"… . Questions 27-31 Complete each sentence with the correct ending,\" บทความมีถ้อยคำที่ตรงกันคือ \"transmitted to the company which provides servicing when necessary\" จึงคำตอบคือ \"servicing\" (paraphrase จากข้อความใน passage)\n\nParaphrased Vocabulary: questions 27-31 complete = transmitted company provides necessary = servicing",
     "parsedPayload": {
       "title": "Cambridge 15 Test 3 Passage 2 - The Desolenator: producing clean water",
@@ -1564,7 +1564,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             "Prices will vary according to where it is bought. In the developing world, the price will depend on what deal aid organisations can negotiate. In developed countries, it is likely to come in at $1,000 (£685) a unit, said Janssen. “We are a venture with a social mission. We are aware that the product we have envisioned is mainly finding application in the developing world and humanitarian sector and that this is the way we will proceed. We do realise, though, that to be a viable company there is a bottom line to keep in mind,’ he says.",
             "The company itself is based at Imperial College London, although Janssen, its chief executive, still lives in the UAE. It has raised £340,000 in funding so far. Within two years, he says, the company aims to be selling 1,000 units a month, mainly in the humanitarian field. They are expected to be sold in areas such as Australia, northern Chile, Peru, Texas and California."
           ],
-          "questionSectionText": "Questions 14-20\nReading Passage 2 has seven sections, A-G.\nChoose the correct heading for each section from the list of headings below.\nWrite the correct number, i-x, in boxes 14-20 on your answer sheet.\nList of Headings\n\ni Getting the finance for production\n\nii An unexpected benefit\n\niii From initial inspiration to new product\n\niv The range of potential customers for the device\n\nv_ What makes the device different from alternatives\n\nvi Cleaning water from a range of sources\n\nvii Overcoming production difficulties\n\nviii Profit not the primary goal\n\nix Awarm welcome for the device\n\nx The number of people affected by water shortages\n14 SectionA\n15 Section B\n16 Section C\n17 Section D\n18 Section E\n19 Section F\n20 SectionG\n\nQuestions 21-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 21-26 on your answer sheet.\nHow the Desolenator works\nThe energy required to operate the Desolenator comes from sunlight. The device can\n\nbe used in different locations, aS it NAS 21 oo. « Water is fed into\n\nA PIPE, AN A 22 ocean OF Water flows over a solar panel. The water H\nthen enters a boiler, where it turns into steam. Any particles in the water are caught in\nFQ vovccmrmnniinnunnnnnnn « Te purified water comes out through one tube, and all\ntyPe OF 24 niente COME Out through another. A screen displays the\n25 eros Of the device, and transmits the information to the company\nso that they know when the Desolenator requires 26 …cnnccssscneniseenenueinn «\ni\ni\n}\ni\n\\|\ni\ni\nj\n3/0 p.124] 65",
+          "questionSectionText": "Questions 14-20\nReading Passage 2 has seven sections, A-G.\nChoose the correct heading for each section from the list of headings below.\nWrite the correct number, i-x, in boxes 14-20 on your answer sheet.\nList of Headings\n\ni Getting the finance for production\n\nii An unexpected benefit\n\niii From initial inspiration to new product\n\niv The range of potential customers for the device\n\nv What makes the device different from alternatives\n\nvi Cleaning water from a range of sources\n\nvii Overcoming production difficulties\n\nviii Profit not the primary goal\n\nix Awarm welcome for the device\n\nx The number of people affected by water shortages\n14 SectionA\n15 Section B\n16 Section C\n17 Section D\n18 Section E\n19 Section F\n20 SectionG\n\nQuestions 21-26\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 21-26 on your answer sheet.\nHow the Desolenator works\nThe energy required to operate the Desolenator comes from sunlight. The device can\n\nbe used in different locations, aS it NAS 21 oo. « Water is fed into\n\nA PIPE, AN A 22 ocean OF Water flows over a solar panel. The water H\nthen enters a boiler, where it turns into steam. Any particles in the water are caught in\nFQ vovccmrmnniinnunnnnnnn « Te purified water comes out through one tube, and all\ntyPe OF 24 niente COME Out through another. A screen displays the\n25 eros Of the device, and transmits the information to the company\nso that they know when the Desolenator requires 26 …cnnccssscneniseenenueinn «\ni\ni\n}\ni\n\\|\ni\ni\nj\n3/0 p.124] 65",
           "questionRanges": [
             {
               "start": 14,
@@ -1586,8 +1586,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portable device that uses the power from the sun to purify water",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portable de…\" จึงคำตอบคือ \"iii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = decades janssen developed southeast = iii"
+              "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"Two decades later Janssen developed that basic idea he saw in Southeast Asia into a portab…\" จึงเลือกหัวข้อ iii",
+              "paraphrasedVocabulary": "paragraph = two decades later janssen = iii"
             },
             {
               "number": 15,
@@ -1599,8 +1599,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "The Desolenator operates as a mobile desalination unit that can take water from",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The Desolenator operates as a mobile desalination unit that can take water from different place…\" จึงคำตอบคือ \"vi\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = desolenator operates mobile desalination = vi"
+              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"The Desolenator operates as a mobile desalination unit that can take water from\" จึงเลือกหัวข้อ vi",
+              "paraphrasedVocabulary": "paragraph = desolenator operates mobile desalination = vi"
             },
             {
               "number": 16,
@@ -1612,8 +1612,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Its main selling point is that unlike standard desalination techniques, it doesn’t require a generated power supply: just sunlight.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Its main selling point is that unlike standard desalination techniques, it doesn’t require a ge…\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = selling unlike standard desalination = v"
+              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"Its main selling point is that unlike standard desalination techniques, it doesn’t require…\" จึงเลือกหัวข้อ v",
+              "paraphrasedVocabulary": "paragraph = main selling point unlike = v"
             },
             {
               "number": 17,
@@ -1625,8 +1625,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "A recent analysis found that at least two-thirds of the world’s population lives with severe water scarcity for at least a month every year",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"A recent analysis found that at least two-thirds of the world’s population lives with severe wa…\" จึงคำตอบคือ \"x\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = recent analysis two-thirds population = x"
+              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"A recent analysis found that at least two-thirds of the world’s population lives with seve…\" จึงเลือกหัวข้อ x",
+              "paraphrasedVocabulary": "paragraph = recent analysis found least = x"
             },
             {
               "number": 18,
@@ -1638,8 +1638,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "world who do not have a constant supply of water to people living off the grid in rural parts of the US.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"The device is aimed at a wide variety of users – from homeowners in the developing world who do…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = device variety homeowners developing = iv"
+              "explanationThai": "ย่อหน้า E มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"world who do not have a constant supply of water to people living off the grid in rural pa…\" จึงเลือกหัวข้อ iv",
+              "paraphrasedVocabulary": "paragraph = world constant supply water = iv"
             },
             {
               "number": 19,
@@ -1651,8 +1651,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "We are a venture with a social mission. We are aware that the product we have envisioned is mainly finding application in the developing world and humanitarian sector and that this is the way we will proceed",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"We are a venture with a social mission. We are aware that the product we have envisioned is mai…\" จึงคำตอบคือ \"viii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = venture social mission product = viii"
+              "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"We are a venture with a social mission. We are aware that the product we have envisioned i…\" จึงเลือกหัวข้อ viii",
+              "paraphrasedVocabulary": "paragraph = venture social mission aware = viii"
             },
             {
               "number": 20,
@@ -1664,12 +1664,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "It has raised £340,000 in funding so far",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"It has raised £340,000 in funding so far\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = raised funding = i"
+              "explanationThai": "ย่อหน้า G มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"It has raised £340,000 in funding so far\" จึงเลือกหัวข้อ i",
+              "paraphrasedVocabulary": "paragraph = raised 340 000 funding = i"
             },
             {
               "number": 21,
-              "prompt": "… . Water is fed into",
+              "prompt": "It measures 120cm by 90cm, and is easy to transport, thanks to its two … ….",
               "correctAnswer": "wheels",
               "acceptedAnswers": [
                 "wheels"
@@ -1677,12 +1677,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "It measures 120cm by 90cm, and is easy to transport, thanks to its two wheels. ",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . Water is fed into\" บทความมีถ้อยคำที่ตรงกันคือ \"It measures 120 cm by 90 cm, and it easy to transport, thanks to its two wheels\" จึงคำตอบคือ \"wheels\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "water = measures transport thanks = wheels"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"It measures 120cm by 90cm, and is easy to transport, thanks to its two … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"It measures 120cm by 90cm, and is easy to transport, thanks to its two wheels.\" จึงคำตอบคือ \"wheels\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "measures 120cm 90cm easy = measures 120cm 90cm easy = wheels"
             },
             {
               "number": 22,
-              "prompt": "… of water flows over",
+              "prompt": "Water enters through a pipe, and flows as a thin … … between a sheet of double glazing and the surface of a solar panel, where it is heated by the.",
               "correctAnswer": "film",
               "acceptedAnswers": [
                 "film"
@@ -1690,12 +1690,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "Water enters through a pipe, and flows as a thin film between a sheet of double glazing and the surface of a solar panel, where it is heated by the sun.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of water flows over\" บทความมีถ้อยคำที่ตรงกันคือ \"Water enters through a pipe, and flows as a thin film between a sheet of double glazing and the…\" จึงคำตอบคือ \"film\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "water flows = enters between double glazing = film"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Water enters through a pipe, and flows as a thin … … between a sheet of double glazing and the surface of a solar panel, where it is heated by the.\" บทความมีถ้อยคำที่ตรงกันคือ \"Water enters through a pipe, and flows as a thin film between a sheet of double glazing an…\" จึงคำตอบคือ \"film\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "water enters through pipe = water enters through pipe = film"
             },
             {
               "number": 23,
-              "prompt": "… . The purified water comes out through one tube, and all types of",
+              "prompt": "The device has a very simple … … to trap particles.",
               "correctAnswer": "filter",
               "acceptedAnswers": [
                 "filter"
@@ -1703,12 +1703,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "The device has a very simple filter to trap particles",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . The purified water comes out through one tube, and all types of\" บทความมีถ้อยคำที่ตรงกันคือ \"The device has a very simple filter to trap particles\" จึงคำตอบคือ \"filter\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "purified water comes = device simple particles = filter"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The device has a very simple … … to trap particles.\" บทความมีถ้อยคำที่ตรงกันคือ \"The device has a very simple filter to trap particles\" จึงคำตอบคือ \"filter\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "device very simple trap = device very simple filter = filter"
             },
             {
               "number": 24,
-              "prompt": "… come out through another.",
+              "prompt": "tyPe OF … … COME Out through another. A screen displays the.",
               "correctAnswer": "waste",
               "acceptedAnswers": [
                 "waste"
@@ -1716,12 +1716,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "There are two tubes for liquid coming out: one for the waste - salt from seawater, fluoride, etc. - and another for the distilled water.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… come out through another.\" บทความมีถ้อยคำที่ตรงกันคือ \"There are two tubes for liquid coming out: one for the waste – salt from seawater, fluoride, et…\" จึงคำตอบคือ \"waste\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "another = liquid coming seawater fluoride = waste"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"tyPe OF … … COME Out through another. A screen displays the.\" บทความมีถ้อยคำที่ตรงกันคือ \"There are two tubes for liquid coming out: one for the waste - salt from seawater, fluorid…\" จึงคำตอบคือ \"waste\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "type come out through = two tubes liquid coming = waste"
             },
             {
               "number": 25,
-              "prompt": "eros Of the device, and transmits the information to the company so that they know when the Desolenator requires 26 …cnnccssscneniseenenueinn « i i } i \\| i i j 3/0 p.124] 65 |",
+              "prompt": "eros Of the device, and transmits the information to the company so that they know when the Desolenator requires 26 … … « i i } i \\| i i j 3/0 p.124] 65 |.",
               "correctAnswer": "performance",
               "acceptedAnswers": [
                 "performance"
@@ -1729,12 +1729,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "The performance of the unit is shown on an LCD screen",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of the device, and transmits the information to the company so that they know when the Desolenator requires\" บทความมีถ้อยคำที่ตรงกันคือ \"The performance of the unit is shown on an LCD screen\" จึงคำตอบคือ \"performance\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "device transmits company = screen = performance"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"eros Of the device, and transmits the information to the company so that they know when the Desolenator requires 26 …cnnccssscneniseenenueinn « i i } i \\| i i j 3/0 p.124] 65 |\" บทความมีถ้อยคำที่ตรงกันคือ \"The performance of the unit is shown on an LCD screen\" จึงคำตอบคือ \"performance\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "eros device transmits information = performance unit shown lcd = performance"
             },
             {
               "number": 26,
-              "prompt": "… . Questions 27-31 Complete each sentence with the correct ending,",
+              "prompt": "so that they know when the Desolenator requires … … «.",
               "correctAnswer": "servicing",
               "acceptedAnswers": [
                 "servicing"
@@ -1742,8 +1742,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "transmitted to the company which provides servicing when necessary",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . Questions 27-31 Complete each sentence with the correct ending,\" บทความมีถ้อยคำที่ตรงกันคือ \"transmitted to the company which provides servicing when necessary\" จึงคำตอบคือ \"servicing\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "questions 27-31 complete = transmitted company provides necessary = servicing"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"so that they know when the Desolenator requires … … «.\" บทความมีถ้อยคำที่ตรงกันคือ \"transmitted to the company which provides servicing when necessary\" จึงคำตอบคือ \"servicing\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "know desolenator requires = transmitted company provides servicing = servicing"
             }
           ]
         }
@@ -1804,8 +1804,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "In some versions, the wolf swallows up the grandmother, while in others it locks her in a cupboard. In some stories Red Riding Hood gets the better of the wolf on her own, while in others a hunter or a woodcutter hears her cries and comes to her rescue",
-              "explanationThai": "คำถาม: \"Drop answer here … • Tehrani rejects the idea that the useful lessons for life in fairy tales\" หลักฐานในบทความคือ \"In some versions, the wolf swallows up the grandmother, while in others it locks her in a cupbo…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "useful lessons life = versions swallows grandmother others = C"
+              "explanationThai": "คำถาม: \"Tehrani rejects the idea that the useful lessons for life in fairy tales\" หลักฐานในบทความคือ \"In some versions, the wolf swallows up the grandmother, while in others it locks her in a …\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "tehrani rejects idea useful = versions wolf swallows grandmother = C"
             },
             {
               "number": 28,
@@ -1817,8 +1817,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "‘It might be what we find interesting about this story is that it’s got this survival-relevant information in it,’ says anthropologist Jamie Tehrani at Durham University in the UK. But his research suggests otherwise.",
-              "explanationThai": "คำถาม: \"Drop answer here … • Various theories about the social significance of fairy tales\" หลักฐานในบทความคือ \"‘It might be what we find interesting about this story is that it’s got this survival-relevant …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "various theories social = interesting survival-relevant anthropologist tehrani = B"
+              "explanationThai": "คำถาม: \"Tehrani rejects the idea that the useful lessons for life in fairy tales\" หลักฐานในบทความคือ \"‘It might be what we find interesting about this story is that it’s got this survival-rele…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "tehrani rejects idea useful = find interesting story it’s = B"
             },
             {
               "number": 29,
@@ -1830,8 +1830,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "That hasn’t stopped anthropologists, folklorists and other academics devising theories to explain the importance of fairy tales in human society.",
-              "explanationThai": "คำถาม: \"Drop answer here … • Insights into the development of fairy tales\" หลักฐานในบทความคือ \"That hasn’t stopped anthropologists, folklorists* and other academics devising theories to expl…\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "insights development fairy = stopped anthropologists folklorists academics = F"
+              "explanationThai": "คำถาม: \"Various theories about the social significance of fairy tales\" หลักฐานในบทความคือ \"That hasn’t stopped anthropologists, folklorists and other academics devising theories to …\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "various theories social significance = hasn’t stopped anthropologists folklorists = F"
             },
             {
               "number": 30,
@@ -1843,8 +1843,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Tehrani has used the same approach to compare related versions of fairy tales to discover how they have evolved and which elements have survived longest",
-              "explanationThai": "คำถาม: \"Drop answer here … • All the fairy tales analysed by Tehrani\" หลักฐานในบทความคือ \"Tehrani has used the same approach to compare related versions of fairy tales to discover how t…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "fairy tales analysed = tehrani approach compare related = A"
+              "explanationThai": "คำถาม: \"Insights into the development of fairy tales\" หลักฐานในบทความคือ \"Tehrani has used the same approach to compare related versions of fairy tales to discover …\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "insights development fairy tales = tehrani used same approach = A"
             },
             {
               "number": 31,
@@ -1856,8 +1856,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Checking for variants of these two tales and similar stories from Africa, East Asia and other regions, he ended up with 58 stories recorded from oral traditions",
-              "explanationThai": "คำถาม: \"Drop answer here … Drag and drop an option to fill in each blank. A. may be provided through methods used in biological research. …\" หลักฐานในบทความคือ \"Checking for variants of these two tales and similar stories from Africa, East Asia and other r…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "option fill blank = checking variants similar stories = E"
+              "explanationThai": "คำถาม: \"All the fairy tales analysed by Tehrani\" หลักฐานในบทความคือ \"Checking for variants of these two tales and similar stories from Africa, East Asia and ot…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "fairy tales analysed tehrani = checking variants two tales = E"
             },
             {
               "number": 32,
@@ -1869,8 +1869,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Once his phylogenetic analysis had established that they were indeed related",
-              "explanationThai": "คำถาม: \"Drop answer here … existed among 58 stories from around the world. He also wanted to know which aspects of the stories had fewest\" หลักฐานในบทความคือ \"Once his phylogenetic analysis had established that they were indeed related\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "existed among stories = phylogenetic analysis established indeed = D"
+              "explanationThai": "คำถาม: \"existed among 58 stories from around the world. He also wanted to know which aspects of the stories had fewest\" หลักฐานในบทความคือ \"Once his phylogenetic analysis had established that they were indeed related\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "existed among stories around = once phylogenetic analysis established = D"
             },
             {
               "number": 33,
@@ -1882,8 +1882,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "he used the same methods to explore how they have developed and altered over time",
-              "explanationThai": "คำถาม: \"Drop answer here … , as he believed these aspects would be the most important ones. Contrary to other beliefs, he found that some\" หลักฐานในบทความคือ \"he used the same methods to explore how they have developed and altered over time\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "believed aspects important = methods explore developed altered = F"
+              "explanationThai": "คำถาม: \", as he believed these aspects would be the most important ones. Contrary to other beliefs, he found that some\" หลักฐานในบทความคือ \"he used the same methods to explore how they have developed and altered over time\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "believed aspects important ones = used same methods explore = F"
             },
             {
               "number": 34,
@@ -1895,8 +1895,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Certain episodes are very stable because they are crucial to the story, but there are lots of other details that can evolve quite freely",
-              "explanationThai": "คำถาม: \"Drop answer here … that were included in\" หลักฐานในบทความคือ \"Certain episodes are very stable because they are crucial to the story, but there are lots of o…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "included = certain episodes stable because = B"
+              "explanationThai": "คำถาม: \"oo ssistiennnnn that were included in a story tended to change over time, | and that the middle of a story seemed no more important than the other parts. | He was also surprised that parts of a story which seemed to provide some sort of\" หลักฐานในบทความคือ \"Certain episodes are very stable because they are crucial to the story, but there are lots…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "ssistiennnnn included story tended = certain episodes very stable = B"
             },
             {
               "number": 35,
@@ -1908,8 +1908,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Yet in his analysis such elements were just as flexible as seemingly trivial details",
-              "explanationThai": "คำถาม: \"Drop answer here … were unimportant. The aspect that he found most important in a story’s survival was\" หลักฐานในบทความคือ \"Yet in his analysis such elements were just as flexible as seemingly trivial details\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "story survival = analysis elements flexible seemingly = C"
+              "explanationThai": "คำถาม: \"acne WETE UNiMportant. The aspect that he found most important in a SUOTY’S SUPVIVAl WAS 36 Qe sssesssieenenennnenes 4 '\" หลักฐานในบทความคือ \"Yet in his analysis such elements were just as flexible as seemingly trivial details\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "acne wete unimportant aspect = yet analysis elements just = C"
             },
             {
               "number": 36,
@@ -1921,8 +1921,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "The answer, it would appear, is fear – blood-thirsty and gruesome aspects of the story, such as the eating of the grandmother by the wolf, turned out to be the best preserved of all",
-              "explanationThai": "คำถาม: \"Drop answer here … Drag and drop an option to fill in each blank. A. ending B. events C. warning D. links E. records F. variations…\" หลักฐานในบทความคือ \"The answer, it would appear, is fear – blood-thirsty and gruesome aspects of the story, such as…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
-              "paraphrasedVocabulary": "option fill blank = appear blood-thirsty gruesome aspects = G"
+              "explanationThai": "คำถาม: \"Write the correct letter, A-I, in boxes 32-36 on your answer sheet. ]\" หลักฐานในบทความคือ \"The answer, it would appear, is fear – blood-thirsty and gruesome aspects of the story, su…\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "write correct letter a-i = answer appear fear blood-thirsty = G"
             },
             {
               "number": 37,
@@ -2051,7 +2051,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "helped people to survive periods of … …",
+              "prompt": "helped people to survive periods of.",
               "correctAnswer": "drought",
               "acceptedAnswers": [
                 "drought"
@@ -2077,7 +2077,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "prevents land from becoming a … …",
+              "prompt": "-prevents land from DECOMING 2.",
               "correctAnswer": "desert",
               "acceptedAnswers": [
                 "desert"
@@ -2085,12 +2085,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "So when the huarangos go, the land turns into a desert.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"prevents land from becoming a … …\" บทความมีถ้อยคำที่ตรงกันคือ \"So when the huarangos go, the land turns into a desert.\" จึงคำตอบคือ \"desert\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "prevents land from becoming a … … = So when the huarangos go, the land turns into a desert. = desert"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"-prevents land from DECOMING 2.\" บทความมีถ้อยคำที่ตรงกันคือ \"So when the huarangos go, the land turns into a desert.\" จึงคำตอบคือ \"desert\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "-prevents land decoming = huarangos land turns desert = desert"
             },
             {
               "number": 6,
-              "prompt": "… Fuel Leaves and",
+              "prompt": "while … … were used for charcoal for cooking and heating.",
               "correctAnswer": "its branches",
               "acceptedAnswers": [
                 "branches",
@@ -2101,12 +2101,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "while its branches were used for charcoal for cooking and heating",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Fuel Leaves and\" บทความมีถ้อยคำที่ตรงกันคือ \"while its branches were used for charcoal for cooking and heating\" จึงคำตอบคือ \"its branches\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "leaves = branches charcoal cooking heating = its branches"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"while … … were used for charcoal for cooking and heating.\" บทความมีถ้อยคำที่ตรงกันคือ \"while its branches were used for charcoal for cooking and heating\" จึงคำตอบคือ \"its branches\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "while used charcoal cooking = while branches used charcoal = its branches"
             },
             {
               "number": 7,
-              "prompt": "… Medicine",
+              "prompt": "Its … … were used for herbal remedies.",
               "correctAnswer": "leaves and bark",
               "acceptedAnswers": [
                 "leaves and bark",
@@ -2117,12 +2117,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "Its leaves and bark were used for herbal remedies",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… Medicine\" บทความมีถ้อยคำที่ตรงกันคือ \"Its leaves and bark were used for herbal remedies\" จึงคำตอบคือ \"huarango bark\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "medicine = leaves herbal remedies = huarango bark"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Its … … were used for herbal remedies.\" บทความมีถ้อยคำที่ตรงกันคือ \"Its leaves and bark were used for herbal remedies\" จึงคำตอบคือ \"leaves and bark\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "used herbal remedies = leaves bark used herbal = leaves and bark"
             },
             {
               "number": 8,
-              "prompt": "… construction Questions 9-13 Do the following statements agree with the information given in the Reading Passage? In boxes on your answer sheet, write",
+              "prompt": "… … was used to build houses.",
               "correctAnswer": "the trunk",
               "acceptedAnswers": [
                 "trunk",
@@ -2133,8 +2133,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "its trunk was used to build houses",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… construction Questions 9-13 Do the following statements agree with the information given in the Reading Passage? In boxes on you…\" บทความมีถ้อยคำที่ตรงกันคือ \"its trunk was used to build houses\" จึงคำตอบคือ \"the trunk\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "construction questions = houses = the trunk"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… … was used to build houses.\" บทความมีถ้อยคำที่ตรงกันคือ \"its trunk was used to build houses\" จึงคำตอบคือ \"the trunk\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "used build houses = trunk used build houses = the trunk"
             },
             {
               "number": 9,
@@ -2326,7 +2326,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "high-and low-frequency tones represent different sounds in Spanish … …",
+              "prompt": "high-and low-frequency tones represent different sounds in Spanish.",
               "correctAnswer": "words",
               "acceptedAnswers": [
                 "words"
@@ -2339,7 +2339,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "pitch of whistle is controlled using silbador’s … …",
+              "prompt": "¢ pitch of whistle is controlled Using SilbAdOr’S … … ecmemennnentenenee.",
               "correctAnswer": "finger",
               "acceptedAnswers": [
                 "finger"
@@ -2347,12 +2347,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 2",
               "answerType": "text",
               "exactPortion": "A whistler – or silbador – puts a finger in his or her mouth to increase the whistle's pitch",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"pitch of whistle is controlled using silbador’s … …\" บทความมีถ้อยคำที่ตรงกันคือ \"A whistler – or silbador – puts a finger in his or her mouth to increase the whistle’s pitch\" จึงคำตอบคือ \"finger\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "pitch whistle controlled = whistler silbador increase whistle = finger"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"¢ pitch of whistle is controlled Using SilbAdOr’S … … ecmemennnentenenee.\" บทความมีถ้อยคำที่ตรงกันคือ \"A whistler – or silbador – puts a finger in his or her mouth to increase the whistle's pit…\" จึงคำตอบคือ \"finger\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "pitch whistle controlled using = whistler silbador puts finger = finger"
             },
             {
               "number": 22,
-              "prompt": "… … is changed with a cupped hand.",
+              "prompt": "while the other hand can be cupped to adjust the … … of the sound.",
               "correctAnswer": "direction",
               "acceptedAnswers": [
                 "direction"
@@ -2360,12 +2360,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 2",
               "answerType": "text",
               "exactPortion": "while the other hand can be cupped to adjust the direction of the sound",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… … is changed with a cupped hand.\" บทความมีถ้อยคำที่ตรงกันคือ \"while the other hand can be cupped to adjust the direction of the sound\" จึงคำตอบคือ \"direction\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "changed = cupped adjust = direction"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"while the other hand can be cupped to adjust the … … of the sound.\" บทความมีถ้อยคำที่ตรงกันคือ \"while the other hand can be cupped to adjust the direction of the sound\" จึงคำตอบคือ \"direction\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "while hand cupped adjust = while hand cupped adjust = direction"
             },
             {
               "number": 23,
-              "prompt": "in everyday use for the transmission of brief … …",
+              "prompt": "e in everyday use for the transmission of brief.",
               "correctAnswer": "commands",
               "acceptedAnswers": [
                 "commands"
@@ -2373,12 +2373,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 2",
               "answerType": "text",
               "exactPortion": "In daily life they use whistles to communicate short commands",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"in everyday use for the transmission of brief … …\" บทความมีถ้อยคำที่ตรงกันคือ \"In daily life they use whistles to communicate short commands\" จึงคำตอบคือ \"commands\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "everyday transmission brief = whistles communicate = commands"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"e in everyday use for the transmission of brief.\" บทความมีถ้อยคำที่ตรงกันคือ \"In daily life they use whistles to communicate short commands\" จึงคำตอบคือ \"commands\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "everyday use transmission brief = daily life use whistles = commands"
             },
             {
               "number": 24,
-              "prompt": "can relay essential information quickly, e.g. to inform people about … …",
+              "prompt": "can relay essential information quickly, e.g. to inform people about.",
               "correctAnswer": "fires",
               "acceptedAnswers": [
                 "fires"
@@ -2391,7 +2391,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "future under threat because of new … …",
+              "prompt": "future under threat because of new.",
               "correctAnswer": "technology",
               "acceptedAnswers": [
                 "technology"
@@ -2404,7 +2404,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "Canaries’ authorities hoping to receive …",
+              "prompt": "Canaries’ authorities hoping to receive.",
               "correctAnswer": "award",
               "acceptedAnswers": [
                 "award"
@@ -2475,8 +2475,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Depending on the circumstances, a business may maximise the amount of money it makes, at least in the short term, by damaging the environment and hurting people.",
-              "explanationThai": "คำถาม: \"Drop answer here … . Lack of\" หลักฐานในบทความคือ \"Depending on the circumstances, a business may maximize the amount of money it makes, at least …\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "Drop answer here … . Lack of = Depending on the circumstances, a business may maximize the … = D"
+              "explanationThai": "คำถาม: \"Lack of\" หลักฐานในบทความคือ \"Depending on the circumstances, a business may maximise the amount of money it makes, at l…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "lack = depending circumstances business maximise = D"
             },
             {
               "number": 28,
@@ -2488,8 +2488,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "but the reverse is likely to be true if government regulation is ineffective",
-              "explanationThai": "คำถาม: \"Drop answer here … by governments and lack of public\" หลักฐานในบทความคือ \"but the reverse is likely to be true if government regulation is ineffective\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "governments public = reverse likely government regulation = E"
+              "explanationThai": "คำถาม: \"by governments and lack of public\" หลักฐานในบทความคือ \"but the reverse is likely to be true if government regulation is ineffective\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "governments lack public = reverse likely true government = E"
             },
             {
               "number": 29,
@@ -2501,8 +2501,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "and if the public doesn’t care",
-              "explanationThai": "คำถาม: \"Drop answer here … can lead to environmental problems such as\" หลักฐานในบทความคือ \"and if the public doesn’t care\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "lead environmental problems = public = F"
+              "explanationThai": "คำถาม: \"can lead to environmental problems such as\" หลักฐานในบทความคือ \"and if the public doesn’t care\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "lead environmental problems = public doesn’t care = F"
             },
             {
               "number": 30,
@@ -2514,8 +2514,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "That is still the case today for fishermen in an unmanaged fishery without quotas",
-              "explanationThai": "คำถาม: \"Drop answer here … or the destruction of\" หลักฐานในบทความคือ \"That is still the case today for fishermen in an unmanaged fishery without quotas\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
-              "paraphrasedVocabulary": "destruction = fishermen unmanaged fishery without = H"
+              "explanationThai": "คำถาม: \"or the destruction of\" หลักฐานในบทความคือ \"That is still the case today for fishermen in an unmanaged fishery without quotas\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
+              "paraphrasedVocabulary": "destruction = still case today fishermen = H"
             },
             {
               "number": 31,
@@ -2527,8 +2527,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "and for international logging companies with short-term leases on tropical rainforest land in places",
-              "explanationThai": "คำถาม: \"Drop answer here … Drag and drop an option to fill in each blank. A. funding B. trees C. rare species D. moral standards E. contro…\" หลักฐานในบทความคือ \"and for international logging companies with short-term leases on tropical rainforest land in p…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "option fill blank = international logging companies short-term = B"
+              "explanationThai": "คำถาม: \"or the destruction of (word list)\" หลักฐานในบทความคือ \"and for international logging companies with short-term leases on tropical rainforest land…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "destruction word list = international logging companies short-term = B"
             },
             {
               "number": 32,
@@ -2579,8 +2579,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_15_EXAMS = [
               "answerGroup": "Cambridge 15 Test 4 Passage 3",
               "answerType": "yes-no-not-given",
               "exactPortion": "I also believe that the public must accept the necessity for higher prices for products to cover the added costs, if any, of sound environmental practices",
-              "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"The public should be prepared to fund good environmental practices.\" โดยเฉพาะจากข้อความ \"I also believe that the public must accept the necessity for higher prices for products to cove…\" จึงตอบ YES",
-              "paraphrasedVocabulary": "public should prepared = believe public accept necessity = YES"
+              "explanationThai": "มุมมองของผู้เขียนในบทความสนับสนุนข้อที่ว่า \"The public should be prepared to pay more for products if this encourages good environmental practices.\" โดยเฉพาะจากข้อความ \"I also believe that the public must accept the necessity for higher prices for products to…\" จึงตอบ YES",
+              "paraphrasedVocabulary": "public prepared pay products = also believe public accept = YES"
             },
             {
               "number": 36,

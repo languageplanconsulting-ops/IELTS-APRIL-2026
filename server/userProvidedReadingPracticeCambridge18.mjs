@@ -44,7 +44,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "There will eventually be",
+              "prompt": "There will eventually be.",
               "correctAnswer": "1000 kg",
               "acceptedAnswers": [
                 "1",
@@ -73,7 +73,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "wide range of … … used",
+              "prompt": "wide range of … … used.",
               "correctAnswer": "pesticides",
               "acceptedAnswers": [
                 "pesticides"
@@ -86,7 +86,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "varieties of fruit and vegetables chosen that can survive long … …",
+              "prompt": "varieties of fruit and vegetables chosen that can survive long.",
               "correctAnswer": "journeys",
               "acceptedAnswers": [
                 "journeys"
@@ -99,7 +99,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "… … receive very little of overall income",
+              "prompt": "80% of the price I pay goes to wholesalers and transport companies, not the … ….",
               "correctAnswer": "producers",
               "acceptedAnswers": [
                 "producers"
@@ -107,12 +107,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 1 Passage 1",
               "answerType": "text",
               "exactPortion": "80% of the price I pay goes to wholesalers and transport companies, not the producers",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… … receive very little of overall income\" บทความมีถ้อยคำที่ตรงกันคือ \"80% of the price I pay goes to wholesalers and transport companies, not the producers\" จึงคำตอบคือ \"producers\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "receive little overall = wholesalers transport companies = producers"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"80% of the price I pay goes to wholesalers and transport companies, not the … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"80% of the price I pay goes to wholesalers and transport companies, not the producers\" จึงคำตอบคือ \"producers\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "price pay goes wholesalers = price pay goes wholesalers = producers"
             },
             {
               "number": 7,
-              "prompt": "produce chosen because of its … …",
+              "prompt": "produce chosen because of its.",
               "correctAnswer": "flavour",
               "acceptedAnswers": [
                 "flavour",
@@ -265,7 +265,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "reference to the aspects of any tree that contribute to its worth … … … … … … …",
+              "prompt": "reference to the aspects of any tree that contribute to its worth",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -273,12 +273,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "A tree’s ‘value’ depends on several factors including its species, size, form, condition, quality, function, and accessibility, and depends on the management goals for a given forest.",
-              "explanationThai": "คำถาม: \"reference to the aspects of any tree that contribute to its worth … … … … … … …\" หลักฐานในบทความคือ \"A tree’s ‘value’ depends on several factors including its species, size, form, condition, quali…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "aspects tree contribute = depends several factors including = A"
+              "explanationThai": "คำถาม: \"reference to the aspects of any tree that contribute to its worth\" หลักฐานในบทความคือ \"A tree’s ‘value’ depends on several factors including its species, size, form, condition, …\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "reference aspects tree contribute = tree’s value’ depends several = A"
             },
             {
               "number": 16,
-              "prompt": "mention of the potential use of wood to help run vehicles … … … … … … …",
+              "prompt": "mention of the potential use of wood to help run vehicles",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -286,12 +286,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Wood can also be gasified for electrical generation and can even be made into liquid fuels like ethanol and gasoline for lorries and cars.",
-              "explanationThai": "คำถาม: \"mention of the potential use of wood to help run vehicles … … … … … … …\" หลักฐานในบทความคือ \"Wood can also be gasified for electrical generation and can even be made into liquid fuels like…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "potential vehicles = gasified electrical generation liquid = C"
+              "explanationThai": "คำถาม: \"mention of the potential use of wood to help run vehicles\" หลักฐานในบทความคือ \"Wood can also be gasified for electrical generation and can even be made into liquid fuels…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "mention potential use wood = wood also gasified electrical = C"
             },
             {
               "number": 17,
-              "prompt": "examples of insects that attack trees … … … … … … …",
+              "prompt": "examples of insects that attack trees",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -299,12 +299,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "With the many pests and pathogens visiting forests including hemlock wooly adelgid, Asian longhomed beetle, emerald ash borer, and gypsy moth, to name just a few,",
-              "explanationThai": "คำถาม: \"examples of insects that attack trees … … … … … … …\" หลักฐานในบทความคือ \"With the many pests and pathogens visiting forests including hemlock wooly adelgid, Asian longh…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "insects attack trees = pathogens visiting forests including = E"
+              "explanationThai": "คำถาม: \"examples of insects that attack trees\" หลักฐานในบทความคือ \"With the many pests and pathogens visiting forests including hemlock wooly adelgid, Asian …\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "examples insects attack trees = many pests pathogens visiting = E"
             },
             {
               "number": 18,
-              "prompt": "aan alternative name for trees that produce low-use wood … … … … … … …",
+              "prompt": "aan alternative name for trees that produce low-use wood",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -312,12 +312,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Some people even call these ‘junk trees’,",
-              "explanationThai": "คำถาม: \"aan alternative name for trees that produce low-use wood … … … … … … … Questions 19-21 Look at the following purposes and the list…\" หลักฐานในบทความคือ \"Some people even call these ‘junk trees’,\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "aan alternative name for trees that produce low-us… = Some people even call these ‘junk trees’, = B"
+              "explanationThai": "คำถาม: \"aan alternative name for trees that produce low-use wood\" หลักฐานในบทความคือ \"Some people even call these ‘junk trees’,\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "aan alternative name trees = people even call junk = B"
             },
             {
               "number": 19,
-              "prompt": "to remove trees that are diseased … … …",
+              "prompt": "to remove trees that are diseased",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -325,8 +325,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 1 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "These types of cut reduce the number of sick trees and seek to manage the future spread of a pest problem.",
-              "explanationThai": "คำถาม: \"to remove trees that are diseased … … …\" หลักฐานในบทความคือ \"These types of cut reduce the number of sick trees and seek to manage the future spread of a pe…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "remove trees diseased = reduce number manage future = B"
+              "explanationThai": "คำถาม: \"to remove trees that are diseased\" หลักฐานในบทความคือ \"These types of cut reduce the number of sick trees and seek to manage the future spread of…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "remove trees diseased = types cut reduce number = B"
             },
             {
               "number": 20,
@@ -356,7 +356,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "Some dead wood is removed to avoid the possibility of … … .",
+              "prompt": "Some dead wood is removed to avoid the possibility of.",
               "correctAnswer": "fire",
               "acceptedAnswers": [
                 "fire"
@@ -382,7 +382,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "Some damaged trees should be left, as their … … provide habitats for",
+              "prompt": "Some damaged trees should be left, as their … … provide habitats for.",
               "correctAnswer": "cavities",
               "acceptedAnswers": [
                 "cavities"
@@ -395,7 +395,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "Some trees that are small, such as … … , are",
+              "prompt": "Some trees that are small, such as … …, are.",
               "correctAnswer": "hawthorn",
               "acceptedAnswers": [
                 "hawthorn"
@@ -403,8 +403,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 1 Passage 2",
               "answerType": "text",
               "exactPortion": "For example, many species like hawthorn provide food for wildlife.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Some trees that are small, such as … … , are\" บทความมีถ้อยคำที่ตรงกันคือ \"For example, many species like hawthorn provide food for wildlife.\" จึงคำตอบคือ \"hawthorn\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "trees small = example species provide wildlife = hawthorn"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Some trees that are small, such as … …, are.\" บทความมีถ้อยคำที่ตรงกันคือ \"For example, many species like hawthorn provide food for wildlife.\" จึงคำตอบคือ \"hawthorn\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "trees small = example many species like = hawthorn"
             },
             {
               "number": 26,
@@ -693,7 +693,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "the ditch and henge were dug, possibly using tools made from … …",
+              "prompt": "the ditch and henge were dug, possibly using tools made from.",
               "correctAnswer": "antlers",
               "acceptedAnswers": [
                 "antlers",
@@ -707,7 +707,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "… … may have been arranged in deep pits inside the circle",
+              "prompt": "Deep pits dating back to that era and located within the circle may have once held a ring of … …, according to some scholars.",
               "correctAnswer": "timber posts",
               "acceptedAnswers": [
                 "posts",
@@ -716,12 +716,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 2 Passage 1",
               "answerType": "text",
               "exactPortion": "Deep pits dating back to that era and located within the circle may have once held a ring of timber posts, according to some scholars.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… … may have been arranged in deep pits inside the circle\" บทความมีถ้อยคำที่ตรงกันคือ \"Deep pits dating back to that era and located within the circle may have once held a ring of ti…\" จึงคำตอบคือ \"timber posts\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "arranged inside circle = dating located within circle = timber posts"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Deep pits dating back to that era and located within the circle may have once held a ring of … …, according to some scholars.\" บทความมีถ้อยคำที่ตรงกันคือ \"Deep pits dating back to that era and located within the circle may have once held a ring …\" จึงคำตอบคือ \"timber posts\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "deep pits dating back = deep pits dating back = timber posts"
             },
             {
               "number": 3,
-              "prompt": "builders used … … to make sledges and rollers",
+              "prompt": "builders used … … to make sledges and rollers.",
               "correctAnswer": "tree trunks",
               "acceptedAnswers": [
                 "tree trunks"
@@ -734,7 +734,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "… … pulled them on giant baskets",
+              "prompt": "supersized wicker baskets on a combination of ball bearings and long grooved planks, hauled by … ….",
               "correctAnswer": "oxen",
               "acceptedAnswers": [
                 "oxen"
@@ -742,12 +742,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 2 Passage 1",
               "answerType": "text",
               "exactPortion": "More recent archaeological hypotheses have them transporting the bluestones with supersized wicker baskets on a combination of ball bearings and long grooved planks, hauled by oxen.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… … pulled them on giant baskets\" บทความมีถ้อยคำที่ตรงกันคือ \"More recent archaeological hypotheses have them transporting the bluestones with supersized wic…\" จึงคำตอบคือ \"oxen\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "pulled giant baskets = recent archaeological hypotheses transporting = oxen"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"supersized wicker baskets on a combination of ball bearings and long grooved planks, hauled by … ….\" บทความมีถ้อยคำที่ตรงกันคือ \"More recent archaeological hypotheses have them transporting the bluestones with supersize…\" จึงคำตอบคือ \"oxen\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "supersized wicker baskets combination = recent archaeological hypotheses transporting = oxen"
             },
             {
               "number": 5,
-              "prompt": "they were brought from Wales by … …",
+              "prompt": "they were brought from Wales by.",
               "correctAnswer": "glaciers",
               "acceptedAnswers": [
                 "glaciers"
@@ -760,7 +760,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "a theory arose in the 17th century that its builders were Celtic … …",
+              "prompt": "a theory arose in the 17th century that its builders were Celtic.",
               "correctAnswer": "druids",
               "acceptedAnswers": [
                 "druids"
@@ -773,7 +773,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "many experts agree it has been used as a … … site",
+              "prompt": "many experts agree it has been used as a … … site.",
               "correctAnswer": "burial",
               "acceptedAnswers": [
                 "burial"
@@ -786,7 +786,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "in the 1960s, it was suggested that it worked as",
+              "prompt": "in the 1960s, it was suggested that it worked as.",
               "correctAnswer": "calendar",
               "acceptedAnswers": [
                 "calendar"
@@ -899,10 +899,18 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             "We have a new powerful technology to deal with- itself, literally, a new way of thinking. For our own safety, we need to point these new thinkers in the right direction, and get them to act well for us. It is not yet clear whether this is possible, but if it is, it will require a cooperative spirit, and a willingness to set aside self-interest.",
             "Both general intelligence and moral reasoning are often thought to be uniquely human capacities. But safety seems to require that we think of them as a package: if we are to give general intelligence to machines, we'll need to give them moral authority, too. And where exactly would that leave human beings? All the more reason to think about the destination now, and to be careful about what we wish for."
           ],
-          "questionSectionText": "Questions 14-26\n14. What point does the writer make about AI in the first paragraph?\n15. What is the writer doing in the second paragraph?\n16. Why does the writer mention the story of King Midas?\n17. What challenge does the writer refer to in the fourth paragraph?\n18. What does the writer suggest about the future of AI in the fifth paragraph?\n19. Which of the following best summarises the writer's argument in the sixth paragraph?\n20. Machines with the ability to make moral decisions may prevent us from promoting the interests of our communities.\n21. Silicon police would need to exist in large numbers in order to be effective.\n22. Many people are comfortable with the prospect of their independence being restricted by machines.\n23. If we want to ensure that machines act in our best interests, we all need to work together.\n24. are allocated in the health service. The positive aspect of AI having\n25. not having their current level of\n26. . It is therefore important that AI goals are appropriate so that discriminatory practices could be avoided.",
+          "questionSectionText": "Questions 14-19\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 14-19 on your answer sheet.\n14 What point does the writer make about AI in the first paragraph?\nA Its rate of progress has fallen short of what was predicted.\nB Its victories in games have little value outside the laboratory.\nC Its confinement to single, specific jobs is expected to be short-lived.\nD Its advances depend entirely on the skill of the people who program it.\n15 What is the writer doing in the second paragraph?\nA explaining why machines are likely to reach levels of thought far beyond our own\nB questioning whether machines will ever match human imagination\nC outlining the technical obstacles that researchers have yet to overcome\nD comparing the running costs of computers with those of the human body\n16 Why does the writer mention the story of King Midas?\nA to show that greed has always been a human weakness\nB to illustrate the danger of expressing our aims imprecisely\nC to suggest that old stories can foresee technological change\nD to argue that ordinary people rarely understand how machines work\n17 What challenge does the writer refer to in the fourth paragraph?\nA Machines cannot yet handle the volume of data required.\nB Experts cannot agree on how soon machines will match us intellectually.\nC There is no reliable way of measuring how intelligent a machine has become.\nD Our own record of treating others badly makes us poor models to copy.\n18 What does the writer suggest about the future of AI in the fifth paragraph?\nA It will require constant supervision by teams of human experts.\nB It is likely to develop priorities that clash with our own.\nC It could end up leading people towards better standards of behaviour.\nD It will be confined to tasks that raise no questions of right and wrong.\n19 Which of the following best summarises the writer's argument in the sixth paragraph?\nA Machines will resist any goals that human beings try to impose on them.\nB The technology needed to build genuinely ethical machines does not yet exist.\nC People will only accept moral machines once they trust them completely.\nD Our divided loyalties and inconsistent ideals make it very hard to give machines a clear target.\n\nQuestions 20-23\nDo the following statements agree with the views of the writer in Reading Passage 2?\nIn boxes 20-23 on your answer sheet, write\nYES if the statement agrees with the views of the writer\nNO if the statement contradicts the views of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n20 Machines with the ability to make moral decisions may prevent us from promoting the interests of our communities.\n21 Silicon police would need to exist in large numbers in order to be effective.\n22 Many people are comfortable with the prospect of their independence being restricted by machines.\n23 If we want to ensure that machines act in our best interests, we all need to work together.\n\nQuestions 24-26\nComplete the summary using the list of words, A-F, below.\nWrite the correct letter, A-F, in boxes 24-26 on your answer sheet.\n\nAI in the health service\nAI is already used in the UK to help decide how 24 … are allocated in the health\nservice. The positive aspect of AI having a greater role would be that decisions are made\nmore efficiently and in the interests of patients, but a negative aspect would be\n25 … not having their current level of 26 … . It is therefore important that AI goals\nare appropriate so that discriminatory practices could be avoided.\n\nA specialists\nB efficiency\nC resources\nD taxpayers\nE authority\nF fairness",
           "questionRanges": [
             {
               "start": 14,
+              "end": 19
+            },
+            {
+              "start": 20,
+              "end": 23
+            },
+            {
+              "start": 24,
               "end": 26
             }
           ],
@@ -1006,7 +1014,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
                 "NOT GIVEN"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 2",
-              "answerType": "true-false-not-given",
+              "answerType": "yes-no-not-given",
               "exactPortion": "But are we ready for ethical silicon police limiting our options?",
               "explanationThai": "ข้อความในข้อว่า \"Silicon police would need to exist in large numbers in order to be effective.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"But are we ready for ethical silicon police limiting our options?\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "silicon police exist = ethical silicon police limiting = NOT GIVEN"
@@ -1039,7 +1047,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "are allocated in the health service. The positive aspect of AI having",
+              "prompt": "are allocated in the health service. The positive aspect of AI having a greater role would be that decisions are made more efficiently and in the interests of patients, but a negative aspect would be",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1047,8 +1055,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "AI already has some input into how resources are used in our National Health Service (NHS) here in the UK, for example.",
-              "explanationThai": "คำถาม: \"Drop answer here … are allocated in the health service. The positive aspect of AI having\" หลักฐานในบทความคือ \"AI already has some input into how resources are used in our National Health Service (NHS) here…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "allocated health service = already resources national health = C"
+              "explanationThai": "คำถาม: \"are allocated in the health service. The positive aspect of AI having a greater role would be that decisions are made more efficiently and in the interests of patients, but a negative aspect would be\" หลักฐานในบทความคือ \"AI already has some input into how resources are used in our National Health Service (NHS)…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "allocated health service positive = already input resources used = C"
             },
             {
               "number": 25,
@@ -1060,21 +1068,21 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 2 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "However, we’d be depriving some humans (e.g. senior doctors) of the control they presently enjoy.",
-              "explanationThai": "คำถาม: \"Drop answer here … not having their current level of\" หลักฐานในบทความคือ \"However, we’d be depriving some humans (e.g. senior doctors) of the control they presently enjo…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "having current level = however depriving humans senior = A"
+              "explanationThai": "คำถาม: \"not having their current level of\" หลักฐานในบทความคือ \"However, we’d be depriving some humans (e.g. senior doctors) of the control they presently…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "having current level = however we’d depriving humans = A"
             },
             {
               "number": 26,
-              "prompt": "It is therefore important that AI goals are appropriate so that discriminatory practices could be avoided.",
+              "prompt": ". It is therefore important that AI goals are appropriate so that discriminatory practices could be avoided.",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
               ],
               "answerGroup": "Cambridge 18 Test 2 Passage 2",
               "answerType": "multiple-choice",
-              "exactPortion": "However, we’d be depriving some humans (e.g. senior doctors) of the control they presently enjoy.",
-              "explanationThai": "คำถาม: \"Drop answer here … . It is therefore important that AI goals are appropriate so that discriminatory practices could be avoided. Dr…\" หลักฐานในบทความคือ \"However, we’d be depriving some humans (e.g. senior doctors) of the control they presently enjo…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "option fill blank = however depriving humans senior = E"
+              "exactPortion": "However, we'd be depriving some humans (e.g. senior doctors) of the control they presently enjoy.",
+              "explanationThai": "คำถาม: \". It is therefore important that AI goals are appropriate so that discriminatory practices could be avoided.\" หลักฐานในบทความคือ \"However, we'd be depriving some humans (e.g. senior doctors) of the control they presently…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "therefore important goals appropriate = however we'd depriving humans = E"
             }
           ]
         }
@@ -1354,7 +1362,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "an explanation of the industrial processes that create potential raw materials for concrete … … … … … … … …",
+              "prompt": "an explanation of the industrial processes that create potential raw materials for concrete",
               "correctAnswer": "G",
               "acceptedAnswers": [
                 "G"
@@ -1362,12 +1370,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "Iron-ore slag, a byproduct of the iron-ore smelting process, can be used in a similar way",
-              "explanationThai": "คำถาม: \"an explanation of the industrial processes that create potential raw materials for concrete … … … … … … … …\" หลักฐานในบทความคือ \"Iron-ore slag, a byproduct of the iron-ore smelting process, can be used in a similar way\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
-              "paraphrasedVocabulary": "explanation industrial processes = iron-ore byproduct iron-ore smelting = G"
+              "explanationThai": "คำถาม: \"an explanation of the industrial processes that create potential raw materials for concrete\" หลักฐานในบทความคือ \"Iron-ore slag, a byproduct of the iron-ore smelting process, can be used in a similar way\" ซึ่งสนับสนุนตัวเลือก G มากที่สุด จึงตอบ G",
+              "paraphrasedVocabulary": "explanation industrial processes create = iron-ore slag byproduct iron-ore = G"
             },
             {
               "number": 2,
-              "prompt": "a reference to the various locations where high-rise wooden buildings can be found … … … … … … … …",
+              "prompt": "a reference to the various locations where high-rise wooden buildings can be found",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -1375,12 +1383,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "Vancouver, Vienna and Brumunddal in Norway are all home to constructed tall, wooden buildings.",
-              "explanationThai": "คำถาม: \"a reference to the various locations where high-rise wooden buildings can be found … … … … … … … …\" หลักฐานในบทความคือ \"Vancouver, Vienna and Brumunddal in Norway are all home to constructed tall, wooden buildings.\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "various locations high-rise = vancouver vienna brumunddal norway = D"
+              "explanationThai": "คำถาม: \"a reference to the various locations where high-rise wooden buildings can be found\" หลักฐานในบทความคือ \"Vancouver, Vienna and Brumunddal in Norway are all home to constructed tall, wooden buildi…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "reference various locations high-rise = vancouver vienna brumunddal norway = D"
             },
             {
               "number": 3,
-              "prompt": "an indication of how widely available the raw materials of concrete are … … … … … … … …",
+              "prompt": "an indication of how widely available the raw materials of concrete are",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1388,8 +1396,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "Not only are the ingredients of concrete relatively cheap and found in abundance in most places around the globe",
-              "explanationThai": "คำถาม: \"an indication of how widely available the raw materials of concrete are … … … … … … … …\" หลักฐานในบทความคือ \"Not only are the ingredients of concrete relatively cheap and found in abundance in most places…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "indication widely available = ingredients concrete relatively abundance = C"
+              "explanationThai": "คำถาม: \"an indication of how widely available the raw materials of concrete are\" หลักฐานในบทความคือ \"Not only are the ingredients of concrete relatively cheap and found in abundance in most p…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "indication widely available raw = only ingredients concrete relatively = C"
             },
             {
               "number": 4,
@@ -1406,7 +1414,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "… to use wood in modern construction projects. Using wood, however, has its challenges. For example, as",
+              "prompt": "but climate change is driving … … to turn to treated timber as a possible resource.",
               "correctAnswer": "architects",
               "acceptedAnswers": [
                 "architects"
@@ -1414,12 +1422,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "text",
               "exactPortion": "but climate change is driving architects to turn to treated timber as a possible resource.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… to use wood in modern construction projects. Using wood, however, has its challenges. For example, as\" บทความมีถ้อยคำที่ตรงกันคือ \"but climate change is driving architects to turn to treated timber as a possible resource.\" จึงคำตอบคือ \"architects\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "modern construction projects = climate change driving treated = architects"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"but climate change is driving … … to turn to treated timber as a possible resource.\" บทความมีถ้อยคำที่ตรงกันคือ \"but climate change is driving architects to turn to treated timber as a possible resource.\" จึงคำตอบคือ \"architects\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "climate change driving turn = climate change driving architects = architects"
             },
             {
               "number": 6,
-              "prompt": "… in the atmosphere enters wood, it increases in size. In addition, wood is prone to pests and the risk of fire is greater. However, wood can be turned into",
+              "prompt": "Wood expands as it absorbs … … from the air and is susceptible to pests, not to mention fire.",
               "correctAnswer": "moisture",
               "acceptedAnswers": [
                 "moisture"
@@ -1427,12 +1435,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "text",
               "exactPortion": "Wood expands as it absorbs moisture from the air and is susceptible to pests, not to mention fire.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… in the atmosphere enters wood, it increases in size. In addition, wood is prone to pests and the risk of fire is greater. Howeve…\" บทความมีถ้อยคำที่ตรงกันคือ \"Wood expands as it absorbs moisture from the air and is susceptible to pests, not to mention fi…\" จึงคำตอบคือ \"moisture\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "turned = expands absorbs susceptible = moisture"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Wood expands as it absorbs … … from the air and is susceptible to pests, not to mention fire.\" บทความมีถ้อยคำที่ตรงกันคือ \"Wood expands as it absorbs moisture from the air and is susceptible to pests, not to menti…\" จึงคำตอบคือ \"moisture\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "wood expands absorbs air = wood expands absorbs moisture = moisture"
             },
             {
               "number": 7,
-              "prompt": "… of solid wood are glued together to create building blocks. These blocks are lighter than concrete and steel but equal them in strength. Experts say that wooden buildings are an improvement on those made of concrete and steel in terms of the",
+              "prompt": "n adhesive is used to stick … … of solid-sawn timber together, crosswise, to form building blocks.",
               "correctAnswer": "layers",
               "acceptedAnswers": [
                 "layers"
@@ -1440,12 +1448,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "text",
               "exactPortion": "n adhesive is used to stick layers of solid-sawn timber together, crosswise, to form building blocks.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… of solid wood are glued together to create building blocks. These blocks are lighter than concrete and steel but equal them in s…\" บทความมีถ้อยคำที่ตรงกันคือ \"n adhesive is used to stick layers of solid-sawn timber together, crosswise, to form building b…\" จึงคำตอบคือ \"layers\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "concrete steel equal = adhesive solid-sawn timber together = layers"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"n adhesive is used to stick … … of solid-sawn timber together, crosswise, to form building blocks.\" บทความมีถ้อยคำที่ตรงกันคือ \"n adhesive is used to stick layers of solid-sawn timber together, crosswise, to form build…\" จึงคำตอบคือ \"layers\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "adhesive used stick solid-sawn = adhesive used stick layers = layers"
             },
             {
               "number": 8,
-              "prompt": "… with which they can be constructed and how much noise is generated by the process.",
+              "prompt": "Construction experts say that wooden buildings can be constructed at a greater … … than ones of concrete and steel and the process, it seems, is quieter.",
               "correctAnswer": "speed",
               "acceptedAnswers": [
                 "speed"
@@ -1453,12 +1461,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "text",
               "exactPortion": "Construction experts say that wooden buildings can be constructed at a greater speed than ones of concrete and steel and the process, it seems, is quieter.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… with which they can be constructed and how much noise is generated by the process. Questions 9-13 Look at the following statemen…\" บทความมีถ้อยคำที่ตรงกันคือ \"Construction experts say that wooden buildings can be constructed at a greater speed than ones …\" จึงคำตอบคือ \"speed\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "constructed noise generated = construction experts wooden buildings = speed"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Construction experts say that wooden buildings can be constructed at a greater … … than ones of concrete and steel and the process, it seems, is quieter.\" บทความมีถ้อยคำที่ตรงกันคือ \"Construction experts say that wooden buildings can be constructed at a greater speed than …\" จึงคำตอบคือ \"speed\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "construction experts say wooden = construction experts say wooden = speed"
             },
             {
               "number": 9,
-              "prompt": "The environmental advantage of cement alternatives may not be as great as initially assumed. … … … …",
+              "prompt": "The environmental advantage of cement alternatives may not be as great as initially assumed.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1466,8 +1474,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "If they are transported over long distances, using fossil fuels, the use of alternative materials might not make sense from an overall carbon reduction perspective.",
-              "explanationThai": "คำถาม: \"The environmental advantage of cement alternatives may not be as great as initially assumed. … … … …\" หลักฐานในบทความคือ \"If they are transported over long distances, using fossil fuels, the use of alternative materia…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "environmental advantage cement = transported distances fossil alternative = C"
+              "explanationThai": "คำถาม: \"The environmental advantage of cement alternatives may not be as great as initially assumed.\" หลักฐานในบทความคือ \"If they are transported over long distances, using fossil fuels, the use of alternative ma…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "environmental advantage cement alternatives = transported long distances using = C"
             },
             {
               "number": 10,
@@ -1510,7 +1518,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "The environmental damage caused by concrete is due to it being produced in large quantities. … … … …",
+              "prompt": "The environmental damage caused by concrete is due to it being produced in large quantities.",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1518,8 +1526,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "But it is the scale on which it is used that makes it high carbon. The sheer scale of manufacture is so huge, that is the issue",
-              "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด (The environmental damage caused by concrete is due to it being produced in large quantities. … … … … Questions 14-20 The Reading P…) โดยเฉพาะประโยค \"But it is the scale on which it is used that makes it high carbon. The sheer scale of manufactu…\" จึงเลือก A",
-              "paraphrasedVocabulary": "environmental damage caused = carbon manufacture = A"
+              "explanationThai": "คำถาม: \"The environmental damage caused by concrete is due to it being produced in large quantities.\" หลักฐานในบทความคือ \"But it is the scale on which it is used that makes it high carbon. The sheer scale of manu…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "environmental damage caused concrete = scale used makes high = A"
             }
           ]
         }
@@ -1552,21 +1560,25 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             "The brothers made one final attempt to produce a viable steam automobile. In early 1924, the Doble brothers shipped a Model E to New York City to be road-tested by the Automobile Club of America. After sitting overnight in freezing temperatures, the car was pushed out into the road and left to sit for over an hour in the frosty morning air. At the turn of the key, the boiler lit and reached its operating pressure inside of forty seconds. As they drove the test vehicle further, they found that its evenly distributed weight lent it surprisingly good handling, even though it was so heavy. As the new Doble steamer was further developed and tested, its maximum speed was pushed to over a hundred miles per hour, and it achieved about fifteen miles per gallon of kerosene with negligible emissions.",
             "Sadly, the Dobles' brilliant steam car never was a financial success. Priced at around $18,000 in 1924, it was popular only among the very wealthy. Plus, it is said that no two Model Es were quite the same, because Abner Doble tinkered endlessly with the design. By the time the company folded in 1931, fewer than fifty of the amazing Model E steam cars had been produced. For his whole career, until his death in 1961, Abner Doble remained adamant that steam-powered automobiles were at least equal to gasoline cars, if not superior. Given the evidence, he may have been right. Many of the Model E Dobles which have survived are still in good working condition, some having been driven over half a million miles with only normal maintenance. Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in California today, and they are pretty strict. It is true that the technology poses some difficult problems, but you cannot help but wonder how efficient a steam car might be with the benefit of modem materials and computers. Under the current pressure to improve automotive performance and reduce emissions, it is not unthinkable that the steam car may rise again."
           ],
-          "questionSectionText": "Questions 14-26\n21. What point does the writer make about the steam car in Paragraph B?\n22. When building their first steam car, the Doble brothers\n23. In order to produce the Model C, the Doble brothers\n24. … , while keeping its emissions extremely low. The steam car was too expensive for many people and its design was constantly being altered. Under\n25. … cars were produced before the company went out of business. However, even today, there are Model Es on the road in the US. They are straightforward to maintain, and they satisfy California’s\n26. … emissions laws. Perhaps today’s technology and materials would help us revive the steam car.\nQuestions 27-30 Choose the correct letter,",
+          "questionSectionText": "Questions 14-20\nReading Passage 2 has seven paragraphs, A-G.\nChoose the correct heading for each paragraph from the list of headings below.\nWrite the correct number, i-x, in boxes 14-20 on your answer sheet.\n\nList of Headings\ni A winter trial revealing the capabilities of the final version\nii The risks involved in starting an engine by hand\niii An established form of propulsion adapted, complete with its faults\niv Commercial failure, lasting quality and a possible future revival\nv Securing funds and attracting orders for an improved version\nvi An amateur project that outperformed commercially available vehicles\nvii Customers let down by a product that failed to perform\nviii A newcomer that quickly displaced an established form of power\nix Lessons that the earliest motor vehicles took from the railways\nx One engineer's habit of constantly modifying his own work\n\n14 Paragraph A\n15 Paragraph B\n16 Paragraph C\n17 Paragraph D\n18 Paragraph E\n19 Paragraph F\n20 Paragraph G\n\nQuestions 21-23\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 21-23 on your answer sheet.\n21 What point does the writer make about the steam car in Paragraph B?\nA Its period of popularity was surprisingly brief.\nB It was never able to match the speed of its rivals.\nC It was more expensive to run than owners expected.\nD It was mainly bought by wealthy enthusiasts.\n22 When building their first steam car, the Doble brothers\nA relied on parts bought from established manufacturers.\nB produced a vehicle that immediately impressed the trade press.\nC kept going despite a disappointing initial result.\nD abandoned the project after their first attempt.\n23 In order to produce the Model C, the Doble brothers\nA moved their workshop closer to their suppliers.\nB travelled elsewhere in search of financial backing.\nC recruited engineers from the railway industry.\nD simplified the design of their earlier prototype.\n\nQuestions 24-26\nComplete the summary below.\nChoose ONE WORD AND/OR A NUMBER from the passage for each answer.\nWrite your answers in boxes 24-26 on your answer sheet.\n\nThe Doble Model E\nThe Doble brothers promised a steam car that offered all the convenience of a petrol\nvehicle together with far greater 24 … , while keeping its emissions extremely low.\nThe steam car was too expensive for many people and its design was constantly being\naltered. Under 25 … cars were produced before the company went out of business.\nHowever, even today, there are Model Es on the road in the US. They are straightforward\nto maintain, and they satisfy the very 26 … emissions laws of California. Perhaps\ntoday's technology and materials would help us revive the steam car.",
           "questionRanges": [
             {
               "start": 14,
-              "end": 26
+              "end": 20
             },
             {
-              "start": 27,
-              "end": 30
+              "start": 21,
+              "end": 23
+            },
+            {
+              "start": 24,
+              "end": 26
             }
           ],
           "questions": [
             {
               "number": 14,
-              "prompt": "Choose the correct heading for this section.",
+              "prompt": "Paragraph A",
               "correctAnswer": "iii",
               "acceptedAnswers": [
                 "iii"
@@ -1574,12 +1586,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "these early cars inherited steam’s weaknesses along with its strengths.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"these early cars inherited steam’s weaknesses along with its strengths.\" จึงคำตอบคือ \"iii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = inherited weaknesses strengths = iii"
+              "explanationThai": "ย่อหน้า A มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"these early cars inherited steam’s weaknesses along with its strengths.\" จึงเลือกหัวข้อ iii",
+              "paraphrasedVocabulary": "paragraph = early cars inherited steam’s = iii"
             },
             {
               "number": 15,
-              "prompt": "Choose the correct heading for this section.",
+              "prompt": "Paragraph B",
               "correctAnswer": "viii",
               "acceptedAnswers": [
                 "viii"
@@ -1587,12 +1599,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "A new technology called the Internal Combustion Engine soon appeared,",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"A new technology called the Internal Combustion Engine soon appeared,\" จึงคำตอบคือ \"viii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = technology called internal combustion = viii"
+              "explanationThai": "ย่อหน้า B มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"A new technology called the Internal Combustion Engine soon appeared,\" จึงเลือกหัวข้อ viii",
+              "paraphrasedVocabulary": "paragraph = new technology called internal = viii"
             },
             {
               "number": 16,
-              "prompt": "Choose the correct heading for this section.",
+              "prompt": "Paragraph C",
               "correctAnswer": "vi",
               "acceptedAnswers": [
                 "vi"
@@ -1600,12 +1612,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "it drew the attention of automobile trade magazines due to its numerous improvements over previous steam cars. The Model B proved to be superior to gasoline automobiles in many ways.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"it drew the attention of automobile trade magazines due to its numerous improvements over previ…\" จึงคำตอบคือ \"vi\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = attention automobile magazines numerous = vi"
+              "explanationThai": "ย่อหน้า C มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"it drew the attention of automobile trade magazines due to its numerous improvements over …\" จึงเลือกหัวข้อ vi",
+              "paraphrasedVocabulary": "paragraph = drew attention automobile trade = vi"
             },
             {
               "number": 17,
-              "prompt": "Choose the correct heading for this section.",
+              "prompt": "Paragraph D",
               "correctAnswer": "v",
               "acceptedAnswers": [
                 "v"
@@ -1613,12 +1625,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "By the following April, the General Engineering Company had received 5,390 deposits for Doble Detroits, which were scheduled for delivery in early 1918.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"By the following April, the General Engineering Company had received 5,390 deposits for Doble D…\" จึงคำตอบคือ \"v\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = general engineering company received = v"
+              "explanationThai": "ย่อหน้า D มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"By the following April, the General Engineering Company had received 5,390 deposits for Do…\" จึงเลือกหัวข้อ v",
+              "paraphrasedVocabulary": "paragraph = following april general engineering = v"
             },
             {
               "number": 18,
-              "prompt": "Choose the correct heading for this section.",
+              "prompt": "Paragraph E",
               "correctAnswer": "vii",
               "acceptedAnswers": [
                 "vii"
@@ -1626,12 +1638,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Those buyers who received the handful of completed cars complained that the vehicles were sluggish and erratic,",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Those buyers who received the handful of completed cars complained that the vehicles were slugg…\" จึงคำตอบคือ \"vii\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = buyers received handful completed = vii"
+              "explanationThai": "ย่อหน้า E มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"Those buyers who received the handful of completed cars complained that the vehicles were …\" จึงเลือกหัวข้อ vii",
+              "paraphrasedVocabulary": "paragraph = buyers received handful completed = vii"
             },
             {
               "number": 19,
-              "prompt": "Choose the correct heading for this section.",
+              "prompt": "Paragraph F",
               "correctAnswer": "i",
               "acceptedAnswers": [
                 "i"
@@ -1639,12 +1651,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "After sitting overnight in freezing temperatures, the car was pushed out into the road and left to sit for over an hour in the frosty morning air.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"After sitting overnight in freezing temperatures, the car was pushed out into the road and left…\" จึงคำตอบคือ \"i\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = sitting overnight freezing temperatures = i"
+              "explanationThai": "ย่อหน้า F มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"After sitting overnight in freezing temperatures, the car was pushed out into the road and…\" จึงเลือกหัวข้อ i",
+              "paraphrasedVocabulary": "paragraph = after sitting overnight freezing = i"
             },
             {
               "number": 20,
-              "prompt": "Choose the correct heading for this section.",
+              "prompt": "Paragraph G",
               "correctAnswer": "iv",
               "acceptedAnswers": [
                 "iv"
@@ -1652,8 +1664,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Under the current pressure to improve automotive performance and reduce emissions, it is not unthinkable that the steam car may rise again.",
-              "explanationThai": "ในข้อให้เติมหัวข้อ: \"Drop heading here …\" บทความมีถ้อยคำที่ตรงกันคือ \"Under the current pressure to improve automotive performance and reduce emissions, it is not un…\" จึงคำตอบคือ \"iv\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "heading = current pressure improve automotive = iv"
+              "explanationThai": "ย่อหน้า G มีเนื้อหาที่ตรงกับหัวข้อในข้อมากที่สุด โดยเฉพาะประโยค \"Under the current pressure to improve automotive performance and reduce emissions, it is n…\" จึงเลือกหัวข้อ iv",
+              "paraphrasedVocabulary": "paragraph = current pressure improve automotive = iv"
             },
             {
               "number": 21,
@@ -1696,7 +1708,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "… , while keeping its emissions extremely low. The steam car was too expensive for many people and its design was constantly being altered. Under",
+              "prompt": ", while keeping its emissions extremely low. The steam car was too expensive for many people and its design was constantly being altered. Under.",
               "correctAnswer": "speed",
               "acceptedAnswers": [
                 "speed"
@@ -1704,12 +1716,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "With these enhancements, the Dobles' new car company promised a steam vehicle which would provide all of the convenience of a gasoline car, but with much greater speed, much simpler driving controls, and a virtually silent powerplant.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… , while keeping its emissions extremely low. The steam car was too expensive for many people and its design was constantly being…\" บทความมีถ้อยคำที่ตรงกันคือ \"With these enhancements, the Dobles' new car company promised a steam vehicle which would provi…\" จึงคำตอบคือ \"speed\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "keeping emissions extremely = enhancements dobles' company promised = speed"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \", while keeping its emissions extremely low. The steam car was too expensive for many people and its design was constantly being altered. Under\" บทความมีถ้อยคำที่ตรงกันคือ \"With these enhancements, the Dobles' new car company promised a steam vehicle which would …\" จึงคำตอบคือ \"speed\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "while keeping emissions extremely = enhancements dobles' new car = speed"
             },
             {
               "number": 25,
-              "prompt": "… cars were produced before the company went out of business. However, even today, there are Model Es on the road in the US. They are straightforward to maintain, and they satisfy California’s",
+              "prompt": "The steam car was too expensive for many people and its design was constantly being altered. Under … … cars were produced before the company went out of business.",
               "correctAnswer": "50",
               "acceptedAnswers": [
                 "fifty",
@@ -1718,12 +1730,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "fewer than fifty of the amazing Model E steam cars had been produced.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… cars were produced before the company went out of business. However, even today, there are Model Es on the road in the US. They …\" บทความมีถ้อยคำที่ตรงกันคือ \"fewer than fifty of the amazing Model E steam cars had been produced.\" จึงคำตอบคือ \"50\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "produced company business = amazing produced = 50"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"The steam car was too expensive for many people and its design was constantly being altered. Under … … cars were produced before the company went out of business.\" บทความมีถ้อยคำที่ตรงกันคือ \"fewer than fifty of the amazing Model E steam cars had been produced.\" จึงคำตอบคือ \"50\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "steam car too expensive = fewer fifty amazing model = 50"
             },
             {
               "number": 26,
-              "prompt": "… emissions laws. Perhaps today’s technology and materials would help us revive the steam car.",
+              "prompt": "to maintain, and they satisfy the very … … emissions laws of California. Perhaps.",
               "correctAnswer": "strict",
               "acceptedAnswers": [
                 "strict"
@@ -1731,8 +1743,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 2",
               "answerType": "text",
               "exactPortion": "Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in California today, and they are pretty strict.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… emissions laws. Perhaps today’s technology and materials would help us revive the steam car. Questions 27-30 Choose the correct …\" บทความมีถ้อยคำที่ตรงกันคือ \"Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in Cali…\" จึงคำตอบคือ \"strict\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "emissions perhaps today = astonishingly unmodified enough emissions = strict"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"to maintain, and they satisfy the very … … emissions laws of California. Perhaps.\" บทความมีถ้อยคำที่ตรงกันคือ \"Astonishingly, an unmodified Doble Model E runs clean enough to pass the emissions laws in…\" จึงคำตอบคือ \"strict\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "maintain satisfy very emissions = astonishingly unmodified doble model = strict"
             }
           ]
         }
@@ -1768,7 +1780,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             "I find it amazing to watch students get over an idea to their peers in ways that I would never think of. They operate with different language tools and different social tools from teachers and, having just learnt it themselves, they possess similar cognitive structures to their struggling classmates. There is also something exciting about passing on skills and knowledge that you yourself have just mastered – a certain pride and zeal, a certain freshness to the interaction between 'teacher' and 'learner' that is often lost by the expert for whom the steps are obvious and the joy of discovery forgotten.",
             "Having a variety of different abilities in a collaborative learning environment provides valuable resources for helping students meet their learning needs, not to mention improving their communication and social skills. And today, more than ever, we need the many to flourish – not suffer at the expense of a few bright stars. Once a year, I go on a hike with my class, a mixed bunch of students. It is challenging. The fittest students realise they need to encourage the reluctant. There are lookouts who report back, and extra items to carry for others. We make it – together."
           ],
-          "questionSectionText": "Questions 27-30\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 27-30 on your answer sheet.\n\n27   The writer describes the Romeo and Juliet lesson in order to demonstrate\nA   how few students are interested in literature.\nB   how a teacher handles a range of learning needs.\nC   how unsuitable Shakespeare is for most teenagers.\nD   how weaker students can disrupt their classmates' learning.\n\n28   What does the writer say about streaming in the third paragraph?\nA   It has a very broad appeal.\nB   It favours cleverer students.\nC   It is relatively simple to implement.\nD   It works better in some schools than others.\n\n29   What idea is suggested by the reference to Mount Qomolangma in the fifth paragraph?\nA   students following unsuitable paths\nB   students attempting interesting tasks\nC   students not achieving their full potential\nD   students not being aware of their limitations\n\n30   What does the word 'scaffolding' in the sixth paragraph refer to?\nA   the factors which prevent a student from learning effectively\nB   the environment where most of a student's learning takes place\nC   the assistance given to a student in their initial stages of learning\nD   the setting of appropriate learning targets for a student's aptitude\n\nQuestions 31-35\nComplete the summary using the list of phrases, A-I, below.\nWrite the correct letter, A-I, in boxes 31-35 on your answer sheet.\n\nIs streaming effective?\n\nAccording to Professor John Hattie of the Melbourne Education Research Institute there is very little indication that streaming leads to 31 ………………… . He points out that, in schools which use streaming, the most significant impact is on those students placed in the 32 …………………, especially where a large proportion of them have 33 ………………… . Meanwhile, for the 34 …………………, there appears to be only minimal advantage. A further issue is that teachers tend to have 35 ………………… of students in streamed groups.\n\nA   wrong classes      B   lower expectations\nC   average learners     D   bottom sets\nE   brightest pupils      F   disadvantaged backgrounds\nG   weaker students     H   higher achievements\nI    positive impressions\n\nQuestions 36-40\nDo the following statements agree with the views of the writer in Reading Passage 3?\nIn boxes 36-40 on your answer sheet, write\nYES if the statement agrees with the views of the writer\nNO if the statement contradicts the views of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n\n36   The Vygotsky model of education supports the concept of a mixed-ability class.\n37   Some teachers are uncertain about allowing students to take on MKO roles in the classroom.\n38   It can be rewarding to teach knowledge which you have only recently acquired.\n39   The priority should be to ensure that the highest-achieving students attain their goals.\n40   Taking part in collaborative outdoor activities with teachers and classmates can improve student outcomes in the classroom.",
+          "questionSectionText": "Questions 27-30\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 27-30 on your answer sheet.\n\n27   The writer describes the Romeo and Juliet lesson in order to demonstrate\nA   how few students are interested in literature.\nB   how a teacher handles a range of learning needs.\nC   how unsuitable Shakespeare is for most teenagers.\nD   how weaker students can disrupt their classmates' learning.\n\n28   What does the writer say about streaming in the third paragraph?\nA   It has a very broad appeal.\nB   It favours cleverer students.\nC   It is relatively simple to implement.\nD   It works better in some schools than others.\n\n29   What idea is suggested by the reference to Mount Qomolangma in the fifth paragraph?\nA   students following unsuitable paths\nB   students attempting interesting tasks\nC   students not achieving their full potential\nD   students not being aware of their limitations\n\n30   What does the word 'scaffolding' in the sixth paragraph refer to?\nA   the factors which prevent a student from learning effectively\nB   the environment where most of a student's learning takes place\nC   the assistance given to a student in their initial stages of learning\nD   the setting of appropriate learning targets for a student's aptitude\n\nQuestions 31-35\nComplete the summary using the list of phrases, A-I, below.\nWrite the correct letter, A-I, in boxes 31-35 on your answer sheet.\n\nIs streaming effective?\n\nAccording to Professor John Hattie of the Melbourne Education Research Institute there is very little indication that streaming leads to 31 ………………… . He points out that, in schools which use streaming, the most significant impact is on those students placed in the 32 …………………, especially where a large proportion of them have 33 ………………… . Meanwhile, for the 34 …………………, there appears to be only minimal advantage. A further issue is that teachers tend to have 35 ………………… of students in streamed groups.\n\nA wrong classes\nB lower expectations\nC average learners\nD bottom sets\nE brightest pupils\nF disadvantaged backgrounds\nG weaker students\nH higher achievements\nI positive impressions\n\nQuestions 36-40\nDo the following statements agree with the views of the writer in Reading Passage 3?\nIn boxes 36-40 on your answer sheet, write\nYES if the statement agrees with the views of the writer\nNO if the statement contradicts the views of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n\n36   The Vygotsky model of education supports the concept of a mixed-ability class.\n37   Some teachers are uncertain about allowing students to take on MKO roles in the classroom.\n38   It can be rewarding to teach knowledge which you have only recently acquired.\n39   The priority should be to ensure that the highest-achieving students attain their goals.\n40   Taking part in collaborative outdoor activities with teachers and classmates can improve student outcomes in the classroom.",
           "questionRanges": [
             {
               "start": 27,
@@ -1846,8 +1858,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "‘tracking has minimal effects on learning outcomes’.",
-              "explanationThai": "คำถาม: \"Drop answer here … . He points out that, in schools which use streaming, the most significant impact is on those students placed i…\" หลักฐานในบทความคือ \"‘tracking has minimal effects on learning outcomes’.\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
-              "paraphrasedVocabulary": "points schools streaming = tracking minimal effects learning = H"
+              "explanationThai": "คำถาม: \"He points out that, in schools which use streaming, the most significant impact is on those students placed in the\" หลักฐานในบทความคือ \"‘tracking has minimal effects on learning outcomes’.\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
+              "paraphrasedVocabulary": "points out schools use = tracking minimal effects learning = H"
             },
             {
               "number": 32,
@@ -1859,7 +1871,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "What is more, streaming appears to significantly – and negatively – affect those students assigned to the lowest sets.",
-              "explanationThai": "คำถาม: \"Drop answer here … , especially where\" หลักฐานในบทความคือ \"What is more, streaming appears to significantly – and negatively – affect those students assig…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "explanationThai": "คำถาม: \", especially where\" หลักฐานในบทความคือ \"What is more, streaming appears to significantly – and negatively – affect those students …\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
               "paraphrasedVocabulary": "especially = streaming appears significantly negatively = D"
             },
             {
@@ -1872,8 +1884,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "These students tend to have much higher representation of low socioeconomic class.",
-              "explanationThai": "คำถาม: \"Drop answer here … . Meanwhile, for the\" หลักฐานในบทความคือ \"These students tend to have much higher representation of low socioeconomic class.\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "meanwhile = students higher representation socioeconomic = F"
+              "explanationThai": "คำถาม: \"Meanwhile, for the\" หลักฐานในบทความคือ \"These students tend to have much higher representation of low socioeconomic class.\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "meanwhile = students tend much higher = F"
             },
             {
               "number": 34,
@@ -1885,8 +1897,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Less significant is the small benefit for those lucky clever students in the higher sets.",
-              "explanationThai": "คำถาม: \"Drop answer here … , there appears to be only minimal advantage.\" หลักฐานในบทความคือ \"Less significant is the small benefit for those lucky clever students in the higher sets.\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "appears minimal advantage = significant benefit clever students = E"
+              "explanationThai": "คำถาม: \", there appears to be only minimal advantage.\" หลักฐานในบทความคือ \"Less significant is the small benefit for those lucky clever students in the higher sets.\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "appears only minimal advantage = less significant small benefit = E"
             },
             {
               "number": 35,
@@ -1898,8 +1910,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 3 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Streaming students by diagnosed achievement automatically limits what the teacher feels the student is capable of",
-              "explanationThai": "คำถาม: \"Drop answer here … of students in streamed groups. Drag and drop an option to fill in each blank. A. wrong classes B. lower expect…\" หลักฐานในบทความคือ \"Streaming students by diagnosed achievement automatically limits what the teacher feels the stu…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "option fill blank = streaming students diagnosed achievement = B"
+              "explanationThai": "คำถาม: \"of students in streamed groups.\" หลักฐานในบทความคือ \"Streaming students by diagnosed achievement automatically limits what the teacher feels th…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "students streamed groups = streaming students diagnosed achievement = B"
             },
             {
               "number": 36,
@@ -1999,15 +2011,23 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             "E",
             "As the expertise about green roofs grows, official standards have been developed to ensure that they are designed, constructed and maintained properly, and function well. Improvements in the science and technology underpinning green roof development have also led to new variations in the concept. For example, 'blue roofs' enable buildings to hold water over longer periods of time, rather than draining it away quickly – crucial in times of heavier rainfall. There are also combinations of green roofs with solar panels, and 'brown roofs' which are wilder in nature and maximise biodiversity. If the trend continues, it could create new jobs and a more vibrant and sustainable local food economy – alongside many other benefits. There are still barriers to overcome, but the evidence so far indicates that green roofs have the potential to transform cities and help them function sustainably long into the future. The success stories need to be studied and replicated elsewhere, to make green, blue, brown and food-producing roofs the norm in cities around the world."
           ],
-          "questionSectionText": "Questions 1-13\n1. mention of several challenges to be overcome before\n2. reference to\n3. a belief that existing green roofs should be used as\n4. examples of how green roofs can work in combination with other green urban initiatives …  …  …  …  …\n5. the need to make\n6. … and creating environments that are suitable for wildlife. In many cases, they can also be used for producing\n7. … . There are also social benefits of green roofs. For example, the medical profession recommends\n8. … as an activity to help people cope with mental health issues. Studies have also shown that the availability of green spaces can prevent physical problems such as\n9. … .\nQuestions 10-11 Choose\n10. Which TWO advantages of using newer buildings for green roofs are mentioned in Paragraph C of the passage?\n11. Which TWO advantages of using newer buildings for green roofs are mentioned in Paragraph C of the passage?\n12. Which TWO aims of new variations on the concept of green roofs are mentioned in Paragraph E of the passage?\n13. Which TWO aims of new variations on the concept of green roofs are mentioned in Paragraph E of the passage?",
+          "questionSectionText": "Questions 1-5\nReading Passage 1 has five paragraphs, A-E.\nWhich paragraph contains the following information?\nWrite the correct letter, A-E, in boxes 1-5 on your answer sheet.\nNB You may use any letter more than once.\n1 mention of several challenges to be overcome before a green roof can be installed\n2 reference to a place where authorities have promoted food growing on buildings for many years\n3 a belief that existing green roofs should be used as models for other cities\n4 examples of how green roofs can work in combination with other green urban initiatives\n5 the need to demonstrate financial benefits to potential funders\n\nQuestions 6-9\nComplete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.\nWrite your answers in boxes 6-9 on your answer sheet.\n\nThe benefits of green roofs\nGreen roofs bring a wide range of benefits to cities. They cut the 6 … costs of a\nbuilding and create environments that are suitable for wildlife. In many cases, they can\nalso be used for producing 7 … . There are also social benefits of green roofs. For\nexample, the medical profession recommends 8 … as an activity to help people cope\nwith mental health issues. Studies have also shown that the availability of green spaces\ncan prevent physical problems such as 9 … .\n\nQuestions 10-11\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 10 and 11 on your answer sheet.\nWhich TWO advantages of using newer buildings for green roofs are mentioned in Paragraph C of the passage?\nA They are cheaper to install a green roof on.\nB They need less maintenance once the planting is complete.\nC A broader range of species can be cultivated.\nD Their structure can bear a heavier load.\nE They are more likely to be granted planning permission.\n\nQuestions 12-13\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 12 and 13 on your answer sheet.\nWhich TWO aims of new variations on the concept of green roofs are mentioned in Paragraph E of the passage?\nA increasing the range of wildlife that the roof supports\nB reducing the cost of maintaining the roof\nC opening up the roof space to the general public\nD delaying the release of rainwater from the building\nE shortening the time that installation takes",
           "questionRanges": [
             {
               "start": 1,
-              "end": 13
+              "end": 5
+            },
+            {
+              "start": 6,
+              "end": 9
             },
             {
               "start": 10,
               "end": 11
+            },
+            {
+              "start": 12,
+              "end": 13
             }
           ],
           "questions": [
@@ -2052,7 +2072,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "examples of how green roofs can work in combination with other green urban initiatives … … … … …",
+              "prompt": "examples of how green roofs can work in combination with other green urban initiatives",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -2060,8 +2080,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 1",
               "answerType": "multiple-choice",
               "exactPortion": "Ongoing research is showcasing how green roofs in cities can integrate with ‘living walls’: environmentally friendly walls which are partially or completely covered with greenery, including a growing medium, such as soil or water. Research also indicates that green roofs can be integrated with drainage systems on the ground,",
-              "explanationThai": "คำถาม: \"examples of how green roofs can work in combination with other green urban initiatives … … … … …\" หลักฐานในบทความคือ \"Ongoing research is showcasing how green roofs in cities can integrate with ‘living walls’: env…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "green roofs work = ongoing research showcasing cities = B"
+              "explanationThai": "คำถาม: \"examples of how green roofs can work in combination with other green urban initiatives\" หลักฐานในบทความคือ \"Ongoing research is showcasing how green roofs in cities can integrate with ‘living walls’…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "examples green roofs work = ongoing research showcasing green = B"
             },
             {
               "number": 5,
@@ -2078,7 +2098,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "… and creating environments that are suitable for wildlife. In many cases, they can also be used for producing",
+              "prompt": "Green roofs bring a wide range of benefits to cities. They cut the … … and creating environments that are suitable for wildlife. In many cases, they can also be used for producing.",
               "correctAnswer": "energy",
               "acceptedAnswers": [
                 "energy"
@@ -2086,12 +2106,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "Among the benefits are saving on energy costs,",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… and creating environments that are suitable for wildlife. In many cases, they can also be used for producing\" บทความมีถ้อยคำที่ตรงกันคือ \"Among the benefits are saving on energy costs,\" จึงคำตอบคือ \"energy\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "used producing = benefits saving = energy"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"Green roofs bring a wide range of benefits to cities. They cut the … … and creating environments that are suitable for wildlife. In many cases, they can also be used for producing.\" บทความมีถ้อยคำที่ตรงกันคือ \"Among the benefits are saving on energy costs,\" จึงคำตอบคือ \"energy\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "green roofs bring wide = among benefits saving energy = energy"
             },
             {
               "number": 7,
-              "prompt": "… . There are also social benefits of green roofs. For example, the medical profession recommends",
+              "prompt": "also be used for producing … …. There are also social benefits of green roofs. For example, the medical profession recommends.",
               "correctAnswer": "food",
               "acceptedAnswers": [
                 "food"
@@ -2099,12 +2119,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "mitigating the risk of floods, making habitats for urban wildlife, tackling air pollution and even growing food.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . There are also social benefits of green roofs. For example, the medical profession recommends\" บทความมีถ้อยคำที่ตรงกันคือ \"mitigating the risk of floods, making habitats for urban wildlife, tackling air pollution and e…\" จึงคำตอบคือ \"food\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "social benefits green = mitigating floods making habitats = food"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"also be used for producing … …. There are also social benefits of green roofs. For example, the medical profession recommends.\" บทความมีถ้อยคำที่ตรงกันคือ \"mitigating the risk of floods, making habitats for urban wildlife, tackling air pollution …\" จึงคำตอบคือ \"food\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "also used producing also = mitigating risk floods making = food"
             },
             {
               "number": 8,
-              "prompt": "… as an activity to help people cope with mental health issues. Studies have also shown that the availability of green spaces can prevent physical problems such as",
+              "prompt": "example, the medical profession recommends … … as an activity to help people cope with mental health issues. Studies have also shown that the availability of green spaces can prevent physical problems such as.",
               "correctAnswer": "gardening",
               "acceptedAnswers": [
                 "gardening"
@@ -2112,12 +2132,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "Doctors are increasingly prescribing time spent gardening outdoors for patients dealing with anxiety and depression.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… as an activity to help people cope with mental health issues. Studies have also shown that the availability of green spaces can …\" บทความมีถ้อยคำที่ตรงกันคือ \"Doctors are increasingly prescribing time spent gardening outdoors for patients dealing with an…\" จึงคำตอบคือ \"gardening\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "activity help cope = doctors increasingly prescribing outdoors = gardening"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"example, the medical profession recommends … … as an activity to help people cope with mental health issues. Studies have also shown that the availability of green spaces can prevent physical problems such as.\" บทความมีถ้อยคำที่ตรงกันคือ \"Doctors are increasingly prescribing time spent gardening outdoors for patients dealing wi…\" จึงคำตอบคือ \"gardening\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": "example medical profession recommends = doctors increasingly prescribing time = gardening"
             },
             {
               "number": 9,
-              "prompt": "… .",
+              "prompt": "with mental health issues. Studies have also shown that the availability of green spaces can prevent physical problems such as.",
               "correctAnswer": "obesity",
               "acceptedAnswers": [
                 "obesity"
@@ -2125,8 +2145,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 1",
               "answerType": "text",
               "exactPortion": "And research has found that access to even the most basic green spaces can provide a better quality of life for dementia sufferers and help people avoid obesity.",
-              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… . Questions 10-11 Choose\" บทความมีถ้อยคำที่ตรงกันคือ \"And research has found that access to even the most basic green spaces can provide a better qua…\" จึงคำตอบคือ \"obesity\" (paraphrase จากข้อความใน passage)",
-              "paraphrasedVocabulary": "questions 10-11 = research access spaces provide = obesity"
+              "explanationThai": "ในข้อให้เติมคำในช่องว่าง: \"… .\" บทความมีถ้อยคำที่ตรงกันคือ \"And research has found that access to even the most basic green spaces can provide a bette…\" จึงคำตอบคือ \"obesity\" (paraphrase จากข้อความใน passage)",
+              "paraphrasedVocabulary": " = research found access even = obesity"
             },
             {
               "number": 10,
@@ -2217,10 +2237,18 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             "Recent evidence would suggest that growth mindset interventions are not the elixir of student learning that its proponents claim it to be. The growth mindset appears to be a viable construct in the lab, which, when administered in the classroom via targeted interventions, doesn't seem to work. It is hard to dispute that having faith in the capacity to change is a good attribute for students. Paradoxically, however, that aspiration is not well served by direct interventions that try to instil it.",
             "Motivational posters and talks are often a waste of time, and might well give students a deluded notion of what success actually means. Teaching concrete skills such as how to write an effective introduction to an essay then praising students' effort in getting there is probably a far better way of improving confidence than telling them how unique they are, or indeed how capable they are of changing their own brains. Perhaps growth mindset works best as a philosophy and not an intervention."
           ],
-          "questionSectionText": "Questions 14-26\n14. What can we learn from the first paragraph?\n15. The second paragraph describes how schools encourage students to\n16. In the third paragraph, the writer suggests that students with\n17. The methodology behind the growth mindset studies was not strict enough. …  …  …  …  …\n18. The idea of the growth mindset has been incorrectly interpreted. …  …  …  …  …\n19. Intellectual ability is an unchangeable feature of each individual. …  …  …  …  …\n20. The growth mindset should be promoted without students being aware of it. …  …  …  …  …\n21. The growth mindset is not simply about boosting students' morale. …  …  …  …  …\n22. Research shows that the growth mindset has no effect on academic achievement. …  …  …  …  … Questions 23-26 Do the following statements agree with the views of the writer in The Reading Passage? In boxes on your answer sheet, write\n23. Dweck has handled criticisms of her work in an admirable way.\n24. Students' self-perception is\n25. Recent evidence about growth mindset interventions has attracted unfair coverage in the media.\n26. Deliberate attempts to encourage students to strive for high achievement may have",
+          "questionSectionText": "Questions 14-16\nChoose the correct letter, A, B, C or D.\nWrite the correct letter in boxes 14-16 on your answer sheet.\n14 What can we learn from the first paragraph?\nA Binet's tests are still regarded as the best measure of mental ability.\nB Opinion shifted towards the view that the right surroundings could raise any child's ability.\nC Nineteenth-century scientists were the first to claim that reasoning can be taught.\nD Early twentieth-century reformers had little influence on what happened in classrooms.\n15 The second paragraph describes how schools encourage students to\nA copy the training routines of well-known sportspeople.\nB compete with each other for the highest grades.\nC treat their mistakes as an opportunity to improve rather than proof of their limits.\nD accept that some subjects will always be beyond them.\n16 In the third paragraph, the writer suggests that students with\nA a growth mindset need less encouragement from teachers.\nB a fixed mindset progress faster in the early stages.\nC a growth mindset are more often praised for being clever.\nD a fixed mindset avoid anything that might damage their self-image.\n\nQuestions 17-22\nLook at the following statements (Questions 17-22) and the list of people below.\nMatch each statement with the correct person, A-G.\nWrite the correct letter, A-G, in boxes 17-22 on your answer sheet.\nNB You may use any letter more than once.\n17 The methodology behind the growth mindset studies was not strict enough.\n18 The idea of the growth mindset has been incorrectly interpreted.\n19 Intellectual ability is an unchangeable feature of each individual.\n20 The growth mindset should be promoted without students being aware of it.\n21 The growth mindset is not simply about boosting students' morale.\n22 Research shows that the growth mindset has no effect on academic achievement.\n\nList of People\nA Alfred Binet\nB Carol Dweck\nC Andrew Gelman\nD Timothy Bates\nE David Yeager and Gregory Walton\nF John Dewey\nG Jeff Howard\n\nQuestions 23-26\nDo the following statements agree with the views of the writer in Reading Passage 2?\nIn boxes 23-26 on your answer sheet, write\nYES if the statement agrees with the views of the writer\nNO if the statement contradicts the views of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this\n23 Dweck has handled criticisms of her work in an admirable way.\n24 Students' self-perception is the main factor determining how much they go on to achieve.\n25 Recent evidence about growth mindset interventions has attracted unfair coverage in the media.\n26 Deliberate attempts to encourage students to strive for high achievement may have a damaging effect on their understanding of what success really is.",
           "questionRanges": [
             {
               "start": 14,
+              "end": 16
+            },
+            {
+              "start": 17,
+              "end": 22
+            },
+            {
+              "start": 23,
               "end": 26
             }
           ],
@@ -2266,7 +2294,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "The methodology behind the growth mindset studies was not strict enough. … … … … …",
+              "prompt": "The methodology behind the growth mindset studies was not strict enough.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -2274,12 +2302,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "The statistician Andrew Gelman claims that ‘their research designs have enough degrees of freedom that they could take their data to support just about any theory at all’.",
-              "explanationThai": "คำถาม: \"The methodology behind the growth mindset studies was not strict enough. … … … … …\" หลักฐานในบทความคือ \"The statistician Andrew Gelman claims that ‘their research designs have enough degrees of freed…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "methodology behind growth = statistician andrew gelman claims = C"
+              "explanationThai": "คำถาม: \"The methodology behind the growth mindset studies was not strict enough.\" หลักฐานในบทความคือ \"The statistician Andrew Gelman claims that ‘their research designs have enough degrees of …\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "methodology behind growth mindset = statistician andrew gelman claims = C"
             },
             {
               "number": 18,
-              "prompt": "The idea of the growth mindset has been incorrectly interpreted. … … … … …",
+              "prompt": "The idea of the growth mindset has been incorrectly interpreted.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -2287,12 +2315,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "she argues that her work has been misunderstood and misapplied in a range of ways.",
-              "explanationThai": "คำถาม: \"The idea of the growth mindset has been incorrectly interpreted. … … … … …\" หลักฐานในบทความคือ \"she argues that her work has been misunderstood and misapplied in a range of ways.\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "growth mindset incorrectly = argues misunderstood misapplied = B"
+              "explanationThai": "คำถาม: \"The idea of the growth mindset has been incorrectly interpreted.\" หลักฐานในบทความคือ \"she argues that her work has been misunderstood and misapplied in a range of ways.\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "idea growth mindset incorrectly = argues work misunderstood misapplied = B"
             },
             {
               "number": 19,
-              "prompt": "Intellectual ability is an unchangeable feature of each individual. … … … … …",
+              "prompt": "Intellectual ability is an unchangeable feature of each individual.",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -2300,12 +2328,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "in the early 20th century, progressive thinkers revolted against the notion that inherent ability is destiny.",
-              "explanationThai": "คำถาม: \"Intellectual ability is an unchangeable feature of each individual. … … … … …\" หลักฐานในบทความคือ \"in the early 20th century, progressive thinkers revolted against the notion that inherent abili…\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "unchangeable feature individual = century progressive thinkers revolted = A"
+              "explanationThai": "คำถาม: \"Intellectual ability is an unchangeable feature of each individual.\" หลักฐานในบทความคือ \"in the early 20th century, progressive thinkers revolted against the notion that inherent …\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "intellectual ability unchangeable feature = early 20th century progressive = A"
             },
             {
               "number": 20,
-              "prompt": "The growth mindset should be promoted without students being aware of it. … … … … …",
+              "prompt": "The growth mindset should be promoted without students being aware of it.",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -2313,12 +2341,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "Growth mindset supporters David Yeager and Gregory Walton claim that interventions should be delivered in a subtle way to maximise their effectiveness.",
-              "explanationThai": "คำถาม: \"The growth mindset should be promoted without students being aware of it. … … … … …\" หลักฐานในบทความคือ \"Growth mindset supporters David Yeager and Gregory Walton claim that interventions should be de…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "growth mindset should = growth mindset supporters yeager = E"
+              "explanationThai": "คำถาม: \"The growth mindset should be promoted without students being aware of it.\" หลักฐานในบทความคือ \"Growth mindset supporters David Yeager and Gregory Walton claim that interventions should …\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "growth mindset promoted without = growth mindset supporters david = E"
             },
             {
               "number": 21,
-              "prompt": "The growth mindset is not simply about boosting students' morale. … … … … …",
+              "prompt": "The growth mindset is not simply about boosting students' morale.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -2326,12 +2354,12 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "her theories are being misappropriated in schools by being conflated with the self-esteem movement",
-              "explanationThai": "คำถาม: \"The growth mindset is not simply about boosting students' morale. … … … … …\" หลักฐานในบทความคือ \"her theories are being misappropriated in schools by being conflated with the self-esteem movem…\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
-              "paraphrasedVocabulary": "growth mindset simply = theories misappropriated schools conflated = B"
+              "explanationThai": "คำถาม: \"The growth mindset is not simply about boosting students' morale.\" หลักฐานในบทความคือ \"her theories are being misappropriated in schools by being conflated with the self-esteem …\" ซึ่งสนับสนุนตัวเลือก B มากที่สุด จึงตอบ B",
+              "paraphrasedVocabulary": "growth mindset simply boosting = theories being misappropriated schools = B"
             },
             {
               "number": 22,
-              "prompt": "Research shows that the growth mindset has no effect on academic achievement. … … … … …",
+              "prompt": "Research shows that the growth mindset has no effect on academic achievement.",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -2339,8 +2367,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 2",
               "answerType": "multiple-choice",
               "exactPortion": "He notes that: ‘People with a growth mindset don’t cope any better with failure … Kids with the growth mindset aren’t getting better grades, either before or after our intervention study.’",
-              "explanationThai": "คำถาม: \"Research shows that the growth mindset has no effect on academic achievement. … … … … … Questions 23-26 Do the following statement…\" หลักฐานในบทความคือ \"He notes that: ‘People with a growth mindset don’t cope any better with failure … Kids with the…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
-              "paraphrasedVocabulary": "research shows growth = growth mindset better failure = D"
+              "explanationThai": "คำถาม: \"Research shows that the growth mindset has no effect on academic achievement.\" หลักฐานในบทความคือ \"He notes that: ‘People with a growth mindset don’t cope any better with failure … Kids wit…\" ซึ่งสนับสนุนตัวเลือก D มากที่สุด จึงตอบ D",
+              "paraphrasedVocabulary": "research shows growth mindset = notes people growth mindset = D"
             },
             {
               "number": 23,
@@ -2357,7 +2385,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "Students' self-perception is",
+              "prompt": "Students' self-perception is the main factor determining how much they go on to achieve.",
               "correctAnswer": "NO",
               "acceptedAnswers": [
                 "NO"
@@ -2376,14 +2404,14 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
                 "NOT GIVEN"
               ],
               "answerGroup": "Cambridge 18 Test 4 Passage 2",
-              "answerType": "true-false-not-given",
+              "answerType": "yes-no-not-given",
               "exactPortion": "Recent evidence would suggest that growth mindset interventions are not the elixir of student learning that its proponents claim it to be.",
               "explanationThai": "ข้อความในข้อว่า \"Recent evidence about growth mindset interventions has attracted unfair coverage in the media.\" บทความไม่ได้ให้รายละเอียดเพียงพอที่จะยืนยันหรือปฏิเสธข้อนี้โดยตรง (อ้างอิงใกล้เคียง: \"Recent evidence would suggest that growth mindset interventions are not the elixir of student l…\") จึงตอบ NOT GIVEN",
               "paraphrasedVocabulary": "recent evidence growth = recent evidence suggest growth = NOT GIVEN"
             },
             {
               "number": 26,
-              "prompt": "Deliberate attempts to encourage students to strive for high achievement may have",
+              "prompt": "Deliberate attempts to encourage students to strive for high achievement may have a damaging effect on their understanding of what success really is.",
               "correctAnswer": "YES",
               "acceptedAnswers": [
                 "YES"
@@ -2507,8 +2535,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "When I started writing about Wegener’s life and work,",
-              "explanationThai": "ข้อความในข้อว่า \"Drop answer here … is that although he proposed\" ตรงกับรายการ i ในบทความ เพราะบทความระบุว่า \"When I started writing about Wegener’s life and work,\" จึงตอบ I",
-              "paraphrasedVocabulary": "although proposed = started writing wegener = I"
+              "explanationThai": "เนื้อหาย่อหน้าที่เกี่ยวกับ \"When I started writing about Wegener’s life and work,\" ตรงกับหัวข้อ I มากที่สุด จึงตอบ I",
+              "paraphrasedVocabulary": "one interesting aspect greene's = started writing wegener’s life = I"
             },
             {
               "number": 32,
@@ -2520,8 +2548,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "He trained as an astronomer and pursued a career in atmospheric physics.",
-              "explanationThai": "คำถาม: \"Drop answer here … were limited to atmospheric physics. However, at the time he proposed his theory of continental drift in 1912, …\" หลักฐานในบทความคือ \"He trained as an astronomer and pursued a career in atmospheric physics.\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
-              "paraphrasedVocabulary": "limited atmospheric physics = trained astronomer pursued career = F"
+              "explanationThai": "คำถาม: \"Greene suggests that Wegener's interests\" หลักฐานในบทความคือ \"He trained as an astronomer and pursued a career in atmospheric physics.\" ซึ่งสนับสนุนตัวเลือก F มากที่สุด จึงตอบ F",
+              "paraphrasedVocabulary": "greene suggests wegener's interests = trained astronomer pursued career = F"
             },
             {
               "number": 33,
@@ -2533,8 +2561,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "However, he was not an ‘unknown’.",
-              "explanationThai": "คำถาม: \"Drop answer here … . Six years previously, there had been his\" หลักฐานในบทความคือ \"However, he was not an ‘unknown’.\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
-              "paraphrasedVocabulary": "years previously = however unknown = A"
+              "explanationThai": "คำถาม: \"At the time he proposed his theory of continental drift, Wegener already had\" หลักฐานในบทความคือ \"However, he was not an ‘unknown’.\" ซึ่งสนับสนุนตัวเลือก A มากที่สุด จึงตอบ A",
+              "paraphrasedVocabulary": "time proposed theory continental = however unknown’ = A"
             },
             {
               "number": 34,
@@ -2546,8 +2574,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "In 1906 he had set a world record (with his brother Kurt) for time aloft in a hot-air balloon: 52 hours.",
-              "explanationThai": "คำถาม: \"Drop answer here … of 52 hours in\" หลักฐานในบทความคือ \"In 1906 he had set a world record (with his brother Kurt) for time aloft in a hot-air balloon: …\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
-              "paraphrasedVocabulary": "hours = record brother hot-air balloon = C"
+              "explanationThai": "คำถาม: \"Wegener's record-breaking achievement involved staying airborne for a period\" หลักฐานในบทความคือ \"In 1906 he had set a world record (with his brother Kurt) for time aloft in a hot-air ball…\" ซึ่งสนับสนุนตัวเลือก C มากที่สุด จึงตอบ C",
+              "paraphrasedVocabulary": "wegener's record-breaking achievement involved = 1906 set world record = C"
             },
             {
               "number": 35,
@@ -2559,8 +2587,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "Between 1906 and 1908 he had taken part in a highly publicized and extremely dangerous expedition to the coast of northeast Greenland.",
-              "explanationThai": "คำถาม: \"Drop answer here … of Greenland’s coast. With the publication of his textbook on thermodynamics, he had also come to the attention…\" หลักฐานในบทความคือ \"Between 1906 and 1908 he had taken part in a highly publicized and extremely dangerous expediti…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
-              "paraphrasedVocabulary": "greenland coast publication = between highly publicized extremely = H"
+              "explanationThai": "คำถาม: \"Wegener gained recognition from a small group of scientists through his involvement in\" หลักฐานในบทความคือ \"Between 1906 and 1908 he had taken part in a highly publicized and extremely dangerous exp…\" ซึ่งสนับสนุนตัวเลือก H มากที่สุด จึงตอบ H",
+              "paraphrasedVocabulary": "wegener gained recognition small = between 1906 1908 taken = H"
             },
             {
               "number": 36,
@@ -2572,8 +2600,8 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_18_EXAMS = [
               "answerGroup": "Cambridge 18 Test 4 Passage 3",
               "answerType": "multiple-choice",
               "exactPortion": "He had also made a name for himself amongst a small circle of meteorologists and atmospheric physicists in Germany as the author of a textbook, Thermodynamics of the Atmosphere (1911), and of a number of interesting scientific papers.",
-              "explanationThai": "คำถาม: \"Drop answer here … of German scientists. Drag and drop an option to fill in each blank. A. modest fame B. vast range C. record-bre…\" หลักฐานในบทความคือ \"He had also made a name for himself amongst a small circle of meteorologists and atmospheric ph…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
-              "paraphrasedVocabulary": "scientists drag drop = himself amongst circle meteorologists = E"
+              "explanationThai": "คำถาม: \"Wegener's textbook helped him become known to a\" หลักฐานในบทความคือ \"He had also made a name for himself amongst a small circle of meteorologists and atmospher…\" ซึ่งสนับสนุนตัวเลือก E มากที่สุด จึงตอบ E",
+              "paraphrasedVocabulary": "wegener's textbook helped him = also made name himself = E"
             },
             {
               "number": 37,

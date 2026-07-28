@@ -104,7 +104,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "Advantages of aluminium screw caps: do not affect the … of the bottle contents",
+              "prompt": "Advantages of aluminium screw caps: do not affect the … … of the bottle contents.",
               "correctAnswer": "taste",
               "acceptedAnswers": [
                 "taste"
@@ -117,7 +117,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "Advantages of aluminium screw caps: are … to produce",
+              "prompt": "Advantages of aluminium screw caps: are … … to produce.",
               "correctAnswer": "cheaper",
               "acceptedAnswers": [
                 "cheaper"
@@ -130,7 +130,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "Advantages of aluminium screw caps: are … to use",
+              "prompt": "Advantages of aluminium screw caps: are … … to use.",
               "correctAnswer": "convenient",
               "acceptedAnswers": [
                 "convenient"
@@ -143,7 +143,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "Advantages of cork bottle stoppers: suit the … of quality products",
+              "prompt": "Advantages of cork bottle stoppers: suit the … … of quality products.",
               "correctAnswer": "image",
               "acceptedAnswers": [
                 "image"
@@ -156,7 +156,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "Advantages of cork bottle stoppers: made from a … material",
+              "prompt": "Advantages of cork bottle stoppers: made from a … … material.",
               "correctAnswer": "sustainable",
               "acceptedAnswers": [
                 "sustainable"
@@ -169,7 +169,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Advantages of cork bottle stoppers: easily …",
+              "prompt": "Advantages of cork bottle stoppers: easily.",
               "correctAnswer": "recycled",
               "acceptedAnswers": [
                 "recycled"
@@ -182,7 +182,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "cork forests aid …",
+              "prompt": "cork forests aid.",
               "correctAnswer": "biodiversity",
               "acceptedAnswers": [
                 "biodiversity"
@@ -195,7 +195,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "cork forests stop … happening",
+              "prompt": "cork forests stop … … happening.",
               "correctAnswer": "desertification",
               "acceptedAnswers": [
                 "desertification"
@@ -257,7 +257,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "The writer mentions … as an example of collecting in order to make money.",
+              "prompt": "The writer mentions … … as an example of collecting in order to make money.",
               "correctAnswer": "antiques",
               "acceptedAnswers": [
                 "antiques"
@@ -270,7 +270,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "Collectors may get a feeling of … from buying and selling items.",
+              "prompt": "Collectors may get a feeling of … … from buying and selling items.",
               "correctAnswer": "triumph",
               "acceptedAnswers": [
                 "triumph"
@@ -283,7 +283,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 16,
-              "prompt": "Collectors' clubs provide opportunities to share …",
+              "prompt": "Collectors' clubs provide opportunities to share.",
               "correctAnswer": "information",
               "acceptedAnswers": [
                 "information"
@@ -296,7 +296,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "Collectors' clubs offer … with people who have similar interests.",
+              "prompt": "Collectors' clubs offer … … with people who have similar interests.",
               "correctAnswer": "contact",
               "acceptedAnswers": [
                 "contact",
@@ -310,7 +310,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "Collecting sometimes involves a life-long … for a special item.",
+              "prompt": "Collecting sometimes involves a life-long … … for a special item.",
               "correctAnswer": "desire",
               "acceptedAnswers": [
                 "desire",
@@ -324,7 +324,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "Searching for something particular may prevent people from feeling their life is completely …",
+              "prompt": "Searching for something particular may prevent people from feeling their life is completely.",
               "correctAnswer": "aimless",
               "acceptedAnswers": [
                 "aimless",
@@ -338,7 +338,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "Stamp collecting may be … because it provides facts about different countries.",
+              "prompt": "Stamp collecting may be … … because it provides facts about different countries.",
               "correctAnswer": "educational",
               "acceptedAnswers": [
                 "educational"
@@ -351,7 +351,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "… tends to be mostly a male hobby.",
+              "prompt": "though to a lesser extent – a popular form of collecting, particularly among boys and men, was … ….",
               "correctAnswer": "trainspotting",
               "acceptedAnswers": [
                 "trainspotting"
@@ -562,7 +562,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "The 'Arson for Profit' course: students studying …",
+              "prompt": "The 'Arson for Profit' course: students studying.",
               "correctAnswer": "fire science",
               "acceptedAnswers": [
                 "fire science"
@@ -575,7 +575,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "They will become … specialising in arson.",
+              "prompt": "They will become … … specialising in arson.",
               "correctAnswer": "investigators",
               "acceptedAnswers": [
                 "investigators"
@@ -588,7 +588,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "Find … of criminal intent",
+              "prompt": "Find … … of criminal intent.",
               "correctAnswer": "evidence",
               "acceptedAnswers": [
                 "evidence"
@@ -601,7 +601,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "Leading to successful … in the courts.",
+              "prompt": "Leading to successful … … in the courts.",
               "correctAnswer": "prosecution",
               "acceptedAnswers": [
                 "prosecution"
@@ -676,7 +676,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
     "id": "cambridge-12-test2-passage1",
     "title": "Cambridge 12 Test 2 Passage 1 - The Risks Agriculture Faces in Developing Countries",
     "category": "normal",
-    "rawPassageText": "READING PASSAGE 1\nThe Risks Agriculture Faces in Developing Countries\n\nThe risks agriculture faces in developing countries\n\nSynthesis of an online debate*\n\nA\n\nTwo things distinguish food production from all other productive activities: first, every single person needs food each day and has a right to it; and second, it is hugely dependent on nature. These two unique aspects, one political, the other natural, make food production highly vulnerable and different from any other business. At the same time, cultural values are highly entrenched in food and agricultural systems worldwide.\n\nB\n\nFarmers everywhere face major risks, including extreme weather, long-term climate change, and price volatility in input and product markets. However, smallholder farmers in developing countries must in addition deal with adverse environments, both natural, in terms of soil quality, rainfall, etc., and human, in terms of infrastructure, financial systems, markets, knowledge and technology. Counter-intuitively, hunger is prevalent among many smallholder farmers in the developing world.\n\nC\n\nParticipants in the online debate argued that our biggest challenge is to address the underlying causes of the agricultural system’s inability to ensure sufficient food for all, and they identified as drivers of this problem our dependency on fossil fuels and unsupportive government policies.\n\nD\n\nOn the question of mitigating the risks farmers face, most essayists called for greater state intervention. In his essay, Kanayo F. Nwanze, President of the International Fund for Agricultural Development, argued that governments can significantly reduce risks for farmers by providing basic services like roads to get produce more efficiently to markets, or water and food storage facilities to reduce losses. Sophia Murphy, senior advisor to the Institute for Agriculture and Trade Policy, suggested that the procurement and holding of stocks by governments can also help mitigate wild swings in food prices by alleviating uncertainties about market supply.\n\nE\n\nShenggen Fan, Director General of the International Food Policy Research Institute, held up social safety nets and public welfare programmes in Ethiopia, Brazil and Mexico as valuable ways to address poverty among farming families and reduce their vulnerability to agriculture shocks. However, some commentators responded that cash transfers to poor families do not necessarily translate into increased food security, as these programmes do not always strengthen food production or raise incomes. Regarding state subsidies for agriculture, Rokeya Kabir, Executive Director of Bangladesh Nari Progati Sangha, commented in her essay that these ‘have not compensated for the stranglehold exercised by private traders. In fact, studies show that sixty percent of beneficiaries of subsidies are not poor, but rich landowners and non-farmer traders.’\n\nF\n\nNwanze, Murphy and Fan argued that private risk management tools, like private insurance, commodity futures markets, and rural finance can help small-scale producers mitigate risk and allow for investment in improvements. Kabir warned that financial support schemes often encourage the adoption of high-input agricultural practices, which in the medium term may raise production costs beyond the value of their harvests. Murphy noted that when futures markets become excessively financialised they can contribute to short-term price volatility, which increases farmers’ food insecurity. Many participants and commentators emphasised that greater transparency in markets is needed to mitigate the impact of volatility, and make evident whether adequate stocks and supplies are available. Others contended that agribusiness companies should be held responsible for paying for negative side effects.\n\nG\n\nMany essayists mentioned climate change and its consequences for small-scale agriculture. Fan explained that ‘in addition to reducing crop yields, climate change increases the magnitude and frequency of extreme weather events, which increase smallholder vulnerability.’ The growing unpredictability of weather patterns increases farmers’ difficulty in managing weather-related risks. According to this author, one solution would be to develop crop varieties that are more resilient to new climate trends and extreme weather patterns. Accordingly, Pat Mooney, co-founder and executive director of the ETC Group, suggested that ‘if we are to survive climate change, we must adopt policies that let peasants diversify the plant and animal species and varieties/breeds that make up our menus.’\n\nH\n\nSome participating authors and commentators argued in favour of community-based and autonomous risk management strategies through collective action groups, co-operatives or producers’ groups. Such groups enhance market opportunities for small-scale producers, reduce marketing costs and synchronise buying and selling with seasonal price conditions. According to Murphy, ‘collective action offers an important way for farmers to strengthen their political and economic bargaining power, and to reduce their business risks.’ One commentator, Giel Ton, warned that collective action does not come as a free good. It takes time, effort and money to organise, build trust and to experiment. Others, like Marcel Vernooij and Marcel Beukeboom, suggested that in order to ‘apply what we already know’, all stakeholders, including business, government, scientists and civil society, must work together, starting at the beginning of the value chain.\n\nI\n\nSome participants explained that market price volatility is often worsened by the presence of intermediary purchasers who, taking advantage of farmers’ vulnerability, dictate prices. One commentator suggested farmers can gain greater control over prices and minimise price volatility by selling directly to consumers. Similarly, Sonali Bisht, founder and advisor to the Institute of Himalayan Environmental Research and Education (INHERE), India, wrote that community-supported agriculture, where consumers invest in local farmers by subscription and guarantee producers a fair price, is a risk-sharing model worth more attention. Direct food distribution systems not only encourage small-scale agriculture but also give consumers more control over the food they consume, she wrote.\n\n———————\n\nQuestions 1-13\nQuestions 1-3\nWhich paragraph contains the following information? Write A-I.\n1 a reference to characteristics that only apply to food production\n2 a reference to challenges faced only by farmers in certain parts of the world\n3 a reference to difficulties in bringing about co-operation between farmers\nQuestions 4-9\nMatch each statement with the correct person, A-G.\n4 Financial assistance from the government does not always go to the farmers who most need it.\n5 Farmers can benefit from collaborating as a group.\n6 Financial assistance from the government can improve the standard of living of farmers.\n7 Farmers may be helped if there is financial input by the same individuals who buy from them.\n8 Governments can help to reduce variation in prices.\n… … to … … can have a major impact on risk …\nQuestions 10-11\nWhich TWO problems affect farmers with small farms in developing countries?\nQuestions 12-13\nWhich TWO actions are recommended for improving conditions for farmers?",
+    "rawPassageText": "READING PASSAGE 1\nThe Risks Agriculture Faces in Developing Countries\n\nThe risks agriculture faces in developing countries\n\nSynthesis of an online debate*\n\nA\n\nTwo things distinguish food production from all other productive activities: first, every single person needs food each day and has a right to it; and second, it is hugely dependent on nature. These two unique aspects, one political, the other natural, make food production highly vulnerable and different from any other business. At the same time, cultural values are highly entrenched in food and agricultural systems worldwide.\n\nB\n\nFarmers everywhere face major risks, including extreme weather, long-term climate change, and price volatility in input and product markets. However, smallholder farmers in developing countries must in addition deal with adverse environments, both natural, in terms of soil quality, rainfall, etc., and human, in terms of infrastructure, financial systems, markets, knowledge and technology. Counter-intuitively, hunger is prevalent among many smallholder farmers in the developing world.\n\nC\n\nParticipants in the online debate argued that our biggest challenge is to address the underlying causes of the agricultural system’s inability to ensure sufficient food for all, and they identified as drivers of this problem our dependency on fossil fuels and unsupportive government policies.\n\nD\n\nOn the question of mitigating the risks farmers face, most essayists called for greater state intervention. In his essay, Kanayo F. Nwanze, President of the International Fund for Agricultural Development, argued that governments can significantly reduce risks for farmers by providing basic services like roads to get produce more efficiently to markets, or water and food storage facilities to reduce losses. Sophia Murphy, senior advisor to the Institute for Agriculture and Trade Policy, suggested that the procurement and holding of stocks by governments can also help mitigate wild swings in food prices by alleviating uncertainties about market supply.\n\nE\n\nShenggen Fan, Director General of the International Food Policy Research Institute, held up social safety nets and public welfare programmes in Ethiopia, Brazil and Mexico as valuable ways to address poverty among farming families and reduce their vulnerability to agriculture shocks. However, some commentators responded that cash transfers to poor families do not necessarily translate into increased food security, as these programmes do not always strengthen food production or raise incomes. Regarding state subsidies for agriculture, Rokeya Kabir, Executive Director of Bangladesh Nari Progati Sangha, commented in her essay that these ‘have not compensated for the stranglehold exercised by private traders. In fact, studies show that sixty percent of beneficiaries of subsidies are not poor, but rich landowners and non-farmer traders.’\n\nF\n\nNwanze, Murphy and Fan argued that private risk management tools, like private insurance, commodity futures markets, and rural finance can help small-scale producers mitigate risk and allow for investment in improvements. Kabir warned that financial support schemes often encourage the adoption of high-input agricultural practices, which in the medium term may raise production costs beyond the value of their harvests. Murphy noted that when futures markets become excessively financialised they can contribute to short-term price volatility, which increases farmers’ food insecurity. Many participants and commentators emphasised that greater transparency in markets is needed to mitigate the impact of volatility, and make evident whether adequate stocks and supplies are available. Others contended that agribusiness companies should be held responsible for paying for negative side effects.\n\nG\n\nMany essayists mentioned climate change and its consequences for small-scale agriculture. Fan explained that ‘in addition to reducing crop yields, climate change increases the magnitude and frequency of extreme weather events, which increase smallholder vulnerability.’ The growing unpredictability of weather patterns increases farmers’ difficulty in managing weather-related risks. According to this author, one solution would be to develop crop varieties that are more resilient to new climate trends and extreme weather patterns. Accordingly, Pat Mooney, co-founder and executive director of the ETC Group, suggested that ‘if we are to survive climate change, we must adopt policies that let peasants diversify the plant and animal species and varieties/breeds that make up our menus.’\n\nH\n\nSome participating authors and commentators argued in favour of community-based and autonomous risk management strategies through collective action groups, co-operatives or producers’ groups. Such groups enhance market opportunities for small-scale producers, reduce marketing costs and synchronise buying and selling with seasonal price conditions. According to Murphy, ‘collective action offers an important way for farmers to strengthen their political and economic bargaining power, and to reduce their business risks.’ One commentator, Giel Ton, warned that collective action does not come as a free good. It takes time, effort and money to organise, build trust and to experiment. Others, like Marcel Vernooij and Marcel Beukeboom, suggested that in order to ‘apply what we already know’, all stakeholders, including business, government, scientists and civil society, must work together, starting at the beginning of the value chain.\n\nI\n\nSome participants explained that market price volatility is often worsened by the presence of intermediary purchasers who, taking advantage of farmers’ vulnerability, dictate prices. One commentator suggested farmers can gain greater control over prices and minimise price volatility by selling directly to consumers. Similarly, Sonali Bisht, founder and advisor to the Institute of Himalayan Environmental Research and Education (INHERE), India, wrote that community-supported agriculture, where consumers invest in local farmers by subscription and guarantee producers a fair price, is a risk-sharing model worth more attention. Direct food distribution systems not only encourage small-scale agriculture but also give consumers more control over the food they consume, she wrote.\n\n———————\n\nQuestions 1-13\nQuestions 1-3\nWhich paragraph contains the following information? Write A-I.\n1 a reference to characteristics that only apply to food production\n2 a reference to challenges faced only by farmers in certain parts of the world\n3 a reference to difficulties in bringing about co-operation between farmers\nQuestions 4-9\nLook at the following statements (Questions 4-9) and the list of people below.\nMatch each statement with the correct person, A-G.\nWrite the correct letter, A-G, in boxes 4-9 on your answer sheet.\nNB You may use any letter more than once.\n4 Financial assistance from the government does not always go to the farmers who most need it.\n5 Farmers can benefit from collaborating as a group.\n6 Financial assistance from the government can improve the standard of living of farmers.\n7 Farmers may be helped if there is financial input by the same individuals who buy from them.\n8 Governments can help to reduce variation in prices.\n9 Improvements to infrastructure can have a major impact on risk for farmers.\n\nList of People\nA Kanayo F. Nwanze\nB Sophia Murphy\nC Shenggen Fan\nD Rokeya Kabir\nE Pat Mooney\nF Giel Ton\nG Sonali Bisht\n\nQuestions 10-11\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 10 and 11 on your answer sheet.\nWhich TWO problems affect farmers with small farms in developing countries?\nA A shortage of people willing to work on the land.\nB Restrictions on the export of their produce.\nC Competition from cheap food imports.\nD Conditions that are becoming harder to forecast.\nE Middlemen who control what they are paid.\n\nQuestions 12-13\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 12 and 13 on your answer sheet.\nWhich TWO actions are recommended for improving conditions for farmers?\nA Withdrawing government involvement in agriculture.\nB Encouraging farmers to grow a narrower range of crops.\nC Bringing every party in the food chain together.\nD Buyers putting money into the farms that supply them.\nE Increasing the role of private traders in setting prices.",
     "rawAnswerKey": "READING PASSAGE 1: The Risks Agriculture Faces in Developing Countries\n\nQuestion 1: Which paragraph: characteristics that only apply to food production\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r\"\n\nShort Thai Explanation: ย่อหน้า A บอกสองสิ่งที่เฉพาะของ food production ข้อความที่เกี่ยวกับ \"distinguish food production from all other\" ชี้ไปที่ตัวเลือก A มากที่สุด\n\nParaphrased Vocabulary: only apply = distinguish from all other = เฉพาะการผลิตอาหาร\n\nQuestion 2: Which paragraph: challenges faced only by farmers in certain parts of the world\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"However, smallholder farmers in developing countries must in addition deal with adverse environments, both natural, in terms of soil quality, rainfall, etc., and human, in terms of infrastructure, financial systems, mark\"\n\nShort Thai Explanation: ย่อหน้า B เกี่ยวกับเกษตรกรในประเทศกำลังพัฒนา ข้อความที่เกี่ยวกับ \"smallholder farmers in developing countries\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: only = developing countries = เฉพาะบางภูมิภาค\n\nQuestion 3: Which paragraph: difficulties in bringing about co-operation between farmers\n\nCorrect Answer: H\n\nAccepted Answers: H\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"According to Murphy, ‘collective action offers an important way for farmers to strengthen their political and economic bargaining power, and to reduce their business risks.’ One commentator, Giel Ton, warned that collect\"\n\nShort Thai Explanation: ย่อหน้า H อธิบายว่า collective action does not come as a free good ต้องใช้เวลาและความพยายามในการสร้างความร่วมมือ จึงเป็นย่อหน้าที่พูดถึง difficulties in co-operation\n\nParaphrased Vocabulary: co-operation = collective action = ความร่วมมือ\n\nQuestion 4: Financial assistance does not always go to farmers who most need it.\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"In fact, studies show that sixty percent of beneficiaries of subsidies are not poor, but rich landowners and non-farmer traders.’ F Nwanze, Murphy and Fan argued that private risk management tools, like private insurance\"\n\nShort Thai Explanation: อุดหนุนไปหมดคนรวย ไม่ใช่คนจน ข้อความที่เกี่ยวกับ \"sixty percent of beneficiaries of subsidies are not poor\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: financial assistance = subsidies = อุดหนุน\n\nQuestion 5: Farmers can benefit from collaborating as a group.\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"According to Murphy, ‘collective action offers an important way for farmers to strengthen their political and economic bargaining power, and to reduce their business risks.’ One commentator, Giel Ton, warned that collect\"\n\nShort Thai Explanation: Murphy ว่าการร่วมมือช่วยเพิ่มอำนาจต่อรอง ข้อความที่เกี่ยวกับ \"collective action offers an important way\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: collaborating = collective action = ร่วมมือกลุ่ม\n\nQuestion 6: Financial assistance can improve standard of living of farmers.\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Shenggen Fan, Director General of the International Food Policy Research Institute, held up social safety nets and public welfare programmes in Ethiopia, Brazil and Mexico as valuable ways to address poverty among farmin\"\n\nShort Thai Explanation: Fan ว่า safety nets ช่วยลดความยากจน ข้อความที่เกี่ยวกับ \"address poverty among farming families\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: standard of living = address poverty = ระดับชีวิต\n\nQuestion 7: Financial input by the same individuals who buy from them.\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Similarly, Sonali Bisht, founder and advisor to the Institute of Himalayan Environmental Research and Education (INHERE), India, wrote that community-supported agriculture, where consumers invest in local farmers by subs\"\n\nShort Thai Explanation: ผู้บริโภคลงทุนกับเกษตรกรโดยตรง ข้อความที่เกี่ยวกับ \"consumers invest in local farmers by subscription\" ชี้ไปที่ตัวเลือก G มากที่สุด\n\nParaphrased Vocabulary: financial input = invest by subscription = ลงทุน\n\nQuestion 8: Governments can help to reduce variation in prices.\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Sophia Murphy, senior advisor to the Institute for Agriculture and Trade Policy, suggested that the procurement and holding of stocks by governments can also help mitigate wild swings in food prices by alleviating uncert\"\n\nShort Thai Explanation: Murphy ว่ารัฐเก็บสต็อกช่วยลดความผันผวนราคา ข้อความที่เกี่ยวกับ \"mitigate wild swings in food prices\" ชี้ไปที่ตัวเลือก B มากที่สุด\n\nParaphrased Vocabulary: variation in prices = wild swings = ความผันผวน\n\nQuestion 9: Improvements to infrastructure can have a major impact on risk.\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Nwanze, President of the International Fund for Agricultural Development, argued that governments can significantly reduce risks for farmers by providing basic services like roads to get produce more efficiently to marke\"\n\nShort Thai Explanation: Nwanze ว่าโครงสร้างพื้นฐานลดความเสี่ยง ข้อความที่เกี่ยวกับ \"providing basic services like roads\" ชี้ไปที่ตัวเลือก A มากที่สุด\n\nParaphrased Vocabulary: infrastructure = basic services like roads = โครงสร้างพื้นฐาน\n\nQuestion 10: Which TWO problems affect small farmers (first answer)\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Fan explained that ‘in addition to reducing crop yields, climate change increases the magnitude and frequency of extreme weather events, which increase smallholder vulnerability.’ The growing unpredictability of weather \"\n\nShort Thai Explanation: ปัญหาหนึ่งคือสภาพอากาศเปลี่ยนแปลง ข้อความที่เกี่ยวกับ \"climate change increases the magnitude and frequency of extreme weather\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: changing weather = extreme weather = สภาพอากาศ\n\nQuestion 11: Which TWO problems affect small farmers (second answer)\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r\"\n\nShort Thai Explanation: ผู้ซื้อกลางกดราคา ข้อความที่เกี่ยวกับ \"intermediary purchasers who dictate prices\" ชี้ไปที่ตัวเลือก E มากที่สุด\n\nParaphrased Vocabulary: intermediary buyers = purchasers who dictate prices = คนกลาง\n\nQuestion 12: Which TWO recommended actions (first answer)\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"The risks agriculture faces in developing countries Synthesis of an online debate* A Two things distinguish food production from all other productive activities: first, every single person needs food each day and has a r\"\n\nShort Thai Explanation: ทุกฝ่ายต้องร่วมมือกัน ข้อความที่เกี่ยวกับ \"all stakeholders must work together\" ชี้ไปที่ตัวเลือก C มากที่สุด\n\nParaphrased Vocabulary: co-operation = work together = ร่วมมือ\n\nQuestion 13: Which TWO recommended actions (second answer)\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 12 Test 2 Passage 1\n\nExact Portion: \"Similarly, Sonali Bisht, founder and advisor to the Institute of Himalayan Environmental Research and Education (INHERE), India, wrote that community-supported agriculture, where consumers invest in local farmers by subs\"\n\nShort Thai Explanation: แบบ community-supported agriculture ข้อความที่เกี่ยวกับ \"consumers invest in local farmers by subscription\" ชี้ไปที่ตัวเลือก D มากที่สุด\n\nParaphrased Vocabulary: financial stake = invest by subscription = ลงทุนร่วม",
     "parsedPayload": {
       "title": "Cambridge 12 Test 2 Passage 1 - The Risks Agriculture Faces in Developing Countries",
@@ -696,7 +696,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             "H Some participating authors and commentators argued in favour of community-based and autonomous risk management strategies through collective action groups, co-operatives or producers’ groups. Such groups enhance market opportunities for small-scale producers, reduce marketing costs and synchronise buying and selling with seasonal price conditions. According to Murphy, ‘collective action offers an important way for farmers to strengthen their political and economic bargaining power, and to reduce their business risks.’ One commentator, Giel Ton, warned that collective action does not come as a free good. It takes time, effort and money to organise, build trust and to experiment. Others, like Marcel Vernooij and Marcel Beukeboom, suggested that in order to ‘apply what we already know’, all stakeholders, including business, government, scientists and civil society, must work together, starting at the beginning of the value chain.",
             "I Some participants explained that market price volatility is often worsened by the presence of intermediary purchasers who, taking advantage of farmers’ vulnerability, dictate prices. One commentator suggested farmers can gain greater control over prices and minimise price volatility by selling directly to consumers. Similarly, Sonali Bisht, founder and advisor to the Institute of Himalayan Environmental Research and Education (INHERE), India, wrote that community-supported agriculture, where consumers invest in local farmers by subscription and guarantee producers a fair price, is a risk-sharing model worth more attention. Direct food distribution systems not only encourage small-scale agriculture but also give consumers more control over the food they consume, she wrote. ———————"
           ],
-          "questionSectionText": "Questions 1-13\nQuestions 1-3\nWhich paragraph contains the following information? Write A-I.\n1 a reference to characteristics that only apply to food production\n2 a reference to challenges faced only by farmers in certain parts of the world\n3 a reference to difficulties in bringing about co-operation between farmers\nQuestions 4-9\nMatch each statement with the correct person, A-G.\n4 Financial assistance from the government does not always go to the farmers who most need it.\n5 Farmers can benefit from collaborating as a group.\n6 Financial assistance from the government can improve the standard of living of farmers.\n7 Farmers may be helped if there is financial input by the same individuals who buy from them.\n8 Governments can help to reduce variation in prices.\n… … to … … can have a major impact on risk …\nQuestions 10-11\nWhich TWO problems affect farmers with small farms in developing countries?\nQuestions 12-13\nWhich TWO actions are recommended for improving conditions for farmers?",
+          "questionSectionText": "Questions 1-13\nQuestions 1-3\nWhich paragraph contains the following information? Write A-I.\n1 a reference to characteristics that only apply to food production\n2 a reference to challenges faced only by farmers in certain parts of the world\n3 a reference to difficulties in bringing about co-operation between farmers\nQuestions 4-9\nLook at the following statements (Questions 4-9) and the list of people below.\nMatch each statement with the correct person, A-G.\nWrite the correct letter, A-G, in boxes 4-9 on your answer sheet.\nNB You may use any letter more than once.\n4 Financial assistance from the government does not always go to the farmers who most need it.\n5 Farmers can benefit from collaborating as a group.\n6 Financial assistance from the government can improve the standard of living of farmers.\n7 Farmers may be helped if there is financial input by the same individuals who buy from them.\n8 Governments can help to reduce variation in prices.\n9 Improvements to infrastructure can have a major impact on risk for farmers.\n\nList of People\nA Kanayo F. Nwanze\nB Sophia Murphy\nC Shenggen Fan\nD Rokeya Kabir\nE Pat Mooney\nF Giel Ton\nG Sonali Bisht\n\nQuestions 10-11\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 10 and 11 on your answer sheet.\nWhich TWO problems affect farmers with small farms in developing countries?\nA A shortage of people willing to work on the land.\nB Restrictions on the export of their produce.\nC Competition from cheap food imports.\nD Conditions that are becoming harder to forecast.\nE Middlemen who control what they are paid.\n\nQuestions 12-13\nChoose TWO letters, A-E.\nWrite the correct letters in boxes 12 and 13 on your answer sheet.\nWhich TWO actions are recommended for improving conditions for farmers?\nA Withdrawing government involvement in agriculture.\nB Encouraging farmers to grow a narrower range of crops.\nC Bringing every party in the food chain together.\nD Buyers putting money into the farms that supply them.\nE Increasing the role of private traders in setting prices.",
           "questionRanges": [
             {
               "start": 1,
@@ -1085,7 +1085,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "Track created for transportation of …",
+              "prompt": "Track created for transportation of.",
               "correctAnswer": "rubber",
               "acceptedAnswers": [
                 "rubber"
@@ -1098,7 +1098,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "Bingham found out about the ruins from a …",
+              "prompt": "Bingham found out about the ruins from a.",
               "correctAnswer": "farmer",
               "acceptedAnswers": [
                 "farmer"
@@ -1168,7 +1168,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "Observing the … of Russian-English bilingual people",
+              "prompt": "Observing the … … of Russian-English bilingual people.",
               "correctAnswer": "eye movements",
               "acceptedAnswers": [
                 "eye movements"
@@ -1181,7 +1181,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 28,
-              "prompt": "mechanism known as …",
+              "prompt": "mechanism known as.",
               "correctAnswer": "language co-activation",
               "acceptedAnswers": [
                 "language co-activation"
@@ -1194,7 +1194,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 29,
-              "prompt": "A test called the …",
+              "prompt": "A test called the.",
               "correctAnswer": "Stroop Task",
               "acceptedAnswers": [
                 "Stroop Task"
@@ -1207,7 +1207,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 30,
-              "prompt": "more able to handle …",
+              "prompt": "bilingual people are more able to handle.",
               "correctAnswer": "conflict management",
               "acceptedAnswers": [
                 "conflict management"
@@ -1220,7 +1220,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "have superior …",
+              "prompt": "bilingual people have superior.",
               "correctAnswer": "cognitive control",
               "acceptedAnswers": [
                 "cognitive control"
@@ -1360,7 +1360,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
     "id": "cambridge-12-test3-passage1",
     "title": "Cambridge 12 Test 3 Passage 1 - Flying Tortoises",
     "category": "normal",
-    "rawPassageText": "READING PASSAGE 1\nFlying Tortoises\n\nFlying tortoises\n\nAn airborne reintroduction programme has helped conservationists take significant steps to protect the endangered Galápagos tortoise.\n\nA\n\nForests of spiny cacti cover much of the uneven lava plains that separate the interior of the Galápagos island of Isabela from the Pacific Ocean. With its five distinct volcanoes, the island resembles a lunar landscape. Only the thick vegetation at the skirt of the often cloud-covered peak of Sierra Negra offers respite from the barren terrain below. This inhospitable environment is home to the giant Galápagos tortoise. Some time after the Galápagos’s birth, around five million years ago, the islands were colonised by one or more tortoises from mainland South America. As these ancestral tortoises settled on the individual islands, the different populations adapted to their unique environments, giving rise to at least 14 different subspecies. Island life agreed with them. In the absence of significant predators, they grew to become the largest and longest-living tortoises on the planet, weighing more than 400 kilograms, occasionally exceeding 1.8 metres in length and living for more than a century.\n\nB\n\nBefore human arrival, the archipelago’s tortoises numbered in the hundreds of thousands. From the 17th century onwards, pirates took a few on board for food, but the arrival of whaling ships in the 1790s saw this exploitation grow exponentially. Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships to act as food supplies during long ocean passages. Sometimes, their bodies were processed into high-grade oil. In total, an estimated 200,000 animals were taken from the archipelago before the 20th century. This historical exploitation was then exacerbated when settlers came to the islands. They hunted the tortoises and destroyed their habitat to clear land for agriculture. They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants – that either prey on the eggs and young tortoises or damage or destroy their habitat.\n\nC\n\nToday, only 11 of the original subspecies survive and of these, several are highly endangered. In 1989, work began on a tortoise-breeding centre just outside the town of Puerto Villamil on Isabela, dedicated to protecting the island’s tortoise populations. The centre’s captive-breeding programme proved to be extremely successful, and it eventually had to deal with an overpopulation problem.\n\nD\n\nThe problem was also a pressing one. Captive-bred tortoises can’t be reintroduced into the wild until they’re at least five years old and weigh at least 4.5 kilograms, at which point their size and weight – and their hardened shells – are sufficient to protect them from predators. But if people wait too long after that point, the tortoises eventually become too large to transport.\n\nE\n\nFor years, repatriation efforts were carried out in small numbers, with the tortoises carried on the backs of men over weeks of long, treacherous hikes along narrow trails. But in November 2010, the environmentalist and Galápagos National Park liaison officer Godfrey Merlin, a visiting private motor yacht captain and a helicopter pilot gathered around a table in a small café in Puerto Ayora on the island of Santa Cruz to work out more ambitious reintroduction. The aim was to use a helicopter to move 300 of the breeding centre’s tortoises to various locations close to Sierra Negra.\n\nF\n\nThis unprecedented effort was made possible by the owners of the 67-metre yacht While Cloud, who provided the Galápagos National Park with free use of their helicopter and its experienced pilot, as well as the logistical support of the yacht, its captain and crew. Originally an air ambulance, the yacht’s helicopter has a rear double door and a large internal space that’s well suited for cargo, so a custom crate was designed to hold up to 33 tortoises with a total weight of about 150 kilograms. This weight, together with that of the fuel, pilot and four crew, approached the helicopter’s maximum payload, and there were times when it was clearly right on the edge of the helicopter’s capabilities. During a period of three days, a group of volunteers from the breeding centre worked around the clock to prepare the young tortoises for transport. Meanwhile, park wardens, dropped off ahead of time in remote locations, cleared landing sites within the thick brush, cacti and lava rocks.\n\nG\n\nUpon their release, the juvenile tortoises quickly spread out over their ancestral territory, investigating their new surroundings and feeding on the vegetation. Eventually, one tiny tortoise came across a fully grown giant who had been lumbering around the island for around a hundred years. The two stood side by side, a powerful symbol of the regeneration of an ancient species.\n\nQuestions 1-13\nQuestions 1-7\nChoose the correct heading for each paragraph from the list of headings below.\nWrite the correct number, i-viii, in boxes 1-7 on your answer sheet.\nList of Headings\ni The importance of getting the timing right\nii Young meets old\niii … … to the … … of tortoise … …\niv Planning a bigger idea\nv Tortoises populate the islands\nvi Carrying out a carefully prepared operation\nvii Looking for a home for the islands' tortoises\nviii The start of the conservation project\n1 Paragraph A\n2 Paragraph B\n3 Paragraph C\n4 Paragraph D\n5 Paragraph E\n6 Paragraph F\n7 Paragraph G\nQuestions 8-13\nComplete the notes. ONE WORD ONLY.",
+    "rawPassageText": "READING PASSAGE 1\nFlying Tortoises\n\nFlying tortoises\n\nAn airborne reintroduction programme has helped conservationists take significant steps to protect the endangered Galápagos tortoise.\n\nA\n\nForests of spiny cacti cover much of the uneven lava plains that separate the interior of the Galápagos island of Isabela from the Pacific Ocean. With its five distinct volcanoes, the island resembles a lunar landscape. Only the thick vegetation at the skirt of the often cloud-covered peak of Sierra Negra offers respite from the barren terrain below. This inhospitable environment is home to the giant Galápagos tortoise. Some time after the Galápagos’s birth, around five million years ago, the islands were colonised by one or more tortoises from mainland South America. As these ancestral tortoises settled on the individual islands, the different populations adapted to their unique environments, giving rise to at least 14 different subspecies. Island life agreed with them. In the absence of significant predators, they grew to become the largest and longest-living tortoises on the planet, weighing more than 400 kilograms, occasionally exceeding 1.8 metres in length and living for more than a century.\n\nB\n\nBefore human arrival, the archipelago’s tortoises numbered in the hundreds of thousands. From the 17th century onwards, pirates took a few on board for food, but the arrival of whaling ships in the 1790s saw this exploitation grow exponentially. Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships to act as food supplies during long ocean passages. Sometimes, their bodies were processed into high-grade oil. In total, an estimated 200,000 animals were taken from the archipelago before the 20th century. This historical exploitation was then exacerbated when settlers came to the islands. They hunted the tortoises and destroyed their habitat to clear land for agriculture. They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants – that either prey on the eggs and young tortoises or damage or destroy their habitat.\n\nC\n\nToday, only 11 of the original subspecies survive and of these, several are highly endangered. In 1989, work began on a tortoise-breeding centre just outside the town of Puerto Villamil on Isabela, dedicated to protecting the island’s tortoise populations. The centre’s captive-breeding programme proved to be extremely successful, and it eventually had to deal with an overpopulation problem.\n\nD\n\nThe problem was also a pressing one. Captive-bred tortoises can’t be reintroduced into the wild until they’re at least five years old and weigh at least 4.5 kilograms, at which point their size and weight – and their hardened shells – are sufficient to protect them from predators. But if people wait too long after that point, the tortoises eventually become too large to transport.\n\nE\n\nFor years, repatriation efforts were carried out in small numbers, with the tortoises carried on the backs of men over weeks of long, treacherous hikes along narrow trails. But in November 2010, the environmentalist and Galápagos National Park liaison officer Godfrey Merlin, a visiting private motor yacht captain and a helicopter pilot gathered around a table in a small café in Puerto Ayora on the island of Santa Cruz to work out more ambitious reintroduction. The aim was to use a helicopter to move 300 of the breeding centre’s tortoises to various locations close to Sierra Negra.\n\nF\n\nThis unprecedented effort was made possible by the owners of the 67-metre yacht While Cloud, who provided the Galápagos National Park with free use of their helicopter and its experienced pilot, as well as the logistical support of the yacht, its captain and crew. Originally an air ambulance, the yacht’s helicopter has a rear double door and a large internal space that’s well suited for cargo, so a custom crate was designed to hold up to 33 tortoises with a total weight of about 150 kilograms. This weight, together with that of the fuel, pilot and four crew, approached the helicopter’s maximum payload, and there were times when it was clearly right on the edge of the helicopter’s capabilities. During a period of three days, a group of volunteers from the breeding centre worked around the clock to prepare the young tortoises for transport. Meanwhile, park wardens, dropped off ahead of time in remote locations, cleared landing sites within the thick brush, cacti and lava rocks.\n\nG\n\nUpon their release, the juvenile tortoises quickly spread out over their ancestral territory, investigating their new surroundings and feeding on the vegetation. Eventually, one tiny tortoise came across a fully grown giant who had been lumbering around the island for around a hundred years. The two stood side by side, a powerful symbol of the regeneration of an ancient species.\n\nQuestions 1-13\nQuestions 1-7\nChoose the correct heading for each paragraph from the list of headings below.\nWrite the correct number, i-viii, in boxes 1-7 on your answer sheet.\nList of Headings\ni The importance of getting the timing right\nii Young meets old\niii Developments to the disadvantage of tortoise populations\niv Planning a bigger idea\nv Tortoises populate the islands\nvi Carrying out a carefully prepared operation\nvii Looking for a home for the islands' tortoises\nviii The start of the conservation project\n1 Paragraph A\n2 Paragraph B\n3 Paragraph C\n4 Paragraph D\n5 Paragraph E\n6 Paragraph F\n7 Paragraph G\nQuestions 8-13\nComplete the notes. ONE WORD ONLY.\n17th century: taken onto ships used by 8 … .\n1790s: kept for 9 … .\nAlso used to produce 10 … .\nHunted by 11 … on the islands.\nDamaged habitat through various 12 … not native to the islands.\nFed on baby tortoises and tortoises' 13 … .",
     "rawAnswerKey": "READING PASSAGE 1: Flying Tortoises\n\nQuestion 1: Heading Paragraph A\n\nCorrect Answer: v\n\nAccepted Answers: v\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Some time after the Galápagos’s birth, around five million years ago, the islands were colonised by one or more tortoises from mainland South America.\"\n\nShort Thai Explanation: เต่าเข้ามาอาศัยเกาะ เนื้อหาย่อหน้าที่เกี่ยวกับ \"islands were colonised by one or more tortoises\" ตรงกับหัวข้อ v มากที่สุด\n\nParaphrased Vocabulary: populate = colonised = v\n\nQuestion 2: Heading Paragraph B\n\nCorrect Answer: iii\n\nAccepted Answers: iii\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"From the 17th century onwards, pirates took a few on board for food, but the arrival of whaling ships in the 1790s saw this exploitation grow exponentially.\"\n\nShort Thai Explanation: การล่าและทำลายประชากร เนื้อหาย่อหน้าที่เกี่ยวกับ \"pirates took a few\" ตรงกับหัวข้อ iii มากที่สุด\n\nParaphrased Vocabulary: disadvantage = exploitation = iii\n\nQuestion 3: Heading Paragraph C\n\nCorrect Answer: viii\n\nAccepted Answers: viii\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"In 1989, work began on a tortoise-breeding centre just outside the town of Puerto Villamil on Isabela, dedicated to protecting the island’s tortoise populations.\"\n\nShort Thai Explanation: เริ่มโครงการอนุรักษ์ เนื้อหาย่อหน้าที่เกี่ยวกับ \"tortoise-breeding centre\" ตรงกับหัวข้อ viii มากที่สุด\n\nParaphrased Vocabulary: conservation project = breeding centre = viii\n\nQuestion 4: Heading Paragraph D\n\nCorrect Answer: i\n\nAccepted Answers: i\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Flying tortoises An airborne reintroduction programme has helped conservationists take significant steps to protect the endangered Galápagos tortoise.\"\n\nShort Thai Explanation: ต้องรอให้ถึงอายุที่ปลอดภัย เนื้อหาย่อหน้าที่เกี่ยวกับ \"can't be reintroduced until they're at least five years old\" ตรงกับหัวข้อ i มากที่สุด\n\nParaphrased Vocabulary: timing right = at least five years old = i\n\nQuestion 5: Heading Paragraph E\n\nCorrect Answer: iv\n\nAccepted Answers: iv\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"But in November 2010, the environmentalist and Galápagos National Park liaison officer Godfrey Merlin, a visiting private motor yacht captain and a helicopter pilot gathered around a table in a small café in Puerto Ayora\"\n\nShort Thai Explanation: วางแผนย้าย 300 ตัว เนื้อหาย่อหน้าที่เกี่ยวกับ \"work out more ambitious reintroduction\" ตรงกับหัวข้อ iv มากที่สุด\n\nParaphrased Vocabulary: bigger idea = more ambitious = iv\n\nQuestion 6: Heading Paragraph F\n\nCorrect Answer: vi\n\nAccepted Answers: vi\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"The aim was to use a helicopter to move 300 of the breeding centre’s tortoises to various locations close to Sierra Negra.\"\n\nShort Thai Explanation: ดำเนินการอย่างพิถีพิถัน เนื้อหาย่อหน้าที่เกี่ยวกับ \"helicopter to move\" ตรงกับหัวข้อ vi มากที่สุด\n\nParaphrased Vocabulary: carefully prepared operation = helicopter operation = vi\n\nQuestion 7: Heading Paragraph G\n\nCorrect Answer: ii\n\nAccepted Answers: ii\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Eventually, one tiny tortoise came across a fully grown giant who had been lumbering around the island for around a hundred years.\"\n\nShort Thai Explanation: เจอเต่าตัวใหญ่ เนื้อหาย่อหน้าที่เกี่ยวกับ \"one tiny tortoise came across a fully grown giant\" ตรงกับหัวข้อ ii มากที่สุด\n\nParaphrased Vocabulary: young meets old = tiny tortoise and giant = ii\n\nQuestion 8: 17th century: taken onto ships used by …\n\nCorrect Answer: pirates\n\nAccepted Answers: pirates\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"From the 17th century onwards, pirates took a few on board for food, but the arrival of whaling ships in the 1790s saw this exploitation grow exponentially.\"\n\nShort Thai Explanation: ตั้งแต่ศตวรรษที่ 17 pirates took a few tortoises on board คำว่า ships used by … จึงตอบ pirates\n\nParaphrased Vocabulary: ships used by = pirates took = โจรสลัด\n\nQuestion 9: 1790s: kept for …\n\nCorrect Answer: food\n\nAccepted Answers: food\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Relatively immobile and capable of surviving for months without food or water, the tortoises were taken on board these ships to act as food supplies during long ocean passages.\"\n\nShort Thai Explanation: เต่าถูกเก็บเป็น food supplies ระหว่างเดินทางทะเลยาว คำว่า kept for … จึงตอบ food\n\nParaphrased Vocabulary: kept for = food supplies = อาหาร\n\nQuestion 10: also used to produce …\n\nCorrect Answer: oil\n\nAccepted Answers: oil\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Sometimes, their bodies were processed into high-grade oil.\"\n\nShort Thai Explanation: ร่างเต่าถูก processed into high-grade oil คำว่า used to produce … จึงตอบ oil\n\nParaphrased Vocabulary: produce = processed into = oil = น้ำมัน\n\nQuestion 11: Hunted by … on the islands\n\nCorrect Answer: settlers\n\nAccepted Answers: settlers\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"Flying tortoises An airborne reintroduction programme has helped conservationists take significant steps to protect the endangered Galápagos tortoise.\"\n\nShort Thai Explanation: เมื่อ settlers มาถึงเกาะ พวกเขา hunted the tortoises คำว่า Hunted by … จึงตอบ settlers\n\nParaphrased Vocabulary: hunted by = settlers hunted = ผู้บุกเบิก\n\nQuestion 12: by various … not native to the islands\n\nCorrect Answer: species\n\nAccepted Answers: species\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants – that either prey on the eggs and young tortoises or damage or destroy their habitat.\"\n\nShort Thai Explanation: มีการนำ introduced alien species เข้ามา คำว่า by various … not native จึงตอบ species\n\nParaphrased Vocabulary: not native = alien species = species\n\nQuestion 13: fed on baby tortoises and tortoises' …\n\nCorrect Answer: eggs\n\nAccepted Answers: eggs\n\nAnswer Group: Cambridge 12 Test 3 Passage 1\n\nExact Portion: \"They also introduced alien species – ranging from cattle, pigs, goats, rats and dogs to plants and ants – that either prey on the eggs and young tortoises or damage or destroy their habitat.\"\n\nShort Thai Explanation: สัตว์ต่างถิ่น prey on the eggs and young tortoises คำว่า fed on … eggs จึงตอบ eggs\n\nParaphrased Vocabulary: fed on = prey on = eggs = ไข่",
     "parsedPayload": {
       "title": "Cambridge 12 Test 3 Passage 1 - Flying Tortoises",
@@ -1378,7 +1378,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             "This unprecedented effort was made possible by the owners of the 67-metre yacht White Cloud, who provided the Galápagos National Park with free use of their helicopter and its experienced pilot, as well as the logistical support of the yacht, its captain and crew. Originally an air ambulance, the yacht's helicopter has a rear double door and a large internal space that's well suited for cargo, so a custom crate was designed to hold up to 33 tortoises with a total weight of about 150 kilograms. This weight, together with that of the fuel, pilot and four crew, approached the helicopter's maximum payload, and there were times when it was clearly right on the edge of the helicopter's capabilities. During a period of three days, a group of volunteers from the breeding centre worked around the clock to prepare the young tortoises for transport. Meanwhile, park wardens, dropped off ahead of time in remote locations, cleared landing sites within the thick brush, cacti and lava rocks.",
             "Upon their release, the juvenile tortoises quickly spread out over their ancestral territory, investigating their new surroundings and feeding on the vegetation. Eventually, one tiny tortoise came across a fully grown giant who had been lumbering around the island for around a hundred years. The two stood side by side, a powerful symbol of the regeneration of an ancient species."
           ],
-          "questionSectionText": "Questions 1-13\nQuestions 1-7\nChoose the correct heading for each paragraph from the list of headings below.\nWrite the correct number, i-viii, in boxes 1-7 on your answer sheet.\nList of Headings\ni The importance of getting the timing right\nii Young meets old\niii … … to the … … of tortoise … …\niv Planning a bigger idea\nv Tortoises populate the islands\nvi Carrying out a carefully prepared operation\nvii Looking for a home for the islands' tortoises\nviii The start of the conservation project\n1 Paragraph A\n2 Paragraph B\n3 Paragraph C\n4 Paragraph D\n5 Paragraph E\n6 Paragraph F\n7 Paragraph G\nQuestions 8-13\nComplete the notes. ONE WORD ONLY.",
+          "questionSectionText": "Questions 1-13\nQuestions 1-7\nChoose the correct heading for each paragraph from the list of headings below.\nWrite the correct number, i-viii, in boxes 1-7 on your answer sheet.\nList of Headings\ni The importance of getting the timing right\nii Young meets old\niii Developments to the disadvantage of tortoise populations\niv Planning a bigger idea\nv Tortoises populate the islands\nvi Carrying out a carefully prepared operation\nvii Looking for a home for the islands' tortoises\nviii The start of the conservation project\n1 Paragraph A\n2 Paragraph B\n3 Paragraph C\n4 Paragraph D\n5 Paragraph E\n6 Paragraph F\n7 Paragraph G\nQuestions 8-13\nComplete the notes. ONE WORD ONLY.\n17th century: taken onto ships used by 8 … .\n1790s: kept for 9 … .\nAlso used to produce 10 … .\nHunted by 11 … on the islands.\nDamaged habitat through various 12 … not native to the islands.\nFed on baby tortoises and tortoises' 13 … .",
           "questionRanges": [
             {
               "start": 1,
@@ -1487,7 +1487,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "17th century: taken onto ships used by …",
+              "prompt": "17th century: taken onto ships used by.",
               "correctAnswer": "pirates",
               "acceptedAnswers": [
                 "pirates"
@@ -1500,7 +1500,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "1790s: kept for …",
+              "prompt": "the tortoises were taken on board these ships to act as … … supplies during long ocean passages.",
               "correctAnswer": "food",
               "acceptedAnswers": [
                 "food"
@@ -1513,7 +1513,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "also used to produce …",
+              "prompt": "Also used to produce.",
               "correctAnswer": "oil",
               "acceptedAnswers": [
                 "oil"
@@ -1526,7 +1526,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Hunted by … on the islands",
+              "prompt": "Hunted by … … on the islands.",
               "correctAnswer": "settlers",
               "acceptedAnswers": [
                 "settlers"
@@ -1539,7 +1539,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "by various … not native to the islands",
+              "prompt": "Damaged habitat through various … … not native to the islands.",
               "correctAnswer": "species",
               "acceptedAnswers": [
                 "species"
@@ -1552,7 +1552,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "fed on baby tortoises and tortoises' …",
+              "prompt": "Fed on baby tortoises and tortoises'.",
               "correctAnswer": "eggs",
               "acceptedAnswers": [
                 "eggs"
@@ -1689,7 +1689,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "diseases disappeared thanks to better … and healthcare",
+              "prompt": "Certain disease have disappeared, thanks to better … … and healthcare.",
               "correctAnswer": "vaccinations",
               "acceptedAnswers": [
                 "vaccinations"
@@ -1702,7 +1702,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "… are losing their usefulness",
+              "prompt": "Because there is more contact between people, … … are losing their usefulness.",
               "correctAnswer": "antibiotics",
               "acceptedAnswers": [
                 "antibiotics"
@@ -1715,7 +1715,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "Disease-causing … in hot, damp regions",
+              "prompt": "Disease-causing … … in hot, damp regions.",
               "correctAnswer": "mosquitos",
               "acceptedAnswers": [
                 "mosquitos"
@@ -1728,7 +1728,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "One cause of pollution is … that burn a particular fuel",
+              "prompt": "One cause of pollution is … … that burn a particular fuel.",
               "correctAnswer": "factories",
               "acceptedAnswers": [
                 "factories"
@@ -1741,7 +1741,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "growth of cities often has an impact on nearby …",
+              "prompt": "The growth of cities often has an impact on nearby.",
               "correctAnswer": "forests",
               "acceptedAnswers": [
                 "forests"
@@ -1754,7 +1754,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "… is one disease growing after being eradicated",
+              "prompt": "It is an increasingly important area of study in a world where diseases like … … are re-emerging, respiratory diseases continue to spread, and malaria-prone areas are still.",
               "correctAnswer": "polio",
               "acceptedAnswers": [
                 "polio"
@@ -1767,7 +1767,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "A physical barrier such as a … can prevent people reaching a hospital",
+              "prompt": "A physical barrier such as a … … can prevent people reaching a hospital.",
               "correctAnswer": "mountain",
               "acceptedAnswers": [
                 "mountain"
@@ -1831,7 +1831,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "music stimulated neurons to release substance called …",
+              "prompt": "When people listen to music, their bodies show physiological signs of emotional arousal. Research showed that music triggered neurons to release a substance called … …. Parts of the brain associated with feeling.",
               "correctAnswer": "dopamine",
               "acceptedAnswers": [
                 "dopamine"
@@ -1844,7 +1844,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 28,
-              "prompt": "parts of the brain associated with feeling …",
+              "prompt": "parts of the brain associated with feeling … … were activated. Dopamine neurons in the area called the.",
               "correctAnswer": "pleasure",
               "acceptedAnswers": [
                 "pleasure"
@@ -1857,7 +1857,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 29,
-              "prompt": "neurons in the area called the …",
+              "prompt": "neurons in the area called the … … were most active before the participants' favourite moments. This period is known as the.",
               "correctAnswer": "caudate",
               "acceptedAnswers": [
                 "caudate"
@@ -1870,7 +1870,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 30,
-              "prompt": "period known as the …",
+              "prompt": "period known as the … …. These neurons anticipate 'reward' stimuli such as.",
               "correctAnswer": "anticipatory phase",
               "acceptedAnswers": [
                 "anticipatory phase"
@@ -1883,7 +1883,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "expectation of 'reward' stimuli such as …",
+              "prompt": "expectation of 'reward' stimuli such as.",
               "correctAnswer": "food",
               "acceptedAnswers": [
                 "food"
@@ -2060,7 +2060,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "Early humans used a material called … to make sharp points",
+              "prompt": "Early humans used a material called … … to make sharp points.",
               "correctAnswer": "obsidian",
               "acceptedAnswers": [
                 "obsidian"
@@ -2073,7 +2073,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "… of their spears",
+              "prompt": "as a result of the intense heat of an eruption melting sand – was first used as tips for … ….",
               "correctAnswer": "spears",
               "acceptedAnswers": [
                 "spears"
@@ -2086,7 +2086,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "4000 BC: … made of stone were covered in glass",
+              "prompt": "4000 BC: … … made of stone were covered in glass.",
               "correctAnswer": "beads",
               "acceptedAnswers": [
                 "beads"
@@ -2099,7 +2099,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "First century BC: glass was coloured because of the … in the material",
+              "prompt": "First century BC: glass was coloured because of the … … in the material.",
               "correctAnswer": "impurities",
               "acceptedAnswers": [
                 "impurities"
@@ -2112,7 +2112,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "Until 476 AD: Only the … knew how to make glass",
+              "prompt": "Until 476 AD: Only the … … knew how to make glass.",
               "correctAnswer": "Romans",
               "acceptedAnswers": [
                 "Romans"
@@ -2125,7 +2125,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "George Ravenscroft developed a process using …",
+              "prompt": "George Ravenscroft developed a process using.",
               "correctAnswer": "lead",
               "acceptedAnswers": [
                 "lead"
@@ -2138,7 +2138,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "to avoid the occurrence of … in blown glass",
+              "prompt": "to avoid the occurrence of … … in blown glass.",
               "correctAnswer": "clouding",
               "acceptedAnswers": [
                 "clouding"
@@ -2151,7 +2151,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "after changes to laws concerning …",
+              "prompt": "• Mid-19th century: British glass production developed after changes to laws concerning.",
               "correctAnswer": "taxes",
               "acceptedAnswers": [
                 "taxes"
@@ -2359,7 +2359,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "reduce the numbers of certain …",
+              "prompt": "reduce the numbers of certain",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -2372,7 +2372,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "minimal threat to …",
+              "prompt": "minimal threat to",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -2650,7 +2650,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 38,
-              "prompt": "non-executive directors were at a disadvantage because of lack of …",
+              "prompt": "non-executive directors were at a disadvantage because of lack of 38.",
               "correctAnswer": "information",
               "acceptedAnswers": [
                 "information"
@@ -2663,7 +2663,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 39,
-              "prompt": "too much emphasis on … considerations of short-term relevance",
+              "prompt": "too much emphasis on 39 … … considerations of short-term relevance.",
               "correctAnswer": "financial",
               "acceptedAnswers": [
                 "financial"
@@ -2676,7 +2676,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 40,
-              "prompt": "the board may have to accept the views of …",
+              "prompt": "the board may have to accept the views of 40.",
               "correctAnswer": "shareholders",
               "acceptedAnswers": [
                 "shareholders",

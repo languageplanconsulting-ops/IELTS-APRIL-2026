@@ -129,7 +129,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "Mike and Bob Bryan made changes to the types of … used on their racket frames.",
+              "prompt": "Mike and Bob Bryan made changes to the types of … … used on their racket frames.",
               "correctAnswer": "paint",
               "acceptedAnswers": [
                 "paint"
@@ -142,7 +142,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "Players were not allowed to use the spaghetti-strung racket because of the amount of … it created.",
+              "prompt": "Players were not allowed to use the spaghetti-strung racket because of the amount of … … it created.",
               "correctAnswer": "topspin",
               "acceptedAnswers": [
                 "topspin"
@@ -155,7 +155,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "Changes to rackets can be regarded as being as important as players' diets or the … they do.",
+              "prompt": "Changes to rackets can be regarded as being as important as players' diets or the … … they do.",
               "correctAnswer": "training",
               "acceptedAnswers": [
                 "training"
@@ -168,7 +168,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "All rackets used to have natural strings made from the … of animals.",
+              "prompt": "All rackets used to have natural strings made from the … … of animals.",
               "correctAnswer": "intestines",
               "acceptedAnswers": [
                 "intestines",
@@ -182,7 +182,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "Pete Sampras had metal … put into the frames of his rackets.",
+              "prompt": "Pete Sampras had metal … … put into the frames of his rackets.",
               "correctAnswer": "weights",
               "acceptedAnswers": [
                 "weights"
@@ -195,7 +195,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "Gonçalo Oliveira changed the … on his racket handles.",
+              "prompt": "Gonçalo Oliveira changed the … … on his racket handles.",
               "correctAnswer": "grips",
               "acceptedAnswers": [
                 "grips"
@@ -238,7 +238,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             "Rome, however, did nothing, further encouraging piracy. By the 1st century BCE, emboldened pirates kidnapped prominent Roman dignitaries, asking for a large ransom to be paid. Their most famous hostage was none other than Julius Caesar, captured in 75 BCE. By now, Rome was well aware that pirates had outlived their usefulness. In 67 BCE, a new law granted Pompey vast funds to combat the Mediterranean menace. Taking personal command, Pompey divided the entire Mediterranean into 13 districts, assigning a fleet and commander to each. After cleansing one district of pirates, the fleet would join another in the next district. The process continued until the entire Mediterranean was free of pirates. Although thousands of pirates died at the hands of Pompey's troops, as a long-term solution to the problem, many more were offered land in fertile areas located far from the sea.",
             "Instead of a maritime menace, Rome got productive farmers that further boosted its economy."
           ],
-          "questionSectionText": "Questions 22-23\nQuestions 20-21\nQuestions 14-19\nReading Passage 2 has seven paragraphs, A-G.\n\nWhich paragraph contains the following information?\n\nWrite the correct letter, A-G, in boxes 14-19 on your answer sheet.\n\nNB   You may use any letter more than once.\n\n14   a reference to a denial of involvement in piracy\n\n15   details of how a campaign to eradicate piracy was carried out\n\n16   a mention of the circumstances in which states in the ancient world would make use of pirates\n\n17   a reference to how people today commonly view pirates\n\n18   an explanation of how some people were encouraged not to return to piracy\n\n19   a mention of the need for many sailing vessels to stay relatively close to land\n\nQuestions 20 and 21\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 20 and 21 on your answer sheet.\n\nWhich TWO of the following statements does the writer make about inhabitants of the Mediterranean region in the ancient world?\n\nA   They often used stolen vessels to carry out pirate attacks.\n\nB   They managed to escape capture by the authorities because they knew the area so well.\n\nC   They paid for information about the routes merchant ships would take.\n\nD   They depended more on the sea for their livelihood than on farming.\n\nE   They stored many of the goods taken in pirate attacks in coves along the coastline.\n\nQuestions 22 and 23\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 22 and 23 on your answer sheet.\n\nWhich TWO of the following statements does the writer make about piracy and ancient Greece?\n\nA   The state estimated that very few people were involved in piracy.\n\nB   Attitudes towards piracy changed shortly after the Iliad and the Odyssey were written.\n\nC   Important officials were known to occasionally take part in piracy.\n\nD   Every citizen regarded pirate attacks on cities as unacceptable.\n\nE   A favourable view of piracy is evident in certain ancient Greek texts.\n\nQuestions 24-26\nComplete the summary below.\n\nChoose ONE WORD ONLY from the passage for each answer.\n\nWrite your answers in boxes 24-26 on your answer sheet.\n\nAncient Rome and piracy\nattacks on vessels transporting 24 … to Rome",
+          "questionSectionText": "Questions 14-19\nReading Passage 2 has seven paragraphs, A-G.\n\nWhich paragraph contains the following information?\n\nWrite the correct letter, A-G, in boxes 14-19 on your answer sheet.\n\nNB   You may use any letter more than once.\n\n14   a reference to a denial of involvement in piracy\n\n15   details of how a campaign to eradicate piracy was carried out\n\n16   a mention of the circumstances in which states in the ancient world would make use of pirates\n\n17   a reference to how people today commonly view pirates\n\n18   an explanation of how some people were encouraged not to return to piracy\n\n19   a mention of the need for many sailing vessels to stay relatively close to land\n\nQuestions 20 and 21\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 20 and 21 on your answer sheet.\n\nWhich TWO of the following statements does the writer make about inhabitants of the Mediterranean region in the ancient world?\n\nA   They often used stolen vessels to carry out pirate attacks.\n\nB   They managed to escape capture by the authorities because they knew the area so well.\n\nC   They paid for information about the routes merchant ships would take.\n\nD   They depended more on the sea for their livelihood than on farming.\n\nE   They stored many of the goods taken in pirate attacks in coves along the coastline.\n\nQuestions 22 and 23\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 22 and 23 on your answer sheet.\n\nWhich TWO of the following statements does the writer make about piracy and ancient Greece?\n\nA   The state estimated that very few people were involved in piracy.\n\nB   Attitudes towards piracy changed shortly after the Iliad and the Odyssey were written.\n\nC   Important officials were known to occasionally take part in piracy.\n\nD   Every citizen regarded pirate attacks on cities as unacceptable.\n\nE   A favourable view of piracy is evident in certain ancient Greek texts.\n\nQuestions 24-26\nComplete the summary below.\n\nChoose ONE WORD ONLY from the passage for each answer.\n\nWrite your answers in boxes 24-26 on your answer sheet.\n\nAncient Rome and piracy\nattacks on vessels transporting 24 … to Rome",
           "questionRanges": [
             {
               "start": 14,
@@ -325,7 +325,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "a mention of the need for many sailing vessels to stay relatively close to land … … … … … … … Questions 20-21 Choose",
+              "prompt": "a mention of the need for many sailing vessels to stay relatively close to land",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -394,7 +394,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "attacks on vessels transporting … to Rome",
+              "prompt": "attacks on vessels transporting … … to Rome.",
               "correctAnswer": "grain",
               "acceptedAnswers": [
                 "grain"
@@ -407,7 +407,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "… for the pirates responsible. Nevertheless, piracy continued, with some pirates demanding a",
+              "prompt": "ships, which were essential to Roman citizens, led to angry voices in the Senate, demanding … … of the culprits.",
               "correctAnswer": "punishment",
               "acceptedAnswers": [
                 "punishment"
@@ -420,7 +420,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "… for the return of the Roman officials they captured. Questions 27-30 Choose the correct letter,",
+              "prompt": "1st century BCE, emboldened pirates kidnapped prominent Roman dignitaries, asking for a large … … to be paid.",
               "correctAnswer": "ransom",
               "acceptedAnswers": [
                 "ransom"
@@ -441,7 +441,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
     "id": "cambridge-19-test1-passage3",
     "title": "Cambridge 19 Test 1 Passage 3 - The persistence and peril of misinformation",
     "category": "advanced",
-    "rawPassageText": "READING PASSAGE 3\nPassage 3 id=\"ielts-reading-transcript-3\" class=\"ielts-reading-transcript \" data-part-number=\"3\">The persistence and\n\nPassage 3 id=\"ielts-reading-transcript-3\" class=\"ielts-reading-transcript \" data-part-number=\"3\">The persistence and peril of misinformation Brian Southwell looks at how human brains verify information and discusses some of the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared -is perhaps an inevitable part of the world in which we live, but it is not a new problem.\n\nPeople likely have lied to one another for roughly as long as verbal communication has existed.\n\nDeceiving others can offer an apparent opportunity to gain strategic advantage, to motivate others to action, or even to protect interpersonal bonds.\n\nMoreover, people inadvertently have been sharing inaccurate information with one another for thousands of years.\n\nHowever, we currently live in an era in which technology enables information to reach large audiences distributed across the globe,and thus the potential for immediate and widespread effects from misinformation now looms larger than in the past.\n\nYet the means to correct misinformation might,over time,be found in those same patterns of mass communication and of the facilitated spread of information.\n\nThe main worry regarding misinformation is its potential to unduly influence attitudes and behavior, leading people to think and act differently than they would if they were correctly informed, as suggested by the research teams of Stephan Lewandowsky of the University of Bristol and Elizabeth Marsh of Duke University, among others.\n\nIn other words, we worry that misinformation might lead people to hold misperceptions (or false beliefs) and that these misperceptions, especially when they occur among large groups of people, may have detrimental, downstream consequences for health, social harmony, and the political climate.\n\nAt least three observations related to misinformation in the contemporary mass-media environment warrant the attention of researchers, policy makers, and really everyone who watches television, listens to the radio, or reads information online.\n\nFirst of all, people who encounter misinformation tend to believe it, at least initially.\n\nSecondly, electronic and print media often do not block many types of misinformation before it appears in content available to large audiences.\n\nThirdly, countering misinformation once it has enjoyed wide exposure can be a resource-intensive effort.\n\nKnowing what happens when people initially encounter misinformation holds tremendous importance for estimating the potential for subsequent problems.\n\nAlthough it is fairly routine for individuals to come across information that is false, the question of exactly how – and when – we mentally label information as true or false has garnered philosophical debate.\n\nThe dilemma is neatly summarized by a contrast between how the 17th-century philosophers Rene Descartes and Baruch Spinoza described human information engagement, with conflicting predictions that only recently have been empirically tested in robust ways.\n\nDescartes argued that a person only accepts or rejects information after considering its truth or falsehood; Spinoza argued that people accept all encountered information (or misinformation) by default and then subsequently verify or reject it through a separate cognitive process.\n\nIn recent decades, empirical evidence from the research teams of Erik Asp of the University of Chicago and Daniel Gilbert at Harvard University, among others, has supported Spinoza's account: people appear to encode all new information as if it were true, even if only momentarily, and later tag the information as being either true or false, a pattern that seems consistent with the observation that mental resources for skepticism physically reside in a different part of the brain than the resources used in perceiving and encoding.\n\nWhat about our second observation that misinformation often can appear in electronic or print media without being preemptively blocked?\n\nIn support of this, one might consider the nature of regulatory structures in the United States: regulatory agencies here tend to focus on post hoc detection of broadcast information.\n\nOrganizations such as the Food and Drug Administration (FDA) offer considerable monitoring and notification functions, but these roles typically do not involve preemptive censoring.\n\nThe IDA oversees direct-to-consumer prescription drug advertising, for example, and has developed mechanisms such as the 'Bad Ad' program, through which people can report advertising in apparent violation of FDA guidelines on drug risks.\n\nSuch programs, although laudable and useful, do not keep false advertising off the airwaves.\n\nIn addition, even misinformation that is successfully corrected can continue to affect attitudes.\n\nThis leads us to our third observation: a campaign to correct misinformation, even if rhetorically compelling, requires resources and planning to accomplish necessary reach and frequency.\n\nFor corrective campaigns to be persuasive, audiences need to be able to comprehend them, which requires either effort to frame messages in ways that are accessible or effort to educate and sensitize audiences to the possibility of misinformation.\n\nThat some audiences might be unaware of the potential for misinformation also suggests the utility of media literacy efforts as early as elementary school.\n\nEven with journalists and scholars pointing to the phenomenon of 'fake news', people do not distinguish between demonstrably false stories and those based in fact when scanning and processing written information.\n\nWe live at a time when widespread misinformation is common.\n\nYet at this time many people also are passionately developing potential solutions and remedies.\n\nThe journey forward undoubtedly will be a long and arduous one.\n\nFuture remedies will require not only continued theoretical consideration but also the development and maintenance of consistent monitoring tools and a recognition among fellow members of society that claims which find prominence in the media that are insufficiently based in scientific consensus and social reality should be countered.\n\nMisinformation arises as a result of human fallibility and human information needs.\n\nTo overcome the worst effects of the phenomenon, we will need coordinated efforts over time, rather than any singular one-time panacea we could hope to offer. <form id =\"\n\nQuestions 27-30\n\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 27-30 on your answer sheet.\n\n27   What point does the writer make about misinformation in the first paragraph?\n\nA   Misinformation is a relatively recent phenomenon.\n\nB   Some people find it easy to identify misinformation.\n\nC   Misinformation changes as it is passed from one person to another.\n\nD   There may be a number of reasons for the spread of misinformation.\n\n28   What does the writer say about the role of technology?\n\nA   It may at some point provide us with a solution to misinformation.\n\nB   It could fundamentally alter the way in which people regard information.\n\nC   It has changed the way in which … … use … ….\n\nD   It has made it easier for people to check whether information is accurate.\n\n29   What is the writer doing in the fourth paragraph?\n\nA   comparing the different opinions people have of misinformation.\n\nB   explaining how the effects of misinformation have changed over time\n\nC   outlining which issues connected with misinformation are significant today\n\nD   describing the attitude of policy makers towards misinformation in the media\n\n30   What point does the writer make about regulation in the USA?\n\nA   The guidelines issued by the FDA need to be simplified.\n\nB   Regulation does not affect people’s opinions of new prescription drugs.\n\nC   The USA has more regulatory bodies than most other countries.\n\nD   Regulation fails to prevent misinformation from appearing in the media.\n\nQuestions 31-36\n\nComplete the summary using the list of phrases, A-J, below\n\nWrite the correct letter, A-J, in boxes 31-36 on your answer sheet.\n\nWhat happens when people encounter misinformation?\nAlthough people have 31 … to misinformation\n\nA   constant conflict\n\nD   experimental subjects\n\nG   frequent exposure\n\nJ    different ideas\n\nB   additional evidence\n\nE   short period\n\nH   mental operation\n\n \n\nC   different locations\n\nF   extreme distrust\n\nI    dubious reason\n\n \n\nQuestions 37-40\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 37-40 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN     if it is impossible to say what the writer thinks about this\n\n37   Campaigns designed to correct misinformation will fail to achieve their purpose if people are unable to understand them.\n\n38   Attempts to teach elementary school students about misinformation have been opposed.\n\n39   It may be possible to overcome the problem of misinformation in a relatively short period.\n\n40   The need to keep up with new information is hugely exaggerated in today’s world.",
+    "rawPassageText": "READING PASSAGE 3\nPassage 3 id=\"ielts-reading-transcript-3\" class=\"ielts-reading-transcript \" data-part-number=\"3\">The persistence and\n\nPassage 3 id=\"ielts-reading-transcript-3\" class=\"ielts-reading-transcript \" data-part-number=\"3\">The persistence and peril of misinformation Brian Southwell looks at how human brains verify information and discusses some of the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared -is perhaps an inevitable part of the world in which we live, but it is not a new problem.\n\nPeople likely have lied to one another for roughly as long as verbal communication has existed.\n\nDeceiving others can offer an apparent opportunity to gain strategic advantage, to motivate others to action, or even to protect interpersonal bonds.\n\nMoreover, people inadvertently have been sharing inaccurate information with one another for thousands of years.\n\nHowever, we currently live in an era in which technology enables information to reach large audiences distributed across the globe,and thus the potential for immediate and widespread effects from misinformation now looms larger than in the past.\n\nYet the means to correct misinformation might,over time,be found in those same patterns of mass communication and of the facilitated spread of information.\n\nThe main worry regarding misinformation is its potential to unduly influence attitudes and behavior, leading people to think and act differently than they would if they were correctly informed, as suggested by the research teams of Stephan Lewandowsky of the University of Bristol and Elizabeth Marsh of Duke University, among others.\n\nIn other words, we worry that misinformation might lead people to hold misperceptions (or false beliefs) and that these misperceptions, especially when they occur among large groups of people, may have detrimental, downstream consequences for health, social harmony, and the political climate.\n\nAt least three observations related to misinformation in the contemporary mass-media environment warrant the attention of researchers, policy makers, and really everyone who watches television, listens to the radio, or reads information online.\n\nFirst of all, people who encounter misinformation tend to believe it, at least initially.\n\nSecondly, electronic and print media often do not block many types of misinformation before it appears in content available to large audiences.\n\nThirdly, countering misinformation once it has enjoyed wide exposure can be a resource-intensive effort.\n\nKnowing what happens when people initially encounter misinformation holds tremendous importance for estimating the potential for subsequent problems.\n\nAlthough it is fairly routine for individuals to come across information that is false, the question of exactly how – and when – we mentally label information as true or false has garnered philosophical debate.\n\nThe dilemma is neatly summarized by a contrast between how the 17th-century philosophers Rene Descartes and Baruch Spinoza described human information engagement, with conflicting predictions that only recently have been empirically tested in robust ways.\n\nDescartes argued that a person only accepts or rejects information after considering its truth or falsehood; Spinoza argued that people accept all encountered information (or misinformation) by default and then subsequently verify or reject it through a separate cognitive process.\n\nIn recent decades, empirical evidence from the research teams of Erik Asp of the University of Chicago and Daniel Gilbert at Harvard University, among others, has supported Spinoza's account: people appear to encode all new information as if it were true, even if only momentarily, and later tag the information as being either true or false, a pattern that seems consistent with the observation that mental resources for skepticism physically reside in a different part of the brain than the resources used in perceiving and encoding.\n\nWhat about our second observation that misinformation often can appear in electronic or print media without being preemptively blocked?\n\nIn support of this, one might consider the nature of regulatory structures in the United States: regulatory agencies here tend to focus on post hoc detection of broadcast information.\n\nOrganizations such as the Food and Drug Administration (FDA) offer considerable monitoring and notification functions, but these roles typically do not involve preemptive censoring.\n\nThe IDA oversees direct-to-consumer prescription drug advertising, for example, and has developed mechanisms such as the 'Bad Ad' program, through which people can report advertising in apparent violation of FDA guidelines on drug risks.\n\nSuch programs, although laudable and useful, do not keep false advertising off the airwaves.\n\nIn addition, even misinformation that is successfully corrected can continue to affect attitudes.\n\nThis leads us to our third observation: a campaign to correct misinformation, even if rhetorically compelling, requires resources and planning to accomplish necessary reach and frequency.\n\nFor corrective campaigns to be persuasive, audiences need to be able to comprehend them, which requires either effort to frame messages in ways that are accessible or effort to educate and sensitize audiences to the possibility of misinformation.\n\nThat some audiences might be unaware of the potential for misinformation also suggests the utility of media literacy efforts as early as elementary school.\n\nEven with journalists and scholars pointing to the phenomenon of 'fake news', people do not distinguish between demonstrably false stories and those based in fact when scanning and processing written information.\n\nWe live at a time when widespread misinformation is common.\n\nYet at this time many people also are passionately developing potential solutions and remedies.\n\nThe journey forward undoubtedly will be a long and arduous one.\n\nFuture remedies will require not only continued theoretical consideration but also the development and maintenance of consistent monitoring tools and a recognition among fellow members of society that claims which find prominence in the media that are insufficiently based in scientific consensus and social reality should be countered.\n\nMisinformation arises as a result of human fallibility and human information needs.\n\nTo overcome the worst effects of the phenomenon, we will need coordinated efforts over time, rather than any singular one-time panacea we could hope to offer. <form id =\"\n\nQuestions 27-30\n\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 27-30 on your answer sheet.\n\n27   What point does the writer make about misinformation in the first paragraph?\n\nA   Misinformation is a relatively recent phenomenon.\n\nB   Some people find it easy to identify misinformation.\n\nC   Misinformation changes as it is passed from one person to another.\n\nD   There may be a number of reasons for the spread of misinformation.\n\n28   What does the writer say about the role of technology?\n\nA   It may at some point provide us with a solution to misinformation.\n\nB   It could fundamentally alter the way in which people regard information.\n\nC   It has changed the way in which organisations use misinformation.\n\nD   It has made it easier for people to check whether information is accurate.\n\n29   What is the writer doing in the fourth paragraph?\n\nA   comparing the different opinions people have of misinformation.\n\nB   explaining how the effects of misinformation have changed over time\n\nC   outlining which issues connected with misinformation are significant today\n\nD   describing the attitude of policy makers towards misinformation in the media\n\n30   What point does the writer make about regulation in the USA?\n\nA   The guidelines issued by the FDA need to be simplified.\n\nB   Regulation does not affect people’s opinions of new prescription drugs.\n\nC   The USA has more regulatory bodies than most other countries.\n\nD   Regulation fails to prevent misinformation from appearing in the media.\n\nQuestions 31-36\n\nComplete the summary using the list of phrases, A-J, below\n\nWrite the correct letter, A-J, in boxes 31-36 on your answer sheet.\n\nWhat happens when people encounter misinformation?\nAlthough people have 31 … to misinformation\n\nA   constant conflict\n\nD   experimental subjects\n\nG   frequent exposure\n\nJ    different ideas\n\nB   additional evidence\n\nE   short period\n\nH   mental operation\n\n \n\nC   different locations\n\nF   extreme distrust\n\nI    dubious reason\n\n \n\nQuestions 37-40\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 37-40 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN     if it is impossible to say what the writer thinks about this\n\n37   Campaigns designed to correct misinformation will fail to achieve their purpose if people are unable to understand them.\n\n38   Attempts to teach elementary school students about misinformation have been opposed.\n\n39   It may be possible to overcome the problem of misinformation in a relatively short period.\n\n40   The need to keep up with new information is hugely exaggerated in today’s world.",
     "rawAnswerKey": "READING PASSAGE 3: The persistence and peril of misinformation\n\nQuestion 27: What point does the writer make about misinformation in the first paragraph?\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared – is perhaps an inevitable part of the world in which we live, but it is not a new problem.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"the challenges of battling widespread falsehoods Misinformation – both deliberately p…\") จึงตอบ D\n\nParaphrased Vocabulary: point misinformation = challenges battling widespread = D\n\nQuestion 28: What does the writer say about the role of technology?\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"However, we currently live in an era in which technology enables information to reach large audiences distributed across the globe, and thus the potential for immediate and widespread effects from misinformation now looms larger than in the\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า A ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"However, we currently live in an era in which technology enables information to reach…\") จึงตอบ A\n\nParaphrased Vocabulary: technology = however currently technology = A\n\nQuestion 29: What is the writer doing in the fourth paragraph?\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"Brian Southwell looks at how human brains verify information and discusses some of the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared – is perhaps an inevitable part of the w\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Brian Southwell looks at how human brains verify information and discusses some of th…\") จึงตอบ C\n\nParaphrased Vocabulary: doing fourth = brian southwell looks = C\n\nQuestion 30: What point does the writer make about regulation in the USA?\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"Even with journalists and scholars pointing to the phenomenon of ‘fake news’, people do not distinguish between demonstrably false stories and those based in fact when scanning and processing written information.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Even with journalists and scholars pointing to the phenomenon of ‘fake news’, people …\") จึงตอบ D\n\nParaphrased Vocabulary: point regulation = journalists scholars pointing = D\n\nQuestion 31: Although people have … to misinformation\n\nCorrect Answer: G\n\nAccepted Answers: G\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared – is perhaps an inevitable part of the world in which we live, but it is not a new problem.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า G ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"the challenges of battling widespread falsehoods Misinformation – both deliberately p…\") จึงตอบ G\n\nParaphrased Vocabulary: although misinformation = challenges battling widespread = G\n\nQuestion 32: Descartes and Spinoza had … about how people engage with information\n\nCorrect Answer: J\n\nAccepted Answers: J\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"st between how the 17th-century philosophers René Descartes and Baruch Spinoza described human information engagement, with conflicting predictions that only recently have been empirically tested in robust ways.\"\n\nShort Thai Explanation: บทความใช้คำว่า \"J\" ตรงกับช่องว่างในข้อ (Descartes and Spinoza had … about how people engage with information) โดยอ้างอิงจาก \"st between how the 17th-century philosophers René Descartes and Baruch Spinoza descri…\"\n\nParaphrased Vocabulary: descartes spinoza engage = between 17th-century philosophers = J\n\nQuestion 33: Spinoza believes that a distinct … is involved in these stages\n\nCorrect Answer: H\n\nAccepted Answers: H\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"th-century philosophers René Descartes and Baruch Spinoza described human information engagement, with conflicting predictions that only recently have been empirically tested in robust ways.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า H ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"th-century philosophers René Descartes and Baruch Spinoza described human information…\") จึงตอบ H\n\nParaphrased Vocabulary: spinoza believes distinct = th-century philosophers descartes = H\n\nQuestion 34: Recent research has provided … for Spinoza's theory\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"they were correctly informed, as suggested by the research teams of Stephan Lewandowsky of the University of Bristol and Elizabeth Marsh of Duke University, among others.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า B ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"they were correctly informed, as suggested by the research teams of Stephan Lewandows…\") จึงตอบ B\n\nParaphrased Vocabulary: recent research provided = correctly informed suggested = B\n\nQuestion 35: people accept all encountered information as if it were true, even if this is for an extremely …\n\nCorrect Answer: E\n\nAccepted Answers: E\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"falsehood; Spinoza argued that people accept all encountered information (or misinformation) by default and then subsequently verify or reject it through a separate cognitive process.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า E ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"falsehood; Spinoza argued that people accept all encountered information (or misinfor…\") จึงตอบ E\n\nParaphrased Vocabulary: accept encountered extremely = falsehood spinoza argued = E\n\nQuestion 36: resources for scepticism and the resources for perceiving and encoding are in … in the brain\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"rent part of the brain than the resources used in perceiving and encoding.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"rent part of the brain than the resources used in perceiving and encoding.\") จึงตอบ C\n\nParaphrased Vocabulary: resources scepticism resources = brain resources perceiving = C\n\nQuestion 37: Campaigns designed to correct misinformation will fail to achieve their purpose if people are unable to understand them.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"ate and sensitize audiences to the possibility of misinformation.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนสอดคล้องกับข้อนี้ โดยอ้างอิงจาก \"ate and sensitize audiences to the possibility of misinformation.\" จึงตอบ YES\n\nParaphrased Vocabulary: campaigns designed misinformation = sensitize audiences possibility = YES\n\nQuestion 38: Attempts to teach elementary school students about misinformation have been opposed.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"That some audiences might be unaware of the potential for misinformation also suggests the utility of media literacy efforts as early as elementary school.\"\n\nShort Thai Explanation: บทความไม่ได้ให้ข้อมูลเพียงพอเกี่ยวกับประเด็นในข้อ (อ้างอิง: \"That some audiences might be unaware of the potential for misinformation also suggest…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: attempts teach elementary = audiences might unaware = NOT GIVEN\n\nQuestion 39: It may be possible to overcome the problem of misinformation in a relatively short period.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"the challenges of battling widespread falsehoods Misinformation – both deliberately promoted and accidentally shared – is perhaps an inevitable part of the world in which we live, but it is not a new problem.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนขัดแย้งกับข้อนี้ โดยอ้างอิงจาก \"the challenges of battling widespread falsehoods Misinformation – both deliberately p…\" จึงตอบ NO\n\nParaphrased Vocabulary: possible overcome problem = challenges battling widespread = NO\n\nQuestion 40: The need to keep up with new information is hugely exaggerated in today's world.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 19 Test 1 Passage 3\n\nExact Portion: \"corrective campaigns to be persuasive, audiences need to be able to comprehend them, which requires either effort to frame messages in ways that are accessible or effort to educate and sensitize audiences to the possibility of misinformati\"\n\nShort Thai Explanation: บทความไม่ได้ให้ข้อมูลเพียงพอเกี่ยวกับประเด็นในข้อ (อ้างอิง: \"corrective campaigns to be persuasive, audiences need to be able to comprehend them, …\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: hugely exaggerated today's = corrective campaigns persuasive = NOT GIVEN",
     "createdAt": "2026-05-16T00:00:00.000Z",
     "updatedAt": "2026-06-03T06:07:04.371Z",
@@ -462,7 +462,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             "For corrective campaigns to be persuasive, audiences need to be able to comprehend them, which requires either effort to frame messages in ways that are accessible or effort to educate and sensitize audiences to the possibility of misinformation. That some audiences might be unaware of the potential for misinformation also suggests the utility of media literacy efforts as early as elementary school. Even with journalists and scholars pointing to the phenomenon of 'fake news', people do not distinguish between demonstrably false stories and those based in fact when scanning and processing written information. We live at a time when widespread misinformation is common. Yet at this time many people also are passionately developing potential solutions and remedies. The journey forward undoubtedly will be a long and arduous one.",
             "Future remedies will require not only continued theoretical consideration but also the development and maintenance of consistent monitoring tools and a recognition among fellow members of society that claims which find prominence in the media that are insufficiently based in scientific consensus and social reality should be countered. Misinformation arises as a result of human fallibility and human information needs. To overcome the worst effects of the phenomenon, we will need coordinated efforts over time, rather than any singular one-time panacea we could hope to offer."
           ],
-          "questionSectionText": "Questions 27-30\n\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 27-30 on your answer sheet.\n\n27   What point does the writer make about misinformation in the first paragraph?\n\nA   Misinformation is a relatively recent phenomenon.\n\nB   Some people find it easy to identify misinformation.\n\nC   Misinformation changes as it is passed from one person to another.\n\nD   There may be a number of reasons for the spread of misinformation.\n\n28   What does the writer say about the role of technology?\n\nA   It may at some point provide us with a solution to misinformation.\n\nB   It could fundamentally alter the way in which people regard information.\n\nC   It has changed the way in which … … use … ….\n\nD   It has made it easier for people to check whether information is accurate.\n\n29   What is the writer doing in the fourth paragraph?\n\nA   comparing the different opinions people have of misinformation.\n\nB   explaining how the effects of misinformation have changed over time\n\nC   outlining which issues connected with misinformation are significant today\n\nD   describing the attitude of policy makers towards misinformation in the media\n\n30   What point does the writer make about regulation in the USA?\n\nA   The guidelines issued by the FDA need to be simplified.\n\nB   Regulation does not affect people’s opinions of new prescription drugs.\n\nC   The USA has more regulatory bodies than most other countries.\n\nD   Regulation fails to prevent misinformation from appearing in the media.\n\nQuestions 31-36\n\nComplete the summary using the list of phrases, A-J, below\n\nWrite the correct letter, A-J, in boxes 31-36 on your answer sheet.\n\nWhat happens when people encounter misinformation?\nAlthough people have 31 … to misinformation\n\nA   constant conflict\n\nD   experimental subjects\n\nG   frequent exposure\n\nJ    different ideas\n\nB   additional evidence\n\nE   short period\n\nH   mental operation\n\n \n\nC   different locations\n\nF   extreme distrust\n\nI    dubious reason\n\n \n\nQuestions 37-40\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 37-40 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN     if it is impossible to say what the writer thinks about this\n\n37   Campaigns designed to correct misinformation will fail to achieve their purpose if people are unable to understand them.\n\n38   Attempts to teach elementary school students about misinformation have been opposed.\n\n39   It may be possible to overcome the problem of misinformation in a relatively short period.\n\n40   The need to keep up with new information is hugely exaggerated in today’s world.",
+          "questionSectionText": "Questions 27-30\n\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 27-30 on your answer sheet.\n\n27   What point does the writer make about misinformation in the first paragraph?\n\nA   Misinformation is a relatively recent phenomenon.\n\nB   Some people find it easy to identify misinformation.\n\nC   Misinformation changes as it is passed from one person to another.\n\nD   There may be a number of reasons for the spread of misinformation.\n\n28   What does the writer say about the role of technology?\n\nA   It may at some point provide us with a solution to misinformation.\n\nB   It could fundamentally alter the way in which people regard information.\n\nC   It has changed the way in which organisations use misinformation.\n\nD   It has made it easier for people to check whether information is accurate.\n\n29   What is the writer doing in the fourth paragraph?\n\nA   comparing the different opinions people have of misinformation.\n\nB   explaining how the effects of misinformation have changed over time\n\nC   outlining which issues connected with misinformation are significant today\n\nD   describing the attitude of policy makers towards misinformation in the media\n\n30   What point does the writer make about regulation in the USA?\n\nA   The guidelines issued by the FDA need to be simplified.\n\nB   Regulation does not affect people’s opinions of new prescription drugs.\n\nC   The USA has more regulatory bodies than most other countries.\n\nD   Regulation fails to prevent misinformation from appearing in the media.\n\nQuestions 31-36\n\nComplete the summary using the list of phrases, A-J, below\n\nWrite the correct letter, A-J, in boxes 31-36 on your answer sheet.\n\nWhat happens when people encounter misinformation?\nAlthough people have 31 … to misinformation\n\nA   constant conflict\n\nD   experimental subjects\n\nG   frequent exposure\n\nJ    different ideas\n\nB   additional evidence\n\nE   short period\n\nH   mental operation\n\n \n\nC   different locations\n\nF   extreme distrust\n\nI    dubious reason\n\n \n\nQuestions 37-40\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 37-40 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN     if it is impossible to say what the writer thinks about this\n\n37   Campaigns designed to correct misinformation will fail to achieve their purpose if people are unable to understand them.\n\n38   Attempts to teach elementary school students about misinformation have been opposed.\n\n39   It may be possible to overcome the problem of misinformation in a relatively short period.\n\n40   The need to keep up with new information is hugely exaggerated in today’s world.",
           "questionRanges": [
             {
               "start": 27,
@@ -545,7 +545,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "Descartes and Spinoza had … about how people engage with information",
+              "prompt": "Descartes and Spinoza had … … about how people engage with information.",
               "correctAnswer": "J",
               "acceptedAnswers": [
                 "J"
@@ -584,7 +584,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "people accept all encountered information as if it were true, even if this is for an extremely …",
+              "prompt": "people accept all encountered information as if it were true, even if this is for an extremely",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -706,7 +706,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "In Watt and Boulton's steam engine, the movement of the … was linked to a gear system.",
+              "prompt": "In Watt and Boulton's steam engine, the movement of the … … was linked to a gear system.",
               "correctAnswer": "piston",
               "acceptedAnswers": [
                 "piston"
@@ -719,7 +719,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "A greater supply of … was required to power steam engines.",
+              "prompt": "A greater supply of … … was required to power steam engines.",
               "correctAnswer": "coal",
               "acceptedAnswers": [
                 "coal"
@@ -732,7 +732,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "Before the Industrial Revolution, spinners and weavers worked at home and in …",
+              "prompt": "Before the Industrial Revolution, spinners and weavers worked at home and in.",
               "correctAnswer": "workshops",
               "acceptedAnswers": [
                 "workshops"
@@ -745,7 +745,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "Not as much … was needed to produce cloth once the spinning jenny and power loom were invented.",
+              "prompt": "Not as much … … was needed to produce cloth once the spinning jenny and power loom were invented.",
               "correctAnswer": "labour",
               "acceptedAnswers": [
                 "labour"
@@ -758,7 +758,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "Smelting of iron ore with coke resulted in material that was better …",
+              "prompt": "Smelting of iron ore with coke resulted in material that was better.",
               "correctAnswer": "quality",
               "acceptedAnswers": [
                 "quality"
@@ -771,7 +771,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "Demand for iron increased with the growth of the …",
+              "prompt": "Demand for iron increased with the growth of the.",
               "correctAnswer": "railways",
               "acceptedAnswers": [
                 "railways"
@@ -784,7 +784,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "… Questions 8-13 Do the following statements agree with the claims of the writer in Reading Passage? In boxes on your answer sheet, write",
+              "prompt": "● The new cities were dirty, crowded and lacked sufficient.",
               "correctAnswer": "sanitation",
               "acceptedAnswers": [
                 "sanitation"
@@ -903,7 +903,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             "E. That said, anxiety is also a common experience for athletes when they're under pressure. Anxiety can increase heart rate and perspiration, cause heart palpitations, muscle tremors and shortness of breath, as well as headaches, nausea, stomach pain, weakness and a desire to escape in more extreme cases. Anxiety can also reduce concentration and self-control and cause overthinking. The intensity with which a person experiences anxiety depends on the demands and resources they have. Anxiety may also manifest itself in the form of excitement or nervousness depending on the stress response. Negative stress responses can be damaging to both physical and mental health - and repeated episodes of anxiety coupled with negative responses can increase risk of heart disease and depression.",
             "F. But there are many ways athletes can ensure they respond positively under pressure. Positive stress responses can be promoted through the language that they and others – such as coaches or parents – use. Psychologists can also help athletes change how they see their physiological responses – such as helping them see a higher heart rate as excitement, rather than nerves. Developing psychological skills, such as visualisation, can also help decrease physiological responses to threat. Visualisation may involve the athlete recreating a mental picture of a time when they performed well, or picturing themselves doing well in the future. This can help create a feeling of control over the stressful event. Recreating competitive pressure during training can also help athletes learn how to deal with stress. An example of this might be scoring athletes against their peers to create a sense of competition. This would increase the demands which players experience compared to a normal training session, while still allowing them to practise coping with stress."
           ],
-          "questionSectionText": "Questions 25-26\nQuestions 23-24\nQuestions 14-18\nReading Passage 2 has six paragraphs, A-F.\n\nWhich paragraph contains the following information?\n\nWrite the correct letter, A-F, in boxes 14-18 on your answer sheet.\n\nNB   You may use any letter more than once.\n\n14   reference to two chemical compounds which impact on performance\n\n15   examples of strategies for minimising the effects of stress\n\n16   how a sportsperson accounted for their own experience of stress\n17   study results indicating links between stress responses and performance\n\n18   mention of people who can influence how athletes perceive their stress responses\n\nQuestions 19-22\n\nComplete the sentences below.\n\nChoose ONE WORD ONLY from the passage for each answer.\n\nWrite your answers in boxes 19-22 on your answer sheet.\n\n19   Performance stress involves many demands on the athlete, for example, coping with the possible risk of ……………………… .\n\n20   Cortisol can cause tennis players to produce fewer good ……………………… .\nview their physiological responses as the effect of a positive feeling such as …\n\n22   ……………………… is an example of a psychological technique which can reduce an athlete’s stress responses.\n\nQuestions 23 and 24\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 23 and 24 on your answer sheet.\n\nWhich TWO facts about Emma Raducanu’s withdrawal from the Wimbledon tournament are mentioned in the text?\n\nA   the stage at which she dropped out of the tournament\nB   symptoms of her performance stress at the tournament\n\nC   measures which she had taken to manage her stress levels\n\nD   aspects of the Wimbledon tournament which increased her stress levels\n\nE   reactions to her social media posts about her experience at Wimbledon\n\nQuestions 25 and 26\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 25 and 26 on your answer sheet.\n\nWhich TWO facts about anxiety are mentioned in Paragraph E of the text?\n\nA   the factors which determine how severe it may be\nB   how long it takes for its effects to become apparent\n\nC   which of its symptoms is most frequently encountered\n\nD   the types of athletes who are most likely to suffer from it\n\nE   the harm that can result if athletes experience it too often\nReading test answers",
+          "questionSectionText": "Questions 14-18\nReading Passage 2 has six paragraphs, A-F.\n\nWhich paragraph contains the following information?\n\nWrite the correct letter, A-F, in boxes 14-18 on your answer sheet.\n\nNB   You may use any letter more than once.\n\n14   reference to two chemical compounds which impact on performance\n\n15   examples of strategies for minimising the effects of stress\n\n16   how a sportsperson accounted for their own experience of stress\n17   study results indicating links between stress responses and performance\n\n18   mention of people who can influence how athletes perceive their stress responses\n\nQuestions 19-22\n\nComplete the sentences below.\n\nChoose ONE WORD ONLY from the passage for each answer.\n\nWrite your answers in boxes 19-22 on your answer sheet.\n\n19   Performance stress involves many demands on the athlete, for example, coping with the possible risk of ……………………… .\n\n20   Cortisol can cause tennis players to produce fewer good ……………………… .\nview their physiological responses as the effect of a positive feeling such as …\n\n22   ……………………… is an example of a psychological technique which can reduce an athlete’s stress responses.\n\nQuestions 23 and 24\n\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 23 and 24 on your answer sheet.\n\nWhich TWO facts about Emma Raducanu’s withdrawal from the Wimbledon tournament are mentioned in the text?\n\nA   the stage at which she dropped out of the tournament\nB   symptoms of her performance stress at the tournament\n\nC   measures which she had taken to manage her stress levels\n\nD   aspects of the Wimbledon tournament which increased her stress levels\n\nE   reactions to her social media posts about her experience at Wimbledon\n\nQuestions 25 and 26\nChoose TWO letters, A-E.\n\nWrite the correct letters in boxes 25 and 26 on your answer sheet.\n\nWhich TWO facts about anxiety are mentioned in Paragraph E of the text?\n\nA   the factors which determine how severe it may be\nB   how long it takes for its effects to become apparent\n\nC   which of its symptoms is most frequently encountered\n\nD   the types of athletes who are most likely to suffer from it\n\nE   the harm that can result if athletes experience it too often\nReading test answers",
           "questionRanges": [
             {
               "start": 14,
@@ -977,7 +977,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "mention of people who can influence how athletes perceive their stress responses … … … … … … Questions 19-22 Complete the sentences below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes on your answer sheet. Performance stress involves many demands on the athlete, for example, coping with the possible risk of",
+              "prompt": "mention of people who can influence how athletes perceive their stress responses",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -990,7 +990,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "Performance stress involves many demands on the athlete, for example, coping with the possible risk of ……………………… .",
+              "prompt": "Performance stress involves many demands on the athlete, for example, coping with the possible risk of.",
               "correctAnswer": "injury",
               "acceptedAnswers": [
                 "injury"
@@ -1003,7 +1003,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "Cortisol can cause tennis players to produce fewer good …",
+              "prompt": "Cortisol can cause tennis players to produce fewer good.",
               "correctAnswer": "serves",
               "acceptedAnswers": [
                 "serves"
@@ -1016,7 +1016,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "Psychologists can help athletes to view their physiological responses as the effect of a positive feeling such as ……………………… . 22 ……………………… is an example of a psychological technique which can reduce an athlete’s stress responses.",
+              "prompt": "Psychologists can help athletes to view their physiological responses as the effect of a positive feeling such as … …. 22 … … is an example of a psychological technique which can reduce an athlete’s stress responses.",
               "correctAnswer": "excitement",
               "acceptedAnswers": [
                 "excitement"
@@ -1029,7 +1029,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "… is an example of a psychological technique which can reduce stress responses",
+              "prompt": "Developing psychological skills, such as … …, can also help decrease physiological responses to threat.",
               "correctAnswer": "visualisation",
               "acceptedAnswers": [
                 "visualisation"
@@ -1106,7 +1106,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
     "id": "cambridge-19-test2-passage3",
     "title": "Cambridge 19 Test 2 Passage 3 - An inquiry into the existence of the gifted child",
     "category": "advanced",
-    "rawPassageText": "READING PASSAGE 3\nPassage 3 id=\"ielts-reading-transcript-3\" class=\"ielts-reading-transcript \" data-part-number=\"3\">An inquiry into\n\nPassage 3 id=\"ielts-reading-transcript-3\" class=\"ielts-reading-transcript \" data-part-number=\"3\">An inquiry into the existence of the gifted child Let us start by looking at a modern 'genius', Maryam Mirzakhani, who died at the early age of 40.\n\nShe was the only woman to win the Fields Medal the mathematical equivalent of a Nobel prize.\n\nIt would be easy to assume that someone as special as Mirzakhani must have been one of those 'gifted' children, those who have an extraordinary ability in a specific sphere of activity or knowledge.\n\nBut look closer and a different story emerges.\n\nShe went to a highly selective girls' school but maths wasn't her interest - reading was.\n\nShe loved novels and would read anything she could lay her hands on.\n\nAs for maths, she did rather poorly at it for the first couple of years in her middle school, but became interested when her elder brother told her about what he'd learned.\n\nHe shared a famous maths problem from a magazine that fascinated her and she was hooked.\n\nIn adult life it is clear that she was curious, excited by what she did and also resolute in the face of setbacks.\n\n'Of course, the most rewarding part is the \"Alia\" moment, the excitement of discovery and enjoyment of understanding something new ...\n\nBut most of the time, doing mathematics for me is like being on a long hike with no trail and no end in sight.'\n\nThat trail took her to the heights of original research into mathematics.\n\nMost Nobel prize winners were unexceptional in childhood.\n\nHe failed the general part of the entry test to Zurich Polytechnic – though they let him in because of high physics and maths scores.\n\nHe struggled at work initially, but he kept plugging away and eventually rewrote the laws of Newtonian mechanics with his theory of relativity.\n\nThere has been a considerable amount of research on high performance over the last century that suggests it goes way beyond tested intelligence.\n\nOn top of that, research is clear that brains are flexible, new neural pathways can be created, and IQ isn't fixed.\n\nFor example, just because you can read stories with hundreds of pages at the age of five doesn't mean you will still be ahead of your contemporaries in your teens.\n\nWhile the jury is out on giftedness being innate and other factors potentially making the difference, what is certain is that the behaviours associated with high levels of performance are replicable and most can be taught even traits such as curiosity.\n\nAccording to my colleague Prof Deborah Eyre, with whom I've collaborated on the book Great Minds and How to Crow Them, the latest neuroscience and psychological research suggests most individuals can reach levels of performance associated in school with the gifted and talented.\n\nHowever, they must be taught the right attitudes and approaches to their learning and develop the attributes of high performers-curiosity, persistence and hard work, for example an approach Eyre calls 'high performance learning'.\n\nCritically, they need the right support in developing those approaches at home as well as at school.\n\nProf Anders Ericsson, an eminent education psychologist at Florida State University, US, is the co-author of Peak: Secrets from the New Science of Expertise.\n\nAfter research going back to 1980 into diverse achievements, from music to memory to sport, he doesn't think unique and innate talents are at the heart of performance.\n\nDeliberate practice, that stretches you every step of the way, and around 10,000 hours of it, is what produces the goods.\n\nIt's not a magic number the highest performers move on to doing a whole lot more, of course.\n\nEricsson's memory research is particularly interesting because random students, trained in memory techniques for the study, went on to outperform others thought to have innately superior memories those who you might call gifted.\n\nBut it is perhaps the work of Benjamin Bloom, another distinguished American educationist working in the 1980s, that gives the most pause for thought.\n\nBloom's team looked at a group of extraordinarily high achieving people in disciplines as varied as ballet, swimming, piano, tennis, maths, sculpture and neurology.\n\nHe found a pattern of parents encouraging and supporting their children, often in areas they enjoyed themselves.\n\nBloom's outstanding people had worked very hard and consistently at something they had become hooked on when at a young age, and their parents all emerged as having strong work ethics themselves.\n\nEyre says we know how high performers learn.\n\nFrom that she has developed a high performing learning approach.\n\nShe is working on this with a group of schools, both in Britain and abroad.\n\nSome spin-off research, which looked in detail at 24 of the 3,000 children being studied who were succeeding despite difficult circumstances, found something remarkable.\n\nHalf were getting free school meals because of poverty, more than half were living with a single parent, and four in five were living in disadvantaged areas.\n\nInterviews uncovered strong evidence of an adult or adults in the child's life who valued and supported education, either in the immediate or extended family or in the child's wider community.\n\nChildren talked about the need to work hard at school, to listen in class and keep trying.\n\nLet us end with Einstein, the epitome of a genius.\n\nHe clearly had curiosity, character and determination.\n\nHe struggled against rejection in early life but was undeterred.\n\nDid he think he was a genius or even gifted?\n\nHe once wrote: 'It's not that I'm so smart, it's just that I stay with problems longer.\n\nMost people say it is the intellect which makes a great scientist.\n\nThey are wrong: it is character.' <form id =\"\n\nQuestions 27-32\n\nComplete the summary using the list of phrases, A-K, below.\n\nWrite the correct letter, A-K, in boxes 27-32 on your answer sheet.\n\nMaryam Mirzakhani\nMaryam Mirzakhani is regarded as 27………………… in the field of mathematics because she was the only female holder of the prestigious Fields Medal - a record that she retained at the time of her death. However, maths held little 28………………… for her as a child and in fact her performance was below average until she was 29………………… by a difficult puzzle that one of her siblings showed her.\nshe proved herself to be 30 … when things did not go smoothly\n\nA   appeal\nD   single\n\nG   involved\n\nJ   satisfaction\n\nB   determined\nE   achievement\n\nH   unique\n\nK   intent\n\nC   intrigued\nF   devoted\n\nI   innovative\n\nQuestions 33-37\n\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 33-37 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN     if it is impossible to say what the writer thinks about this\n\n33   Many people who ended up winning prestigious intellectual prizes only reached an average standard when young.\n\n34   Einstein’s failures as a young man were due to his lack of confidence.\n\n35   It is difficult to reach agreement on whether some children are actually born gifted.\n\n36   Einstein was upset by the public’s view of his life’s work.\n37   Einstein put his success down to the speed at which he dealt with scientific questions.\n\nQuestions 38-40\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 38-40 on your answer sheet.\n\n38   What does Eyre believe is needed for children to equal ‘gifted’ standards?\n\nA   strict discipline from the teaching staff\n\nB   assistance from their peers in the classroom\n\nC   the development of a spirit of inquiry towards their studies\n\nD   the … … to surpass everyone else’s … …\n\n39   What is the result of Ericsson’s research?\n\nA   Very gifted students do not need to work on improving memory skills.\n\nB   Being born with a special gift is not the key factor in becoming expert.\n\nC   Including time for physical exercise is crucial in raising performance.\n\nD   10,000 hours of relevant and demanding work will create a genius.\n\n40   In the penultimate paragraph, it is stated the key to some deprived children’s success is\n\nA   a regular and nourishing diet at home.\n\nB   the loving support of more than one parent.\nC   a community which has well-funded facilities for learning.\n\nD   the guidance of someone who recognises the benefits of learning.",
+    "rawPassageText": "READING PASSAGE 3\nPassage 3 id=\"ielts-reading-transcript-3\" class=\"ielts-reading-transcript \" data-part-number=\"3\">An inquiry into\n\nPassage 3 id=\"ielts-reading-transcript-3\" class=\"ielts-reading-transcript \" data-part-number=\"3\">An inquiry into the existence of the gifted child Let us start by looking at a modern 'genius', Maryam Mirzakhani, who died at the early age of 40.\n\nShe was the only woman to win the Fields Medal the mathematical equivalent of a Nobel prize.\n\nIt would be easy to assume that someone as special as Mirzakhani must have been one of those 'gifted' children, those who have an extraordinary ability in a specific sphere of activity or knowledge.\n\nBut look closer and a different story emerges.\n\nShe went to a highly selective girls' school but maths wasn't her interest - reading was.\n\nShe loved novels and would read anything she could lay her hands on.\n\nAs for maths, she did rather poorly at it for the first couple of years in her middle school, but became interested when her elder brother told her about what he'd learned.\n\nHe shared a famous maths problem from a magazine that fascinated her and she was hooked.\n\nIn adult life it is clear that she was curious, excited by what she did and also resolute in the face of setbacks.\n\n'Of course, the most rewarding part is the \"Alia\" moment, the excitement of discovery and enjoyment of understanding something new ...\n\nBut most of the time, doing mathematics for me is like being on a long hike with no trail and no end in sight.'\n\nThat trail took her to the heights of original research into mathematics.\n\nMost Nobel prize winners were unexceptional in childhood.\n\nHe failed the general part of the entry test to Zurich Polytechnic – though they let him in because of high physics and maths scores.\n\nHe struggled at work initially, but he kept plugging away and eventually rewrote the laws of Newtonian mechanics with his theory of relativity.\n\nThere has been a considerable amount of research on high performance over the last century that suggests it goes way beyond tested intelligence.\n\nOn top of that, research is clear that brains are flexible, new neural pathways can be created, and IQ isn't fixed.\n\nFor example, just because you can read stories with hundreds of pages at the age of five doesn't mean you will still be ahead of your contemporaries in your teens.\n\nWhile the jury is out on giftedness being innate and other factors potentially making the difference, what is certain is that the behaviours associated with high levels of performance are replicable and most can be taught even traits such as curiosity.\n\nAccording to my colleague Prof Deborah Eyre, with whom I've collaborated on the book Great Minds and How to Crow Them, the latest neuroscience and psychological research suggests most individuals can reach levels of performance associated in school with the gifted and talented.\n\nHowever, they must be taught the right attitudes and approaches to their learning and develop the attributes of high performers-curiosity, persistence and hard work, for example an approach Eyre calls 'high performance learning'.\n\nCritically, they need the right support in developing those approaches at home as well as at school.\n\nProf Anders Ericsson, an eminent education psychologist at Florida State University, US, is the co-author of Peak: Secrets from the New Science of Expertise.\n\nAfter research going back to 1980 into diverse achievements, from music to memory to sport, he doesn't think unique and innate talents are at the heart of performance.\n\nDeliberate practice, that stretches you every step of the way, and around 10,000 hours of it, is what produces the goods.\n\nIt's not a magic number the highest performers move on to doing a whole lot more, of course.\n\nEricsson's memory research is particularly interesting because random students, trained in memory techniques for the study, went on to outperform others thought to have innately superior memories those who you might call gifted.\n\nBut it is perhaps the work of Benjamin Bloom, another distinguished American educationist working in the 1980s, that gives the most pause for thought.\n\nBloom's team looked at a group of extraordinarily high achieving people in disciplines as varied as ballet, swimming, piano, tennis, maths, sculpture and neurology.\n\nHe found a pattern of parents encouraging and supporting their children, often in areas they enjoyed themselves.\n\nBloom's outstanding people had worked very hard and consistently at something they had become hooked on when at a young age, and their parents all emerged as having strong work ethics themselves.\n\nEyre says we know how high performers learn.\n\nFrom that she has developed a high performing learning approach.\n\nShe is working on this with a group of schools, both in Britain and abroad.\n\nSome spin-off research, which looked in detail at 24 of the 3,000 children being studied who were succeeding despite difficult circumstances, found something remarkable.\n\nHalf were getting free school meals because of poverty, more than half were living with a single parent, and four in five were living in disadvantaged areas.\n\nInterviews uncovered strong evidence of an adult or adults in the child's life who valued and supported education, either in the immediate or extended family or in the child's wider community.\n\nChildren talked about the need to work hard at school, to listen in class and keep trying.\n\nLet us end with Einstein, the epitome of a genius.\n\nHe clearly had curiosity, character and determination.\n\nHe struggled against rejection in early life but was undeterred.\n\nDid he think he was a genius or even gifted?\n\nHe once wrote: 'It's not that I'm so smart, it's just that I stay with problems longer.\n\nMost people say it is the intellect which makes a great scientist.\n\nThey are wrong: it is character.' <form id =\"\n\nQuestions 27-32\n\nComplete the summary using the list of phrases, A-K, below.\n\nWrite the correct letter, A-K, in boxes 27-32 on your answer sheet.\n\nMaryam Mirzakhani\nMaryam Mirzakhani is regarded as 27………………… in the field of mathematics because she was the only female holder of the prestigious Fields Medal - a record that she retained at the time of her death. However, maths held little 28………………… for her as a child and in fact her performance was below average until she was 29………………… by a difficult puzzle that one of her siblings showed her.\nshe proved herself to be 30 … when things did not go smoothly\n\nA   appeal\nD   single\n\nG   involved\n\nJ   satisfaction\n\nB   determined\nE   achievement\n\nH   unique\n\nK   intent\n\nC   intrigued\nF   devoted\n\nI   innovative\n\nQuestions 33-37\n\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 33-37 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN     if it is impossible to say what the writer thinks about this\n\n33   Many people who ended up winning prestigious intellectual prizes only reached an average standard when young.\n\n34   Einstein’s failures as a young man were due to his lack of confidence.\n\n35   It is difficult to reach agreement on whether some children are actually born gifted.\n\n36   Einstein was upset by the public’s view of his life’s work.\n37   Einstein put his success down to the speed at which he dealt with scientific questions.\n\nQuestions 38-40\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 38-40 on your answer sheet.\n\n38   What does Eyre believe is needed for children to equal ‘gifted’ standards?\n\nA   strict discipline from the teaching staff\n\nB   assistance from their peers in the classroom\n\nC   the development of a spirit of inquiry towards their studies\n\nD   the determination to surpass everyone else’s achievements\n\n39   What is the result of Ericsson’s research?\n\nA   Very gifted students do not need to work on improving memory skills.\n\nB   Being born with a special gift is not the key factor in becoming expert.\n\nC   Including time for physical exercise is crucial in raising performance.\n\nD   10,000 hours of relevant and demanding work will create a genius.\n\n40   In the penultimate paragraph, it is stated the key to some deprived children’s success is\n\nA   a regular and nourishing diet at home.\n\nB   the loving support of more than one parent.\nC   a community which has well-funded facilities for learning.\n\nD   the guidance of someone who recognises the benefits of learning.",
     "rawAnswerKey": "READING PASSAGE 3: An inquiry into the existence of the gifted child\n\nQuestion 27: Maryam Mirzakhani is regarded as … in the field of mathematics\n\nCorrect Answer: H\n\nAccepted Answers: H\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the early age of 40.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า H ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the earl…\") จึงตอบ H\n\nParaphrased Vocabulary: maryam mirzakhani regarded = start looking modern = H\n\nQuestion 28: maths held little … for her as a child\n\nCorrect Answer: A\n\nAccepted Answers: A\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"It would be easy to assume that someone as special as Mirzakhani must have been one of those ‘gifted’ children, those who have an extraordinary ability in a specific sphere of activity or knowledge.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า A ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"It would be easy to assume that someone as special as Mirzakhani must have been one o…\") จึงตอบ A\n\nParaphrased Vocabulary: maths little child = assume someone special = A\n\nQuestion 29: her performance was below average until she was … by a difficult puzzle\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"There has been a considerable amount of research on high performance over the last century that suggests it goes way beyond tested intelligence.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"There has been a considerable amount of research on high performance over the last ce…\") จึงตอบ C\n\nParaphrased Vocabulary: performance below average = considerable amount research = C\n\nQuestion 30: she proved herself to be … when things did not go smoothly\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the early age of 40.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า B ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the earl…\") จึงตอบ B\n\nParaphrased Vocabulary: proved herself things = start looking modern = B\n\nQuestion 31: she got the greatest … from making ground-breaking discoveries\n\nCorrect Answer: J\n\nAccepted Answers: J\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"edness being innate and other factors potentially making the difference,  what is certain is that the behaviours associated with high levels of performance are replicable and most can be taught – even traits such as curiosity.\"\n\nShort Thai Explanation: บทความใช้คำว่า \"J\" ตรงกับช่องว่างในข้อ (she got the greatest … from making ground-breaking discoveries) โดยอ้างอิงจาก \"edness being innate and other factors potentially making the difference,  what is cer…\"\n\nParaphrased Vocabulary: greatest making ground-breaking = edness innate factors = J\n\nQuestion 32: she was responsible for some extremely … mathematical studies\n\nCorrect Answer: I\n\nAccepted Answers: I\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"She was the only woman to win the Fields Medal – the mathematical equivalent of a Nobel prize.\"\n\nShort Thai Explanation: บทความใช้คำว่า \"I\" ตรงกับช่องว่างในข้อ (she was responsible for some extremely … mathematical studies) โดยอ้างอิงจาก \"She was the only woman to win the Fields Medal – the mathematical equivalent of a Nob…\"\n\nParaphrased Vocabulary: responsible extremely mathematical = woman fields medal = I\n\nQuestion 33: Many people who ended up winning prestigious intellectual prizes only reached an average standard when young.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"Most Nobel prize winners were unexceptional in childhood.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนสอดคล้องกับข้อนี้ โดยอ้างอิงจาก \"Most Nobel prize winners were unexceptional in childhood.\" จึงตอบ YES\n\nParaphrased Vocabulary: prize winners reached = nobel prize winners = YES\n\nQuestion 34: Einstein's failures as a young man were due to his lack of confidence.\n\nCorrect Answer: NOT GIVEN\n\nAccepted Answers: NOT GIVEN\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"Bloom’s outstanding people had worked very hard and consistently at something they had become hooked on when at a young age, and their parents all emerged as having strong work ethics themselves.\"\n\nShort Thai Explanation: บทความไม่ได้ให้ข้อมูลเพียงพอเกี่ยวกับประเด็นในข้อ (อ้างอิง: \"Bloom’s outstanding people had worked very hard and consistently at something they ha…\") จึงตอบ NOT GIVEN\n\nParaphrased Vocabulary: einstein's failures young = bloom outstanding worked = NOT GIVEN\n\nQuestion 35: It is difficult to reach agreement on whether some children are actually born gifted.\n\nCorrect Answer: YES\n\nAccepted Answers: YES\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"It would be easy to assume that someone as special as Mirzakhani must have been one of those ‘gifted’ children, those who have an extraordinary ability in a specific sphere of activity or knowledge.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนสอดคล้องกับข้อนี้ โดยอ้างอิงจาก \"It would be easy to assume that someone as special as Mirzakhani must have been one o…\" จึงตอบ YES\n\nParaphrased Vocabulary: difficult reach agreement = assume someone special = YES\n\nQuestion 36: Einstein was upset by the public's view of his life's work.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"However, they must be taught the right attitudes and approaches to their learning and develop the attributes of high performers – curiosity, persistence and hard work, for example – an approach Eyre calls ‘high performance learning’.\"\n\nShort Thai Explanation: มุมมองของผู้เขียนขัดแย้งกับข้อนี้ โดยอ้างอิงจาก \"However, they must be taught the right attitudes and approaches to their learning and…\" จึงตอบ NO\n\nParaphrased Vocabulary: einstein upset public's = however taught right = NO\n\nQuestion 37: Einstein put his success down to the speed at which he dealt with scientific questions.\n\nCorrect Answer: NO\n\nAccepted Answers: NO\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"‘Of course, the most rewarding part is the “Aha” moment, the excitement of discovery and enjoyment of understanding something new … But most of the time, doing mathematics for me is like being on a long hike with no trail and no end in sigh\"\n\nShort Thai Explanation: มุมมองของผู้เขียนขัดแย้งกับข้อนี้ โดยอ้างอิงจาก \"‘Of course, the most rewarding part is the “Aha” moment, the excitement of discovery …\" จึงตอบ NO\n\nParaphrased Vocabulary: einstein success speed = course rewarding moment = NO\n\nQuestion 38: What does Eyre believe is needed for children to equal ‘gifted’ standards?\n\nCorrect Answer: C\n\nAccepted Answers: C\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"It would be easy to assume that someone as special as Mirzakhani must have been one of those ‘gifted’ children, those who have an extraordinary ability in a specific sphere of activity or knowledge.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า C ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"It would be easy to assume that someone as special as Mirzakhani must have been one o…\") จึงตอบ C\n\nParaphrased Vocabulary: believe needed children = assume someone special = C\n\nQuestion 39: What is the result of Ericsson's research?\n\nCorrect Answer: B\n\nAccepted Answers: B\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \".’ That trail took her to the heights of original research into mathematics.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า B ตรงกับหัวข้อในข้อมากที่สุด (เช่น \".’ That trail took her to the heights of original research into mathematics.\") จึงตอบ B\n\nParaphrased Vocabulary: result ericsson's research = trail heights original = B\n\nQuestion 40: In the penultimate paragraph, it is stated the key to some deprived children’s success is\n\nCorrect Answer: D\n\nAccepted Answers: D\n\nAnswer Group: Cambridge 19 Test 2 Passage 3\n\nExact Portion: \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the early age of 40.\"\n\nShort Thai Explanation: เนื้อหาในย่อหน้า D ตรงกับหัวข้อในข้อมากที่สุด (เช่น \"Let us start by looking at a modern ‘genius’, Maryam Mirzakhani, who died at the earl…\") จึงตอบ D\n\nParaphrased Vocabulary: deprived children's success = start looking modern = D",
     "createdAt": "2026-05-16T00:00:00.000Z",
     "updatedAt": "2026-06-03T06:07:04.371Z",
@@ -1128,7 +1128,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             "Bloom's outstanding people had worked very hard and consistently at something they had become hooked on when at a young age, and their parents all emerged as having strong work ethics themselves. Eyre says we know how high performers learn. From that she has developed a high performing learning approach. She is working on this with a group of schools, both in Britain and abroad. Some spin-off research, which looked in detail at 24 of the 3,000 children being studied who were succeeding despite difficult circumstances, found something remarkable. Half were getting free school meals because of poverty, more than half were living with a single parent, and four in five were living in disadvantaged areas.",
             "Interviews uncovered strong evidence of an adult or adults in the child's life who valued and supported education, either in the immediate or extended family or in the child's wider community. Children talked about the need to work hard at school, to listen in class and keep trying. Let us end with Einstein, the epitome of a genius. He clearly had curiosity, character and determination. He struggled against rejection in early life but was undeterred. Did he think he was a genius or even gifted? He once wrote: 'It's not that I'm so smart, it's just that I stay with problems longer. Most people say it is the intellect which makes a great scientist."
           ],
-          "questionSectionText": "Questions 27-32\n\nComplete the summary using the list of phrases, A-K, below.\n\nWrite the correct letter, A-K, in boxes 27-32 on your answer sheet.\n\nMaryam Mirzakhani\nMaryam Mirzakhani is regarded as 27………………… in the field of mathematics because she was the only female holder of the prestigious Fields Medal - a record that she retained at the time of her death. However, maths held little 28………………… for her as a child and in fact her performance was below average until she was 29………………… by a difficult puzzle that one of her siblings showed her. Later, as a professional mathematician, she had an inquiring mind and proved herself to be 30 ………………… when things did not go smoothly. She said she got the greatest 31 ………………… from making ground-breaking discoveries and in fact she was responsible for some extremely 32 ………………… mathematical studies.\n\nA   appeal\nD   single\n\nG   involved\n\nJ   satisfaction\n\nB   determined\nE   achievement\n\nH   unique\n\nK   intent\n\nC   intrigued\nF   devoted\n\nI   innovative\n\nQuestions 33-37\n\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 33-37 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN     if it is impossible to say what the writer thinks about this\n\n33   Many people who ended up winning prestigious intellectual prizes only reached an average standard when young.\n\n34   Einstein’s failures as a young man were due to his lack of confidence.\n\n35   It is difficult to reach agreement on whether some children are actually born gifted.\n\n36   Einstein was upset by the public’s view of his life’s work.\n37   Einstein put his success down to the speed at which he dealt with scientific questions.\n\nQuestions 38-40\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 38-40 on your answer sheet.\n\n38   What does Eyre believe is needed for children to equal ‘gifted’ standards?\n\nA   strict discipline from the teaching staff\n\nB   assistance from their peers in the classroom\n\nC   the development of a spirit of inquiry towards their studies\n\nD   the … … to surpass everyone else’s … …\n\n39   What is the result of Ericsson’s research?\n\nA   Very gifted students do not need to work on improving memory skills.\n\nB   Being born with a special gift is not the key factor in becoming expert.\n\nC   Including time for physical exercise is crucial in raising performance.\n\nD   10,000 hours of relevant and demanding work will create a genius.\n\n40   In the penultimate paragraph, it is stated the key to some deprived children’s success is\n\nA   a regular and nourishing diet at home.\n\nB   the loving support of more than one parent.\nC   a community which has well-funded facilities for learning.\n\nD   the guidance of someone who recognises the benefits of learning.",
+          "questionSectionText": "Questions 27-32\n\nComplete the summary using the list of phrases, A-K, below.\n\nWrite the correct letter, A-K, in boxes 27-32 on your answer sheet.\n\nMaryam Mirzakhani\nMaryam Mirzakhani is regarded as 27………………… in the field of mathematics because she was the only female holder of the prestigious Fields Medal - a record that she retained at the time of her death. However, maths held little 28………………… for her as a child and in fact her performance was below average until she was 29………………… by a difficult puzzle that one of her siblings showed her. Later, as a professional mathematician, she had an inquiring mind and proved herself to be 30 ………………… when things did not go smoothly. She said she got the greatest 31 ………………… from making ground-breaking discoveries and in fact she was responsible for some extremely 32 ………………… mathematical studies.\n\nA   appeal\nD   single\n\nG   involved\n\nJ   satisfaction\n\nB   determined\nE   achievement\n\nH   unique\n\nK   intent\n\nC   intrigued\nF   devoted\n\nI   innovative\n\nQuestions 33-37\n\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 33-37 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN     if it is impossible to say what the writer thinks about this\n\n33   Many people who ended up winning prestigious intellectual prizes only reached an average standard when young.\n\n34   Einstein’s failures as a young man were due to his lack of confidence.\n\n35   It is difficult to reach agreement on whether some children are actually born gifted.\n\n36   Einstein was upset by the public’s view of his life’s work.\n37   Einstein put his success down to the speed at which he dealt with scientific questions.\n\nQuestions 38-40\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 38-40 on your answer sheet.\n\n38   What does Eyre believe is needed for children to equal ‘gifted’ standards?\n\nA   strict discipline from the teaching staff\n\nB   assistance from their peers in the classroom\n\nC   the development of a spirit of inquiry towards their studies\n\nD   the determination to surpass everyone else’s achievements\n\n39   What is the result of Ericsson’s research?\n\nA   Very gifted students do not need to work on improving memory skills.\n\nB   Being born with a special gift is not the key factor in becoming expert.\n\nC   Including time for physical exercise is crucial in raising performance.\n\nD   10,000 hours of relevant and demanding work will create a genius.\n\n40   In the penultimate paragraph, it is stated the key to some deprived children’s success is\n\nA   a regular and nourishing diet at home.\n\nB   the loving support of more than one parent.\nC   a community which has well-funded facilities for learning.\n\nD   the guidance of someone who recognises the benefits of learning.",
           "questionRanges": [
             {
               "start": 27,
@@ -1464,7 +1464,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "… near the village of Kelo revealed: - axes from around 14,000 years ago, probably used to make canoes - axes made out of",
+              "prompt": "Excavations of rock shelters inside … … near the village of Kelo revealed: - axes from around 14,000 years ago, probably used to make canoes - axes made out of.",
               "correctAnswer": "caves",
               "acceptedAnswers": [
                 "caves"
@@ -1477,7 +1477,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "axes made out of …, dating from around 11,700 years ago",
+              "prompt": "● axes from around 14,000 years ago, probably used to make canoes ● axes made out of … …, dating from around 11,700 years ago.",
               "correctAnswer": "stone",
               "acceptedAnswers": [
                 "stone"
@@ -1490,7 +1490,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "… of an animal: evidence of what ancient islanders ate - evidence of travel between islands: + obsidian:",
+              "prompt": "of an animal: evidence of what ancient islanders ate - evidence of travel between islands: + obsidian:.",
               "correctAnswer": "bones",
               "acceptedAnswers": [
                 "bones"
@@ -1503,7 +1503,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "… which resembled ones found on other islands. It is thought that from 8,000 years ago, Obi islanders: - may have switched from hunting to fishing - had",
+              "prompt": "which resembled ones found on other islands. It is thought that from 8,000 years ago, Obi islanders: - may have switched from hunting to fishing - had.",
               "correctAnswer": "beads",
               "acceptedAnswers": [
                 "beads"
@@ -1516,7 +1516,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "… as well as items made out of metal - probably took part in the production and sale of",
+              "prompt": "● may have switched from hunting to fishing ● had … … as well as items made out of metal - probably took part in the production and sale of.",
               "correctAnswer": "pottery",
               "acceptedAnswers": [
                 "pottery"
@@ -1529,7 +1529,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "… Questions 14-17 Which paragraph contains the following information? Write the correct letter,",
+              "prompt": "● probably took part in the production and sale of.",
               "correctAnswer": "spices",
               "acceptedAnswers": [
                 "spices"
@@ -1589,7 +1589,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "reference to the need to ensure that inhabitants of wetland regions continue to benefit from them … … … … … … … …",
+              "prompt": "reference to the need to ensure that inhabitants of wetland regions continue to benefit from them",
               "correctAnswer": "G",
               "acceptedAnswers": [
                 "G"
@@ -1602,7 +1602,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "the proportion of wetlands which have already been lost … … … … … … … …",
+              "prompt": "the proportion of wetlands which have already been lost",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1615,7 +1615,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 16,
-              "prompt": "reference to the idea that people are beginning to appreciate the value of wetlands … … … … … … … …",
+              "prompt": "reference to the idea that people are beginning to appreciate the value of wetlands",
               "correctAnswer": "H",
               "acceptedAnswers": [
                 "H"
@@ -1628,7 +1628,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "mention of the cultural significance of wetlands … … … … … … … … Questions 18-22 Complete the sentences below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes on your answer sheet. Peatlands which have been drained begin to release",
+              "prompt": "mention of the cultural significance of wetlands",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1654,7 +1654,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "Once peatland areas have been cleared, … are more likely to occur",
+              "prompt": "Once peatland areas have been cleared, … … are more likely to occur.",
               "correctAnswer": "fires",
               "acceptedAnswers": [
                 "fires"
@@ -1680,7 +1680,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "Water is drained out of peatlands through the … created by logging companies",
+              "prompt": "Water is drained out of peatlands through the … … created by logging companies.",
               "correctAnswer": "ditches",
               "acceptedAnswers": [
                 "ditches"
@@ -1693,7 +1693,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "Draining peatlands leads to …",
+              "prompt": "Draining peatlands leads to.",
               "correctAnswer": "subsidence",
               "acceptedAnswers": [
                 "subsidence"
@@ -1706,7 +1706,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "Communities living in wetland regions must be included in discussions about the future of these areas … … … …",
+              "prompt": "Communities living in wetland regions must be included in discussions about the future of these areas",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1732,7 +1732,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "People cause harm to wetlands without having any intention to do so … … … …",
+              "prompt": "People cause harm to wetlands without having any intention to do so",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -1745,7 +1745,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "Initiatives to reverse environmental damage need not be complex. … … … … Questions 27-30 Choose the correct letter, A, B, C or D. Write the correct letter in boxes on your answer sheet.",
+              "prompt": "Initiatives to reverse environmental damage need not be complex.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -2111,7 +2111,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "… * first appears at the start of",
+              "prompt": "● lives in large … … * first appears at the start of.",
               "correctAnswer": "colonies",
               "acceptedAnswers": [
                 "colonies"
@@ -2124,7 +2124,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "… * completes more than one reproductive cycle per year The High Brown Fritillary *has one reproductive cycle *is considered to be more",
+              "prompt": "● first appears at the start of … … * completes more than one reproductive cycle per year The High Brown Fritillary *has one reproductive cycle *is considered to be more.",
               "correctAnswer": "spring",
               "acceptedAnswers": [
                 "spring"
@@ -2137,7 +2137,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "… than other species *its caterpillars occupy",
+              "prompt": "● is considered to be more … … than other species *its caterpillars occupy.",
               "correctAnswer": "endangered",
               "acceptedAnswers": [
                 "endangered"
@@ -2150,7 +2150,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "… The Silver-studded Blue *is already able to reproduce twice",
+              "prompt": "● its caterpillars occupy a limited range of … … The Silver-studded Blue *is already able to reproduce twice.",
               "correctAnswer": "habitat",
               "acceptedAnswers": [
                 "habitat",
@@ -2164,7 +2164,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "… The White Admiral *is found in",
+              "prompt": "● is already able to reproduce twice a year in warm areas of … … The White Admiral *is found in.",
               "correctAnswer": "Europe",
               "acceptedAnswers": [
                 "Europe"
@@ -2177,7 +2177,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "… areas of England *both climate change and the",
+              "prompt": "● is found in … … areas of England *both climate change and the.",
               "correctAnswer": "southern",
               "acceptedAnswers": [
                 "southern"
@@ -2190,7 +2190,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "… of the caterpillar are possible reasons for decline Questions 14-17 Reading Passage has six paragraphs, A-F. Which paragraph contains the following information? Write the correct letter, A-F, in boxes on your answer sheet. ABCDEF",
+              "prompt": "● both climate change and the … … of the caterpillar are possible reasons for decline.",
               "correctAnswer": "diet",
               "acceptedAnswers": [
                 "diet"
@@ -2288,7 +2288,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "reference to the fact that the countries of the world have yet to agree on rules for the exploration of the seabed Questions 18-23 Look at the following statements (Questions 18-23) and the list of people below. Match each statement with the correct person or people, A-E. Write the correct letter, A-E, in boxes 18-23 on your answer sheet. NB   You may use any letter more than once.",
+              "prompt": "reference to the fact that the countries of the world have yet to agree on rules for the exploration of the seabed",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -2314,7 +2314,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "The negative effects of undersea exploration on local areas and their inhabitants are being ignored. … … … … …",
+              "prompt": "The negative effects of undersea exploration on local areas and their inhabitants are being ignored.",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -2366,7 +2366,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "There is one marine life habitat where experts agree mining should not take place. … … … … … Questions 24-26 Complete the summary below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes on your answer sheet.",
+              "prompt": "There is one marine life habitat where experts agree mining should not take place.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -2379,7 +2379,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "… . The extraction is often done by adapting the",
+              "prompt": "Mining corporations believe that the mineral resources lying under the sea may be superior to those found in the earth. They also say that these can be removed without producing much … …. The extraction is often done by adapting the.",
               "correctAnswer": "waste",
               "acceptedAnswers": [
                 "waste"
@@ -2392,7 +2392,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "… that has already been used to work on land. The method of excavation involves removing the seawater from the slurry that is brought up to ships and returning it to the seabed. However, concerned groups strongly believe that",
+              "prompt": "adapting the … … that has already been used to work on land. The method of excavation involves removing the seawater from the slurry that is brought up to ships and returning it to the seabed. However, concerned groups strongly believe that.",
               "correctAnswer": "machinery",
               "acceptedAnswers": [
                 "machinery"
@@ -2405,7 +2405,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "… is necessary due to the possible number of unidentified consequences. Questions 27-30 Choose the correct letter, A, B, C or D. Write the correct letter in boxes on your answer sheet.",
+              "prompt": "But environmental and legal groups have urged … …, arguing there are potentially massive and unknown ramifications for the environment and for.",
               "correctAnswer": "caution",
               "acceptedAnswers": [
                 "caution"
@@ -2517,7 +2517,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "… in all areas of life. In these cultures, distributing resources fairly among all members is",
+              "prompt": "Bruce Knauft's research shows that contemporary hunter-gatherer societies tend to exhibit a high level of … … in all areas of life. In these cultures, distributing resources fairly among all members is a moral obligation. These societies also employ strategies to prevent differences in.",
               "correctAnswer": "egalitarianism",
               "acceptedAnswers": [
                 "egalitarianism"
@@ -2530,7 +2530,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "… occurring: for example, the !Kung follow",
+              "prompt": "They also have methods of preserving egalitarianism by ensuring that disparities of … … don't arise.",
               "correctAnswer": "status",
               "acceptedAnswers": [
                 "status"
@@ -2543,7 +2543,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "… is given to another member of the group. Individuals who behave in a",
+              "prompt": "Humans at that time were hunter-gatherers: people who lived by … … wild animals and collecting wild plants.",
               "correctAnswer": "hunting",
               "acceptedAnswers": [
                 "hunting"
@@ -2556,7 +2556,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "… manner are punished by being excluded from the group, and women have",
+              "prompt": "And if a person becomes too … …, the other members of the group ostracise them, exiling the offender from society.",
               "correctAnswer": "domineering",
               "acceptedAnswers": [
                 "domineering"
@@ -2569,7 +2569,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_19_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "… in choices regarding work and marriage. Questions 36-40 Do the following statements agree with the views of the writer in Reading Passage? In boxes on your answer sheet, write",
+              "prompt": "Women in hunter-gatherer groups worldwide often benefit from a high level of … …, being able to select their own marriage partners, decide what work they do and work whenever.",
               "correctAnswer": "autonomy",
               "acceptedAnswers": [
                 "autonomy"

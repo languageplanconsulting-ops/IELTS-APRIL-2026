@@ -41,7 +41,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "Database of tourism services — allowed businesses to … information regularly",
+              "prompt": "Database of tourism services — allowed businesses to … … information regularly.",
               "correctAnswer": "update",
               "acceptedAnswers": [
                 "update"
@@ -54,7 +54,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "Database of tourism services — country-wide evaluation including impact on the …",
+              "prompt": "Database of tourism services — country-wide evaluation including impact on the.",
               "correctAnswer": "environment",
               "acceptedAnswers": [
                 "environment"
@@ -67,7 +67,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "Special features — e.g. interview with a former sports …",
+              "prompt": "Special features — e.g. interview with a former sports.",
               "correctAnswer": "captain",
               "acceptedAnswers": [
                 "captain"
@@ -80,7 +80,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "Special features — interactive tour of locations used in …",
+              "prompt": "Special features — interactive tour of locations used in.",
               "correctAnswer": "films",
               "acceptedAnswers": [
                 "films"
@@ -93,7 +93,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "Information on driving routes — varied depending on the …",
+              "prompt": "Information on driving routes — varied depending on the.",
               "correctAnswer": "season",
               "acceptedAnswers": [
                 "season"
@@ -106,7 +106,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "Travel Planner — map, public transport and local …",
+              "prompt": "Travel Planner — map, public transport and local.",
               "correctAnswer": "accommodation",
               "acceptedAnswers": [
                 "accommodation"
@@ -119,7 +119,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "'Your Words' — travellers could send a link to their …",
+              "prompt": "'Your Words' — travellers could send a link to their.",
               "correctAnswer": "blog",
               "acceptedAnswers": [
                 "blog"
@@ -324,7 +324,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "Paragraph F ## Questions 20-23 Look at the following people (Questions 20-23) and the list of ideas below. Match each person with the correct idea, A-E. Choose the correct letter, A-E, in boxes 20-23 on your answer sheet.",
+              "prompt": "Paragraph F ##",
               "correctAnswer": "iii",
               "acceptedAnswers": [
                 "iii"
@@ -376,7 +376,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "Francoise Wemelsfelder … … … … … Questions 24-26 Complete the summary below. Choose",
+              "prompt": "Francoise Wemelsfelder",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -389,7 +389,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "Responses to boredom — people cannot … due to a failure in the attention system",
+              "prompt": "Responses to boredom — people cannot … … due to a failure in the attention system.",
               "correctAnswer": "focus",
               "acceptedAnswers": [
                 "focus"
@@ -402,7 +402,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "… is an important aim in life may have problems in coping with boredom, whereas those who have the characteristic of",
+              "prompt": "People who are motivated by … … seem to suffer particularly badly.",
               "correctAnswer": "pleasure",
               "acceptedAnswers": [
                 "pleasure"
@@ -415,7 +415,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "Responses to boredom — people with the characteristic of … generally cope with boredom",
+              "prompt": "Responses to boredom — people with the characteristic of … … generally cope with boredom.",
               "correctAnswer": "curiosity",
               "acceptedAnswers": [
                 "curiosity"
@@ -707,7 +707,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "Biblical times — added to …",
+              "prompt": "Biblical times — added to.",
               "correctAnswer": "oils",
               "acceptedAnswers": [
                 "oils"
@@ -720,7 +720,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "Biblical times — used to show … between people",
+              "prompt": "Biblical times — used to show … … between people.",
               "correctAnswer": "friendship",
               "acceptedAnswers": [
                 "friendship"
@@ -733,7 +733,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "Ancient Rome — used for its sweet smell at …",
+              "prompt": "Ancient Rome — used for its sweet smell at.",
               "correctAnswer": "funerals",
               "acceptedAnswers": [
                 "funerals"
@@ -746,7 +746,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "Middle Ages — was an indication of a person's …",
+              "prompt": "Middle Ages — was an indication of a person's.",
               "correctAnswer": "wealth",
               "acceptedAnswers": [
                 "wealth"
@@ -759,7 +759,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "Middle Ages — known as a treatment for … and other health problems",
+              "prompt": "Middle Ages — known as a treatment for … … and other health problems.",
               "correctAnswer": "indigestion",
               "acceptedAnswers": [
                 "indigestion"
@@ -772,7 +772,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "The early cinnamon trade — grown in …",
+              "prompt": "The early cinnamon trade — grown in.",
               "correctAnswer": "India",
               "acceptedAnswers": [
                 "India"
@@ -785,7 +785,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "The early cinnamon trade — merchants used … to bring it to the Mediterranean",
+              "prompt": "The early cinnamon trade — merchants used … … to bring it to the Mediterranean.",
               "correctAnswer": "camels",
               "acceptedAnswers": [
                 "camels"
@@ -798,7 +798,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "The early cinnamon trade — arrived in the Mediterranean at …",
+              "prompt": "The early cinnamon trade — arrived in the Mediterranean at.",
               "correctAnswer": "Alexandria",
               "acceptedAnswers": [
                 "Alexandria"
@@ -811,7 +811,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "traders took it to … … and sold it to destinations around Europe",
+              "prompt": "Spices reached Europe through trading ports such as … … before being sold on at high prices.",
               "correctAnswer": "Venice",
               "acceptedAnswers": [
                 "Venice"
@@ -964,7 +964,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "reference to people ignoring certain aspects of their research data ## Questions 18-20 Look at the following research findings (Questions 18-20) and the list of researchers below. Match each research finding with the correct researcher, A-F. Write the correct letter, A-F, in boxes 18-20 on your answer sheet.",
+              "prompt": "reference to people ignoring certain aspects of their research data ##",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -1003,7 +1003,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "The effect of oxytocin varies from one type of person to another. … … … … … … Questions 21-26 Complete the summary below. Choose",
+              "prompt": "The effect of oxytocin varies from one type of person to another.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1016,7 +1016,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "Oxytocin research — earliest findings about bonding came from research involving …",
+              "prompt": "Oxytocin research — earliest findings about bonding came from research involving.",
               "correctAnswer": "animals",
               "acceptedAnswers": [
                 "animals"
@@ -1029,7 +1029,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "… . An experiment in 2005, in which participants were given either oxytocin or a",
+              "prompt": "It is also released by women in … …, strengthening the attachment between mother and baby.",
               "correctAnswer": "childbirth",
               "acceptedAnswers": [
                 "childbirth"
@@ -1042,7 +1042,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "Oxytocin research — participants were given either oxytocin or a …",
+              "prompt": "Oxytocin research — participants were given either oxytocin or a.",
               "correctAnswer": "placebo",
               "acceptedAnswers": [
                 "placebo"
@@ -1055,7 +1055,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 24,
-              "prompt": "Oxytocin research — University of Haifa participants took part in a …",
+              "prompt": "Oxytocin research — University of Haifa participants took part in a.",
               "correctAnswer": "game",
               "acceptedAnswers": [
                 "game"
@@ -1068,7 +1068,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 25,
-              "prompt": "… while under the influence of oxytocin. Meanwhile, research at the University of Amsterdam revealed that people who have been given oxytocin consider",
+              "prompt": "had received a dose of oxytocin actually became less cooperative when dealing with complete … ….",
               "correctAnswer": "strangers",
               "acceptedAnswers": [
                 "strangers"
@@ -1081,7 +1081,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "… that are familiar to them in their own country to have more positive associations than those from other cultures. Questions 27-31 Choose the correct letter,",
+              "prompt": "## Questions 21-.",
               "correctAnswer": "names",
               "acceptedAnswers": [
                 "names"
@@ -1223,7 +1223,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "It extended its offering by collaborating with another manufacturer. … … … …",
+              "prompt": "It extended its offering by collaborating with another manufacturer.",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1275,7 +1275,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 37,
-              "prompt": "It successfully avoided having to charge its customers less for its core products. … … … … Questions 38-40 Complete each sentence with the correct ending,",
+              "prompt": "It successfully avoided having to charge its customers less for its core products.",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1375,7 +1375,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
           "questions": [
             {
               "number": 1,
-              "prompt": "Coconut palm trunk — timber for houses and the making of …",
+              "prompt": "Coconut palm trunk — timber for houses and the making of.",
               "correctAnswer": "furniture",
               "acceptedAnswers": [
                 "furniture"
@@ -1388,7 +1388,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 2,
-              "prompt": "Coconut palm flowers — sap used as a drink or source of …",
+              "prompt": "Coconut palm flowers — sap used as a drink or source of.",
               "correctAnswer": "sugar",
               "acceptedAnswers": [
                 "sugar"
@@ -1401,7 +1401,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 3,
-              "prompt": "Fruit middle layer (coir fibres) — used for …",
+              "prompt": "Fruit middle layer (coir fibres) — used for.",
               "correctAnswer": "ropes",
               "acceptedAnswers": [
                 "ropes"
@@ -1414,7 +1414,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 4,
-              "prompt": "Fruit inner layer (shell) — a source of …",
+              "prompt": "Fruit inner layer (shell) — a source of.",
               "correctAnswer": "charcoal",
               "acceptedAnswers": [
                 "charcoal"
@@ -1427,7 +1427,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 5,
-              "prompt": "Fruit inner layer (shell) — when halved, used for …",
+              "prompt": "Fruit inner layer (shell) — when halved, used for.",
               "correctAnswer": "bowls",
               "acceptedAnswers": [
                 "bowls"
@@ -1440,7 +1440,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 6,
-              "prompt": "Coconut water — a source of … for other plants",
+              "prompt": "Coconut water — a source of … … for other plants.",
               "correctAnswer": "hormones",
               "acceptedAnswers": [
                 "hormones"
@@ -1453,7 +1453,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 7,
-              "prompt": "Coconut flesh — oil and milk for cooking and …",
+              "prompt": "Coconut flesh — oil and milk for cooking and.",
               "correctAnswer": "cosmetics",
               "acceptedAnswers": [
                 "cosmetics"
@@ -1466,7 +1466,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 8,
-              "prompt": "… ) Questions 9-13 Do the following statements agree with the information given in the Reading Passage? In boxes on your answer sheet, write",
+              "prompt": "different sphere, as Alfred Nobel introduced the world to his nitroglycerine-based invention: … ….",
               "correctAnswer": "dynamite",
               "acceptedAnswers": [
                 "dynamite"
@@ -1632,7 +1632,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "the connection between the amount of baby talk babies hear and how much vocalising they do themselves … … … Questions 18-23 Complete the summary below. Choose",
+              "prompt": "the connection between the amount of baby talk babies hear and how much vocalising they do themselves",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1645,7 +1645,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 18,
-              "prompt": "… , together with specialised computer programs, to analyse how parents interacted with their babies during",
+              "prompt": "Researchers at Washington State University used … …, together with specialised computer programs, to analyse how parents interacted with their babies during a normal day. The study revealed that.",
               "correctAnswer": "recording devices",
               "acceptedAnswers": [
                 "recording devices"
@@ -1658,7 +1658,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 19,
-              "prompt": "… tended not to modify their ordinary speech patterns when interacting with their babies. According to an idea known as the",
+              "prompt": "… … tended not to modify their ordinary speech patterns when interacting with their babies.",
               "correctAnswer": "fathers",
               "acceptedAnswers": [
                 "fathers",
@@ -1672,7 +1672,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 20,
-              "prompt": "Baby talk research — an idea known as the …",
+              "prompt": "Baby talk research — an idea known as the.",
               "correctAnswer": "bridge hypothesis",
               "acceptedAnswers": [
                 "bridge hypothesis"
@@ -1685,7 +1685,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 21,
-              "prompt": "… of types of speech which they can practise. Meanwhile, another study carried out by scientists from the University of Washington and the University of Connecticut recorded speech and sound using special",
+              "prompt": "kind of speech with mom and another kind of speech with dad, so the kid then has a wider … … of kinds of speech to practice,’ says VanDam.",
               "correctAnswer": "repertoire",
               "acceptedAnswers": [
                 "repertoire"
@@ -1698,7 +1698,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 22,
-              "prompt": "… that the babies were equipped with. When they studies the babies again at age two, the found that those who had heard",
+              "prompt": "Meanwhile, another study carried out by scientists from the University of Washington and the University of Connecticut recorded speech and sound using special … … that the babies were equipped with. When they studies the babies again at age two, the found that those who had heard a lot of baby talk in infancy had a much larger.",
               "correctAnswer": "vests",
               "acceptedAnswers": [
                 "vests"
@@ -1711,7 +1711,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 23,
-              "prompt": "Baby talk research — babies who heard more baby talk had a larger … at age two",
+              "prompt": "Baby talk research — babies who heard more baby talk had a larger … … at age two.",
               "correctAnswer": "vocabulary",
               "acceptedAnswers": [
                 "vocabulary"
@@ -1750,7 +1750,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "a mention of babies' preference for the sounds that other babies make … … … … … … Questions 27-31 The Reading Passage has eight paragraphs,",
+              "prompt": "a mention of babies' preference for the sounds that other babies make",
               "correctAnswer": "E",
               "acceptedAnswers": [
                 "E"
@@ -1810,7 +1810,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
           "questions": [
             {
               "number": 27,
-              "prompt": "proposed explanations for the decline of the Harappan Civilisation … … … … … … … …",
+              "prompt": "proposed explanations for the decline of the Harappan Civilisation",
               "correctAnswer": "C",
               "acceptedAnswers": [
                 "C"
@@ -1836,7 +1836,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 29,
-              "prompt": "a difference between the Harappan Civilisation and another culture of the same period … … … … … … … …",
+              "prompt": "a difference between the Harappan Civilisation and another culture of the same period",
               "correctAnswer": "A",
               "acceptedAnswers": [
                 "A"
@@ -1849,7 +1849,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 30,
-              "prompt": "a description of some features of Harappan urban design … … … … … … … …",
+              "prompt": "a description of some features of Harappan urban design",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"
@@ -1862,7 +1862,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "reference to the discovery of errors made by previous archaeologists … … … … … … … … Questions 32-36 Complete the summary below. Choose",
+              "prompt": "reference to the discovery of errors made by previous archaeologists",
               "correctAnswer": "D",
               "acceptedAnswers": [
                 "D"
@@ -1875,7 +1875,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 32,
-              "prompt": "Climate change evidence — collecting the … of snails",
+              "prompt": "Climate change evidence — collecting the … … of snails.",
               "correctAnswer": "shells",
               "acceptedAnswers": [
                 "shells"
@@ -1888,7 +1888,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 33,
-              "prompt": "Climate change evidence — water levels in a … in the region",
+              "prompt": "Climate change evidence — water levels in a … … in the region.",
               "correctAnswer": "lake",
               "acceptedAnswers": [
                 "lake"
@@ -1901,7 +1901,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 34,
-              "prompt": "… than evaporation, and suggests that there was an extended period of drought. Petrie and Singh’s team are using archaeological records to look at",
+              "prompt": "abrupt change about 4,100 years ago, when the amount of evaporation from the lake exceeded the … … – indicative of a drought.’ Hodell adds: ‘We estimate that the weakening of the Indian summer.",
               "correctAnswer": "rainfall",
               "acceptedAnswers": [
                 "rainfall"
@@ -1914,7 +1914,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 35,
-              "prompt": "… from five millennia ago, in order to know whether people had adapted their agricultural practices to changing climatic conditions. They are also examining objects including",
+              "prompt": "Climate change evidence — looking at … … from five millennia ago, in order to know whether people had adapted their agricultural practices to changing climatic conditions. They are also examining objects including.",
               "correctAnswer": "grains",
               "acceptedAnswers": [
                 "grains"
@@ -1927,7 +1927,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 36,
-              "prompt": "… , so as to find out about links between inhabitants of different parts of the region and whether these changed over time. Questions 37-40 Look at the following statements and the",
+              "prompt": "examining objects including … …, so as to find out about links between inhabitants of different parts of the region and whether these changed over time.",
               "correctAnswer": "pottery",
               "acceptedAnswers": [
                 "pottery"
@@ -2146,7 +2146,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 9,
-              "prompt": "After 1880, Cutty Sark carried ………………………… as its main cargo during its most successful time.",
+              "prompt": "After 1880, Cutty Sark carried … … as its main cargo during its most successful time.",
               "correctAnswer": "wool",
               "acceptedAnswers": [
                 "wool"
@@ -2159,7 +2159,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 10,
-              "prompt": "… , Woodget was very skilled. Ferreira went to Falmouth to repair damage that a",
+              "prompt": "The ship's next captain, Richard Woodget, was an excellent … ….",
               "correctAnswer": "navigator",
               "acceptedAnswers": [
                 "navigator"
@@ -2172,7 +2172,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Ferreira went to Falmouth to repair damage that a …………………………. had caused.",
+              "prompt": "Ferreira went to Falmouth to repair damage that a … … had caused.",
               "correctAnswer": "gale",
               "acceptedAnswers": [
                 "gale"
@@ -2185,7 +2185,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 12,
-              "prompt": "Between 1923 and 1954, Cutty Sark was used for …………………………..",
+              "prompt": "Between 1923 and 1954, Cutty Sark was used for … … 1923 and 1954, Cutty Sark was used for.",
               "correctAnswer": "training",
               "acceptedAnswers": [
                 "training"
@@ -2198,7 +2198,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 13,
-              "prompt": "Cutty Sark has twice been damaged by ………………………… in the 21st century.",
+              "prompt": "Cutty Sark has twice been damaged by … … in the 21st century.",
               "correctAnswer": "fire",
               "acceptedAnswers": [
                 "fire"
@@ -2260,7 +2260,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
           "questions": [
             {
               "number": 14,
-              "prompt": "… . It provides us with food and also with antibiotics, and its function in storing",
+              "prompt": "## Questions … …. It provides us with food and also with antibiotics, and its function in storing.",
               "correctAnswer": "minerals",
               "acceptedAnswers": [
                 "minerals"
@@ -2273,7 +2273,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 15,
-              "prompt": "Soil degradation — soil stores … and affects the climate",
+              "prompt": "Soil degradation — soil stores … … and affects the climate.",
               "correctAnswer": "carbon",
               "acceptedAnswers": [
                 "carbon"
@@ -2286,7 +2286,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 16,
-              "prompt": "… . If these microorganisms are lost, soil may lose its special properties. The main factor contributing to soil degradation is the",
+              "prompt": "Soils also store … …, preventing flood damage: in the UK, damage to buildings, roads and bridges from floods.",
               "correctAnswer": "water",
               "acceptedAnswers": [
                 "water"
@@ -2299,7 +2299,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 17,
-              "prompt": "… carried out by humans. Questions 18-21 Complete each sentence with the correct ending,",
+              "prompt": "## Questions 14-.",
               "correctAnswer": "agriculture",
               "acceptedAnswers": [
                 "agriculture"
@@ -2416,7 +2416,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 26,
-              "prompt": "a reason why it is difficult to provide an overview of soil degradation … … … … … … … Questions 27-29 Choose the correct letter,",
+              "prompt": "a reason why it is difficult to provide an overview of soil degradation",
               "correctAnswer": "F",
               "acceptedAnswers": [
                 "F"
@@ -2449,8 +2449,17 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
           "number": 3,
           "title": "Book Review The Happiness Industry: How the Government and Big Business Sold Us Well-Being",
           "bodyParagraphs": [
-            "Book Review The Happiness Industry: How the Government and Big Business Sold Us Well-Being By William Davies 'Happiness is the ultimate goal because it is self-evidently good. If we are asked why happiness matters we can give no further external reason. This pronouncement by Richard Layard, an economist and advocate of 'positive psychology', summarises the beliefs of many people today. For Layard and others like him, it is obvious that the purpose of government is to promote a state of collective well-being. The only question is how to achieve it, and here positive psychology – a supposed science that not only identifies what makes people happy but also allows their happiness to be measured – can show the way. Equipped with this science, they say, governments can secure happiness in society in a way they never could in the past. It is an astonishingly crude and simple-minded way of thinking, and for that very reason increasingly popular. Those who think in this way are oblivious to the vast philosophical literature in which the meaning and value of happiness have been explored and questioned, and write as if nothing of any importance had been thought on the subject until it came to their attention. It was the philosopher Jeremy Bentham (1748-1832) who was more than anyone else responsible for the development of this way of thinking. For Bentham it was obvious that the human good consists of pleasure and the absence of pain. The Greek philosopher Aristotle may have identified happiness with self-realisation in the 4th century BC, and thinkers throughout the ages may have struggled to reconcile the pursuit of happiness with other human values, but for Bentham all this was mere metaphysics or fiction. Without knowing anything much of him or the school of moral theory he established – since they are by education and intellectual conviction illiterate in the history of ideas – our advocates of positive psychology follow in his tracks in rejecting as outmoded and irrelevant pretty much the entirety of ethical reflection on human happiness to date. But as William Davies notes in his recent book The Happiness Industry, the view that happiness is the only self-evident good is actually a way of limiting moral inquiry. One of the virtues of this rich, lucid and arresting book is that it places the current cult of happiness in a well-defined historical framework. Rightly, Davies begins his story with Bentham, noting that he was far more than a philosopher. Davies writes, 'Bentham's activities were those which we might now associate with a public sector management consultant'. In the 1790s, he wrote to the Home Office suggesting that the departments of government be linked together through a set of 'conversation tubes', and to the Bank of England with a design for a printing device that could produce unforgeable banknotes. He drew up plans for a 'frigidarium' to keep provisions such as meat, fish, fruit and vegetables fresh. His celebrated design for a prison to be known as a 'Panopticon', in which prisoners would be kept in solitary confinement while being visible at all times to the guards, was very nearly adopted. (Surprisingly, Davies does not discuss the fact that Bentham meant his Panopticon not just as a model prison but also as an instrument of control that could be applied to schools and factories.) Bentham was also a pioneer of the 'science of happiness'. If happiness is to be regarded as a science, it has to be measured, and Bentham suggested two ways in which this might be done. Viewing happiness as a complex of pleasurable sensations, he suggested that it might be quantified by measuring the human pulse rate. Alternatively, money could be used as the standard for quantification: if two different goods have the same price, it can be claimed that they produce the same quantity of pleasure in the consumer. Bentham was more attracted by the latter measure. By associating money so closely to inner experience, Davies writes, Bentham 'set the stage for the entangling of psychological research and capitalism that would shape the business practices of the twentieth century'. The Happiness Industry describes how the project of a science of happiness has become integral to capitalism. We learn much that is interesting about how economic problems are being redefined and treated as psychological maladies. In addition, Davies shows how the belief that inner states of pleasure and displeasure can be objectively measured has informed management studies and advertising. The tendency of thinkers such as J",
-            "B. Watson, the founder of behaviourism*, was that human beings could be shaped, or manipulated, by policymakers and managers. Watson had no factual basis for his view of human action. When he became president of the American Psychological Association in 1915, he 'had never even studied a single human being': his research had been confined to experiments on white rats. Yet Watson's reductive model is now widely applied, with 'behaviour change' becoming the goal of governments: in Britain, a 'Behaviour Insights Team' has been established by the government to study how people can be encouraged, at minimum cost to the public purse, to live in what are considered to be socially desirable ways. Modern industrial societies appear to need the possibility of ever-increasing happiness to motivate them in their labours. But whatever its intellectual pedigree, the idea that governments should be responsible for promoting happiness is always a threat to human freedom. ———————– * 'behaviourism': a branch of psychology which is concerned with observable behaviour"
+            "Book Review",
+            "The Happiness Industry: How the Government and Big Business Sold Us Well-Being",
+            "By William Davies",
+            "'Happiness is the ultimate goal because it is self-evidently good. If we are asked why happiness matters we can give no further external reason. It just obviously does matter.' This pronouncement by Richard Layard, an economist and advocate of 'positive psychology', summarises the beliefs of many people today. For Layard and others like him, it is obvious that the purpose of government is to promote a state of collective well-being. The only question is how to achieve it, and here positive psychology – a supposed science that not only identifies what makes people happy but also allows their happiness to be measured – can show the way. Equipped with this science, they say, governments can secure happiness in society in a way they never could in the past.",
+            "It is an astonishingly crude and simple-minded way of thinking, and for that very reason increasingly popular. Those who think in this way are oblivious to the vast philosophical literature in which the meaning and value of happiness have been explored and questioned, and write as if nothing of any importance had been thought on the subject until it came to their attention. It was the philosopher Jeremy Bentham (1748-1832) who was more than anyone else responsible for the development of this way of thinking. For Bentham it was obvious that the human good consists of pleasure and the absence of pain. The Greek philosopher Aristotle may have identified happiness with self-realisation in the 4th century BC, and thinkers throughout the ages may have struggled to reconcile the pursuit of happiness with other human values, but for Bentham all this was mere metaphysics or fiction. Without knowing anything much of him or the school of moral theory he established – since they are by education and intellectual conviction illiterate in the history of ideas – our advocates of positive psychology follow in his tracks in rejecting as outmoded and irrelevant pretty much the entirety of ethical reflection on human happiness to date.",
+            "But as William Davies notes in his recent book The Happiness Industry, the view that happiness is the only self-evident good is actually a way of limiting moral inquiry. One of the virtues of this rich, lucid and arresting book is that it places the current cult of happiness in a well-defined historical framework. Rightly, Davies begins his story with Bentham, noting that he was far more than a philosopher. Davies writes, 'Bentham's activities were those which we might now associate with a public sector management consultant'. In the 1790s, he wrote to the Home Office suggesting that the departments of government be linked together through a set of 'conversation tubes', and to the Bank of England with a design for a printing device that could produce unforgeable banknotes. He drew up plans for a 'frigidarium' to keep provisions such as meat, fish, fruit and vegetables fresh. His celebrated design for a prison to be known as a 'Panopticon', in which prisoners would be kept in solitary confinement while being visible at all times to the guards, was very nearly adopted. (Surprisingly, Davies does not discuss the fact that Bentham meant his Panopticon not just as a model prison but also as an instrument of control that could be applied to schools and factories.)",
+            "Bentham was also a pioneer of the 'science of happiness'. If happiness is to be regarded as a science, it has to be measured, and Bentham suggested two ways in which this might be done. Viewing happiness as a complex of pleasurable sensations, he suggested that it might be quantified by measuring the human pulse rate. Alternatively, money could be used as the standard for quantification: if two different goods have the same price, it can be claimed that they produce the same quantity of pleasure in the consumer. Bentham was more attracted by the latter measure. By associating money so closely to inner experience, Davies writes, Bentham 'set the stage for the entangling of psychological research and capitalism that would shape the business practices of the twentieth century'.",
+            "The Happiness Industry describes how the project of a science of happiness has become integral to capitalism. We learn much that is interesting about how economic problems are being redefined and treated as psychological maladies. In addition, Davies shows how the belief that inner states of pleasure and displeasure can be objectively measured has informed management studies and advertising. The tendency of thinkers such as J B Watson, the founder of behaviourism*, was that human beings could be shaped, or manipulated, by policymakers and managers. Watson had no factual basis for his view of human action. When he became president of the American Psychological Association in 1915, he 'had never even studied a single human being': his research had been confined to experiments on white rats. Yet Watson's reductive model is now widely applied, with 'behaviour change' becoming the goal of governments: in Britain, a 'Behaviour Insights Team' has been established by the government to study how people can be encouraged, at minimum cost to the public purse, to live in what are considered to be socially desirable ways.",
+            "Modern industrial societies appear to need the possibility of ever-increasing happiness to motivate them in their labours. But whatever its intellectual pedigree, the idea that governments should be responsible for promoting happiness is always a threat to human freedom.",
+            "———————–",
+            "* 'behaviourism': a branch of psychology which is concerned with observable behaviour"
           ],
           "questionSectionText": "Questions 27-40\n## Questions 27-29\n\nChoose the correct letter, A, B, C or D.\n\nWrite the correct letter in boxes 27-29 on your answer sheet.\n\n27.   What is the reviewer’s attitude to advocates of positive psychology?\n\nA)   They are wrong to reject the ideas of Bentham.\n\nB)   They are over-influenced by their study of Bentham’s theories.\n\nC)   They have a fresh new approach to ideas on human happiness.\n\nD)   They are ignorant about the ideas they should be considering.\n\n28.   The reviewer refers to the Greek philosopher Aristotle in order to suggest that happiness\n\nA)   may not be just pleasure and the absence of pain.\n\nB)   should not be the main goal of humans.\n\nC)   is not something that should be fought for.\n\nD)   is not just an abstract concept.\n\n29.   According to Davies, Bentham’s suggestion for linking the price of goods to happiness was significant because\n\nA)   it was the first successful way of assessing happiness.\n\nB)   it established a connection between work and psychology.\n\nC)   it was the first successful example of psychological research.\n\nD)   it involved consideration of the rights of consumers.\n\n## Questions 30-34\n\nComplete the summary using the list of words A-G below.\n\nWrite the correct letter, A-G, in boxes 30-34 on your answer sheet.\n\nJeremy Bentham\n\nJeremy Bentham — technology to improve 30 … for government departments\n\nA   measurement\nB   security\nC   implementation\nD   profits\nE   observation\nF   communication\nG   preservation\n\n## Questions 35-40\n\nDo the following statements agree with the claims of the writer in Reading Passage 3?\n\nIn boxes 35-40 on your answer sheet, write\n\nYES                  if the statement agrees with the claims of the writer\n\nNO                   if the statement contradicts the claims of the writer\n\nNOT GIVEN    if it is impossible to say what the writer thinks about this\n\n35.   One strength of The Happiness Industry is its discussion of the relationship between psychology and economics.\n\n36.   It is more difficult to measure some emotions than others.\n\n37.   Watson’s ideas on behaviourism were supported by research on humans he carried out before 1915.\n\n38.   Watson’s ideas have been most influential on governments outside America.\n\n39.   The need for happiness is linked to industrialisation.\n\n40.   A main aim of government should be to increase the happiness of the population.",
           "questionRanges": [
@@ -2526,7 +2535,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS = [
             },
             {
               "number": 31,
-              "prompt": "Jeremy Bentham — printing banknotes to increase …",
+              "prompt": "Jeremy Bentham — printing banknotes to increase",
               "correctAnswer": "B",
               "acceptedAnswers": [
                 "B"

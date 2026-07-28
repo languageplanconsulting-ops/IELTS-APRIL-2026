@@ -71,7 +71,7 @@ export const READING_JOURNEY_UNLOCK_PERCENT = 80
 export const READING_JOURNEY_EXAM_ID_PREFIX = 'journey-normal-stage-'
 export const READING_JOURNEY_PROGRESS_KEY = 'ielts-reading-journey-progress'
 
-const ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
+const ROMAN_HEADING_PATTERN = /^(?:xiii|xii|xiv|xv|viii|vii|iii|xi|ix|iv|vi|ii|x|v|i)$/i
 
 export type ReadingJourneyPassageStats = {
   fill: number

@@ -80,7 +80,7 @@ export type ReadingQuestionDisplayMode =
 const READING_MCQ_OPTION_LINE = /^([A-G])[\s\).:\-_]+(.+)$/i
 const READING_QUESTION_SECTION_HEADER_REGEX =
   /(?:^|\n)\s*(?:#+\s*)?Questions?\s+(\d+)(?:\s*[–-]\s*(\d+)|\s+and\s+(\d+))?/gi
-const READING_ROMAN_HEADING_PATTERN = /^(?:i|ii|iii|iv|v|vi|vii|viii|ix|x)$/i
+const READING_ROMAN_HEADING_PATTERN = /^(?:xiii|xii|xiv|xv|viii|vii|iii|xi|ix|iv|vi|ii|x|v|i)$/i
 const READING_CHOOSE_TWO_SECTION_PATTERN =
   /which\s+two\b|choose\s+two\s+(?:letters?|answers?|options?)/i
 
@@ -253,6 +253,7 @@ export const readingBlockHasPerQuestionLetterOptions = (sourceText: string) => {
   const questionStarts = [...text.matchAll(/(?:^|\n)\s*(\d+)\s*[.)]?\s+/gm)]
   if (!questionStarts.length) return false
 
+  const chunksWithOptions: number[] = []
   for (let index = 0; index < questionStarts.length; index += 1) {
     const start = questionStarts[index].index ?? 0
     const end = questionStarts[index + 1]?.index ?? text.length
@@ -261,10 +262,23 @@ export const readingBlockHasPerQuestionLetterOptions = (sourceText: string) => {
       .split('\n')
       .map((line) => line.trim())
       .filter((line) => isReadingMcqOptionLine(line)).length
-    if (optionCount >= 2) return true
+    if (optionCount >= 2) chunksWithOptions.push(index)
   }
 
-  return false
+  if (!chunksWithOptions.length) return false
+  // A shared word/idea bank tacked on after the last numbered item (e.g. a
+  // "match each person with the idea list below" block) lands entirely in
+  // the final chunk. That's not per-question options — it's one bank shared
+  // by every question in the range — so a lone match on the last chunk of a
+  // multi-question block doesn't count.
+  if (
+    questionStarts.length >= 2 &&
+    chunksWithOptions.length === 1 &&
+    chunksWithOptions[0] === questionStarts.length - 1
+  ) {
+    return false
+  }
+  return true
 }
 
 export const isReadingStandardMcqBlock = (block: string) =>
@@ -292,7 +306,11 @@ export const isReadingJudgementBlock = (block: string) => {
 }
 
 const extractSharedReadingLetterOptionBank = (sourceText: string) => {
-  if (readingBlockHasPerQuestionLetterOptions(sourceText)) return []
+  // A block that explicitly announces a shared word/phrase bank ("Complete the
+  // summary using the list of words, A-F, below") always has one bank, even when
+  // only a single numbered gap happens to begin a line.
+  const declaresSharedBank = /list of (?:words|phrases)/i.test(String(sourceText || ''))
+  if (!declaresSharedBank && readingBlockHasPerQuestionLetterOptions(sourceText)) return []
 
   const lines = String(sourceText || '')
     .split('\n')
@@ -301,7 +319,11 @@ const extractSharedReadingLetterOptionBank = (sourceText: string) => {
   const bankLines: string[] = []
 
   for (let index = lines.length - 1; index >= 0; index -= 1) {
-    if (READING_LETTER_OPTION_LINE.test(lines[index])) {
+    const match = lines[index].match(READING_LETTER_OPTION_LINE)
+    // Cap the option text length: genuine word/phrase bank entries are short.
+    // A summary sentence that happens to start with "A " (indefinite article)
+    // or similar can otherwise be misread as a bogus bank entry.
+    if (match && match[2].trim().length <= 90) {
       bankLines.unshift(lines[index])
     } else if (bankLines.length >= 3) {
       break
@@ -535,7 +557,7 @@ export const extractReadingMultipleChoiceOptions = (
       .map((line) => line.trim())
       .filter(Boolean)
       .map((line) => {
-        const match = line.match(/^([A-H])\s+(.+)$/i)
+        const match = line.match(/^([A-H])\s*(?:[-–—.:_]|\s+)\s*(.+)$/i)
         if (!match) return null
         return { letter: match[1].toUpperCase(), text: match[2].trim() }
       })
@@ -854,7 +876,7 @@ const buildReadingChooseTwoGroups = (
       .map((line) => line.trim())
       .filter(Boolean)
       .map((line) => {
-        const match = line.match(/^([A-H])\s+(.+)$/i)
+        const match = line.match(/^([A-H])\s*(?:[-–—.:_]|\s+)\s*(.+)$/i)
         if (!match) return null
         return { letter: match[1].toUpperCase(), text: match[2].trim() }
       })
