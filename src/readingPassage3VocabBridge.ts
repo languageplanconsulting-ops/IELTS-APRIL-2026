@@ -1843,7 +1843,7 @@ const READING_VOCAB_BRIDGE_BY_GROUP: Record<string, Record<number, ReadingVocabB
         passagePhrase: { en: "a growing number of computer programs which possess creative talents", th: "โปรแกรมคอมพิวเตอร์ที่มีพรสวรรค์เชิงสร้างสรรค์ซึ่งมีจำนวนเพิ่มขึ้นเรื่อย ๆ" },
         pairs: [
           { q: "A great deal of progress has already been attained", p: "a growing number of computer programs", th: "มีจำนวนเพิ่มขึ้นเรื่อย ๆ = วงการนี้ก้าวหน้าไปมาก", note: "'a growing number' บวกตัวอย่างความสำเร็จ สื่อว่ามีความก้าวหน้ามากแล้ว จึงตอบ B" },
-          { q: "computer-produced works", p: "computer programs which possess creative talents", th: "ผลงานที่สร้างโดยคอมพิวเตอร์" },
+          { q: "computer-produced works", p: "computer programs which, so their makers claim, possess creative talents", th: "ผลงานที่สร้างโดยคอมพิวเตอร์" },
           { q: "in this field", p: "sold for thousands of dollars and been hung in prestigious galleries", th: "ความสำเร็จในวงการ (ขายได้ ถูกแขวนในหอศิลป์ดัง)" },
         ],
         keyVocab: { word: "a growing number", th: "จำนวนที่เพิ่มมากขึ้นเรื่อย ๆ", note: "วลี 'a growing number' บวกกับตัวอย่างความสำเร็จ (ขายได้, ถูกแขวนในหอศิลป์) สื่อว่าวงการนี้ก้าวหน้าไปมากแล้ว จึงตอบ B" }
@@ -2973,7 +2973,7 @@ const READING_VOCAB_BRIDGE_BY_GROUP: Record<string, Record<number, ReadingVocabB
         pairs: [
           { q: "persisted with the task for longer", p: "spending significantly more time working on the task", th: "ทำงานต่อเนื่องนานกว่า", note: "คลิป Mr. Bean เป็นวิดีโอตลก ('amusing') ที่ทำให้พยายามนานขึ้น จึงเติม H" },
           { q: "tried harder to accomplish the task", p: "making twice as many predictions", th: "พยายามมากขึ้นเพื่อทำงานให้สำเร็จ" },
-          { q: "than either of the other two groups", p: "than the other two groups", th: "มากกว่าอีกสองกลุ่ม" },
+          { q: "than either of the other two groups", p: "as the other two groups", th: "มากกว่าอีกสองกลุ่ม" },
         ],
         keyVocab: { word: "Mr. Bean (comedy) = amusing", th: "Mr. Bean (คอเมดี) = ตลก/น่าขบขัน", note: "คลิป Mr. Bean เป็นวิดีโอตลก ('amusing' = humorous) ซึ่งทำให้พยายามนานขึ้น จึงเติม H" }
     },
@@ -4291,13 +4291,13 @@ const READING_VOCAB_BRIDGE_BY_GROUP: Record<string, Record<number, ReadingVocabB
     },
     29: {
         questionPhrase: { en: "his skill is limited to chess", th: "ความสามารถพิเศษของเขาจำกัดอยู่แค่หมากรุก" },
-        passagePhrase: { en: "nothing other than playing chess he seems to be supremely gifted at", th: "ไม่มีอะไรนอกจากหมากรุกที่เขาเก่งเป็นพิเศษ" },
+        passagePhrase: { en: "anything other than playing chess he seems to be supremely gifted at", th: "ไม่มีอะไรนอกจากหมากรุกที่เขาเก่งเป็นพิเศษ" },
         pairs: [
-          { q: "limited to chess", p: "nothing other than playing chess", th: "จำกัดอยู่แค่หมากรุก", note: "'nothing other than playing chess that he seems to be supremely gifted at' = ความเก่ง 'limited to chess' จึงตอบย่อหน้า F" },
+          { q: "limited to chess", p: "anything other than playing chess", th: "จำกัดอยู่แค่หมากรุก", note: "'anything other than playing chess that he seems to be supremely gifted at' = ความเก่ง 'limited to chess' จึงตอบย่อหน้า F" },
           { q: "skill", p: "supremely gifted", th: "ความสามารถพิเศษ / พรสวรรค์" },
           { q: "a claim", p: "said Rissman", th: "คำกล่าวอ้าง (โดยนักวิจัย)" },
         ],
-        keyVocab: { word: "nothing other than playing chess", th: "ไม่มีอะไรนอกจากหมากรุก", note: "'nothing other than chess' = ความเก่ง 'limited to chess' พอดี (อยู่ในย่อหน้า F ตอน Rissman พูด) จึงตอบ F" }
+        keyVocab: { word: "anything other than playing chess", th: "ไม่มีอะไรนอกจากหมากรุก", note: "'anything other than chess' = ความเก่ง 'limited to chess' พอดี (อยู่ในย่อหน้า F ตอน Rissman พูด) จึงตอบ F" }
     },
     30: {
         questionPhrase: { en: "why scientists are interested in his skill", th: "ทำไมนักวิทยาศาสตร์สนใจความสามารถของเขา" },
@@ -5186,7 +5186,7 @@ const READING_VOCAB_BRIDGE_BY_GROUP: Record<string, Record<number, ReadingVocabB
         passagePhrase: { en: "it's just that I stay with problems longer", th: "แค่ผมอยู่กับปัญหานานกว่าคนอื่น" },
         pairs: [
           { q: "the speed at which he dealt with", p: "I stay with problems longer", th: "ความเร็วในการแก้ปัญหา (ขัดกับ 'อยู่กับมันนานกว่า')", note: "คำถามว่า 'speed' (เร็ว) แต่ข้อความว่า 'stay longer' (ใช้เวลานานกว่า) ขัดแย้งกัน จึงตอบ NO" },
-          { q: "his success", p: "what makes a great scientist", th: "ความสำเร็จของเขา" },
+          { q: "his success", p: "which makes a great scientist", th: "ความสำเร็จของเขา" },
         ],
         keyVocab: { word: "longer", th: "นานกว่า", contrastA: "speed . ความเร็ว", contrastB: "stay longer . อยู่กับมันนานกว่า", note: "คำถามบอก 'speed' (เร็ว) แต่ข้อความบอก 'stay longer' (ใช้เวลานานกว่า) ขัดแย้งกันชัด จึงตอบ NO" }
     },

@@ -258,7 +258,11 @@ const splitReadingPassageSentences = (text) => {
   const source = String(text || '').trim()
   if (!source) return []
   return (
-    source.match(/(?:[^.!?]|\d\.\d)+(?:\.(?!\d)|[!?])+(?:['"]|\s+|$)|(?:[^.!?]|\d\.\d)+$/g) ||
+    // A closing bracket/paren can sit between the terminating punctuation and the
+    // sentence boundary (e.g. "...should be done.)") — without the `[)\]]*` allowance
+    // here, that combination matches neither alternative, so the whole parenthetical
+    // sentence is silently skipped by the global match and its text is lost.
+    source.match(/(?:[^.!?]|\d\.\d)+(?:\.(?!\d)|[!?])+[)\]]*(?:['"]|\s+|$)|(?:[^.!?]|\d\.\d)+$/g) ||
       [source]
   )
     .map((sentence) => sentence.trim())
@@ -525,7 +529,7 @@ const parseReadingAnswerKey = (rawAnswerKey) => {
       acceptedAnswers: acceptedAnswers.length ? acceptedAnswers : undefined,
       answerGroup: String(answerGroupMatch?.[1] || '').trim() || undefined,
       answerType: guessReadingAnswerType(correctAnswer),
-      exactPortion: String(exactPortionMatch?.[1] || '').trim().replace(/^["']|["']$/g, ''),
+      exactPortion: String(exactPortionMatch?.[1] || '').trim().replace(/^["']|["']$/g, '').trim(),
       explanationThai: String(explanationMatch?.[1] || '').trim(),
       paraphrasedVocabulary: String(paraphraseMatch?.[1] || '').trim()
     }

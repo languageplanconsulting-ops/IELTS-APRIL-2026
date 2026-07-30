@@ -242,7 +242,7 @@ export const buildIntensivePassage = (
     bodyParagraphs:
       layout.paragraphLabels === false
         ? layout.paragraphs.map(([, text]) => text)
-        : layout.paragraphs.map(([letter, text]) => `${letter} ${text}`),
+        : layout.paragraphs.map(([letter, text]) => (letter ? `${letter} ${text}` : text)),
     questionSectionText: sectionLines.join('\n').replace(/^\n+/, ''),
     questionRanges: ranges,
     questions
