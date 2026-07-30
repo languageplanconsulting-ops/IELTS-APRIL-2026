@@ -1196,6 +1196,30 @@ const parseJsonSafe = async (response) => {
   }
 }
 
+// Supabase restricts Storage on its own when cached egress runs out (402), while Auth and
+// the database keep serving normally. Media and the progress/report JSON buckets go dark,
+// but nothing else has to — so storage calls degrade to a no-op instead of failing the
+// whole request. Once we see one 402 we stop retrying for a minute to avoid hammering it.
+const STORAGE_RESTRICTED_TTL_MS = 60_000
+let storageRestrictedAt = 0
+
+const markStorageRestricted = () => {
+  storageRestrictedAt = Date.now()
+}
+
+const isStorageRestricted = () =>
+  storageRestrictedAt > 0 && Date.now() - storageRestrictedAt < STORAGE_RESTRICTED_TTL_MS
+
+const withStorageFallback = async (run, fallback = null) => {
+  if (isStorageRestricted()) return fallback
+  try {
+    return await run()
+  } catch (error) {
+    if (!error?.storageRestricted) throw error
+    return fallback
+  }
+}
+
 const supabaseRequest = async (path, options = {}, requestOptions) => {
   ensureSupabaseConfigured()
   let response
@@ -1221,6 +1245,10 @@ const supabaseRequest = async (path, options = {}, requestOptions) => {
     const error = new Error(String(message))
     error.status = response.status
     error.payload = payload
+    if (response.status === 402 && path.startsWith('/storage/v1/')) {
+      error.storageRestricted = true
+      markStorageRestricted()
+    }
     throw error
   }
   return response
@@ -1592,6 +1620,7 @@ const ensureSpeakingSampleVideoBucket = async () => {
       })
     }
   } catch (error) {
+    if (error?.storageRestricted) return
     if (!isSupabaseMissingResourceError(error)) {
       throw error
     }
@@ -1624,7 +1653,7 @@ const loadSpeakingSampleVideoManifest = async ({ forceRefresh = false } = {}) =>
       { timeoutMs: 10000, retries: 0 }
     )
   } catch (error) {
-    if (!isSupabaseMissingResourceError(error)) {
+    if (!error?.storageRestricted && !isSupabaseMissingResourceError(error)) {
       throw error
     }
     speakingSampleVideoManifestCache = { items: {} }
@@ -1697,7 +1726,8 @@ const deleteSpeakingSampleVideoObject = async (objectPath) => {
   })
 }
 
-const signSpeakingSampleVideoObject = async (objectPath) => {
+const signSpeakingSampleVideoObject = async (objectPath) =>
+  withStorageFallback(async () => {
   const normalized = String(objectPath || '').trim()
   if (!normalized) return ''
   await ensureSpeakingSampleVideoBucket()
@@ -1710,7 +1740,7 @@ const signSpeakingSampleVideoObject = async (objectPath) => {
     }
   )
   return normalizeSignedStorageUrl(payload?.signedURL || payload?.signedUrl || payload?.url)
-}
+  }, '')
 
 // Signed UPLOAD URL — used by the admin Video Studio for direct-to-Supabase
 // uploads when a file exceeds the serverless body size limit.
@@ -1948,6 +1978,7 @@ const ensureQuestionAudioBucket = async () => {
       })
     }
   } catch (error) {
+    if (error?.storageRestricted) return
     if (error?.status !== 404 && !(error?.status === 400 && /bucket not found|not found/i.test(String(error?.message || '')))) {
       throw error
     }
@@ -1973,7 +2004,10 @@ const loadQuestionAudioManifest = async ({ forceRefresh = false } = {}) => {
     publicAsset: true
   })
   const response = await safeFetch(manifestUrl, { method: 'GET' }, { timeoutMs: 10000, retries: 0 }).catch(() => null)
-  if (!response || response.status === 404) {
+  // 402 = Storage is quota-restricted; treat it like an absent manifest so the rest of
+  // the app keeps working and question audio simply falls back to on-device speech.
+  if (!response || response.status === 404 || response.status === 402) {
+    if (response?.status === 402) markStorageRestricted()
     questionAudioManifestCache = { items: {} }
     return questionAudioManifestCache
   }
@@ -2019,6 +2053,7 @@ const ensureAssessmentReportsBucket = async () => {
       headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
     })
   } catch (error) {
+    if (error?.storageRestricted) return
     if (error?.status !== 404) throw error
     await supabaseRequest('/storage/v1/bucket', {
       method: 'POST',
@@ -2046,7 +2081,7 @@ const loadAssessmentReportsIndex = async ({ forceRefresh = false } = {}) => {
     const payload = await parseJsonSafe(response)
     assessmentReportsIndexCache = payload && typeof payload === 'object' ? payload : { items: [] }
   } catch (error) {
-    if (error?.status !== 400 && error?.status !== 404) throw error
+    if (!error?.storageRestricted && error?.status !== 400 && error?.status !== 404) throw error
     assessmentReportsIndexCache = { items: [] }
   }
   if (!Array.isArray(assessmentReportsIndexCache.items)) {
@@ -2055,7 +2090,8 @@ const loadAssessmentReportsIndex = async ({ forceRefresh = false } = {}) => {
   return assessmentReportsIndexCache
 }
 
-const saveAssessmentReportsIndex = async (index) => {
+const saveAssessmentReportsIndex = async (index) =>
+  withStorageFallback(async () => {
   await ensureAssessmentReportsBucket()
   await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(ASSESSMENT_REPORT_INDEX_PATH)}`,
@@ -2071,9 +2107,10 @@ const saveAssessmentReportsIndex = async (index) => {
     }
   )
   assessmentReportsIndexCache = index
-}
+  })
 
-const uploadAssessmentReportJson = async ({ objectPath, payload }) => {
+const uploadAssessmentReportJson = async ({ objectPath, payload }) =>
+  withStorageFallback(async () => {
   await ensureAssessmentReportsBucket()
   await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
@@ -2088,9 +2125,10 @@ const uploadAssessmentReportJson = async ({ objectPath, payload }) => {
       body: JSON.stringify(payload)
     }
   )
-}
+  })
 
-const loadAssessmentReportJson = async (objectPath) => {
+const loadAssessmentReportJson = async (objectPath) =>
+  withStorageFallback(async () => {
   const response = await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
     {
@@ -2098,7 +2136,7 @@ const loadAssessmentReportJson = async (objectPath) => {
     }
   )
   return parseJsonSafe(response)
-}
+  })
 
 const ensureReadingPdoyProgressBucket = async () => {
   if (readingPdoyProgressBucketReady) return
@@ -2108,6 +2146,7 @@ const ensureReadingPdoyProgressBucket = async () => {
       headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
     })
   } catch (error) {
+    if (error?.storageRestricted) return
     if (error?.status !== 404) throw error
     await supabaseRequest('/storage/v1/bucket', {
       method: 'POST',
@@ -2135,7 +2174,7 @@ const loadReadingPdoyProgressIndex = async ({ forceRefresh = false } = {}) => {
     const payload = await parseJsonSafe(response)
     readingPdoyProgressIndexCache = payload && typeof payload === 'object' ? payload : { items: [] }
   } catch (error) {
-    if (error?.status !== 400 && error?.status !== 404) throw error
+    if (!error?.storageRestricted && error?.status !== 400 && error?.status !== 404) throw error
     readingPdoyProgressIndexCache = { items: [] }
   }
   if (!Array.isArray(readingPdoyProgressIndexCache.items)) {
@@ -2144,7 +2183,8 @@ const loadReadingPdoyProgressIndex = async ({ forceRefresh = false } = {}) => {
   return readingPdoyProgressIndexCache
 }
 
-const saveReadingPdoyProgressIndex = async (index) => {
+const saveReadingPdoyProgressIndex = async (index) =>
+  withStorageFallback(async () => {
   await ensureReadingPdoyProgressBucket()
   await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}/${encodeStorageObjectPath(READING_PDOY_PROGRESS_INDEX_PATH)}`,
@@ -2160,9 +2200,10 @@ const saveReadingPdoyProgressIndex = async (index) => {
     }
   )
   readingPdoyProgressIndexCache = index
-}
+  })
 
-const uploadReadingPdoyProgressJson = async ({ objectPath, payload }) => {
+const uploadReadingPdoyProgressJson = async ({ objectPath, payload }) =>
+  withStorageFallback(async () => {
   await ensureReadingPdoyProgressBucket()
   await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
@@ -2177,9 +2218,10 @@ const uploadReadingPdoyProgressJson = async ({ objectPath, payload }) => {
       body: JSON.stringify(payload)
     }
   )
-}
+  })
 
-const loadReadingPdoyProgressJson = async (objectPath) => {
+const loadReadingPdoyProgressJson = async (objectPath) =>
+  withStorageFallback(async () => {
   const response = await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
     {
@@ -2187,7 +2229,7 @@ const loadReadingPdoyProgressJson = async (objectPath) => {
     }
   )
   return parseJsonSafe(response)
-}
+  })
 
 const ensureReadingAttemptsBucket = async () => {
   if (readingAttemptsBucketReady) return
@@ -2197,6 +2239,7 @@ const ensureReadingAttemptsBucket = async () => {
       headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
     })
   } catch (error) {
+    if (error?.storageRestricted) return
     if (error?.status !== 404) throw error
     await supabaseRequest('/storage/v1/bucket', {
       method: 'POST',
@@ -2218,7 +2261,8 @@ const buildReadingAttemptsObjectPath = (userId) => `users/${normalizeOptionalUui
 const buildReadingJourneyProgressObjectPath = (userId) =>
   `journey/${normalizeOptionalUuid(userId) || 'unknown'}.json`
 
-const uploadReadingAttemptsJson = async ({ objectPath, payload }) => {
+const uploadReadingAttemptsJson = async ({ objectPath, payload }) =>
+  withStorageFallback(async () => {
   await ensureReadingAttemptsBucket()
   await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_ATTEMPTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
@@ -2233,9 +2277,10 @@ const uploadReadingAttemptsJson = async ({ objectPath, payload }) => {
       body: JSON.stringify(payload)
     }
   )
-}
+  })
 
-const loadReadingAttemptsJson = async (objectPath) => {
+const loadReadingAttemptsJson = async (objectPath) =>
+  withStorageFallback(async () => {
   await ensureReadingAttemptsBucket()
   const response = await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_READING_ATTEMPTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
@@ -2244,7 +2289,7 @@ const loadReadingAttemptsJson = async (objectPath) => {
     }
   )
   return parseJsonSafe(response)
-}
+  })
 
 const ensureListeningAttemptsBucket = async () => {
   if (listeningAttemptsBucketReady) return
@@ -2254,6 +2299,7 @@ const ensureListeningAttemptsBucket = async () => {
       headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
     })
   } catch (error) {
+    if (error?.storageRestricted) return
     if (error?.status !== 404) throw error
     await supabaseRequest('/storage/v1/bucket', {
       method: 'POST',
@@ -2270,7 +2316,8 @@ const ensureListeningAttemptsBucket = async () => {
 
 const buildListeningAttemptsObjectPath = (userId) => `users/${normalizeOptionalUuid(userId) || 'unknown'}.json`
 
-const uploadListeningAttemptsJson = async ({ objectPath, payload }) => {
+const uploadListeningAttemptsJson = async ({ objectPath, payload }) =>
+  withStorageFallback(async () => {
   await ensureListeningAttemptsBucket()
   await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_LISTENING_ATTEMPTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
@@ -2285,9 +2332,10 @@ const uploadListeningAttemptsJson = async ({ objectPath, payload }) => {
       body: JSON.stringify(payload)
     }
   )
-}
+  })
 
-const loadListeningAttemptsJson = async (objectPath) => {
+const loadListeningAttemptsJson = async (objectPath) =>
+  withStorageFallback(async () => {
   await ensureListeningAttemptsBucket()
   const response = await supabaseRequest(
     `/storage/v1/object/${encodeURIComponent(SUPABASE_LISTENING_ATTEMPTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
@@ -2296,7 +2344,7 @@ const loadListeningAttemptsJson = async (objectPath) => {
     }
   )
   return parseJsonSafe(response)
-}
+  })
 
 const normalizeReadingPdoyStep = (value) => {
   const normalized = String(value || '').trim().toLowerCase()
@@ -2592,7 +2640,8 @@ const getListeningSectionNumberFromAudioItem = (item = {}) => {
 const isListeningSectionAudioItem = (item = {}) =>
   String(item?.audioKind || '').trim() === 'listening-section' || getListeningSectionNumberFromAudioItem(item) > 0
 
-const uploadQuestionAudioBuffer = async ({ objectPath, audioBuffer }) => {
+const uploadQuestionAudioBuffer = async ({ objectPath, audioBuffer }) =>
+  withStorageFallback(async () => {
   await ensureQuestionAudioBucket()
   await supabaseRequest(`/storage/v1/object/${encodeURIComponent(SUPABASE_TTS_BUCKET)}/${encodeStorageObjectPath(objectPath)}`, {
     method: 'POST',
@@ -2604,7 +2653,7 @@ const uploadQuestionAudioBuffer = async ({ objectPath, audioBuffer }) => {
     },
     body: audioBuffer
   })
-}
+  })
 
 const questionAudioObjectExists = async (objectPath) => {
   const publicUrl = buildSupabaseStorageObjectUrl({
