@@ -15070,6 +15070,836 @@ app.get('/api/assess/status/:jobId', requireAuth, (req, res) => {
   return res.json(job)
 })
 
+/* ---------------------------------------------------------------------------
+ * IELTS Bite Size — short-form video feed backed by Bunny Stream.
+ * Uploads go browser -> Bunny over TUS (this API only mints a scoped, expiring
+ * signature) because api/index.mjs is a serverless function with a small body
+ * cap. Only the video guid and display metadata are stored in Supabase.
+ * ------------------------------------------------------------------------ */
+
+const BUNNY_STREAM_API_KEY = String(process.env.BUNNY_STREAM_API_KEY || '').trim()
+const BUNNY_BITESIZE_LIBRARY_ID = String(process.env.BUNNY_BITESIZE_LIBRARY_ID || '').trim()
+const BUNNY_BITESIZE_CDN_HOSTNAME = String(process.env.BUNNY_BITESIZE_CDN_HOSTNAME || '')
+  .trim()
+  .replace(/^https?:\/\//i, '')
+  .replace(/\/+$/, '')
+const BUNNY_STREAM_API_BASE = 'https://video.bunnycdn.com'
+const BUNNY_TUS_ENDPOINT = `${BUNNY_STREAM_API_BASE}/tusupload`
+const BITE_SIZE_UPLOAD_TICKET_TTL_SECONDS = 60 * 60 * 3
+const BITE_SIZE_CATEGORIES = ['writing', 'speaking', 'listening', 'reading']
+const MAX_BITE_SIZE_COMMENT_LENGTH = 600
+
+const isBiteSizeBunnyConfigured = () =>
+  Boolean(BUNNY_STREAM_API_KEY && BUNNY_BITESIZE_LIBRARY_ID && BUNNY_BITESIZE_CDN_HOSTNAME)
+
+const missingBiteSizeBunnyEnv = () =>
+  [
+    BUNNY_STREAM_API_KEY ? null : 'BUNNY_STREAM_API_KEY',
+    BUNNY_BITESIZE_LIBRARY_ID ? null : 'BUNNY_BITESIZE_LIBRARY_ID',
+    BUNNY_BITESIZE_CDN_HOSTNAME ? null : 'BUNNY_BITESIZE_CDN_HOSTNAME'
+  ].filter(Boolean)
+
+const ensureBiteSizeBunnyConfigured = () => {
+  if (isBiteSizeBunnyConfigured()) return
+  throw new Error(
+    `Bunny Stream is not configured for Bite Size. Missing: ${missingBiteSizeBunnyEnv().join(', ')}`
+  )
+}
+
+const bunnyStreamRequest = async (path, { method = 'GET', body } = {}) => {
+  ensureBiteSizeBunnyConfigured()
+  const response = await safeFetch(
+    `${BUNNY_STREAM_API_BASE}/library/${encodeURIComponent(BUNNY_BITESIZE_LIBRARY_ID)}${path}`,
+    {
+      method,
+      headers: {
+        AccessKey: BUNNY_STREAM_API_KEY,
+        accept: 'application/json',
+        ...(body ? { 'Content-Type': 'application/json' } : {})
+      },
+      ...(body ? { body: JSON.stringify(body) } : {})
+    },
+    { timeoutMs: 30000, retries: 1 }
+  )
+  const payload = await parseJsonSafe(response)
+  if (!response.ok) {
+    const message =
+      payload?.Message || payload?.message || response.statusText || 'Bunny Stream request failed.'
+    const error = new Error(String(message))
+    error.status = response.status
+    throw error
+  }
+  return payload
+}
+
+// Bunny video status: 0 Created, 1 Uploaded, 2 Processing, 3 Transcoding,
+// 4 Finished, 5 Error, 6 UploadFailed.
+const mapBunnyEncodeStatus = (statusCode) => {
+  const code = Number(statusCode)
+  if (code >= 5) return 'failed'
+  if (code >= 4) return 'ready'
+  return 'processing'
+}
+
+const normalizeBiteSizeCategory = (value) => {
+  const normalized = String(value || '').trim().toLowerCase()
+  return BITE_SIZE_CATEGORIES.includes(normalized) ? normalized : 'writing'
+}
+
+const normalizeBiteSizeHashtags = (value) => {
+  const source = Array.isArray(value) ? value : String(value || '').split(/[\s,]+/)
+  const seen = new Set()
+  const tags = []
+  for (const raw of source) {
+    const tag = String(raw || '')
+      .trim()
+      .replace(/^#+/, '')
+      .replace(/[^\p{L}\p{N}_]/gu, '')
+      .slice(0, 40)
+    if (!tag || seen.has(tag.toLowerCase())) continue
+    seen.add(tag.toLowerCase())
+    tags.push(tag)
+    if (tags.length >= 12) break
+  }
+  return tags
+}
+
+const buildBiteSizeMediaUrls = (record) => {
+  const guid = String(record?.video_guid || '').trim()
+  const host = String(record?.cdn_hostname || BUNNY_BITESIZE_CDN_HOSTNAME || '').trim()
+  const libraryId = String(record?.library_id || BUNNY_BITESIZE_LIBRARY_ID || '').trim()
+  if (!guid || !host) {
+    return { playbackUrl: '', hlsUrl: '', thumbnailUrl: '', previewUrl: '', embedUrl: '' }
+  }
+  const base = `https://${host}/${guid}`
+  return {
+    playbackUrl: `${base}/play_720p.mp4`,
+    hlsUrl: `${base}/playlist.m3u8`,
+    thumbnailUrl: `${base}/thumbnail.jpg`,
+    previewUrl: `${base}/preview.webp`,
+    embedUrl: libraryId ? `https://iframe.mediadelivery.net/embed/${libraryId}/${guid}` : ''
+  }
+}
+
+const mapBiteSizePostRecord = (record, { liked = false, saved = false, collectionIds = [] } = {}) => ({
+  collectionIds,
+  id: record.id,
+  category: record.category,
+  title: record.title || '',
+  caption: record.caption || '',
+  hashtags: Array.isArray(record.hashtags) ? record.hashtags : [],
+  videoGuid: record.video_guid || '',
+  libraryId: record.library_id || '',
+  coverTimeMs: Number(record.cover_time_ms || 0),
+  durationSeconds: Number(record.duration_seconds || 0),
+  width: Number(record.width || 0),
+  height: Number(record.height || 0),
+  encodeStatus: record.encode_status || 'processing',
+  encodeProgress: Number(record.encode_progress || 0),
+  status: record.status || 'draft',
+  sortIndex: Number(record.sort_index || 0),
+  viewCount: Number(record.view_count || 0),
+  likeCount: Number(record.like_count || 0),
+  commentCount: Number(record.comment_count || 0),
+  publishedAt: record.published_at || null,
+  createdAt: record.created_at || null,
+  viewerLiked: liked,
+  viewerSaved: saved,
+  ...buildBiteSizeMediaUrls(record)
+})
+
+const loadBiteSizePostRecord = async (postId) => {
+  const rows = await fetchSupabaseJson(
+    `/rest/v1/bite_size_posts?id=eq.${encodeURIComponent(postId)}&deleted_at=is.null&select=*&limit=1`,
+    { headers: buildSupabaseHeaders({ serviceRole: true }) }
+  )
+  const record = Array.isArray(rows) ? rows[0] : null
+  if (!record) {
+    const error = new Error('Bite Size post not found.')
+    error.status = 404
+    throw error
+  }
+  return record
+}
+
+const countBiteSizeRows = async (table, postId) => {
+  const rows = await fetchSupabaseJson(
+    `/rest/v1/${table}?post_id=eq.${encodeURIComponent(postId)}&select=post_id`,
+    { headers: buildSupabaseHeaders({ serviceRole: true }) }
+  )
+  return Array.isArray(rows) ? rows.length : 0
+}
+
+const patchBiteSizePost = async (postId, patch) => {
+  const rows = await fetchSupabaseJson(
+    `/rest/v1/bite_size_posts?id=eq.${encodeURIComponent(postId)}&select=*`,
+    {
+      method: 'PATCH',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify(patch)
+    }
+  )
+  return Array.isArray(rows) ? rows[0] : null
+}
+
+// Pulls the current encode state out of Bunny and mirrors it onto the row so the
+// feed can show "still processing" without every client hitting Bunny directly.
+const syncBiteSizePostFromBunny = async (record) => {
+  if (!record?.video_guid || !isBiteSizeBunnyConfigured()) return record
+  if (record.encode_status === 'ready') return record
+  let video = null
+  try {
+    video = await bunnyStreamRequest(`/videos/${encodeURIComponent(record.video_guid)}`)
+  } catch {
+    return record
+  }
+  if (!video) return record
+  const encodeStatus = mapBunnyEncodeStatus(video.status)
+  const encodeProgress = Math.max(0, Math.min(100, Number(video.encodeProgress || 0)))
+  const durationSeconds = Number(video.length || 0)
+  const width = Number(video.width || 0)
+  const height = Number(video.height || 0)
+  if (
+    encodeStatus === record.encode_status &&
+    encodeProgress === Number(record.encode_progress || 0) &&
+    durationSeconds === Number(record.duration_seconds || 0)
+  ) {
+    return record
+  }
+  const updated = await patchBiteSizePost(record.id, {
+    encode_status: encodeStatus,
+    encode_progress: encodeProgress,
+    duration_seconds: durationSeconds,
+    width,
+    height
+  })
+  return updated || record
+}
+
+const resolveBiteSizeViewer = (req) => {
+  const userId = normalizeOptionalUuid(req?.auth?.user?.id)
+  const role = req?.auth?.profile ? resolveSessionRole(req.auth.profile, req.auth.user) : null
+  const isAdmin = role === 'admin'
+  const name =
+    String(req?.auth?.profile?.full_name || '').trim() ||
+    String(req?.auth?.user?.email || '').trim() ||
+    'Student'
+  return { userId, isAdmin, name }
+}
+
+const respondBiteSizeError = (res, error, fallbackStatus = 500) => {
+  const status = Number(error?.status) || fallbackStatus
+  return res.status(status).json({
+    error: {
+      status,
+      type: status === 404 ? 'not_found' : 'bite_size_error',
+      message: error instanceof Error ? error.message : 'Bite Size request failed.'
+    }
+  })
+}
+
+app.get('/api/bite-size/config', requireAdmin, (_req, res) => {
+  res.json({
+    bunnyEnabled: isBiteSizeBunnyConfigured(),
+    missingEnv: missingBiteSizeBunnyEnv(),
+    libraryId: BUNNY_BITESIZE_LIBRARY_ID,
+    cdnHostname: BUNNY_BITESIZE_CDN_HOSTNAME,
+    categories: BITE_SIZE_CATEGORIES
+  })
+})
+
+// Creates the Bunny video shell and returns a signature scoped to that one guid,
+// so the browser can TUS-upload straight to Bunny without ever seeing the API key.
+app.post('/api/admin/bite-size/upload-ticket', requireAdmin, async (req, res) => {
+  try {
+    ensureBiteSizeBunnyConfigured()
+    const title = String(req.body?.title || '').trim().slice(0, 200) || 'Bite Size clip'
+    const created = await bunnyStreamRequest('/videos', { method: 'POST', body: { title } })
+    const videoGuid = String(created?.guid || '').trim()
+    if (!videoGuid) throw new Error('Bunny Stream did not return a video id.')
+
+    const expiration = Math.floor(Date.now() / 1000) + BITE_SIZE_UPLOAD_TICKET_TTL_SECONDS
+    const signature = createHash('sha256')
+      .update(`${BUNNY_BITESIZE_LIBRARY_ID}${BUNNY_STREAM_API_KEY}${expiration}${videoGuid}`)
+      .digest('hex')
+
+    return res.json({
+      videoGuid,
+      libraryId: BUNNY_BITESIZE_LIBRARY_ID,
+      cdnHostname: BUNNY_BITESIZE_CDN_HOSTNAME,
+      tusEndpoint: BUNNY_TUS_ENDPOINT,
+      expiration,
+      signature,
+      title
+    })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.post('/api/admin/bite-size/posts', requireAdmin, async (req, res) => {
+  try {
+    const viewer = resolveBiteSizeViewer(req)
+    const videoGuid = String(req.body?.videoGuid || '').trim()
+    if (!videoGuid) throw Object.assign(new Error('videoGuid is required.'), { status: 400 })
+
+    const coverTimeMs = Math.max(0, Math.round(Number(req.body?.coverTimeMs || 0)))
+    const payload = {
+      category: normalizeBiteSizeCategory(req.body?.category),
+      title: String(req.body?.title || '').trim().slice(0, 200),
+      caption: String(req.body?.caption || '').trim().slice(0, 2200),
+      hashtags: normalizeBiteSizeHashtags(req.body?.hashtags),
+      provider: 'bunny',
+      library_id: BUNNY_BITESIZE_LIBRARY_ID,
+      video_guid: videoGuid,
+      cdn_hostname: BUNNY_BITESIZE_CDN_HOSTNAME,
+      cover_time_ms: coverTimeMs,
+      duration_seconds: Math.max(0, Number(req.body?.durationSeconds || 0)),
+      width: Math.max(0, Math.round(Number(req.body?.width || 0))),
+      height: Math.max(0, Math.round(Number(req.body?.height || 0))),
+      encode_status: 'processing',
+      status: req.body?.status === 'published' ? 'published' : 'draft',
+      sort_index: Math.round(Date.now() / 1000),
+      created_by: viewer.userId,
+      published_at: req.body?.status === 'published' ? new Date().toISOString() : null
+    }
+
+    // The cover frame is a Bunny-side setting: thumbnailTime is milliseconds
+    // into the clip, so the admin picker just sends the scrub position.
+    if (coverTimeMs > 0) {
+      await bunnyStreamRequest(`/videos/${encodeURIComponent(videoGuid)}`, {
+        method: 'POST',
+        body: { title: payload.title || 'Bite Size clip', thumbnailTime: coverTimeMs }
+      }).catch(() => null)
+    }
+
+    const rows = await fetchSupabaseJson('/rest/v1/bite_size_posts', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify(payload)
+    })
+    const record = Array.isArray(rows) ? rows[0] : null
+    if (!record) throw new Error('Could not save the Bite Size post.')
+    return res.json({ post: mapBiteSizePostRecord(record) })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.patch('/api/admin/bite-size/posts/:postId', requireAdmin, async (req, res) => {
+  try {
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    const patch = {}
+
+    if (req.body?.category !== undefined) patch.category = normalizeBiteSizeCategory(req.body.category)
+    if (req.body?.title !== undefined) patch.title = String(req.body.title || '').trim().slice(0, 200)
+    if (req.body?.caption !== undefined) patch.caption = String(req.body.caption || '').trim().slice(0, 2200)
+    if (req.body?.hashtags !== undefined) patch.hashtags = normalizeBiteSizeHashtags(req.body.hashtags)
+    if (req.body?.sortIndex !== undefined) patch.sort_index = Math.round(Number(req.body.sortIndex) || 0)
+
+    if (req.body?.status !== undefined) {
+      const nextStatus = req.body.status === 'published' ? 'published' : 'draft'
+      patch.status = nextStatus
+      patch.published_at =
+        nextStatus === 'published' ? record.published_at || new Date().toISOString() : null
+    }
+
+    if (req.body?.coverTimeMs !== undefined) {
+      const coverTimeMs = Math.max(0, Math.round(Number(req.body.coverTimeMs) || 0))
+      patch.cover_time_ms = coverTimeMs
+      if (record.video_guid && isBiteSizeBunnyConfigured()) {
+        await bunnyStreamRequest(`/videos/${encodeURIComponent(record.video_guid)}`, {
+          method: 'POST',
+          body: {
+            title: patch.title ?? record.title ?? 'Bite Size clip',
+            thumbnailTime: coverTimeMs
+          }
+        })
+      }
+    }
+
+    if (!Object.keys(patch).length) {
+      return res.json({ post: mapBiteSizePostRecord(record) })
+    }
+    const updated = await patchBiteSizePost(record.id, patch)
+    return res.json({ post: mapBiteSizePostRecord(updated || record) })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.post('/api/admin/bite-size/posts/:postId/sync', requireAdmin, async (req, res) => {
+  try {
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    const synced = await syncBiteSizePostFromBunny(record)
+    return res.json({ post: mapBiteSizePostRecord(synced) })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.delete('/api/admin/bite-size/posts/:postId', requireAdmin, async (req, res) => {
+  try {
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    if (record.video_guid && isBiteSizeBunnyConfigured()) {
+      await bunnyStreamRequest(`/videos/${encodeURIComponent(record.video_guid)}`, {
+        method: 'DELETE'
+      }).catch(() => null)
+    }
+    await patchBiteSizePost(record.id, {
+      deleted_at: new Date().toISOString(),
+      status: 'draft'
+    })
+    return res.json({ ok: true })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.get('/api/bite-size/feed', requireAuth, async (req, res) => {
+  try {
+    const viewer = resolveBiteSizeViewer(req)
+    const category = String(req.query?.category || 'all').trim().toLowerCase()
+    const includeDrafts = viewer.isAdmin && String(req.query?.includeDrafts || '1') !== '0'
+
+    const filters = ['deleted_at=is.null']
+    if (!includeDrafts) filters.push('status=eq.published')
+    if (BITE_SIZE_CATEGORIES.includes(category)) filters.push(`category=eq.${category}`)
+
+    const rows =
+      (await fetchSupabaseJson(
+        `/rest/v1/bite_size_posts?${filters.join('&')}&select=*&order=sort_index.desc,created_at.desc&limit=200`,
+        { headers: buildSupabaseHeaders({ serviceRole: true }) }
+      )) || []
+
+    // Only admins wait on Bunny, and only for clips still encoding.
+    let records = rows
+    if (viewer.isAdmin) {
+      const pending = rows.filter((row) => row.encode_status !== 'ready').slice(0, 8)
+      if (pending.length) {
+        const synced = await Promise.all(pending.map((row) => syncBiteSizePostFromBunny(row)))
+        const byId = new Map(synced.filter(Boolean).map((row) => [row.id, row]))
+        records = rows.map((row) => byId.get(row.id) || row)
+      }
+    }
+
+    const membershipRows =
+      (await fetchSupabaseJson('/rest/v1/bite_size_collection_items?select=collection_id,post_id', {
+        headers: buildSupabaseHeaders({ serviceRole: true })
+      })) || []
+    const collectionsByPost = new Map()
+    for (const row of membershipRows) {
+      const existing = collectionsByPost.get(row.post_id) || []
+      existing.push(row.collection_id)
+      collectionsByPost.set(row.post_id, existing)
+    }
+
+    let likedIds = new Set()
+    let savedIds = new Set()
+    if (viewer.userId) {
+      const [likes, saves] = await Promise.all([
+        fetchSupabaseJson(
+          `/rest/v1/bite_size_likes?user_id=eq.${viewer.userId}&select=post_id`,
+          { headers: buildSupabaseHeaders({ serviceRole: true }) }
+        ),
+        fetchSupabaseJson(
+          `/rest/v1/bite_size_saves?user_id=eq.${viewer.userId}&select=post_id`,
+          { headers: buildSupabaseHeaders({ serviceRole: true }) }
+        )
+      ])
+      likedIds = new Set((likes || []).map((row) => row.post_id))
+      savedIds = new Set((saves || []).map((row) => row.post_id))
+    }
+
+    const counts = BITE_SIZE_CATEGORIES.reduce((acc, key) => {
+      acc[key] = records.filter((row) => row.category === key).length
+      return acc
+    }, {})
+
+    return res.json({
+      isAdmin: viewer.isAdmin,
+      counts,
+      posts: records.map((row) =>
+        mapBiteSizePostRecord(row, {
+          liked: likedIds.has(row.id),
+          saved: savedIds.has(row.id),
+          collectionIds: collectionsByPost.get(row.id) || []
+        })
+      )
+    })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+const toggleBiteSizeReaction = async ({ table, countColumn, postId, userId, active }) => {
+  if (active) {
+    await fetchSupabaseJson(`/rest/v1/${table}`, {
+      method: 'POST',
+      headers: buildSupabaseHeaders({
+        serviceRole: true,
+        prefer: 'resolution=merge-duplicates,return=minimal'
+      }),
+      body: JSON.stringify({ post_id: postId, user_id: userId })
+    })
+  } else {
+    await supabaseRequest(
+      `/rest/v1/${table}?post_id=eq.${encodeURIComponent(postId)}&user_id=eq.${userId}`,
+      { method: 'DELETE', headers: buildSupabaseHeaders({ serviceRole: true }) }
+    )
+  }
+  const total = await countBiteSizeRows(table, postId)
+  if (countColumn) await patchBiteSizePost(postId, { [countColumn]: total })
+  return total
+}
+
+app.post('/api/bite-size/posts/:postId/like', requireAuth, async (req, res) => {
+  try {
+    const viewer = resolveBiteSizeViewer(req)
+    if (!viewer.userId) throw Object.assign(new Error('Sign in to like a clip.'), { status: 403 })
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    const liked = req.body?.liked !== false
+    const likeCount = await toggleBiteSizeReaction({
+      table: 'bite_size_likes',
+      countColumn: 'like_count',
+      postId: record.id,
+      userId: viewer.userId,
+      active: liked
+    })
+    return res.json({ liked, likeCount })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.post('/api/bite-size/posts/:postId/save', requireAuth, async (req, res) => {
+  try {
+    const viewer = resolveBiteSizeViewer(req)
+    if (!viewer.userId) throw Object.assign(new Error('Sign in to save a clip.'), { status: 403 })
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    const saved = req.body?.saved !== false
+    await toggleBiteSizeReaction({
+      table: 'bite_size_saves',
+      countColumn: null,
+      postId: record.id,
+      userId: viewer.userId,
+      active: saved
+    })
+    return res.json({ saved })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.post('/api/bite-size/posts/:postId/view', requireAuth, async (req, res) => {
+  try {
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    const updated = await patchBiteSizePost(record.id, {
+      view_count: Math.max(0, Number(record.view_count || 0)) + 1
+    })
+    return res.json({ viewCount: Number(updated?.view_count || record.view_count || 0) })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.get('/api/bite-size/posts/:postId/comments', requireAuth, async (req, res) => {
+  try {
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    const viewer = resolveBiteSizeViewer(req)
+    const rows =
+      (await fetchSupabaseJson(
+        `/rest/v1/bite_size_comments?post_id=eq.${encodeURIComponent(record.id)}&deleted_at=is.null&select=*&order=created_at.desc&limit=200`,
+        { headers: buildSupabaseHeaders({ serviceRole: true }) }
+      )) || []
+    return res.json({
+      comments: rows.map((row) => ({
+        id: row.id,
+        authorName: row.author_name || 'Student',
+        body: row.body || '',
+        createdAt: row.created_at,
+        canDelete: viewer.isAdmin || (viewer.userId && row.user_id === viewer.userId)
+      }))
+    })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.post('/api/bite-size/posts/:postId/comments', requireAuth, async (req, res) => {
+  try {
+    const viewer = resolveBiteSizeViewer(req)
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    const body = String(req.body?.body || '').trim().slice(0, MAX_BITE_SIZE_COMMENT_LENGTH)
+    if (!body) throw Object.assign(new Error('Write something first.'), { status: 400 })
+
+    const rows = await fetchSupabaseJson('/rest/v1/bite_size_comments', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify({
+        post_id: record.id,
+        user_id: viewer.userId,
+        author_name: viewer.name,
+        body
+      })
+    })
+    const created = Array.isArray(rows) ? rows[0] : null
+    const commentCount = await countBiteSizeRows('bite_size_comments', record.id)
+    await patchBiteSizePost(record.id, { comment_count: commentCount })
+    return res.json({
+      comment: created
+        ? {
+            id: created.id,
+            authorName: created.author_name,
+            body: created.body,
+            createdAt: created.created_at,
+            canDelete: true
+          }
+        : null,
+      commentCount
+    })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.delete('/api/bite-size/comments/:commentId', requireAuth, async (req, res) => {
+  try {
+    const viewer = resolveBiteSizeViewer(req)
+    const rows = await fetchSupabaseJson(
+      `/rest/v1/bite_size_comments?id=eq.${encodeURIComponent(req.params.commentId)}&select=*&limit=1`,
+      { headers: buildSupabaseHeaders({ serviceRole: true }) }
+    )
+    const comment = Array.isArray(rows) ? rows[0] : null
+    if (!comment) throw Object.assign(new Error('Comment not found.'), { status: 404 })
+    if (!viewer.isAdmin && (!viewer.userId || comment.user_id !== viewer.userId)) {
+      throw Object.assign(new Error('You can only delete your own comment.'), { status: 403 })
+    }
+    await supabaseRequest(`/rest/v1/bite_size_comments?id=eq.${encodeURIComponent(comment.id)}`, {
+      method: 'PATCH',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ deleted_at: new Date().toISOString() })
+    })
+    const commentCount = await countBiteSizeRows('bite_size_comments', comment.post_id)
+    await patchBiteSizePost(comment.post_id, { comment_count: commentCount })
+    return res.json({ ok: true, commentCount })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+/* --- Bite Size collections: admin-made groups shown as Instagram highlights --- */
+
+const mapBiteSizeCollectionRecord = (record, { postIds = [], coverPost = null } = {}) => ({
+  id: record.id,
+  name: record.name || '',
+  emoji: record.emoji || '📌',
+  description: record.description || '',
+  coverPostId: record.cover_post_id || null,
+  coverThumbnailUrl: coverPost ? buildBiteSizeMediaUrls(coverPost).thumbnailUrl : '',
+  sortIndex: Number(record.sort_index || 0),
+  status: record.status || 'published',
+  postIds,
+  postCount: postIds.length,
+  createdAt: record.created_at || null
+})
+
+const loadBiteSizeCollectionRecord = async (collectionId) => {
+  const rows = await fetchSupabaseJson(
+    `/rest/v1/bite_size_collections?id=eq.${encodeURIComponent(collectionId)}&deleted_at=is.null&select=*&limit=1`,
+    { headers: buildSupabaseHeaders({ serviceRole: true }) }
+  )
+  const record = Array.isArray(rows) ? rows[0] : null
+  if (!record) {
+    const error = new Error('Collection not found.')
+    error.status = 404
+    throw error
+  }
+  return record
+}
+
+const loadBiteSizeCollections = async ({ includeDrafts }) => {
+  const filters = ['deleted_at=is.null']
+  if (!includeDrafts) filters.push('status=eq.published')
+  const [collections, items] = await Promise.all([
+    fetchSupabaseJson(
+      `/rest/v1/bite_size_collections?${filters.join('&')}&select=*&order=sort_index.desc,created_at.desc&limit=200`,
+      { headers: buildSupabaseHeaders({ serviceRole: true }) }
+    ),
+    fetchSupabaseJson(
+      '/rest/v1/bite_size_collection_items?select=collection_id,post_id,sort_index&order=sort_index.desc',
+      { headers: buildSupabaseHeaders({ serviceRole: true }) }
+    )
+  ])
+
+  const list = Array.isArray(collections) ? collections : []
+  const byCollection = new Map()
+  for (const row of Array.isArray(items) ? items : []) {
+    const existing = byCollection.get(row.collection_id) || []
+    existing.push(row.post_id)
+    byCollection.set(row.collection_id, existing)
+  }
+
+  // Only fetch the handful of posts actually used as covers.
+  const coverIds = [...new Set(list.map((row) => row.cover_post_id).filter(Boolean))]
+  let coversById = new Map()
+  if (coverIds.length) {
+    const coverRows = await fetchSupabaseJson(
+      `/rest/v1/bite_size_posts?id=in.(${coverIds.map((id) => encodeURIComponent(id)).join(',')})&select=id,video_guid,cdn_hostname,library_id`,
+      { headers: buildSupabaseHeaders({ serviceRole: true }) }
+    )
+    coversById = new Map((coverRows || []).map((row) => [row.id, row]))
+  }
+
+  return list.map((row) =>
+    mapBiteSizeCollectionRecord(row, {
+      postIds: byCollection.get(row.id) || [],
+      coverPost: row.cover_post_id ? coversById.get(row.cover_post_id) || null : null
+    })
+  )
+}
+
+app.get('/api/bite-size/collections', requireAuth, async (req, res) => {
+  try {
+    const viewer = resolveBiteSizeViewer(req)
+    const collections = await loadBiteSizeCollections({ includeDrafts: viewer.isAdmin })
+    return res.json({ collections })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.post('/api/admin/bite-size/collections', requireAdmin, async (req, res) => {
+  try {
+    const viewer = resolveBiteSizeViewer(req)
+    const name = String(req.body?.name || '').trim().slice(0, 120)
+    if (!name) throw Object.assign(new Error('Give the group a name.'), { status: 400 })
+
+    const rows = await fetchSupabaseJson('/rest/v1/bite_size_collections', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify({
+        name,
+        emoji: String(req.body?.emoji || '📌').trim().slice(0, 8) || '📌',
+        description: String(req.body?.description || '').trim().slice(0, 500),
+        status: req.body?.status === 'draft' ? 'draft' : 'published',
+        sort_index: Math.round(Date.now() / 1000),
+        created_by: viewer.userId
+      })
+    })
+    const created = Array.isArray(rows) ? rows[0] : null
+    if (!created) throw new Error('Could not create the group.')
+    return res.json({ collection: mapBiteSizeCollectionRecord(created) })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.patch('/api/admin/bite-size/collections/:collectionId', requireAdmin, async (req, res) => {
+  try {
+    const record = await loadBiteSizeCollectionRecord(req.params.collectionId)
+    const patch = {}
+    if (req.body?.name !== undefined) {
+      const name = String(req.body.name || '').trim().slice(0, 120)
+      if (!name) throw Object.assign(new Error('Give the group a name.'), { status: 400 })
+      patch.name = name
+    }
+    if (req.body?.emoji !== undefined) patch.emoji = String(req.body.emoji || '📌').trim().slice(0, 8) || '📌'
+    if (req.body?.description !== undefined) {
+      patch.description = String(req.body.description || '').trim().slice(0, 500)
+    }
+    if (req.body?.status !== undefined) patch.status = req.body.status === 'draft' ? 'draft' : 'published'
+    if (req.body?.sortIndex !== undefined) patch.sort_index = Math.round(Number(req.body.sortIndex) || 0)
+    if (req.body?.coverPostId !== undefined) {
+      patch.cover_post_id = normalizeOptionalUuid(req.body.coverPostId)
+    }
+
+    if (Object.keys(patch).length) {
+      await supabaseRequest(
+        `/rest/v1/bite_size_collections?id=eq.${encodeURIComponent(record.id)}`,
+        {
+          method: 'PATCH',
+          headers: buildSupabaseHeaders({ serviceRole: true }),
+          body: JSON.stringify(patch)
+        }
+      )
+    }
+    const collections = await loadBiteSizeCollections({ includeDrafts: true })
+    return res.json({ collection: collections.find((item) => item.id === record.id) || null })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+app.delete('/api/admin/bite-size/collections/:collectionId', requireAdmin, async (req, res) => {
+  try {
+    const record = await loadBiteSizeCollectionRecord(req.params.collectionId)
+    await supabaseRequest(`/rest/v1/bite_size_collections?id=eq.${encodeURIComponent(record.id)}`, {
+      method: 'PATCH',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ deleted_at: new Date().toISOString(), status: 'draft' })
+    })
+    await supabaseRequest(
+      `/rest/v1/bite_size_collection_items?collection_id=eq.${encodeURIComponent(record.id)}`,
+      { method: 'DELETE', headers: buildSupabaseHeaders({ serviceRole: true }) }
+    )
+    return res.json({ ok: true })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
+// Replaces a post's whole group membership in one call, so the picker can just
+// send the checked list.
+app.put('/api/admin/bite-size/posts/:postId/collections', requireAdmin, async (req, res) => {
+  try {
+    const record = await loadBiteSizePostRecord(req.params.postId)
+    const requested = Array.isArray(req.body?.collectionIds) ? req.body.collectionIds : []
+    const collectionIds = [...new Set(requested.map((id) => normalizeOptionalUuid(id)).filter(Boolean))]
+
+    await supabaseRequest(
+      `/rest/v1/bite_size_collection_items?post_id=eq.${encodeURIComponent(record.id)}`,
+      { method: 'DELETE', headers: buildSupabaseHeaders({ serviceRole: true }) }
+    )
+
+    if (collectionIds.length) {
+      await fetchSupabaseJson('/rest/v1/bite_size_collection_items', {
+        method: 'POST',
+        headers: buildSupabaseHeaders({
+          serviceRole: true,
+          prefer: 'resolution=merge-duplicates,return=minimal'
+        }),
+        body: JSON.stringify(
+          collectionIds.map((collectionId, index) => ({
+            collection_id: collectionId,
+            post_id: record.id,
+            sort_index: collectionIds.length - index
+          }))
+        )
+      })
+    }
+
+    // A group with no cover yet adopts the first clip added to it.
+    for (const collectionId of collectionIds) {
+      const collection = await loadBiteSizeCollectionRecord(collectionId).catch(() => null)
+      if (collection && !collection.cover_post_id) {
+        await supabaseRequest(
+          `/rest/v1/bite_size_collections?id=eq.${encodeURIComponent(collectionId)}`,
+          {
+            method: 'PATCH',
+            headers: buildSupabaseHeaders({ serviceRole: true }),
+            body: JSON.stringify({ cover_post_id: record.id })
+          }
+        )
+      }
+    }
+
+    return res.json({ collectionIds })
+  } catch (error) {
+    return respondBiteSizeError(res, error)
+  }
+})
+
 app.use((error, _req, res, next) => {
   if (error?.type === 'entity.too.large') {
     return res.status(413).json({

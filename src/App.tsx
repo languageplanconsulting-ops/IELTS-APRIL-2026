@@ -21,6 +21,7 @@ import {
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import { VocabPopover } from './VocabPopover'
 import ExamFeedPage from './ExamFeedPage'
+import BiteSizePage from './BiteSizePage'
 import { AdminVideoStudio } from './AdminVideoStudio'
 import {
   formatEngagementDuration,
@@ -260,7 +261,7 @@ const getListeningFoundationAudioCacheKey = (set: ListeningFoundationSet) =>
   set.audioCacheKey || `listening-foundation-${set.id}`
 
 type Role = 'student' | 'admin' | 'trial'
-type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'writing' | 'notebook' | 'admin' | 'examfeed' | 'course'
+type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'writing' | 'notebook' | 'admin' | 'examfeed' | 'course' | 'bitesize'
 type AdminWorkspaceSection =
   | 'landing'
   | 'reading'
@@ -21343,6 +21344,15 @@ function App() {
             )}
             {authSession?.role === 'admin' && (
               <button
+                className={activePage === 'bitesize' ? 'active' : ''}
+                onClick={() => setActivePage('bitesize')}
+                type="button"
+              >
+                Bite Size
+              </button>
+            )}
+            {authSession?.role === 'admin' && (
+              <button
                 className={activePage === 'admin' ? 'active' : ''}
                 onClick={() => setActivePage('admin')}
                 type="button"
@@ -25053,6 +25063,24 @@ function App() {
         )
       ) : activePage === 'examfeed' ? (
         <ExamFeedPage onOpenCourse={() => setActivePage('home')} />
+      ) : activePage === 'bitesize' ? (
+        authSession?.role === 'admin' ? (
+          <BiteSizePage
+            accessToken={authSession.accessToken}
+            isAdmin
+            onBackHome={() => setActivePage('home')}
+          />
+        ) : (
+          <section className="panel full">
+            <div className="emptyState">
+              <h3>IELTS Bite Size isn't available yet</h3>
+              <p>This is an admin-only preview while we build out the short-video library.</p>
+              <button type="button" onClick={() => setActivePage('home')}>
+                Back Home
+              </button>
+            </div>
+          </section>
+        )
       ) : activePage === 'course' ? (
         authSession?.role === 'admin' ? (
           <CourseHomePage
