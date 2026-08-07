@@ -11,10 +11,9 @@ export const INTENSIVE_PAIRS_STAGE_1_5: Record<number, Record<1 | 2, Record<numb
         { q: "ancient stepwells", p: "stepwells", th: "บ่อน้ำขั้นบันไดโบราณ" },
       ],
       2: [
-        { q: "During their heyday", p: "During their heyday", th: "ในช่วงรุ่งเรือง", note: "ข้อความตรงกับบทความทุกประการ (gathering, leisure, relaxation, worship) จึงตอบ TRUE" },
-        { q: "places of gathering", p: "places of gathering", th: "สถานที่ชุมนุม" },
-        { q: "leisure, of relaxation", p: "of leisure, of relaxation", th: "พักผ่อนหย่อนใจ" },
-        { q: "worship", p: "worship", th: "การสักการะบูชา" },
+        { q: "a range of functions", p: "places of gathering, of leisure, of relaxation and of worship", th: "หน้าที่หลากหลาย = เป็นที่ชุมนุม พักผ่อน และสักการะ", note: "บทความไล่หน้าที่ของบ่อน้ำไว้หลายอย่าง (ชุมนุม พักผ่อน สักการะ) ซึ่งก็คือ a range of functions จึงตอบ TRUE" },
+        { q: "in addition to", p: "goes beyond", th: "นอกเหนือจาก / มากกว่าแค่" },
+        { q: "those related to water collection", p: "its utilitarian application", th: "หน้าที่ด้านการเก็บน้ำ / การใช้งานเชิงประโยชน์" },
       ],
       3: [
         { q: "existing stepwells in Delhi", p: "a few also survive in Delhi", th: "บ่อน้ำที่ยังเหลืออยู่ในเดลี", note: "บทความบอกแค่ว่ามีบ่อน้ำเหลืออยู่บ้างในเดลี แต่ไม่ได้พูดถึงความสวยงามเปรียบเทียบ จึงตอบ NOT GIVEN" },
@@ -43,8 +42,9 @@ export const INTENSIVE_PAIRS_STAGE_1_5: Record<number, Record<1 | 2, Record<numb
         { q: "nowadays", p: "Today", th: "ในปัจจุบัน" },
       ],
       9: [
-        { q: "survived an earthquake", p: "survived a devastating earthquake", th: "รอดพ้นจากแผ่นดินไหว", note: "โครงสร้างโบราณรอดจากแผ่นดินไหว จึงตอบ Earthquake" },
-        { q: "7.6 on the Richter scale", p: "7.6 on the Richter scale", th: "ขนาด 7.6 ตามมาตราริกเตอร์" },
+        { q: "despite the … of January 2001", p: "survived a devastating earthquake", th: "แม้เกิด … ขึ้นในเดือนมกราคม 2001", note: "สิ่งที่โครงสร้างโบราณนี้รอดพ้นมาได้คือแผ่นดินไหว จึงตอบ Earthquake" },
+        { q: "still in excellent condition", p: "today it's in pristine condition", th: "ยังอยู่ในสภาพสมบูรณ์" },
+        { q: "restored in the 1960s", p: "began restoring it in the 1960s", th: "ได้รับการบูรณะในทศวรรษ 1960" },
       ],
       10: [
         { q: "four … of steps", p: "four sides of steps", th: "บันไดสี่ … = สี่ด้าน", note: "ช่องว่างเติมด้วย sides ตามบทความ four sides of steps จึงตอบ sides" },
@@ -60,8 +60,8 @@ export const INTENSIVE_PAIRS_STAGE_1_5: Record<number, Record<1 | 2, Record<numb
         { q: "overlook the steps", p: "overlook the steps", th: "มองลงไปยังขั้นบันได" },
       ],
       13: [
-        { q: "last two levels underwater", p: "the last two being underwater", th: "สองชั้นล่างสุดอยู่ใต้น้ำ", note: "ช่องว่างเติมด้วย underwater จึงตอบ underwater" },
-        { q: "Constructed in around 1700", p: "Constructed in around 1700", th: "สร้างราวปี 1700" },
+        { q: "the last two levels …", p: "the last two being underwater", th: "สองชั้นล่างสุดอยู่ …", note: "ช่องว่างคือสภาพของสองชั้นล่างสุด คือจมอยู่ใต้น้ำ จึงตอบ underwater" },
+        { q: "still used by the public today", p: "Still in public use", th: "ยังเปิดให้ประชาชนใช้อยู่" },
         { q: "nine storeys deep", p: "nine storeys deep", th: "ลึกเก้าชั้น" },
       ],
     },
