@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './CourseJourneyHome.css'
 import {
+  advanceWatched,
   buildEmbedUrl,
   formatClock,
+  hasWatchedEnough,
   isResumable,
   minutesLeft,
   subscribeToPlaybackPosition,
+  watchedPercent,
   type LessonResumeEntry,
   type ResumeMap
 } from './lessonResume'
@@ -54,6 +57,16 @@ import {
   type ScheduleMode,
   type StudySchedule
 } from './studySchedule'
+import { EXAM_HORIZONS, daysUntil, derivePlan, examVerdict } from './examPlan'
+import {
+  checkPraise,
+  checkPrompt,
+  dueForReview,
+  isRecallSufficient,
+  recallShortfall,
+  type CheckAnswer,
+  type CheckMap
+} from './lessonCheck'
 import { journeyStorageKey } from './courseStorageKeys'
 import { PLANS, PLAN_BY_ID, SKIPPABLE_REASON_TH, type PlanId } from './bundlePlans'
 
@@ -92,6 +105,27 @@ type StoredJourney = {
   unlockedDays: string[]
   resume: ResumeMap
   path: CoursePath
+  /**
+   * The exam date, ISO — the one fact the app can't derive and the only thing
+   * setup asks for. Null means "no date yet", which is a real answer, not a gap.
+   */
+  examDateIso: string | null
+  /** Retrieval answers, keyed by lesson. See lessonCheck. */
+  checks: CheckMap
+}
+
+const parseChecks = (raw: unknown): CheckMap => {
+  if (!raw || typeof raw !== 'object') return {}
+  const out: CheckMap = {}
+  for (const [lessonId, value] of Object.entries(raw as Record<string, Partial<CheckAnswer>>)) {
+    if (typeof value?.text !== 'string' || !value.text.trim()) continue
+    out[lessonId] = {
+      text: value.text,
+      at: typeof value.at === 'number' ? value.at : 0,
+      ...(typeof value.reviewedAt === 'number' ? { reviewedAt: value.reviewedAt } : {})
+    }
+  }
+  return out
 }
 
 const THAI_MONTHS = [
@@ -131,7 +165,9 @@ const loadJourney = (email: string): StoredJourney => {
     completedAt: {},
     unlockedDays: [],
     resume: {},
-    path: RECOMMENDED_PATH
+    path: RECOMMENDED_PATH,
+    examDateIso: null,
+    checks: {}
   }
   if (typeof window === 'undefined') return empty
   try {
@@ -189,7 +225,9 @@ const loadJourney = (email: string): StoredJourney => {
       path: {
         order: storedOrder?.length ? storedOrder : null,
         keepWarm: parsed?.path?.keepWarm !== false
-      }
+      },
+      examDateIso: typeof parsed?.examDateIso === 'string' ? parsed.examDateIso : null,
+      checks: parseChecks(parsed?.checks)
     }
   } catch {
     return empty
@@ -215,21 +253,28 @@ export function CourseJourneyHome({
   const [completedAt, setCompletedAt] = useState<Record<string, number>>(initial.completedAt)
   const [unlockedDays, setUnlockedDays] = useState<Set<string>>(() => new Set(initial.unlockedDays))
   const [path, setPath] = useState<CoursePath>(initial.path)
-  /** The path editor, open only when the student asks to rearrange. */
-  const [pathOpen, setPathOpen] = useState(false)
   const [resume, setResume] = useState<ResumeMap>(initial.resume)
   const [view, setView] = useState<JourneyView>({ kind: 'home' })
   const [autoplayLessonId, setAutoplayLessonId] = useState<string | null>(null)
   const [openDayIndex, setOpenDayIndex] = useState<number | null>(null)
-  /** Locked day the student tapped — the calendar asks before jumping ahead. */
-  const [askAheadIndex, setAskAheadIndex] = useState<number | null>(null)
-  /** Which altitude the rail is showing: one day, this week, or month by month. */
-  const [railView, setRailView] = useState<'day' | 'week' | 'month'>('day')
+  /** When the exam is. Setup's only question; everything else is derived from it. */
+  const [examDateIso, setExamDateIso] = useState<string | null>(initial.examDateIso)
+  /** Retrieval answers — see lessonCheck. The record that progress is real. */
+  const [checks, setChecks] = useState<CheckMap>(initial.checks)
 
   // The planner edits a draft, so a half-finished change never reshuffles the
   // calendar underneath the student while they are still choosing.
   const [draft, setDraft] = useState<StudySchedule>(() => initial.schedule ?? defaultSchedule())
-  const [plannerOpen, setPlannerOpen] = useState(() => !initial.schedule)
+  /**
+   * The settings drawer.
+   *
+   * Closed by default and closed for first-timers too. Pace, plan depth, course
+   * list and course order are all authoring surfaces: a student opens this page
+   * to study, and every one of those questions has a defensible answer already.
+   */
+  const [planOpen, setPlanOpen] = useState(false)
+  /** Which panel of the drawer is showing — one at a time, not a wall of four. */
+  const [planTab, setPlanTab] = useState<'pace' | 'courses' | 'order' | 'calendar'>('pace')
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -244,13 +289,15 @@ export function CourseJourneyHome({
           completedAt,
           unlockedDays: Array.from(unlockedDays),
           resume,
-          path
+          path,
+          examDateIso,
+          checks
         })
       )
     } catch {
       // Storage full or blocked — the plan just won't survive a reload.
     }
-  }, [learnerEmail, schedule, planId, enrolled, otherCompletedIds, completedAt, unlockedDays, resume, path])
+  }, [learnerEmail, schedule, planId, enrolled, otherCompletedIds, completedAt, unlockedDays, resume, path, examDateIso, checks])
 
   /** What every screen below reads: both stores, merged, never written to directly. */
   const completedIds = useMemo(
@@ -356,7 +403,9 @@ export function CourseJourneyHome({
     setResume((prev) => {
       const previous = prev[lessonId]
       if (previous && previous.seconds === seconds && previous.duration === duration) return prev
-      return { ...prev, [lessonId]: { seconds, duration, updatedAt: Date.now() } }
+      // advanceWatched, not a bare write: this is where "watched" stops being
+      // the learner's word for it and becomes something the app measured.
+      return { ...prev, [lessonId]: advanceWatched(previous, seconds, duration) }
     })
   }, [])
 
@@ -384,13 +433,73 @@ export function CourseJourneyHome({
     })
   }
 
+  /**
+   * The only route to "done": the learner has watched it and just written down
+   * what it was for, from memory.
+   *
+   * Keeping the recall and the tick in one call is deliberate — it means there
+   * is no code path that marks a lesson complete without an answer behind it,
+   * so every percentage on this page has something under it.
+   */
+  const completeWithRecall = (lessonId: string, text: string) => {
+    setChecks((prev) => ({ ...prev, [lessonId]: { text: text.trim(), at: Date.now() } }))
+    if (!completedIds.has(lessonId)) toggleComplete(lessonId)
+  }
+
+  /** A second (or third) pass at a lesson's recall, days later. */
+  const recordReview = (lessonId: string, text: string) => {
+    setChecks((prev) => {
+      const previous = prev[lessonId]
+      if (!previous) return prev
+      return { ...prev, [lessonId]: { ...previous, text: text.trim(), reviewedAt: Date.now() } }
+    })
+  }
+
+  /**
+   * "Later" — pushed to the next interval, with the answer untouched.
+   *
+   * Deliberately not recordReview('') : an empty text is dropped on reload, so
+   * skipping a review would quietly destroy what they wrote the first time.
+   */
+  const deferReview = (lessonId: string) => {
+    setChecks((prev) => {
+      const previous = prev[lessonId]
+      if (!previous) return prev
+      return { ...prev, [lessonId]: { ...previous, reviewedAt: Date.now() } }
+    })
+  }
+
+  /** Un-ticking a lesson takes its recall with it, so the two never disagree. */
+  const undoComplete = (lessonId: string) => {
+    setChecks((prev) => {
+      if (!prev[lessonId]) return prev
+      const next = { ...prev }
+      delete next[lessonId]
+      return next
+    })
+    toggleComplete(lessonId)
+  }
+
+  /**
+   * Setup's whole output.
+   *
+   * One answer in, a complete plan out — depth, session length, which days,
+   * start date — so nobody has to visit four controls to begin.
+   */
+  const applyExamDate = (iso: string | null) => {
+    const derived = derivePlan(enrolled, iso ? daysUntil(iso, today) : null, today)
+    setExamDateIso(iso)
+    setPlanId(derived.planId)
+    setSchedule(derived.schedule)
+    setDraft(derived.schedule)
+  }
+
   const toggleEnrolled = (courseId: JourneyCourseId) => {
     setEnrolled((prev) => (prev.includes(courseId) ? prev.filter((id) => id !== courseId) : [...prev, courseId]))
   }
 
   const savePlan = () => {
     setSchedule(draft)
-    setPlannerOpen(false)
   }
 
   // ------------------------------------------------------------- lesson --
@@ -408,8 +517,10 @@ export function CourseJourneyHome({
           planId={planId}
           enrolled={enrolled}
           bundleLabel={bundle?.label ?? null}
+          savedRecall={checks[lesson.id]?.text ?? ''}
           onRecordPosition={(seconds, duration) => recordPosition(lesson.id, seconds, duration)}
-          onToggleComplete={() => toggleComplete(lesson.id)}
+          onCompleteWithRecall={(text) => completeWithRecall(lesson.id, text)}
+          onUndoComplete={() => undoComplete(lesson.id)}
           onRevise={() => openLesson(lesson.id, { autoplay: true, restart: true })}
           onBack={() => setView({ kind: 'course', courseId: lesson.course })}
           onOpenCourse={(courseId) => setView({ kind: 'course', courseId })}
@@ -452,22 +563,58 @@ export function CourseJourneyHome({
   }
 
   // --------------------------------------------------------------- home --
+
+  /**
+   * Opening a day that isn't due yet.
+   *
+   * This used to raise a modal asking whether the student was sure they wanted
+   * to study. They are sure — they tapped a study day. The plan still shifts up
+   * behind them, which is the only thing the dialog was really announcing, and
+   * the day card says so in a line once they're there.
+   */
+  const openDay = (day: JourneyDay) => {
+    if (isJourneyDayLocked(day, today, unlockedDays, completedIds)) {
+      setUnlockedDays((prev) => new Set(prev).add(day.key))
+    }
+    setOpenDayIndex(day.index)
+  }
+
+  const finishIso = calendar.length ? calendar[calendar.length - 1].dateIso : null
+  const verdict = examVerdict(finishIso, examDateIso)
+  /** One lesson whose recall is due again — never a queue. See lessonCheck. */
+  const reviewLessonId = useMemo(() => dueForReview(checks, Date.now()), [checks, today])
+  const reviewLesson = reviewLessonId ? lessonById.get(reviewLessonId) ?? null : null
+
+  // Setup is a gate, not a step. With no schedule there is nothing honest to
+  // render below it — the old page built the whole calendar from an unsaved
+  // draft and then offered a button called "create my calendar", so the primary
+  // action of the page changed nothing the student could see.
+  if (!schedule) {
+    return (
+      <div className="cjPage cjPage-setup">
+        <header className="cjTopBar">
+          <button type="button" className="cjBack" onClick={onBackHome}>
+            ← กลับหน้าหลัก
+          </button>
+          <span className="cjTopBarLabel">คอร์สของฉัน</span>
+        </header>
+        <ExamSetup learnerName={learnerName} enrolled={enrolled} today={today} onChoose={applyExamDate} />
+      </div>
+    )
+  }
+
   return (
     <div className="cjPage">
       <header className="cjTopBar">
         <button type="button" className="cjBack" onClick={onBackHome}>
           ← กลับหน้าหลัก
         </button>
-        <span className="cjTopBarLabel">คอร์สของฉัน · Admin preview</span>
+        <span className="cjTopBarLabel">คอร์สของฉัน</span>
       </header>
 
       <div className="cjHead">
         <p className="cjKicker">สวัสดี {learnerName || 'นักเรียน'}</p>
-        <h1>เส้นทางการเรียนของคุณ</h1>
-        <p className="cjLede">
-          ตั้งเวลาเรียนที่ทำได้จริงก่อน แล้วระบบจะจัดคอร์สที่คุณมีทั้งหมดลงปฏิทินให้เอง —
-          เปิดมาก็รู้ทันทีว่าวันนี้ต้องดูคลิปไหน
-        </p>
+        <h1>วันนี้เรียนอะไร</h1>
       </div>
 
       {/* The plan measuring itself against reality, before anything below it
@@ -486,110 +633,140 @@ export function CourseJourneyHome({
         />
       )}
 
-      {/* 1 — the planner. Everything below it is a consequence of these answers. */}
-      <PlannerSection
-        draft={draft}
-        setDraft={setDraft}
+      {/* The page. Not a section of it — everything below is either a
+          consequence of this card or a setting that produced it. */}
+      {calendar.length === 0 ? (
+        <p className="cjEmpty">
+          ยังไม่มีคอร์สในแผน — เปิด “แผนของฉัน” ด้านล่างแล้วเพิ่มคอร์ส ปฏิทินจะขึ้นให้เอง
+        </p>
+      ) : (
+        <TodayCard
+          day={openDayIndex !== null ? calendar[openDayIndex] ?? todayDay : todayDay}
+          today={today}
+          completedIds={completedIds}
+          resume={resume}
+          isPinned={openDayIndex !== null}
+          onUnpin={() => setOpenDayIndex(null)}
+          onOpenLesson={openLesson}
+        />
+      )}
+
+      {/* Spaced retrieval: one lesson from days ago, recalled again before it
+          decays. Placed under today's work rather than above it — the day's
+          lesson is the commitment, this is the top-up. */}
+      {reviewLesson && (
+        <ReviewCard
+          key={reviewLesson.id}
+          lesson={reviewLesson}
+          previous={checks[reviewLesson.id]}
+          onSubmit={(text) => recordReview(reviewLesson.id, text)}
+          onSkip={() => deferReview(reviewLesson.id)}
+          onOpenLesson={() => openLesson(reviewLesson.id)}
+        />
+      )}
+
+      {calendar.length > 0 && (
+        <UpNext
+          calendar={calendar}
+          today={today}
+          shownIndex={(openDayIndex !== null ? calendar[openDayIndex] : todayDay)?.index ?? -1}
+          completedIds={completedIds}
+          unlockedDays={unlockedDays}
+          onOpenDay={openDay}
+        />
+      )}
+
+      {/* Every authoring surface the page has, folded into one line and one
+          disclosure. Pace, depth, which courses and what order all have a
+          defensible answer already; none of them is a question a student should
+          have to answer before they can press play. */}
+      <PlanBar
         planId={planId}
-        onPickPlan={setPlanId}
-        saved={schedule}
-        isOpen={plannerOpen}
-        onOpen={() => {
-          setDraft(schedule ?? defaultSchedule())
-          setPlannerOpen(true)
-        }}
-        onSave={savePlan}
-        onCancel={() => {
-          setDraft(schedule ?? defaultSchedule())
-          setPlannerOpen(Boolean(!schedule))
-        }}
-        sessionCount={draftCalendar.length}
-        finishIso={draftFinishIso}
+        schedule={schedule}
+        sessionCount={calendar.length}
+        finishIso={finishIso}
+        examDateIso={examDateIso}
+        verdict={verdict}
+        isOpen={planOpen}
+        onToggle={() => setPlanOpen((v) => !v)}
       />
 
-      {/* 2 — the catalogue, with the student's own courses tied together. */}
-      <CoursesSection
-        enrolled={enrolled}
-        order={studyOrder}
-        planId={planId}
-        bundleLabel={bundle?.label ?? null}
-        bundleTagline={bundle?.tagline ?? null}
-        completedIds={completedIds}
-        onToggleEnrolled={toggleEnrolled}
-        onOpenCourse={(courseId) => setView({ kind: 'course', courseId })}
-      />
-
-      {/* 3 — the order those courses run in, which is the student's call. */}
-      <PathSection
-        enrolled={enrolled}
-        path={path}
-        completedIds={completedIds}
-        buildWith={buildWith}
-        isOpen={pathOpen}
-        onOpen={() => setPathOpen(true)}
-        onClose={() => setPathOpen(false)}
-        onSave={(next) => {
-          setPath(next)
-          setPathOpen(false)
-        }}
-      />
-
-      {/* 4 — the calendar those sections produce. */}
-      <CalendarSection
-        calendar={calendar}
-        today={today}
-        todayDay={todayDay}
-        completedIds={completedIds}
-        unlockedDays={unlockedDays}
-        resume={resume}
-        railView={railView}
-        setRailView={setRailView}
-        openDayIndex={openDayIndex}
-        setOpenDayIndex={setOpenDayIndex}
-        onAskAhead={setAskAheadIndex}
-        onOpenLesson={openLesson}
-        scheduleLabel={describeSchedule(effectiveSchedule)}
-      />
-
-      {/* Studying ahead is a decision, not an accident: tapping a locked day
-          asks, shows what that day holds, and says plainly that the rest of the
-          plan will move up. */}
-      {askAheadIndex !== null && calendar[askAheadIndex] && (
-        <div className="cjScrim" role="dialog" aria-modal="true" aria-label="เรียนล่วงหน้า">
-          <div className="cjModal">
-            <span className="cjModalPill">
-              {COURSE_BY_ID[calendar[askAheadIndex].course].emoji}{' '}
-              {formatDayMonth(calendar[askAheadIndex].dateIso)}
-            </span>
-            <h3>อยากเรียนก่อนกำหนดไหม?</h3>
-            <p>
-              วันนี้ยังไม่ถึงคิวตามแผน — ถ้าเรียนเลย ระบบจะเลื่อนวันที่เหลือขึ้นมาให้อัตโนมัติ
-              และวันจบก็จะเร็วขึ้นตาม
-            </p>
-            <ul className="cjModalList">
-              {calendar[askAheadIndex].lessons.map((lesson) => (
-                <li key={lesson.id}>
-                  <b>{lesson.title}</b>
-                  <span>{lesson.minutes} นาที</span>
-                </li>
-              ))}
-            </ul>
-            <div className="cjModalActions">
-              <button type="button" className="cjBtn cjBtn-quiet" onClick={() => setAskAheadIndex(null)}>
-                ไว้ก่อน
-              </button>
+      {planOpen && (
+        <div className="cjDrawer">
+          <div className="cjDrawerTabs" role="tablist" aria-label="ส่วนของแผน">
+            {(
+              [
+                { id: 'pace', label: 'เวลาเรียน' },
+                { id: 'courses', label: 'คอร์สในแผน' },
+                { id: 'order', label: 'ลำดับคอร์ส' },
+                { id: 'calendar', label: 'ปฏิทินทั้งหมด' }
+              ] as const
+            ).map((tab) => (
               <button
+                key={tab.id}
                 type="button"
-                className="cjBtn cjBtn-primary"
-                onClick={() => {
-                  setUnlockedDays((prev) => new Set(prev).add(calendar[askAheadIndex].key))
-                  setOpenDayIndex(askAheadIndex)
-                  setAskAheadIndex(null)
-                }}
+                role="tab"
+                id={`cjTab-${tab.id}`}
+                aria-selected={planTab === tab.id}
+                aria-controls="cjDrawerPanel"
+                className={`cjDrawerTab ${planTab === tab.id ? 'is-on' : ''}`}
+                onClick={() => setPlanTab(tab.id)}
               >
-                เรียนเลย →
+                {tab.label}
               </button>
-            </div>
+            ))}
+          </div>
+
+          <div className="cjDrawerPanel" id="cjDrawerPanel" role="tabpanel" aria-labelledby={`cjTab-${planTab}`}>
+            {planTab === 'pace' && (
+              <PaceControls
+                draft={draft}
+                setDraft={setDraft}
+                planId={planId}
+                onPickPlan={setPlanId}
+                saved={schedule}
+                examDateIso={examDateIso}
+                onSetExamDate={applyExamDate}
+                onSave={savePlan}
+                onCancel={() => setDraft(schedule ?? defaultSchedule())}
+                sessionCount={draftCalendar.length}
+                finishIso={draftFinishIso}
+              />
+            )}
+            {planTab === 'courses' && (
+              <CoursesSection
+                enrolled={enrolled}
+                order={studyOrder}
+                planId={planId}
+                bundleLabel={bundle?.label ?? null}
+                bundleTagline={bundle?.tagline ?? null}
+                completedIds={completedIds}
+                onToggleEnrolled={toggleEnrolled}
+                onOpenCourse={(courseId) => setView({ kind: 'course', courseId })}
+              />
+            )}
+            {planTab === 'order' && (
+              <PathSection
+                enrolled={enrolled}
+                path={path}
+                completedIds={completedIds}
+                buildWith={buildWith}
+                onSave={setPath}
+              />
+            )}
+            {planTab === 'calendar' && (
+              <FullCalendar
+                calendar={calendar}
+                today={today}
+                shownIndex={(openDayIndex !== null ? calendar[openDayIndex] : todayDay)?.index ?? -1}
+                completedIds={completedIds}
+                unlockedDays={unlockedDays}
+                onOpenDay={(day) => {
+                  openDay(day)
+                  if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+              />
+            )}
           </div>
         </div>
       )}
@@ -597,41 +774,88 @@ export function CourseJourneyHome({
   )
 }
 
-// ======================================================== section band =====
+// ============================================================== setup =====
 
 /**
- * The coloured header every section wears.
+ * The whole of onboarding.
  *
- * The three sections were previously identical white cards with a small numeral,
- * which made the page read as one undifferentiated wall — nothing told the eye
- * where a decision ended and its consequence began. Each section now carries its
- * own colour on a solid band: violet for the pace you set, teal for the courses
- * you own, amber for the journey those two produce.
+ * One question, because there is exactly one fact a new student has that the app
+ * doesn't: when they sit the test. Target band, session length, study days and
+ * start date are all derivable from it against the content they own (see
+ * examPlan), and every one of them stays editable afterwards — this just means
+ * nobody has to answer four questions to watch their first video.
  */
-function SectionBand({ step, title, subtitle }: { step: number; title: string; subtitle: string }) {
+function ExamSetup({
+  learnerName,
+  enrolled,
+  today,
+  onChoose
+}: {
+  learnerName: string
+  enrolled: JourneyCourseId[]
+  today: string
+  onChoose: (examIso: string | null) => void
+}) {
+  const [customIso, setCustomIso] = useState('')
+
   return (
-    <header className="cjBand">
-      <span className="cjBandNo" aria-hidden="true">
-        {step}
-      </span>
-      <span className="cjBandText">
-        <b>{title}</b>
-        <small>{subtitle}</small>
-      </span>
-    </header>
+    <section className="cjSetup">
+      <p className="cjKicker">สวัสดี {learnerName || 'นักเรียน'}</p>
+      <h1>สอบ IELTS เมื่อไหร่?</h1>
+      <p className="cjLede">
+        ตอบข้อเดียว แล้วเราจัดที่เหลือให้ — ว่าต้องเรียนบทไหน วันละกี่นาที สัปดาห์ละกี่วัน
+        ปรับเองทีหลังได้ทุกอย่าง
+      </p>
+
+      <div className="cjSetupPick" role="group" aria-label="อีกนานแค่ไหนจะสอบ">
+        {EXAM_HORIZONS.map((horizon) => {
+          const iso = horizon.days === null ? null : addDays(today, horizon.days)
+          const derived = derivePlan(enrolled, horizon.days, today)
+          return (
+            <button key={horizon.id} type="button" className="cjSetupCard" onClick={() => onChoose(iso)}>
+              <b>{horizon.label}</b>
+              <small>
+                {PLAN_BY_ID[derived.planId].labelTh} · {describeSchedule(derived.schedule)}
+              </small>
+              {derived.tight && <span className="cjSetupTight">เวลาน้อย — จะจัดเฉพาะบทแกนให้ก่อน</span>}
+            </button>
+          )
+        })}
+      </div>
+
+      <div className="cjSetupExact">
+        <label htmlFor="cjExamDate">รู้วันสอบแน่นอนแล้ว</label>
+        <input
+          id="cjExamDate"
+          type="date"
+          className="cjDateInput"
+          min={today}
+          value={customIso}
+          onChange={(event) => setCustomIso(event.target.value)}
+        />
+        <button
+          type="button"
+          className="cjBtn cjBtn-primary"
+          disabled={!customIso}
+          onClick={() => customIso && onChoose(customIso)}
+        >
+          ใช้วันนี้เป็นวันสอบ
+        </button>
+      </div>
+    </section>
   )
 }
 
-// ============================================================ planner =====
+// ======================================================== pace controls =====
 
-function PlannerSection({
+function PaceControls({
   draft,
   setDraft,
   planId,
   onPickPlan,
   saved,
-  isOpen,
-  onOpen,
+  examDateIso,
+  onSetExamDate,
   onSave,
   onCancel,
   sessionCount,
@@ -641,9 +865,10 @@ function PlannerSection({
   setDraft: (next: StudySchedule) => void
   planId: PlanId
   onPickPlan: (next: PlanId) => void
-  saved: StudySchedule | null
-  isOpen: boolean
-  onOpen: () => void
+  saved: StudySchedule
+  examDateIso: string | null
+  /** Re-derives the whole plan from a new exam date, the way setup did. */
+  onSetExamDate: (iso: string | null) => void
   onSave: () => void
   onCancel: () => void
   sessionCount: number
@@ -659,43 +884,39 @@ function PlannerSection({
 
   const perWeek = sessionsPerWeek(draft)
   const minutesPerWeek = Math.round(perWeek * draft.minutesPerDay)
-
-  if (!isOpen && saved) {
-    return (
-      <section className="cjSection cjSection-plan cjPlannerSaved">
-        <div className="cjPlannerSavedBody">
-          <span className="cjSectionNo" aria-hidden="true">1</span>
-          <div>
-            <b>แผนเรียนของคุณ</b>
-            <p>
-              <span className="cjPlanTag">{PLAN_BY_ID[planId].labelTh}</span> {describeSchedule(saved)}
-            </p>
-            <small>
-              {sessionCount} ครั้ง · เริ่ม {formatDayMonth(saved.startDateIso)}
-              {finishIso ? ` · เรียนจบประมาณ ${formatDayMonth(finishIso)}` : ''}
-            </small>
-          </div>
-        </div>
-        <button type="button" className="cjBtn cjBtn-ghost" onClick={onOpen}>
-          แก้ไขแผน
-        </button>
-      </section>
-    )
-  }
+  const dirty = JSON.stringify(draft) !== JSON.stringify(saved)
+  const verdict = examVerdict(finishIso, examDateIso)
 
   return (
-    <section className="cjSection cjSection-plan cjPlanner">
-      <SectionBand
-        step={1}
-        title="แผนเรียนของฉัน"
-        subtitle="เลือกเป้าหมายกับเวลาที่มี — ปฏิทินจะจัดใหม่ให้ทันที เปลี่ยนทีหลังได้ตลอด"
-      />
-
-      {/* Target band first: it decides WHICH lessons get scheduled, and every
-          number below it — sessions, hours per week, finish date — is downstream
-          of that choice. Asking for pace before purpose would be the wrong way
-          round. */}
+    <div className="cjPlanner">
+      {/* The exam date still comes first, because changing it re-derives
+          everything below — the same single answer setup ran on. */}
       <div className="cjField cjField-first">
+        <h3>
+          วันสอบ
+          <span className="cjHint">เปลี่ยนวันสอบแล้วเราจะจัดแผนใหม่ให้ทั้งชุด</span>
+        </h3>
+        <div className="cjChipRow">
+          <input
+            type="date"
+            className="cjDateInput"
+            aria-label="วันสอบ"
+            value={examDateIso ?? ''}
+            onChange={(event) => onSetExamDate(event.target.value || null)}
+          />
+          {examDateIso && (
+            <button type="button" className="cjChip" onClick={() => onSetExamDate(null)}>
+              ยังไม่กำหนดวันสอบ
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Target band: it decides WHICH lessons get scheduled, and every number
+          below it — sessions, hours per week, finish date — is downstream of
+          that choice. Asking for pace before purpose would be the wrong way
+          round. */}
+      <div className="cjField">
         <h3>
           ตั้งเป้าไว้ที่แบนด์ไหน?
           <span className="cjHint">ทุกแผนเปิดดูได้ครบทุกบท — แผนแค่ตัดสินว่าบทไหนถูกจัดลงปฏิทินให้</span>
@@ -748,11 +969,14 @@ function PlannerSection({
 
       <div className="cjField">
         <h3>เรียนวันไหนบ้าง?</h3>
-        <div className="cjModeRow" role="tablist" aria-label="รูปแบบการจัดวันเรียน">
+        {/* A radiogroup, not a tablist: `role="tab"` promises a `tabpanel` and
+            arrow-key navigation, neither of which was ever here. These are two
+            mutually exclusive choices, which is exactly what `radio` means. */}
+        <div className="cjModeRow" role="radiogroup" aria-label="รูปแบบการจัดวันเรียน">
           <button
             type="button"
-            role="tab"
-            aria-selected={draft.mode === 'interval'}
+            role="radio"
+            aria-checked={draft.mode === 'interval'}
             className={`cjModeBtn ${draft.mode === 'interval' ? 'is-active' : ''}`}
             onClick={() => setMode('interval')}
           >
@@ -761,8 +985,8 @@ function PlannerSection({
           </button>
           <button
             type="button"
-            role="tab"
-            aria-selected={draft.mode === 'weekdays'}
+            role="radio"
+            aria-checked={draft.mode === 'weekdays'}
             className={`cjModeBtn ${draft.mode === 'weekdays' ? 'is-active' : ''}`}
             onClick={() => setMode('weekdays')}
           >
@@ -848,37 +1072,41 @@ function PlannerSection({
         </div>
       </div>
 
-      {/* The honest consequence of the answers above, before anything is saved. */}
-      <div className="cjEstimate">
-        <div>
-          <b>{perWeek % 1 === 0 ? perWeek : perWeek.toFixed(1)}</b>
-          <span>ครั้ง/สัปดาห์</span>
-        </div>
-        <div>
-          <b>{formatHoursTh(minutesPerWeek)}</b>
-          <span>ต่อสัปดาห์</span>
-        </div>
-        <div>
-          <b>{sessionCount}</b>
-          <span>ครั้งทั้งหมด</span>
-        </div>
-        <div>
-          <b>{finishIso ? formatDayMonth(finishIso) : '—'}</b>
-          <span>คาดว่าจะจบ</span>
-        </div>
-      </div>
+      {/* The consequence, as one sentence.
+          Four equal tiles gave "sessions per week" — a number the student had
+          just chosen — the same weight as the finish date, which is the only one
+          they are shopping for. And a finish date alone is a fact about the
+          course; against the exam date it becomes a fact about them. */}
+      <p className="cjOutcome">
+        เรียนสัปดาห์ละ {perWeek % 1 === 0 ? perWeek : perWeek.toFixed(1)} ครั้ง ({formatHoursTh(minutesPerWeek)}) —
+        รวม {sessionCount} ครั้ง
+        {finishIso ? (
+          <>
+            {' '}
+            เรียนจบประมาณ <b>{formatDayMonth(finishIso)}</b>
+          </>
+        ) : null}
+      </p>
+      {verdict.kind === 'clear' && (
+        <p className="cjOutcomeGood">เหลือเวลาทบทวนก่อนสอบอีก {verdict.days} วัน</p>
+      )}
+      {verdict.kind === 'late' && (
+        <p className="cjOutcomeBad">
+          แผนนี้จบหลังวันสอบ {verdict.days} วัน — เพิ่มวันเรียน เพิ่มนาที หรือลดเป้าลงมาที่ Band 6
+        </p>
+      )}
 
       <div className="cjPlannerActions">
-        <button type="button" className="cjBtn cjBtn-primary" onClick={onSave}>
-          {saved ? 'บันทึกแผนใหม่' : 'สร้างปฏิทินของฉัน'}
+        <button type="button" className="cjBtn cjBtn-primary" onClick={onSave} disabled={!dirty}>
+          {dirty ? 'ใช้แผนนี้' : 'บันทึกแล้ว'}
         </button>
-        {saved && (
+        {dirty && (
           <button type="button" className="cjBtn cjBtn-quiet" onClick={onCancel}>
-            ยกเลิก
+            ย้อนกลับ
           </button>
         )}
       </div>
-    </section>
+    </div>
   )
 }
 
@@ -985,9 +1213,6 @@ function PathSection({
   path,
   completedIds,
   buildWith,
-  isOpen,
-  onOpen,
-  onClose,
   onSave
 }: {
   enrolled: JourneyCourseId[]
@@ -995,13 +1220,15 @@ function PathSection({
   completedIds: Set<string>
   /** Builds the calendar a candidate path would produce, so the cost is real. */
   buildWith: (path: CoursePath) => JourneyDay[]
-  isOpen: boolean
-  onOpen: () => void
-  onClose: () => void
   onSave: (path: CoursePath) => void
 }) {
   const [draft, setDraft] = useState<CoursePath>(path)
-  useEffect(() => setDraft(path), [path, isOpen])
+  useEffect(() => setDraft(path), [path])
+  /**
+   * Reordering with the arrow buttons moves a row the caret isn't on, so there
+   * is nothing for a screen reader to announce. This says what happened.
+   */
+  const [announcement, setAnnouncement] = useState('')
 
   const liveOrder = useMemo(() => pathOrder(path, enrolled), [path, enrolled])
   // Memoised because it keys the preview below, which rebuilds two whole
@@ -1031,51 +1258,29 @@ function PathSection({
     if (target < 0 || target >= next.length) return
     ;[next[index], next[target]] = [next[target], next[index]]
     setDraft({ ...draft, order: next })
+    setAnnouncement(`${COURSE_BY_ID[next[target]].labelTh} อยู่ลำดับที่ ${target + 1} จาก ${next.length}`)
   }
 
   return (
-    <section className="cjSection cjSection-path cjPath">
-      <SectionBand
-        step={3}
-        title="ลำดับการเรียน"
-        subtitle={path.order?.length ? 'คุณจัดลำดับเอง — เปลี่ยนได้ตลอด' : 'เรียงตามที่เราแนะนำ — เปลี่ยนเองได้ตลอด'}
-      />
+    <div className="cjPath">
+      <p className="cjPathLede">
+        {path.order?.length
+          ? 'นี่คือลำดับที่คุณจัดเอง ปฏิทินเรียงตามนี้'
+          : PATH_REASON_TH[liveOrder[0]] ?? 'ลำดับนี้ออกแบบให้แต่ละคอร์สส่งต่อความรู้ให้คอร์สถัดไป'}
+      </p>
 
-      {!isOpen ? (
-        <>
-          <ol className="cjPathStrip">
-            {liveOrder.map((courseId, index) => {
-              const course = COURSE_BY_ID[courseId]
-              const progress = courseProgress(courseId, completedIds)
-              return (
-                <li key={courseId} style={{ ['--cjAccent' as string]: course.accent }}>
-                  <span className="cjPathNum">{index + 1}</span>
-                  <span className="cjPathName">
-                    <b>
-                      {course.emoji} {course.labelTh}
-                    </b>
-                    <small>{progress.percent > 0 ? `เรียนแล้ว ${progress.percent}%` : `${progress.total} บท`}</small>
-                  </span>
-                </li>
-              )
-            })}
-          </ol>
-          <div className="cjPathFoot">
-            <p>
-              {path.order?.length
-                ? 'นี่คือลำดับที่คุณจัดเอง ปฏิทินด้านล่างเรียงตามนี้'
-                : PATH_REASON_TH[liveOrder[0]] ?? 'ลำดับนี้ออกแบบให้แต่ละคอร์สส่งต่อความรู้ให้คอร์สถัดไป'}
-            </p>
-            <button type="button" className="cjBtn cjBtn-ghost" onClick={onOpen}>
-              จัดลำดับเอง →
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="cjPathModes">
+      <span className="cjSrOnly" role="status" aria-live="polite">
+        {announcement}
+      </span>
+
+      {/* A radiogroup, said properly. These are two mutually exclusive choices,
+          which is what `radio` means; `aria-pressed` on a pair of buttons tells
+          a screen reader they're independent toggles, which they aren't. */}
+      <div className="cjPathModes" role="radiogroup" aria-label="วิธีจัดลำดับคอร์ส">
             <button
               type="button"
+              role="radio"
+              aria-checked={!isCustom}
               className={`cjPathMode ${!isCustom ? 'is-active' : ''}`}
               onClick={() => setDraft({ ...draft, order: null })}
             >
@@ -1084,6 +1289,8 @@ function PathSection({
             </button>
             <button
               type="button"
+              role="radio"
+              aria-checked={isCustom}
               className={`cjPathMode ${isCustom ? 'is-active' : ''}`}
               onClick={() => setDraft({ ...draft, order: pathOrder(draft, enrolled) })}
             >
@@ -1154,16 +1361,11 @@ function PathSection({
             <button type="button" className="cjBtn cjBtn-primary" onClick={() => onSave(draft)} disabled={!changed}>
               {changed ? 'ใช้ลำดับนี้' : 'ยังไม่มีการเปลี่ยน'}
             </button>
-            <button type="button" className="cjBtn cjBtn-quiet" onClick={onClose}>
-              ปิด
-            </button>
           </div>
           <p className="cjPathNote">
             ความคืบหน้าไม่หายไปไหน — คอร์สที่เรียนค้างไว้จะเริ่มต่อจากบทที่ค้างอยู่เสมอ
           </p>
-        </>
-      )}
-    </section>
+    </div>
   )
 }
 
@@ -1197,25 +1399,26 @@ function CoursesSection({
   const rest = JOURNEY_COURSES.filter((course) => !enrolledSet.has(course.id))
 
   return (
-    <section className="cjSection cjSection-courses cjCourses">
-      <SectionBand
-        step={2}
-        title="เลือกคอร์ส"
-        subtitle="คอร์สที่คุณมีจะถูกจัดลงปฏิทินตามลำดับที่แนะนำ — เขียน → อ่าน → พูด → ฟัง"
-      />
+    <div className="cjCourses">
+      {/* Derived, never asserted. This line used to hardcode
+          "เขียน → อ่าน → พูด → ฟัง", which went stale the moment a student used
+          the reorder control one panel across — and never mentioned Grammar at
+          all, which sits first in the taught order. */}
+      {mine.length > 0 && (
+        <p className="cjCoursesLede">
+          ปฏิทินจัดตามลำดับนี้: {mine.map((course) => course.labelTh).join(' → ')}
+        </p>
+      )}
 
       {mine.length > 0 && (
         <div className="cjMine">
           <div className="cjMineHead">
-            <h3>คอร์สของฉัน</h3>
-            {bundleLabel && <span className="cjBundleTag">🪢 {bundleLabel}</span>}
+            <h3>คอร์สในแผน</h3>
+            {bundleLabel && <span className="cjBundleTag">{bundleLabel}</span>}
           </div>
           {bundleTagline && <p className="cjBundleNote">{bundleTagline}</p>}
 
-          {/* The rope: enrolled courses are one purchase, so they're drawn tied
-              together rather than as four unrelated cards. Decorative only. */}
-          <div className={`cjBundleWrap ${bundleLabel ? 'is-bundled' : ''}`}>
-            {bundleLabel && <BundleRope count={mine.length} />}
+          <div className="cjBundleWrap">
             <div className="cjCourseGrid">
               {mine.map((course, index) => {
                 const progress = courseProgress(course.id, completedIds)
@@ -1293,378 +1496,469 @@ function CoursesSection({
       <p className="cjBundleFoot">
         แพ็กเกจที่มี: {BUNDLES.map((b) => b.label).join(' · ')}
       </p>
+    </div>
+  )
+}
+
+// ========================================================== plan bar =====
+
+/**
+ * The plan, as one line.
+ *
+ * It used to be three numbered sections occupying the first three screens of the
+ * page — pace, courses, order — every one of them a question about how to study
+ * rather than an answer to what to study. They are all still here, one tap away
+ * and unchanged; they are just no longer standing between the student and the
+ * play button.
+ */
+function PlanBar({
+  planId,
+  schedule,
+  sessionCount,
+  finishIso,
+  examDateIso,
+  verdict,
+  isOpen,
+  onToggle
+}: {
+  planId: PlanId
+  schedule: StudySchedule
+  sessionCount: number
+  finishIso: string | null
+  examDateIso: string | null
+  verdict: ReturnType<typeof examVerdict>
+  isOpen: boolean
+  onToggle: () => void
+}) {
+  return (
+    <section className={`cjPlanBar ${isOpen ? 'is-open' : ''}`}>
+      <div className="cjPlanBarBody">
+        <b>แผนของฉัน</b>
+        <p>
+          <span className="cjPlanTag">{PLAN_BY_ID[planId].labelTh}</span> {describeSchedule(schedule)}
+        </p>
+        <small>
+          {sessionCount} ครั้ง
+          {finishIso ? ` · เรียนจบประมาณ ${formatDayMonth(finishIso)}` : ''}
+          {examDateIso ? ` · สอบ ${formatDayMonth(examDateIso)}` : ' · ยังไม่ได้กำหนดวันสอบ'}
+        </small>
+        {/* The plan's own bad news, surfaced where the plan is — not buried in a
+            panel the student has no reason to open. */}
+        {verdict.kind === 'late' && (
+          <p className="cjOutcomeBad">แผนนี้จบหลังวันสอบ {verdict.days} วัน — กด “ปรับแผน” เพื่อแก้</p>
+        )}
+        {verdict.kind === 'clear' && verdict.days < 7 && (
+          <p className="cjOutcomeBad">เหลือเวลาทบทวนก่อนสอบแค่ {verdict.days} วัน</p>
+        )}
+      </div>
+      <button
+        type="button"
+        className="cjBtn cjBtn-ghost"
+        aria-expanded={isOpen}
+        aria-controls="cjDrawerPanel"
+        onClick={onToggle}
+      >
+        {isOpen ? 'ปิด' : 'ปรับแผน'}
+      </button>
     </section>
   )
 }
 
-/** Decorative rope tying the enrolled course cards into one bundle. */
-function BundleRope({ count }: { count: number }) {
-  const knots = Math.max(2, count)
+// ========================================================= today card =====
+
+/**
+ * The page.
+ *
+ * One day, one play button. Everything the old four-section layout was for —
+ * the pace, the plan depth, the course order — exists to decide what goes in
+ * this card; none of it needs to be on screen while the student uses it.
+ */
+function TodayCard({
+  day,
+  today,
+  completedIds,
+  resume,
+  isPinned,
+  onUnpin,
+  onOpenLesson
+}: {
+  day: JourneyDay | null
+  today: string
+  completedIds: Set<string>
+  resume: ResumeMap
+  /** True when the student is looking at a day other than the plan's own next one. */
+  isPinned: boolean
+  onUnpin: () => void
+  onOpenLesson: (lessonId: string, options?: { autoplay?: boolean; restart?: boolean }) => void
+}) {
+  if (!day) return null
+
+  const nextLesson = day.lessons.find((lesson) => !completedIds.has(lesson.id)) ?? null
+  const resumeEntry = nextLesson ? resume[nextLesson.id] : undefined
+  const dayDone = isJourneyDayComplete(day, completedIds)
+  const ahead = day.dateIso > today
+
   return (
-    <svg className="cjRope" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
-      <path className="cjRopeLine" d="M0,6 C15,0 30,12 50,6 C70,0 85,12 100,6" />
-      <path className="cjRopeLine cjRopeLine-thin" d="M0,6 C15,12 30,0 50,6 C70,12 85,0 100,6" />
-      {Array.from({ length: knots }, (_, i) => (
-        <circle key={i} className="cjRopeKnot" cx={(100 / (knots + 1)) * (i + 1)} cy="6" r="2.2" />
-      ))}
-    </svg>
+    <article
+      className={`cjTodayCard ${dayDone ? 'is-done' : ''}`}
+      style={{
+        ['--cjAccent' as string]: COURSE_BY_ID[day.course].accent,
+        ['--cjPastel' as string]: COURSE_BY_ID[day.course].pastel
+      }}
+    >
+      {/* The date, at the size the day deserves. A study day is the unit the
+          student lives in, so it gets the same treatment a calendar app gives
+          an appointment: one huge numeral you can find without reading. */}
+      <div className="cjTodayHero">
+        <span className="cjDayPill">{day.dateIso === today ? 'วันนี้' : bigDateParts(day.dateIso).weekday}</span>
+        <b className="cjBigDate">
+          {bigDateParts(day.dateIso).day}
+          <span>{bigDateParts(day.dateIso).month}</span>
+        </b>
+        <span className="cjTodayCourse">
+          {COURSE_BY_ID[day.course].emoji} {COURSE_BY_ID[day.course].label}
+        </span>
+        <span className="cjTodayMinutes">
+          {day.minutes} นาที · {day.lessons.length} บท
+        </span>
+      </div>
+
+      {/* Behind schedule. Said as a fact with the fix attached, never as a
+          scolding — the plan slipping is the normal case, and the only useful
+          next move is the one lesson below this line. */}
+      {day.dateIso < today && (
+        <p className="cjOverdueNote">
+          ค้างมาตั้งแต่ {formatDayMonth(day.dateIso)} — เริ่มจากตรงนี้ได้เลย ปฏิทินจะขยับตามให้เอง
+        </p>
+      )}
+
+      {/* Studying ahead is no longer a dialog asking whether they meant it.
+          They tapped a study day; they meant it. The one thing the dialog
+          actually announced — that the rest of the plan moves up — is a line. */}
+      {ahead && !dayDone && (
+        <p className="cjAheadNote">
+          เรียนล่วงหน้าอยู่ — วันที่เหลือจะเลื่อนขึ้นมาให้เอง วันจบก็เร็วขึ้นตาม
+        </p>
+      )}
+
+      {nextLesson ? (
+        <button type="button" className="cjPlayBtn" onClick={() => onOpenLesson(nextLesson.id, { autoplay: true })}>
+          <span className="cjPlayIcon" aria-hidden="true">
+            ▶
+          </span>
+          <span className="cjPlayBody">
+            <small>{isResumable(resumeEntry) ? `เล่นต่อจาก ${formatClock(resumeEntry.seconds)}` : 'เริ่มเรียนบทนี้'}</small>
+            <b>{nextLesson.title}</b>
+          </span>
+          <span className="cjPlayMin">
+            {isResumable(resumeEntry) ? `เหลือ ${minutesLeft(resumeEntry)} นาที` : `${nextLesson.minutes} นาที`}
+          </span>
+        </button>
+      ) : (
+        <div className="cjDoneRow">
+          <span className="cjDoneMark" aria-hidden="true">
+            ✓
+          </span>
+          <div>
+            <b>เรียนครบแล้วสำหรับวันนี้</b>
+            <p>อยากทบทวนอีกรอบไหม? กดบทที่อยากดูซ้ำได้เลย</p>
+          </div>
+          <button
+            type="button"
+            className="cjBtn cjBtn-ghost"
+            onClick={() => onOpenLesson(day.lessons[0].id, { autoplay: true, restart: true })}
+          >
+            ทบทวนอีกครั้ง
+          </button>
+        </div>
+      )}
+
+      {day.isLongSession && (
+        <p className="cjLongNote">
+          บทนี้ยาวกว่าที่ตั้งไว้ ({day.minutes} นาที) — เป็นคลิปเดียวจบ แบ่งดูสองรอบได้
+        </p>
+      )}
+
+      <ul className="cjDayList">
+        {day.lessons.map((lesson) => {
+          const done = completedIds.has(lesson.id)
+          return (
+            <li key={lesson.id} className={done ? 'is-done' : ''}>
+              <button type="button" className="cjDayItem" onClick={() => onOpenLesson(lesson.id)}>
+                <span className={`cjCheck ${done ? 'is-done' : ''}`} aria-hidden="true">
+                  {done ? '✓' : '▶'}
+                </span>
+                <span className="cjDayItemBody">
+                  <b>{lesson.title}</b>
+                  <small>
+                    {lesson.chapterName}
+                    {!lesson.bunnyVideoId ? ' · กำลังอัปโหลด' : ''}
+                  </small>
+                </span>
+                <span className="cjTimePill">{lesson.minutes} นาที</span>
+                {done && <span className="cjReviseTag">ทบทวน</span>}
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+
+      {isPinned && (
+        <div className="cjTodayFoot">
+          <button type="button" className="cjBtn cjBtn-quiet" onClick={onUnpin}>
+            กลับไปงานวันนี้
+          </button>
+        </div>
+      )}
+    </article>
   )
 }
 
-// =========================================================== calendar =====
+// ======================================================== review card =====
 
-function CalendarSection({
+/**
+ * Spaced retrieval — the same question, days later.
+ *
+ * One lesson at a time and never a backlog: a review queue that grows is a debt,
+ * and a debt is what people quit a course over. What comes back is the learner's
+ * own words from the first attempt, revealed only after they've tried again —
+ * seeing the answer first turns retrieval into recognition, which is the process
+ * that doesn't produce the effect.
+ */
+function ReviewCard({
+  lesson,
+  previous,
+  onSubmit,
+  onSkip,
+  onOpenLesson
+}: {
+  lesson: JourneyLesson
+  previous: CheckAnswer | undefined
+  onSubmit: (text: string) => void
+  onSkip: () => void
+  onOpenLesson: () => void
+}) {
+  const [text, setText] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const course = COURSE_BY_ID[lesson.course]
+  const ok = isRecallSufficient(text)
+
+  if (submitted) {
+    return (
+      <section className="cjReview is-done" style={{ ['--cjAccent' as string]: course.accent }}>
+        <b>เทียบกับที่เคยเขียนไว้</b>
+        <div className="cjReviewCompare">
+          <div>
+            <small>รอบนี้</small>
+            <p>{text}</p>
+          </div>
+          <div>
+            <small>ครั้งก่อน</small>
+            <p>{previous?.text || '—'}</p>
+          </div>
+        </div>
+        <p className="cjReviewNote">
+          ตรงที่หายไปคือตรงที่ควรกลับไปดู —{' '}
+          <button type="button" className="cjLinkBtn" onClick={onOpenLesson}>
+            เปิดบทนี้อีกครั้ง
+          </button>
+        </p>
+      </section>
+    )
+  }
+
+  return (
+    <section className="cjReview" style={{ ['--cjAccent' as string]: course.accent }}>
+      <span className="cjReviewPill">
+        {course.emoji} ทบทวนความจำ · {course.labelTh}
+      </span>
+      <b>{lesson.title}</b>
+      <p className="cjReviewPrompt">{checkPrompt(lesson.course)}</p>
+      <textarea
+        className="cjRecallBox"
+        rows={3}
+        value={text}
+        aria-label="สิ่งที่คุณจำได้จากบทนี้"
+        placeholder="นึกให้ออกก่อนค่อยเปิดดู — ผิดได้ ไม่มีการให้คะแนน"
+        onChange={(event) => setText(event.target.value)}
+      />
+      <div className="cjRecallFoot">
+        <small>{ok ? 'พอแล้ว — ส่งได้เลย' : `อีก ${recallShortfall(text)} ตัวอักษร`}</small>
+        <div className="cjRecallActions">
+          <button type="button" className="cjBtn cjBtn-quiet" onClick={onSkip}>
+            ไว้ทีหลัง
+          </button>
+          <button
+            type="button"
+            className="cjBtn cjBtn-primary"
+            disabled={!ok}
+            onClick={() => {
+              onSubmit(text)
+              setSubmitted(true)
+            }}
+          >
+            ส่งคำตอบ
+          </button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ============================================================ up next =====
+
+/**
+ * The next few sessions, and nothing else.
+ *
+ * This replaces a day/week/month segmented control — three code paths, three
+ * empty states, three ways to render the same twelve facts, for a screen the
+ * student opens once a day to answer one question. The long view still exists,
+ * in the plan drawer, where a long view belongs.
+ */
+function UpNext({
   calendar,
   today,
-  todayDay,
+  shownIndex,
   completedIds,
   unlockedDays,
-  resume,
-  railView,
-  setRailView,
-  openDayIndex,
-  setOpenDayIndex,
-  onAskAhead,
-  onOpenLesson,
-  scheduleLabel
+  onOpenDay
 }: {
   calendar: JourneyDay[]
   today: string
-  todayDay: JourneyDay | null
+  shownIndex: number
   completedIds: Set<string>
   unlockedDays: Set<string>
-  resume: ResumeMap
-  railView: 'day' | 'week' | 'month'
-  setRailView: (next: 'day' | 'week' | 'month') => void
-  openDayIndex: number | null
-  setOpenDayIndex: (index: number | null) => void
-  onAskAhead: (index: number) => void
-  onOpenLesson: (lessonId: string, options?: { autoplay?: boolean; restart?: boolean }) => void
-  scheduleLabel: string
+  onOpenDay: (day: JourneyDay) => void
 }) {
-  const shownDay = openDayIndex !== null ? calendar[openDayIndex] ?? null : todayDay
-  const nextLesson = shownDay?.lessons.find((lesson) => !completedIds.has(lesson.id)) ?? null
-  const resumeEntry = nextLesson ? resume[nextLesson.id] : undefined
-  const dayDone = shownDay ? isJourneyDayComplete(shownDay, completedIds) : false
-  const locked = shownDay ? isJourneyDayLocked(shownDay, today, unlockedDays, completedIds) : false
+  const upcoming = useMemo(() => {
+    const first = calendar.findIndex((day) => !isJourneyDayComplete(day, completedIds))
+    if (first < 0) return []
+    return calendar.slice(first + 1, first + 4)
+  }, [calendar, completedIds])
 
-  const blocks = useMemo(() => buildJourneyBlocks(calendar, completedIds), [calendar, completedIds])
-  const currentBlockIndex = shownDay
-    ? blocks.findIndex((block) => shownDay.index >= block.firstDayIndex && shownDay.index <= block.lastDayIndex)
-    : -1
-
-  const finishIso = calendar.length ? calendar[calendar.length - 1].dateIso : null
-
-  /** Sunday-to-Saturday around today — the week the student is actually in. */
-  const weekDays = useMemo(() => {
-    const base = fromIso(today)
-    const sunday = new Date(base.getFullYear(), base.getMonth(), base.getDate() - base.getDay())
-    const from = toIso(sunday)
-    const to = toIso(new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate() + 6))
-    return calendar.filter((day) => day.dateIso >= from && day.dateIso <= to)
-  }, [calendar, today])
-
-  /** Calendar folded into months, for the month rail. */
-  const months = useMemo(() => {
-    const map = new Map<string, { key: string; label: string; days: JourneyDay[]; minutes: number; courses: JourneyCourseId[] }>()
-    calendar.forEach((day) => {
-      const d = fromIso(day.dateIso)
-      const key = `${d.getFullYear()}-${d.getMonth()}`
-      const entry = map.get(key) ?? {
-        key,
-        label: `${THAI_MONTHS[d.getMonth()]} ${d.getFullYear()}`,
-        days: [],
-        minutes: 0,
-        courses: []
-      }
-      entry.days.push(day)
-      entry.minutes += day.minutes
-      if (!entry.courses.includes(day.course)) entry.courses.push(day.course)
-      map.set(key, entry)
-    })
-    return Array.from(map.values())
-  }, [calendar])
-
-  const currentMonthKey = shownDay
-    ? `${fromIso(shownDay.dateIso).getFullYear()}-${fromIso(shownDay.dateIso).getMonth()}`
-    : ''
+  if (!upcoming.length) return null
 
   return (
-    <section className="cjSection cjSection-journey cjCalendar">
-      <SectionBand step={4} title="เส้นทางของฉัน" subtitle={`${scheduleLabel} — ข้ามวันได้ ปฏิทินไม่หาย`} />
-
-      {!calendar.length ? (
-        <p className="cjEmpty">ยังไม่มีคอร์สในแผน — เพิ่มคอร์สในหัวข้อที่ 2 ก่อน แล้วปฏิทินจะขึ้นให้เอง</p>
-      ) : (
-        <>
-          {/* The rail: one station per skill, in taught order, with the station
-              you are standing in opened. Lesson titles have left the grid
-              entirely — days are chips here, and the titles live in the focus
-              card below, which is the only place with room to read them. */}
-          <div className="cjRailBar">
-            <div className="cjSeg" role="group" aria-label="มุมมองปฏิทิน">
-              {(['day', 'week', 'month'] as const).map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  className={railView === option ? 'is-on' : ''}
-                  aria-pressed={railView === option}
-                  onClick={() => setRailView(option)}
-                >
-                  {option === 'day' ? 'วัน' : option === 'week' ? 'สัปดาห์' : 'เดือน'}
-                </button>
-              ))}
-            </div>
-            <span className="cjRailCount">
-              {railView === 'week'
-                ? `สัปดาห์นี้ ${weekDays.length} ครั้ง`
-                : `${calendar.length} ครั้ง · จบ ${finishIso ? formatDayMonth(finishIso) : '—'}`}
-            </span>
-          </div>
-
-          {railView === 'month' ? (
-            <ol className="cjRail">
-              {months.map((month) => {
-                const course = COURSE_BY_ID[month.days[0].course]
-                const isNow = month.key === currentMonthKey
-                return (
-                  <li key={month.key} className={`cjStation ${isNow ? 'is-now' : ''}`}>
-                    <span className="cjStationDot" aria-hidden="true" />
-                    <div className="cjStationCard" style={{ ['--cjPastel' as string]: course.pastel }}>
-                      <div className="cjStationTop">
-                        <b>{month.label}</b>
-                        <span className="cjStationPill">{month.days.length} ครั้ง</span>
-                      </div>
-                      <span className="cjStationMeta">
-                        {month.courses.map((id) => `${COURSE_BY_ID[id].emoji} ${COURSE_BY_ID[id].label.replace('IELTS ', '')}`).join(' · ')}
-                        {' · '}
-                        {formatHoursTh(month.minutes)}
-                      </span>
-                      <DayChips
-                        days={month.days}
-                        today={today}
-                        completedIds={completedIds}
-                        unlockedDays={unlockedDays}
-                        shownIndex={shownDay?.index ?? -1}
-                        onOpenDay={setOpenDayIndex}
-                        onAskAhead={onAskAhead}
-                      />
-                    </div>
-                  </li>
-                )
-              })}
-            </ol>
-          ) : railView === 'week' ? (
-            <div className="cjWeekPane">
-              {weekDays.length === 0 ? (
-                <p className="cjEmpty">สัปดาห์นี้ไม่มีคิวเรียน — พักได้ หรือกดวันในอนาคตเพื่อเรียนล่วงหน้า</p>
-              ) : (
-                <ul className="cjWeekList">
-                  {weekDays.map((day) => {
-                    const course = COURSE_BY_ID[day.course]
-                    const complete = isJourneyDayComplete(day, completedIds)
-                    const dayLocked = isJourneyDayLocked(day, today, unlockedDays, completedIds)
-                    const parts = bigDateParts(day.dateIso)
-                    return (
-                      <li key={day.index}>
-                        <button
-                          type="button"
-                          className={`cjWeekRow ${complete ? 'is-done' : ''} ${dayLocked ? 'is-locked' : ''} ${day.dateIso === today ? 'is-today' : ''}`}
-                          style={{ ['--cjAccent' as string]: course.accent, ['--cjPastel' as string]: course.pastel }}
-                          onClick={() => (dayLocked ? onAskAhead(day.index) : setOpenDayIndex(day.index))}
-                        >
-                          <span className="cjWeekDate">
-                            <b>{parts.day}</b>
-                            <span>{parts.weekday.slice(0, 2)}</span>
-                          </span>
-                          <span className="cjWeekBar" aria-hidden="true" />
-                          <span className="cjWeekBody">
-                            <b>{day.lessons[0]?.title}</b>
-                            <small>
-                              {course.emoji} {course.label.replace('IELTS ', '')}
-                              {day.lessons.length > 1 ? ` · อีก ${day.lessons.length - 1} บท` : ''}
-                              {complete ? ' · ✅ เรียนจบแล้ว' : dayLocked ? ' · 🔒 กดเพื่อเรียนก่อน' : ''}
-                            </small>
-                          </span>
-                          <span className="cjTimePill">{day.minutes} นาที</span>
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
-            </div>
-          ) : (
-            <ol className="cjRail">
-              {blocks.map((block, index) => {
-                const course = COURSE_BY_ID[block.course]
-                const isNow = index === currentBlockIndex
-                const done = block.percent >= 100
-                return (
-                  <li key={`${block.course}-${block.startIso}`} className={`cjStation ${isNow ? 'is-now' : ''} ${done ? 'is-done' : ''}`}>
-                    <span className="cjStationDot" aria-hidden="true" />
-                    <div className="cjStationCard" style={{ ['--cjPastel' as string]: course.pastel, ['--cjAccent' as string]: course.accent }}>
-                      <div className="cjStationTop">
-                        {(isNow || done) && (
-                          <span className="cjRing" style={{ ['--cjRingPct' as string]: `${block.percent}%` }}>
-                            <span>{block.percent}%</span>
-                          </span>
-                        )}
-                        <span className="cjStationHead">
-                          <b>
-                            {course.emoji} {course.label.replace('IELTS ', '').toUpperCase()}
-                          </b>
-                          <span className="cjStationMeta">
-                            {formatDayMonth(block.startIso)} – {formatDayMonth(block.endIso)} · {block.days} ครั้ง · {block.lessons} บท
-                            {block.guestDays > 0 &&
-                              ` · แทรก ${block.guestCourses.map((id) => COURSE_BY_ID[id].labelTh).join('/')} ${block.guestDays} ครั้ง`}
-                          </span>
-                        </span>
-                        {isNow && <span className="cjStationPill is-now">กำลังเรียน</span>}
-                        {done && !isNow && <span className="cjStationPill is-done">จบแล้ว</span>}
-                      </div>
-
-                      {/* Only the station you are in opens its days. Four blocks
-                          of chips at once would be the density problem again in
-                          a different shape. */}
-                      {isNow && (
-                        <DayChips
-                          days={block.days > 0 ? calendar.slice(block.firstDayIndex, block.lastDayIndex + 1) : []}
-                          today={today}
-                          completedIds={completedIds}
-                          unlockedDays={unlockedDays}
-                          shownIndex={shownDay?.index ?? -1}
-                          onOpenDay={setOpenDayIndex}
-                          onAskAhead={onAskAhead}
-                          windowed
-                        />
-                      )}
-                    </div>
-                  </li>
-                )
-              })}
-            </ol>
-          )}
-
-          {shownDay && (
-            <article
-              className={`cjTodayCard ${dayDone ? 'is-done' : ''}`}
-              style={{
-                ['--cjAccent' as string]: COURSE_BY_ID[shownDay.course].accent,
-                ['--cjPastel' as string]: COURSE_BY_ID[shownDay.course].pastel
-              }}
-            >
-              {/* The date, at the size the day deserves. A study day is the unit
-                  the student lives in, so it gets the same treatment a calendar
-                  app gives an appointment: one huge numeral you can find without
-                  reading. */}
-              <div className="cjTodayHero">
-                <span className="cjDayPill">
-                  {shownDay.dateIso === today ? 'วันนี้' : bigDateParts(shownDay.dateIso).weekday}
+    <section className="cjUpNext">
+      <h2>ครั้งต่อไป</h2>
+      <ul className="cjWeekList">
+        {upcoming.map((day) => {
+          const course = COURSE_BY_ID[day.course]
+          const complete = isJourneyDayComplete(day, completedIds)
+          const locked = isJourneyDayLocked(day, today, unlockedDays, completedIds)
+          const parts = bigDateParts(day.dateIso)
+          return (
+            <li key={day.index}>
+              <button
+                type="button"
+                className={`cjWeekRow ${complete ? 'is-done' : ''} ${day.index === shownIndex ? 'is-open' : ''}`}
+                style={{ ['--cjAccent' as string]: course.accent, ['--cjPastel' as string]: course.pastel }}
+                onClick={() => onOpenDay(day)}
+              >
+                <span className="cjWeekDate">
+                  <b>{parts.day}</b>
+                  <span>{parts.weekday.slice(0, 2)}</span>
                 </span>
-                <b className="cjBigDate">
-                  {bigDateParts(shownDay.dateIso).day}
-                  <span>{bigDateParts(shownDay.dateIso).month}</span>
-                </b>
-                <span className="cjTodayCourse">
-                  {COURSE_BY_ID[shownDay.course].emoji} {COURSE_BY_ID[shownDay.course].label}
+                <span className="cjWeekBar" aria-hidden="true" />
+                <span className="cjWeekBody">
+                  <b>{day.lessons[0]?.title}</b>
+                  <small>
+                    {course.emoji} {course.label.replace('IELTS ', '')}
+                    {day.lessons.length > 1 ? ` · อีก ${day.lessons.length - 1} บท` : ''}
+                    {complete ? ' · เรียนจบแล้ว' : locked ? ' · แตะเพื่อเรียนล่วงหน้า' : ''}
+                  </small>
                 </span>
-                <span className="cjTodayMinutes">
-                  {shownDay.minutes} นาที · {shownDay.lessons.length} บท
-                </span>
-              </div>
-
-              {/* Behind schedule. Said as a fact with the fix attached, never as
-                  a scolding — the plan slipping is the normal case, and the only
-                  useful next move is the one lesson below this line. */}
-              {shownDay.dateIso < today && (
-                <p className="cjOverdueNote">
-                  ค้างมาตั้งแต่ {formatDayMonth(shownDay.dateIso)} — เริ่มจากตรงนี้ได้เลย ปฏิทินจะขยับตามให้เอง
-                </p>
-              )}
-
-              {locked ? (
-                <div className="cjLockedRow">
-                  <p>วันนี้ยังไม่ถึงคิวตามแผน — คิวไว้วันที่ {formatDayMonth(shownDay.dateIso)}</p>
-                  <button type="button" className="cjBtn cjBtn-primary" onClick={() => onAskAhead(shownDay.index)}>
-                    อยากเรียนล่วงหน้าเลย
-                  </button>
-                </div>
-              ) : nextLesson ? (
-                <button
-                  type="button"
-                  className="cjPlayBtn"
-                  onClick={() => onOpenLesson(nextLesson.id, { autoplay: true })}
-                >
-                  <span className="cjPlayIcon" aria-hidden="true">▶</span>
-                  <span className="cjPlayBody">
-                    <small>
-                      {isResumable(resumeEntry) ? `เล่นต่อจาก ${formatClock(resumeEntry.seconds)}` : 'เริ่มเรียนบทนี้'}
-                    </small>
-                    <b>{nextLesson.title}</b>
-                  </span>
-                  <span className="cjPlayMin">
-                    {isResumable(resumeEntry) ? `เหลือ ${minutesLeft(resumeEntry)} นาที` : `${nextLesson.minutes} นาที`}
-                  </span>
-                </button>
-              ) : (
-                // The sketch's finished state: green tick, plus the one thing a
-                // student actually wants next — to watch it again.
-                <div className="cjDoneRow">
-                  <span className="cjDoneMark" aria-hidden="true">✓</span>
-                  <div>
-                    <b>เรียนครบแล้วสำหรับวันนี้</b>
-                    <p>อยากทบทวนอีกรอบไหม? กดบทที่อยากดูซ้ำได้เลย</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="cjBtn cjBtn-ghost"
-                    onClick={() => onOpenLesson(shownDay.lessons[0].id, { autoplay: true, restart: true })}
-                  >
-                    ทบทวนอีกครั้ง
-                  </button>
-                </div>
-              )}
-
-              {shownDay.isLongSession && (
-                <p className="cjLongNote">
-                  บทนี้ยาวกว่าที่ตั้งไว้ ({shownDay.minutes} นาที) — เป็นคลิปเดียวจบ แบ่งดูสองรอบได้
-                </p>
-              )}
-
-              <ul className="cjDayList">
-                {shownDay.lessons.map((lesson) => {
-                  const done = completedIds.has(lesson.id)
-                  return (
-                    <li key={lesson.id} className={done ? 'is-done' : ''}>
-                      <button type="button" className="cjDayItem" onClick={() => onOpenLesson(lesson.id)}>
-                        <span className={`cjCheck ${done ? 'is-done' : ''}`} aria-hidden="true">{done ? '✓' : '▶'}</span>
-                        <span className="cjDayItemBody">
-                          <b>{lesson.title}</b>
-                          <small>
-                            {lesson.chapterName}
-                            {!lesson.bunnyVideoId ? ' · กำลังอัปโหลด' : ''}
-                          </small>
-                        </span>
-                        <span className="cjTimePill">{lesson.minutes} นาที</span>
-                        {done && <span className="cjReviseTag">ทบทวน</span>}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
-
-              {openDayIndex !== null && (
-                <button type="button" className="cjBtn cjBtn-quiet" onClick={() => setOpenDayIndex(null)}>
-                  กลับไปงานวันนี้
-                </button>
-              )}
-            </article>
-          )}
-
-        </>
-      )}
+                <span className="cjTimePill">{day.minutes} นาที</span>
+              </button>
+            </li>
+          )
+        })}
+      </ul>
     </section>
+  )
+}
+
+// ====================================================== full calendar =====
+
+/** The long arc — one station per course block, in study order. */
+function FullCalendar({
+  calendar,
+  today,
+  shownIndex,
+  completedIds,
+  unlockedDays,
+  onOpenDay
+}: {
+  calendar: JourneyDay[]
+  today: string
+  shownIndex: number
+  completedIds: Set<string>
+  unlockedDays: Set<string>
+  onOpenDay: (day: JourneyDay) => void
+}) {
+  const blocks = useMemo(() => buildJourneyBlocks(calendar, completedIds), [calendar, completedIds])
+  const currentBlockIndex = blocks.findIndex(
+    (block) => shownIndex >= block.firstDayIndex && shownIndex <= block.lastDayIndex
+  )
+  const finishIso = calendar.length ? calendar[calendar.length - 1].dateIso : null
+
+  if (!calendar.length) {
+    return <p className="cjEmpty">ยังไม่มีคอร์สในแผน — เพิ่มคอร์สในแท็บ “คอร์สในแผน” ก่อน</p>
+  }
+
+  return (
+    <div className="cjCalendar">
+      <p className="cjRailCount">
+        {calendar.length} ครั้ง · เรียนจบประมาณ {finishIso ? formatDayMonth(finishIso) : '—'}
+      </p>
+      <ol className="cjRail">
+        {blocks.map((block, index) => {
+          const course = COURSE_BY_ID[block.course]
+          const isNow = index === currentBlockIndex
+          const done = block.percent >= 100
+          return (
+            <li key={`${block.course}-${block.startIso}`} className={`cjStation ${isNow ? 'is-now' : ''} ${done ? 'is-done' : ''}`}>
+              <span className="cjStationDot" aria-hidden="true" />
+              <div className="cjStationCard" style={{ ['--cjPastel' as string]: course.pastel, ['--cjAccent' as string]: course.accent }}>
+                <div className="cjStationTop">
+                  {(isNow || done) && (
+                    <span className="cjRing" style={{ ['--cjRingPct' as string]: `${block.percent}%` }}>
+                      <span>{block.percent}%</span>
+                    </span>
+                  )}
+                  <span className="cjStationHead">
+                    <b>
+                      {course.emoji} {course.label.replace('IELTS ', '')}
+                    </b>
+                    <span className="cjStationMeta">
+                      {formatDayMonth(block.startIso)} – {formatDayMonth(block.endIso)} · {block.days} ครั้ง · {block.lessons} บท
+                      {block.guestDays > 0 &&
+                        ` · แทรก ${block.guestCourses.map((id) => COURSE_BY_ID[id].labelTh).join('/')} ${block.guestDays} ครั้ง`}
+                    </span>
+                  </span>
+                  {isNow && <span className="cjStationPill is-now">กำลังเรียน</span>}
+                  {done && !isNow && <span className="cjStationPill is-done">จบแล้ว</span>}
+                </div>
+
+                {/* Only the station you are in opens its days — four blocks of
+                    chips at once is the density problem in a different shape. */}
+                {isNow && (
+                  <DayChips
+                    days={block.days > 0 ? calendar.slice(block.firstDayIndex, block.lastDayIndex + 1) : []}
+                    today={today}
+                    completedIds={completedIds}
+                    unlockedDays={unlockedDays}
+                    shownIndex={shownIndex}
+                    onOpenDay={onOpenDay}
+                    windowed
+                  />
+                )}
+              </div>
+            </li>
+          )
+        })}
+      </ol>
+    </div>
   )
 }
 
@@ -1685,7 +1979,6 @@ function DayChips({
   unlockedDays,
   shownIndex,
   onOpenDay,
-  onAskAhead,
   windowed
 }: {
   days: JourneyDay[]
@@ -1693,8 +1986,7 @@ function DayChips({
   completedIds: Set<string>
   unlockedDays: Set<string>
   shownIndex: number
-  onOpenDay: (index: number) => void
-  onAskAhead: (index: number) => void
+  onOpenDay: (day: JourneyDay) => void
   /** Long blocks show a window around the current day until asked for the rest. */
   windowed?: boolean
 }) {
@@ -1721,10 +2013,10 @@ function DayChips({
               type="button"
               className={`cjChipDay ${complete ? 'is-done' : ''} ${dayLocked ? 'is-locked' : ''} ${day.dateIso === today ? 'is-today' : ''} ${day.index === shownIndex ? 'is-open' : ''}`}
               title={`${formatDayMonth(day.dateIso)} · ${day.lessons[0]?.title ?? ''} · ${day.minutes} นาที`}
-              onClick={() => (dayLocked ? onAskAhead(day.index) : onOpenDay(day.index))}
+              onClick={() => onOpenDay(day)}
             >
               <b>{parts.day}</b>
-              <span>{complete ? '✓' : dayLocked ? '🔒' : parts.month}</span>
+              <span>{complete ? '✓' : parts.month}</span>
             </button>
           )
         })}
@@ -1929,8 +2221,10 @@ function JourneyLessonView({
   planId,
   enrolled,
   bundleLabel,
+  savedRecall,
   onRecordPosition,
-  onToggleComplete,
+  onCompleteWithRecall,
+  onUndoComplete,
   onRevise,
   onOpenLesson,
   onOpenCourse,
@@ -1947,8 +2241,11 @@ function JourneyLessonView({
   planId: PlanId
   enrolled: JourneyCourseId[]
   bundleLabel: string | null
+  /** What they wrote the first time, shown back once the lesson is done. */
+  savedRecall: string
   onRecordPosition: (seconds: number, duration: number) => void
-  onToggleComplete: () => void
+  onCompleteWithRecall: (text: string) => void
+  onUndoComplete: () => void
   onRevise: () => void
   onOpenLesson: (lessonId: string, options?: { autoplay?: boolean; restart?: boolean }) => void
   onOpenCourse: (courseId: JourneyCourseId) => void
@@ -1956,6 +2253,24 @@ function JourneyLessonView({
   onHome: () => void
 }) {
   const course = COURSE_BY_ID[lesson.course]
+
+  /**
+   * The check, and the gate in front of it.
+   *
+   * `✓ ดูจบแล้ว` used to be an unconditional button, and a second button marked
+   * the lesson done *and* advanced in one tap — so the fastest route to 100% was
+   * tapping through the course without playing anything. Now the tick needs the
+   * video to have actually played (see lessonResume.advanceWatched, which
+   * ignores seeking) and one retrieval answer. A lesson whose video hasn't
+   * uploaded yet has nothing to gate on, so only the recall applies.
+   */
+  const [recall, setRecall] = useState('')
+  const [checkOpen, setCheckOpen] = useState(false)
+  const [justFinished, setJustFinished] = useState(false)
+  const gated = Boolean(lesson.bunnyVideoId)
+  const watchedOk = !gated || hasWatchedEnough(resumeEntry)
+  const percent = watchedPercent(resumeEntry)
+  const recallOk = isRecallSufficient(recall)
 
   return (
     <div className="cjPage cjLessonPage" style={{ ['--cjAccent' as string]: course.accent }}>
@@ -2014,44 +2329,85 @@ function JourneyLessonView({
             </p>
           )}
 
-          {/* Done state, exactly as sketched: a green tick, then the revise offer. */}
           {isDone ? (
             <div className="cjLessonDone">
               <span className="cjDoneMark" aria-hidden="true">✓</span>
               <div>
-                <b>เรียนบทนี้จบแล้ว</b>
-                <p>อยากทบทวนอีกครั้งไหม? กดดูซ้ำได้ ไม่กระทบความคืบหน้า</p>
+                <b>{justFinished ? checkPraise : 'เรียนบทนี้จบแล้ว'}</b>
+                {savedRecall ? (
+                  <p className="cjRecallEcho">“{savedRecall}”</p>
+                ) : (
+                  <p>อยากทบทวนอีกครั้งไหม? กดดูซ้ำได้ ไม่กระทบความคืบหน้า</p>
+                )}
               </div>
               <div className="cjLessonDoneActions">
                 <button type="button" className="cjBtn cjBtn-ghost" onClick={onRevise}>
                   ▶ ทบทวนอีกครั้ง
                 </button>
-                <button type="button" className="cjBtn cjBtn-quiet" onClick={onToggleComplete}>
+                <button type="button" className="cjBtn cjBtn-quiet" onClick={onUndoComplete}>
                   ยกเลิกเครื่องหมายว่าจบ
                 </button>
               </div>
             </div>
+          ) : checkOpen ? (
+            /* The retrieval check. Ungraded on purpose — the benefit is in the
+               attempt, and an answer key would limit this to the handful of
+               lessons anyone got round to authoring one for. */
+            <div className="cjCheck-panel">
+              <b>ก่อนติ๊กว่าจบ — ลองนึกดูก่อน</b>
+              <p className="cjReviewPrompt">{checkPrompt(lesson.course)}</p>
+              <textarea
+                className="cjRecallBox"
+                rows={3}
+                value={recall}
+                autoFocus
+                aria-label="สิ่งที่คุณจำได้จากบทนี้"
+                placeholder="เขียนด้วยคำของคุณเอง — ไม่มีการให้คะแนน ผิดได้"
+                onChange={(event) => setRecall(event.target.value)}
+              />
+              <div className="cjRecallFoot">
+                <small>{recallOk ? 'พอแล้ว — ส่งได้เลย' : `อีก ${recallShortfall(recall)} ตัวอักษร`}</small>
+                <div className="cjRecallActions">
+                  <button type="button" className="cjBtn cjBtn-quiet" onClick={() => setCheckOpen(false)}>
+                    ยังไม่พร้อม
+                  </button>
+                  <button
+                    type="button"
+                    className="cjBtn cjBtn-primary"
+                    disabled={!recallOk}
+                    onClick={() => {
+                      onCompleteWithRecall(recall)
+                      setJustFinished(true)
+                      setCheckOpen(false)
+                    }}
+                  >
+                    บันทึกและติ๊กว่าจบ
+                  </button>
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="cjLessonActions">
-              <button type="button" className="cjBtn cjBtn-primary" onClick={onToggleComplete}>
+              <button
+                type="button"
+                className="cjBtn cjBtn-primary"
+                disabled={!watchedOk}
+                onClick={() => setCheckOpen(true)}
+              >
                 ✓ ดูจบแล้ว
               </button>
-              {nextLesson && (
-                <button
-                  type="button"
-                  className="cjBtn cjBtn-ghost"
-                  onClick={() => {
-                    onToggleComplete()
-                    onOpenLesson(nextLesson.id)
-                  }}
-                >
-                  จบแล้ว ไปบทถัดไป →
-                </button>
+              {!watchedOk && (
+                <p className="cjGateNote">
+                  ดูไปแล้ว {percent}% — ติ๊กว่าจบได้เมื่อดูครบ 80%
+                  {percent === 0 ? ' (กดเล่นวิดีโอด้านบนก่อน)' : ''}
+                </p>
               )}
             </div>
           )}
 
-          {nextLesson && (
+          {/* Moving on without ticking is fine; ticking on the way past is not.
+              This card no longer marks anything complete. */}
+          {nextLesson && !checkOpen && (
             <button type="button" className="cjNextCard" onClick={() => onOpenLesson(nextLesson.id)}>
               <small>บทถัดไป →</small>
               <b>{nextLesson.title}</b>

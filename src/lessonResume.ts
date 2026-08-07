@@ -31,9 +31,86 @@ export type LessonResumeEntry = {
   duration: number
   /** Epoch ms of the last update — used to pick the most recent lesson. */
   updatedAt: number
+  /**
+   * Seconds of the lesson that have genuinely played, seeks excluded.
+   *
+   * Position alone can't answer "did they watch this?" — dragging the scrubber
+   * to the end puts `seconds` at the finish having played nothing. This is
+   * accumulated from forward movement only, capped per report, so it can only
+   * grow at roughly the speed a video plays. Absent on entries written before
+   * this existed; treated as "unknown", never as zero.
+   */
+  watched?: number
 }
 
 export type ResumeMap = Record<string, LessonResumeEntry>
+
+/**
+ * How much of a lesson must have played before it can be marked done.
+ *
+ * Not 100%: end credits, a question the learner already knows the answer to,
+ * and a player that stops reporting a second early are all normal. 80% is the
+ * point past which "they watched it" stops being a guess.
+ */
+export const COMPLETION_RATIO = 0.8
+
+/**
+ * The most credit one position report can earn.
+ *
+ * Reports arrive every few seconds, so a real one advances a few seconds. A
+ * seek advances arbitrarily far — capping the credit is what makes scrubbing
+ * to the end worth nothing, without needing to detect seeks explicitly. The cap
+ * sits above the throttle window so a slightly late report is still paid in
+ * full, and above 1× so faster playback speeds aren't penalised.
+ */
+const MAX_CREDIT_PER_REPORT = 12
+
+/**
+ * The entry a new position report produces.
+ *
+ * Pure, so the accounting can be reasoned about (and tested) without a player.
+ */
+export function advanceWatched(
+  previous: LessonResumeEntry | undefined,
+  seconds: number,
+  duration: number
+): LessonResumeEntry {
+  const priorWatched = previous?.watched ?? 0
+  const delta = previous ? seconds - previous.seconds : seconds
+  const credit = delta > 0 ? Math.min(delta, MAX_CREDIT_PER_REPORT) : 0
+  const total = priorWatched + credit
+  return {
+    seconds,
+    duration,
+    updatedAt: Date.now(),
+    // Rewatching a section is real watching, but it can't push the total past
+    // the length of the video — otherwise the ratio below exceeds 1.
+    watched: duration > 0 ? Math.min(total, duration) : total
+  }
+}
+
+/** 0–1, or null when there is nothing to measure against yet. */
+export function watchedRatio(entry: LessonResumeEntry | undefined): number | null {
+  if (!entry || !entry.duration) return null
+  return Math.min(1, (entry.watched ?? 0) / entry.duration)
+}
+
+/**
+ * Whether this lesson has been watched enough to be ticked.
+ *
+ * A lesson we've never seen a duration for returns false — the caller decides
+ * what to do about a lesson with no video at all, which is a different case.
+ */
+export function hasWatchedEnough(entry: LessonResumeEntry | undefined): boolean {
+  const ratio = watchedRatio(entry)
+  return ratio !== null && ratio >= COMPLETION_RATIO
+}
+
+/** "63%" — how far through, for the label on a gated button. */
+export function watchedPercent(entry: LessonResumeEntry | undefined): number {
+  const ratio = watchedRatio(entry)
+  return ratio === null ? 0 : Math.round(ratio * 100)
+}
 
 /**
  * The lesson to offer as "continue" — the most recently watched one that is

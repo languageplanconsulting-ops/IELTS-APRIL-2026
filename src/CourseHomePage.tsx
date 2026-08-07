@@ -4,15 +4,19 @@ import { CourseJourneyHome } from './CourseJourneyHome'
 import { writingPlanStorageKey } from './courseStorageKeys'
 import { PERSONAS, PERSONA_BY_ID, personaScope, resetPersona, seedPersona, type PersonaId } from './coursePersonas'
 import {
+  advanceWatched,
   buildEmbedUrl,
   formatClock,
+  hasWatchedEnough,
   isResumable,
   minutesLeft,
   pickResumeLesson,
   subscribeToPlaybackPosition,
+  watchedPercent,
   type LessonResumeEntry,
   type ResumeMap
 } from './lessonResume'
+import { checkPraise, checkPrompt, isRecallSufficient, recallShortfall, type CheckAnswer, type CheckMap } from './lessonCheck'
 import {
   QUESTION_TYPE_BY_ID,
   WRITING_COURSE_CHAPTERS,
@@ -71,10 +75,22 @@ type StoredState = {
   aheadUnlocked: number[]
   /** Playback position per lesson id, so an interrupted lesson resumes exactly. */
   resume: ResumeMap
+  /** Retrieval answers, keyed by lesson — see lessonCheck. */
+  checks: CheckMap
+}
+
+const parseChecks = (raw: unknown): CheckMap => {
+  if (!raw || typeof raw !== 'object') return {}
+  const out: CheckMap = {}
+  for (const [lessonId, value] of Object.entries(raw as Record<string, Partial<CheckAnswer>>)) {
+    if (typeof value?.text !== 'string' || !value.text.trim()) continue
+    out[lessonId] = { text: value.text, at: typeof value.at === 'number' ? value.at : 0 }
+  }
+  return out
 }
 
 
-const emptyState = (): StoredState => ({ onboarding: null, completedIds: [], aheadUnlocked: [], resume: {} })
+const emptyState = (): StoredState => ({ onboarding: null, completedIds: [], aheadUnlocked: [], resume: {}, checks: {} })
 
 const parseResumeMap = (raw: unknown): ResumeMap => {
   if (!raw || typeof raw !== 'object') return {}
@@ -113,7 +129,8 @@ const loadStoredState = (email: string): StoredState => {
       onboarding,
       completedIds: Array.isArray(parsed?.completedIds) ? parsed.completedIds.filter((id: unknown) => typeof id === 'string') : [],
       aheadUnlocked: Array.isArray(parsed?.aheadUnlocked) ? parsed.aheadUnlocked.filter((n: unknown) => typeof n === 'number') : [],
-      resume: parseResumeMap(parsed?.resume)
+      resume: parseResumeMap(parsed?.resume),
+      checks: parseChecks(parsed?.checks)
     }
   } catch {
     return emptyState()
@@ -255,14 +272,24 @@ function CourseHomeShell({ onBackHome, learnerEmail, learnerName }: CourseHomePa
    */
   const [autoplayLessonId, setAutoplayLessonId] = useState<string | null>(null)
 
+  /**
+   * Retrieval answers, keyed by lesson.
+   *
+   * The Writing shell writes into the same completion store the journey home
+   * reads, so it has to hold the same line: without this, a lesson ticked here
+   * would inflate the journey's percentages with nothing behind it.
+   */
+  const [checks, setChecks] = useState<CheckMap>(() => loadStoredState(learnerEmail).checks)
+
   useEffect(() => {
     saveStoredState(learnerEmail, {
       onboarding,
       completedIds: Array.from(completedIds),
       aheadUnlocked: Array.from(aheadUnlocked),
-      resume
+      resume,
+      checks
     })
-  }, [learnerEmail, onboarding, completedIds, aheadUnlocked, resume])
+  }, [learnerEmail, onboarding, completedIds, aheadUnlocked, resume, checks])
 
   /**
    * Records where a lesson's video actually reached. Called from the player,
@@ -273,19 +300,25 @@ function CourseHomeShell({ onBackHome, learnerEmail, learnerName }: CourseHomePa
       const previous = prev[lessonId]
       // Ignore no-op ticks so we don't churn state (and localStorage) on every poll.
       if (previous && previous.seconds === seconds && previous.duration === duration) return prev
-      return { ...prev, [lessonId]: { seconds, duration, updatedAt: Date.now() } }
+      // advanceWatched, not a bare write — this is the evidence the tick needs.
+      return { ...prev, [lessonId]: advanceWatched(previous, seconds, duration) }
     })
   }, [])
 
-  /** Marking a lesson done clears its resume point — there's nothing to return to. */
-  const clearResume = useCallback((lessonId: string) => {
-    setResume((prev) => {
+  const completeWithRecall = (lessonId: string, text: string) => {
+    setChecks((prev) => ({ ...prev, [lessonId]: { text: text.trim(), at: Date.now() } }))
+    if (!completedIds.has(lessonId)) toggleComplete(lessonId)
+  }
+
+  const undoComplete = (lessonId: string) => {
+    setChecks((prev) => {
       if (!prev[lessonId]) return prev
       const next = { ...prev }
       delete next[lessonId]
       return next
     })
-  }, [])
+    toggleComplete(lessonId)
+  }
 
   const calendar = useMemo(() => (onboarding ? buildCalendar(onboarding, false) : []), [onboarding])
   const calendarByDate = useMemo(() => {
@@ -566,12 +599,9 @@ function CourseHomeShell({ onBackHome, learnerEmail, learnerName }: CourseHomePa
               trackLabel={trackMeta.label}
               prevLesson={prevLesson}
               nextLesson={nextLesson}
-              onToggleComplete={() => {
-                // Finishing a lesson removes its resume point — there's no
-                // half-watched state left to return to.
-                if (!completedIds.has(selectedLesson.id)) clearResume(selectedLesson.id)
-                toggleComplete(selectedLesson.id)
-              }}
+              savedRecall={checks[selectedLesson.id]?.text ?? ''}
+              onCompleteWithRecall={(text) => completeWithRecall(selectedLesson.id, text)}
+              onUndoComplete={() => undoComplete(selectedLesson.id)}
               onOpenLesson={openLesson}
               onBackToPlan={() => setView('day')}
               resumeEntry={resume[selectedLesson.id]}
@@ -1142,7 +1172,10 @@ type LessonPanelProps = {
   trackLabel: string
   prevLesson: CourseLesson | null
   nextLesson: CourseLesson | null
-  onToggleComplete: () => void
+  /** What they wrote the first time, shown back once the lesson is done. */
+  savedRecall: string
+  onCompleteWithRecall: (text: string) => void
+  onUndoComplete: () => void
   onOpenLesson: (lessonId: string) => void
   onBackToPlan: () => void
   /** Saved playback position for this lesson, if it was left part-way. */
@@ -1160,7 +1193,9 @@ function LessonPanel({
   trackLabel,
   prevLesson,
   nextLesson,
-  onToggleComplete,
+  savedRecall,
+  onCompleteWithRecall,
+  onUndoComplete,
   onOpenLesson,
   onBackToPlan,
   resumeEntry,
@@ -1169,6 +1204,18 @@ function LessonPanel({
 }: LessonPanelProps) {
   const tier = TIER_BADGE[lesson.tier]
   const showResumeNote = isResumable(resumeEntry) && !isDone
+
+  /**
+   * The same gate the journey home applies, for the same reason: this shell
+   * writes into the shared completion store, so an ungated tick here would put
+   * an unearned percentage on every screen that reads it.
+   */
+  const [recall, setRecall] = useState('')
+  const [checkOpen, setCheckOpen] = useState(false)
+  const [justFinished, setJustFinished] = useState(false)
+  const watchedOk = !lesson.bunnyVideoId || hasWatchedEnough(resumeEntry)
+  const percent = watchedPercent(resumeEntry)
+  const recallOk = isRecallSufficient(recall)
 
   return (
     <article className="cwLessonPanel">
@@ -1237,26 +1284,77 @@ function LessonPanel({
         </div>
       )}
 
-      <div className="cwLessonActions">
-        <button type="button" className={`cwBtn ${isDone ? 'cwBtn-ghost' : 'cwBtn-primary'}`} onClick={onToggleComplete}>
-          {isDone ? '✓ ดูจบแล้ว — กดเพื่อยกเลิก' : 'ทำเครื่องหมายว่าดูจบแล้ว'}
-        </button>
-        {nextLesson && (
-          <button
-            type="button"
-            className="cwBtn cwBtn-ghost"
-            onClick={() => {
-              if (!isDone) onToggleComplete()
-              onOpenLesson(nextLesson.id)
-            }}
-          >
-            เรียนจบแล้ว ไปบทถัดไป →
+      {checkOpen ? (
+        <div className="cwCheckPanel">
+          <b>ก่อนติ๊กว่าจบ — ลองนึกดูก่อน</b>
+          <p className="cwCheckPrompt">{checkPrompt('writing')}</p>
+          <textarea
+            className="cwRecallBox"
+            rows={3}
+            value={recall}
+            autoFocus
+            aria-label="สิ่งที่คุณจำได้จากบทนี้"
+            placeholder="เขียนด้วยคำของคุณเอง — ไม่มีการให้คะแนน ผิดได้"
+            onChange={(event) => setRecall(event.target.value)}
+          />
+          <div className="cwRecallFoot">
+            <small>{recallOk ? 'พอแล้ว — ส่งได้เลย' : `อีก ${recallShortfall(recall)} ตัวอักษร`}</small>
+            <div className="cwRecallActions">
+              <button type="button" className="cwBtn cwBtn-quiet" onClick={() => setCheckOpen(false)}>
+                ยังไม่พร้อม
+              </button>
+              <button
+                type="button"
+                className="cwBtn cwBtn-primary"
+                disabled={!recallOk}
+                onClick={() => {
+                  onCompleteWithRecall(recall)
+                  setJustFinished(true)
+                  setCheckOpen(false)
+                }}
+              >
+                บันทึกและติ๊กว่าจบ
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="cwLessonActions">
+          {isDone ? (
+            <>
+              <button type="button" className="cwBtn cwBtn-ghost" onClick={onUndoComplete}>
+                ✓ ดูจบแล้ว — กดเพื่อยกเลิก
+              </button>
+              {savedRecall && (
+                <p className="cwRecallEcho">
+                  {justFinished ? `${checkPraise} — ` : ''}“{savedRecall}”
+                </p>
+              )}
+            </>
+          ) : (
+            <>
+              <button type="button" className="cwBtn cwBtn-primary" disabled={!watchedOk} onClick={() => setCheckOpen(true)}>
+                ทำเครื่องหมายว่าดูจบแล้ว
+              </button>
+              {!watchedOk && (
+                <p className="cwGateNote">
+                  ดูไปแล้ว {percent}% — ติ๊กว่าจบได้เมื่อดูครบ 80%
+                  {percent === 0 ? ' (กดเล่นวิดีโอด้านบนก่อน)' : ''}
+                </p>
+              )}
+            </>
+          )}
+          {/* Moving on no longer ticks anything on the way past. */}
+          {nextLesson && (
+            <button type="button" className="cwBtn cwBtn-ghost" onClick={() => onOpenLesson(nextLesson.id)}>
+              ไปบทถัดไป →
+            </button>
+          )}
+          <button type="button" className="cwBtn cwBtn-quiet" onClick={onBackToPlan}>
+            กลับไปงานวันนี้
           </button>
-        )}
-        <button type="button" className="cwBtn cwBtn-quiet" onClick={onBackToPlan}>
-          กลับไปงานวันนี้
-        </button>
-      </div>
+        </div>
+      )}
 
       <nav className="cwLessonNav" aria-label="บทเรียนก่อนหน้า / ถัดไป">
         {prevLesson ? (
