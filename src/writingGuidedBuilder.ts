@@ -761,7 +761,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' '),
           sel('gb12-b2b', ['for', 'of', 'to'], 'for', 'word-choice', 'account for = คิดเป็น (สัดส่วน) เป็นวลีตายตัวใช้ for ส่วน of/to ไม่เข้ากับ account'),
           t(' the '),
-          sel('gb12-b3', ['largest', 'largment', 'largely'], 'largest', 'word-choice', 'largest share = สัดส่วนใหญ่ที่สุด (superlative) ส่วน largment ไม่มีคำนี้ และ largely เป็น adverb'),
+          sel('gb12-b3', ['largest', 'larger', 'largely'], 'largest', 'word-choice', 'largest share = สัดส่วนใหญ่ที่สุด (superlative) ใช้กับ the ส่วน larger เป็น comparative ใช้เทียบกันแค่สองสิ่ง และ largely เป็น adverb'),
           t(' share at 32%, '),
           typ('gb12-b4', 'follow', ['followed'], 'v3-clause', 'followed by = ตามมาด้วย ใช้ V3 (past participle) ในโครงสร้าง passive'),
           t(' by Japanese '),
