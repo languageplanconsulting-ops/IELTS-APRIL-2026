@@ -31,7 +31,14 @@ const DICT_SUPPLEMENT = [
   'nonetheless', 'therefore', 'thus', 'however', 'overall', 'online', 'lifestyle',
   'workplace', 'healthcare', 'wellbeing', 'worldwide', 'nationwide', 'nowadays',
   'prioritize', 'prioritise', 'privatize', 'privatise', 'digitize', 'digitise',
-  'incentivize', 'incentivise', 'globalize', 'globalise', 'urbanize', 'urbanise'
+  'incentivize', 'incentivise', 'globalize', 'globalise', 'urbanize', 'urbanise',
+  // Inflections the rules below cannot reach: the stem-length guard in
+  // possibleBases() refuses a stem under three letters ("using" -> "us"), and
+  // isInflectableBase() treats an -s base as already plural, so "gas" can never
+  // yield "gases". Both are unquestionably real.
+  'using', 'gases', 'gasses',
+  // Compounds web2 omits but that make honest wrong-meaning distractors.
+  'houseware', 'housewares', 'housemate', 'housemates'
 ]
 
 export const loadDictionary = () => {
@@ -142,6 +149,9 @@ const regularInflections = (base) => {
       forms.add(`${doubled}ed`)
       forms.add(`${doubled}ing`)
       forms.add(`${doubled}er`)
+      // The superlative doubles too — "hotter" was accepted while "hottest"
+      // was rejected, which is the same word class either way.
+      forms.add(`${doubled}est`)
     }
   }
   return forms

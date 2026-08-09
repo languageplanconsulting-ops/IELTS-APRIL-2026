@@ -486,7 +486,7 @@ export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [
           t(' and other sources '),
           typ('gb10-b9', 'make', ['made'], 'verb-tense', 'past simple เล่าอดีต: make -> made (ประธานพหูพจน์)'),
           t(' up '),
-          sel('gb10-b10', ['smaller', 'smallest', 'smallly'], 'smaller', 'word-choice', 'เปรียบเทียบกับแหล่งที่ใหญ่กว่า ใช้ comparative smaller ส่วน smallest เป็น superlative และ smallly ไม่มีคำนี้'),
+          sel('gb10-b10', ['smaller', 'smallest', 'less'], 'smaller', 'word-choice', 'เปรียบเทียบกับแหล่งที่ใหญ่กว่า ใช้ comparative smaller ส่วน smallest เป็น superlative ใช้ตอนเทียบตั้งแต่สามสิ่งขึ้นไป และ less ใช้กับนามนับไม่ได้ ไม่ใช้กับ shares ที่นับได้ (ต้องใช้ fewer)'),
           t(' shares, at 6% and 9%, '),
           sel('gb10-b11', ['respectively', 'clearly', 'lately'], 'respectively', 'word-choice', 'respectively = ตามลำดับ จับคู่ nuclear=6% และ other=9% (มี comma นำหน้าเสมอ) ส่วน clearly/lately ผิดความหมาย'),
           t('. '),

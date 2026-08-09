@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm run dev:api\" \"npm run dev:client\"",
     "dev:client": "vite",
     "dev:api": "node server/index.mjs",
-    "build": "tsc -b && npm run verify:task1 && npm run verify:gt-task1 && npm run verify:task2 && npm run verify:task2-spelling && npm run verify:gt-task2 && npm run verify:recall && npm run build:seo && vite build",
+    "build": "tsc -b && npm run verify:task1 && npm run verify:task1-spelling && npm run verify:gt-task1 && npm run verify:task2 && npm run verify:task2-spelling && npm run verify:gt-task2 && npm run verify:recall && npm run build:seo && vite build",
     "start": "node server/index.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -45,7 +45,8 @@
     "rebuild:cambridge-16-reading-pdf": "node scripts/build-cambridge-16-reading-from-pdf.mjs",
     "verify:listening-part1-audio": "node scripts/verify-part1-audio-urls.mjs",
     "audit:listening-part1": "node scripts/audit-part1-foundation.mjs",
-    "warm:listening-audio": "npx --yes vite-node scripts/warm-listening-audio-cache.mjs --"
+    "warm:listening-audio": "npx --yes vite-node scripts/warm-listening-audio-cache.mjs --",
+    "verify:task1-spelling": "npx --yes tsx scripts/verify-task1-spelling.mjs"
   },
   "dependencies": {
     "@breezystack/lamejs": "^1.2.7",
