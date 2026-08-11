@@ -1622,6 +1622,46 @@ const SPEAKING_MODE_LABELS: Record<SpeakingTestMode, string> = {
   full: 'Full Exam'
 }
 
+// The launch sequence that runs between "I'm ready" and the first word the student
+// speaks. Each step is awaited in order and shown on screen, so the wait for the
+// health check, the microphone and the spoken question reads as progress instead of
+// a frozen preparation screen.
+type ExamLaunchStep = {
+  key: 'system' | 'mic' | 'question' | 'countdown'
+  title: string
+  detail: string
+  doneDetail: string
+}
+
+const EXAM_LAUNCH_STEPS: ExamLaunchStep[] = [
+  {
+    key: 'system',
+    title: 'ตรวจสอบระบบตรวจข้อสอบ',
+    detail: 'กำลังเชื่อมต่อเซิร์ฟเวอร์…',
+    doneDetail: 'เชื่อมต่อเรียบร้อย'
+  },
+  {
+    key: 'mic',
+    title: 'เปิดไมโครโฟนและเริ่มอัดเสียง',
+    detail: 'ถ้าเบราว์เซอร์ถาม ให้กด “อนุญาต” (Allow)',
+    doneDetail: 'ไมโครโฟนพร้อม กำลังอัดเสียงแล้ว'
+  },
+  {
+    key: 'question',
+    title: 'ฟังคำถามจากกรรมการให้จบ',
+    detail: 'กำลังอ่านคำถาม — ยังไม่ต้องพูดนะครับ',
+    doneDetail: 'อ่านคำถามจบแล้ว'
+  },
+  {
+    key: 'countdown',
+    title: 'นับถอยหลัง 3 · 2 · 1 แล้วเริ่มพูด',
+    detail: 'เตรียมตัว…',
+    doneDetail: 'เริ่มพูดได้เลย'
+  }
+]
+
+type ExamLaunchAction = 'retry' | 'skip' | 'continue'
+
 const RECOMMENDATION_LEVEL_META: Record<RecommendationLevel, string> = {
   B1: 'Band 6.5',
   B2: 'Band 7',
@@ -7373,6 +7413,10 @@ function App() {
   const [questionCountdown, setQuestionCountdown] = useState<number | null>(null)
   const [questionCountdownLabel, setQuestionCountdownLabel] = useState('')
   const [isPromptTtsPlaying, setIsPromptTtsPlaying] = useState(false)
+  const [examLaunchStepIndex, setExamLaunchStepIndex] = useState<number | null>(null)
+  const [examLaunchStatus, setExamLaunchStatus] = useState<'running' | 'confirm' | 'blocked' | 'error'>('running')
+  const [examLaunchError, setExamLaunchError] = useState('')
+  const [examLaunchQuestion, setExamLaunchQuestion] = useState('')
   const [micCheckStatus, setMicCheckStatus] = useState<'idle' | 'recording' | 'playing' | 'success' | 'error'>('idle')
   const [micCheckAudioUrl, setMicCheckAudioUrl] = useState<string | null>(null)
   const [isExamPaused, setIsExamPaused] = useState(false)
@@ -7462,6 +7506,9 @@ function App() {
   const transcriptionRestartTimeoutRef = useRef<number | null>(null)
   const transcriptionStartPendingRef = useRef(false)
   const promptAudioRef = useRef<HTMLAudioElement | null>(null)
+  const unlockedPromptAudioRef = useRef<HTMLAudioElement | null>(null)
+  const examLaunchBusyRef = useRef(false)
+  const examLaunchResumeRef = useRef<((action: ExamLaunchAction) => void) | null>(null)
   const notebookLoadedRef = useRef(false)
   const notebookSyncTimeoutRef = useRef<number | null>(null)
   const notebookSyncedSignatureRef = useRef('')
@@ -8580,6 +8627,7 @@ function App() {
     questionResponsesRef.current = []
     questionStartCharIndexRef.current = 0
     clearQuestionCountdown()
+    closeExamLaunchOverlay()
     resetPart2TimerDelay()
     if ('speechSynthesis' in window) window.speechSynthesis.cancel()
     stopPromptAudioPlayback()
@@ -12784,15 +12832,43 @@ function App() {
 
   const stopPromptAudioPlayback = () => {
     if (!promptAudioRef.current) return
-    promptAudioRef.current.pause()
-    promptAudioRef.current.src = ''
+    const audio = promptAudioRef.current
     promptAudioRef.current = null
+    audio.onended = null
+    audio.onerror = null
+    audio.pause()
+    if (audio !== unlockedPromptAudioRef.current) {
+      audio.src = ''
+    }
+  }
+
+  // Safari (and iOS in particular) only lets an <audio> element play if it was first
+  // started inside a real user gesture. Unlocking one element on the "I'm ready" click
+  // and reusing it for every spoken question keeps the exam audio from being blocked
+  // halfway through the launch sequence.
+  const primePromptAudioPlayback = () => {
+    try {
+      const audio = unlockedPromptAudioRef.current || new Audio()
+      unlockedPromptAudioRef.current = audio
+      // A real (silent) clip, played unmuted — iOS does not count a muted play as an unlock.
+      audio.src =
+        'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA='
+      const played = audio.play()
+      if (played && typeof played.then === 'function') {
+        played.catch(() => {
+          // Blocked anyway — the launch overlay offers a tap-to-play fallback.
+        })
+      }
+    } catch {
+      // noop: playback falls back to a fresh element below.
+    }
   }
 
   const playPromptAudioFromUrl = async (sourceUrl: string, revokeOnFinish = false) => {
     await new Promise<void>((resolve, reject) => {
       stopPromptAudioPlayback()
-      const audio = new Audio(sourceUrl)
+      const audio = unlockedPromptAudioRef.current || new Audio()
+      audio.src = sourceUrl
       promptAudioRef.current = audio
       let completed = false
 
@@ -16224,6 +16300,7 @@ function App() {
     setFullExamAnnouncement('')
     setIsPromptTtsPlaying(false)
     clearQuestionCountdown()
+    closeExamLaunchOverlay()
     if (fullExamAnnouncementTimeoutRef.current) {
       window.clearTimeout(fullExamAnnouncementTimeoutRef.current)
       fullExamAnnouncementTimeoutRef.current = null
@@ -16361,6 +16438,7 @@ function App() {
     setFullExamAnnouncement('')
     setIsPromptTtsPlaying(false)
     clearQuestionCountdown()
+    closeExamLaunchOverlay()
     if (fullExamAnnouncementTimeoutRef.current) {
       window.clearTimeout(fullExamAnnouncementTimeoutRef.current)
       fullExamAnnouncementTimeoutRef.current = null
@@ -16372,12 +16450,10 @@ function App() {
     stopPromptAudioPlayback()
   }
 
-  const beginSpeakingStage = async () => {
-    const apiReady = await checkAssessmentApiReady()
-    if (!apiReady) {
-      setAudioError('Assessment server is offline right now. Please wait a moment and try again.')
-      return
-    }
+  // Step 2 of the launch sequence: move the exam on to the speaking stage and get the
+  // recorder running. The spoken question and the countdown are driven by
+  // runExamLaunchSequence so each one can be shown to the student as its own step.
+  const prepareSpeakingStage = async (): Promise<boolean> => {
     if (prepIntervalRef.current) {
       window.clearInterval(prepIntervalRef.current)
       prepIntervalRef.current = null
@@ -16395,33 +16471,16 @@ function App() {
     setFullExamPart1Index(0)
     setFullExamPart3Index(0)
     setFullExamPhaseSeconds(isTrialSpeakingFlow ? 60 : 75)
-    if (isFullExamMode) {
-      showFullExamAnnouncement(isTrialSpeakingFlow ? 'เริ่มช่วงเตรียมตัว 1 นาทีครับ' : 'Part 1 is starting', 1800)
-    }
     questionResponsesRef.current = []
     questionStartCharIndexRef.current = 0
     setRecordingDuration(0)
     const recordingStarted = await startAudioRecording()
     if (!recordingStarted) {
       setAttemptStage('prep')
-      return
+      return false
     }
     startTranscription()
-    if (isFullExamMode && isTrialSpeakingFlow) {
-      startQuestionCountdown('Trial - เตรียมตัว 1 นาที')
-    } else if (isFullExamMode) {
-      await runPromptThenCountdown('Part 1 - Question 1', fullExamPlan.part1Questions[0] || 'Part 1 question 1')
-    } else if (isQuestionByQuestionMode) {
-      await runPromptThenCountdown(
-        `Question 1 of ${activeQuestionList.length}`,
-        activeQuestionList[0] || activeTopic?.prompt || 'Question 1'
-      )
-    } else {
-      await runPromptThenCountdown(
-        SPEAKING_MODE_LABELS[selectedTestMode],
-        activeTopic?.prompt || 'Speaking prompt'
-      )
-    }
+    return true
   }
 
   const captureCurrentQuestionResponse = () => {
@@ -16550,51 +16609,148 @@ function App() {
     await finishSpeakingAndAssess()
   }
 
-  const skipPreparation = async () => {
-    if ('speechSynthesis' in window && !ttsPrimedRef.current) {
-      try {
-        // Unlock speech synthesis for browsers that block until the first user-gesture call.
-        const unlockUtterance = new SpeechSynthesisUtterance('test')
-        unlockUtterance.volume = 0.01
-        unlockUtterance.rate = 1
-        unlockUtterance.lang = 'en-US'
-        window.speechSynthesis.speak(unlockUtterance)
-        window.setTimeout(() => {
-          if ('speechSynthesis' in window) window.speechSynthesis.cancel()
-        }, 900)
-        ttsPrimedRef.current = true
-      } catch {
-        // noop: continue without priming
-      }
-    }
-
-    // Speak the first prompt right here (user click gesture) so TTS reliably works.
-    let shouldSkipImmediateReplay = false
+  const primeSpeechSynthesis = () => {
+    if (!('speechSynthesis' in window) || ttsPrimedRef.current) return
     try {
-      let initialPromptText = ''
-      if (isFullExamMode) {
-        initialPromptText = isTrialSpeakingFlow
-          ? fullExamPlan.part2Prompt || 'Part 2 prompt'
-          : fullExamPlan.part1Questions[0] || 'Part 1 question 1'
-      } else if (isQuestionByQuestionMode) {
-        initialPromptText = activeQuestionList[0] || activeTopic?.prompt || ''
-      } else {
-        initialPromptText = activeTopic?.prompt || ''
-      }
-
-      if (initialPromptText) {
-        setIsPromptTtsPlaying(true)
-        await speakPrompt(initialPromptText)
-        shouldSkipImmediateReplay = true
-      }
+      // Unlock speech synthesis for browsers that block until the first user-gesture call.
+      const unlockUtterance = new SpeechSynthesisUtterance('test')
+      unlockUtterance.volume = 0.01
+      unlockUtterance.rate = 1
+      unlockUtterance.lang = 'en-US'
+      window.speechSynthesis.speak(unlockUtterance)
+      window.setTimeout(() => {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel()
+      }, 900)
+      ttsPrimedRef.current = true
     } catch {
-      // ignore TTS failures; countdown should still work.
-    } finally {
-      setIsPromptTtsPlaying(false)
+      // noop: continue without priming
+    }
+  }
+
+  const resolveLaunchPrompt = (): { label: string; text: string } => {
+    if (isFullExamMode) {
+      if (isTrialSpeakingFlow) {
+        return { label: 'Trial - เตรียมตัว 1 นาที', text: fullExamPlan.part2Prompt || 'Part 2 prompt' }
+      }
+      return { label: 'Part 1 - Question 1', text: fullExamPlan.part1Questions[0] || 'Part 1 question 1' }
+    }
+    if (isQuestionByQuestionMode) {
+      return {
+        label: `Question 1 of ${activeQuestionList.length}`,
+        text: activeQuestionList[0] || activeTopic?.prompt || ''
+      }
+    }
+    return { label: SPEAKING_MODE_LABELS[selectedTestMode], text: activeTopic?.prompt || '' }
+  }
+
+  // Parks the launch sequence until the student presses one of the overlay buttons, or
+  // until holdMs elapses. Returning 'continue' on timeout keeps a working exam moving.
+  const waitForExamLaunchAction = (holdMs?: number) =>
+    new Promise<ExamLaunchAction>((resolve) => {
+      let settled = false
+      let timeoutId: number | null = null
+      const settle = (action: ExamLaunchAction) => {
+        if (settled) return
+        settled = true
+        if (timeoutId !== null) window.clearTimeout(timeoutId)
+        examLaunchResumeRef.current = null
+        resolve(action)
+      }
+      examLaunchResumeRef.current = settle
+      if (typeof holdMs === 'number') {
+        timeoutId = window.setTimeout(() => settle('continue'), holdMs)
+      }
+    })
+
+  const resumeExamLaunch = (action: ExamLaunchAction) => {
+    examLaunchResumeRef.current?.(action)
+  }
+
+  const closeExamLaunchOverlay = () => {
+    examLaunchResumeRef.current = null
+    examLaunchBusyRef.current = false
+    setExamLaunchStepIndex(null)
+    setExamLaunchStatus('running')
+    setExamLaunchError('')
+    setExamLaunchQuestion('')
+  }
+
+  // "I'm ready" used to await the TTS and the health check with the preparation screen
+  // still on display, which read as a freeze. Every wait now has a visible step.
+  const runExamLaunchSequence = async () => {
+    if (examLaunchBusyRef.current) return
+    examLaunchBusyRef.current = true
+
+    // Both of these must happen inside the click gesture, before the first await.
+    primeSpeechSynthesis()
+    primePromptAudioPlayback()
+
+    const { label, text } = resolveLaunchPrompt()
+    skipNextPromptTtsRef.current = false
+    setExamLaunchQuestion(text)
+    setExamLaunchError('')
+    setExamLaunchStatus('running')
+    setExamLaunchStepIndex(0)
+
+    const failLaunch = (message: string) => {
+      setExamLaunchStatus('error')
+      setExamLaunchError(message)
+      examLaunchBusyRef.current = false
     }
 
-    skipNextPromptTtsRef.current = shouldSkipImmediateReplay
-    await beginSpeakingStage()
+    // Step 1 — assessment server.
+    const apiReady = await checkAssessmentApiReady()
+    if (!apiReady) {
+      setAudioError('Assessment server is offline right now. Please wait a moment and try again.')
+      failLaunch('เชื่อมต่อเซิร์ฟเวอร์ตรวจข้อสอบไม่ได้ กรุณาตรวจอินเทอร์เน็ตแล้วลองอีกครั้ง')
+      return
+    }
+
+    // Step 2 — microphone and recorder.
+    setExamLaunchStepIndex(1)
+    const recordingReady = await prepareSpeakingStage()
+    if (!recordingReady) {
+      failLaunch('เปิดไมโครโฟนไม่สำเร็จ อนุญาตให้เว็บใช้ไมโครโฟนแล้วลองอีกครั้ง')
+      return
+    }
+
+    // Step 3 — play the question and confirm the student actually heard it.
+    setExamLaunchStepIndex(2)
+    if (text) {
+      for (;;) {
+        setExamLaunchStatus('running')
+        try {
+          await speakPromptWithTtsAndManageTranscription(text)
+        } catch {
+          // Autoplay blocked or the TTS endpoint failed: stop and let the student
+          // trigger playback themselves rather than starting the timer on silence.
+          setExamLaunchStatus('blocked')
+          const blockedAction = await waitForExamLaunchAction()
+          if (blockedAction === 'skip') break
+          continue
+        }
+        // Brief hold before the countdown so a student whose volume was down can
+        // replay the question instead of losing the first seconds of their answer.
+        setExamLaunchStatus('confirm')
+        const holdAction = await waitForExamLaunchAction(2500)
+        if (holdAction === 'retry') continue
+        break
+      }
+    }
+
+    // Step 4 — hand over to the countdown.
+    setExamLaunchStepIndex(3)
+    setExamLaunchStatus('running')
+    await new Promise((resolve) => window.setTimeout(resolve, 600))
+    closeExamLaunchOverlay()
+    if (isFullExamMode) {
+      showFullExamAnnouncement(isTrialSpeakingFlow ? 'เริ่มช่วงเตรียมตัว 1 นาทีครับ' : 'Part 1 is starting', 1800)
+    }
+    startQuestionCountdown(label)
+  }
+
+  const skipPreparation = async () => {
+    await runExamLaunchSequence()
   }
 
   const speakPromptWithBrowserTts = async (text: string) => {
@@ -17491,7 +17647,7 @@ function App() {
     }
 
     speakingIntervalRef.current = window.setInterval(() => {
-      if (questionCountdown !== null || isPromptTtsPlaying || isExamPaused) return
+      if (examLaunchStepIndex !== null || questionCountdown !== null || isPromptTtsPlaying || isExamPaused) return
       const isStandalonePart2 = !isFullExamMode && selectedTestMode === 'part2'
       const isFullMockPart2 = isFullExamMode && fullExamPhase === 'part2_speaking'
       const part2DelayUntil = part2TimerDelayUntilRef.current
@@ -17552,7 +17708,8 @@ function App() {
     fullExamPart1Index,
     fullExamPart3Index,
     isPromptTtsPlaying,
-    isExamPaused
+    isExamPaused,
+    examLaunchStepIndex
   ])
 
   useEffect(() => {
@@ -30965,6 +31122,94 @@ function App() {
           <div className="fullExamOverlayCard speakingFlowOverlayCard">
             <p className="fullExamOverlayEyebrow">English Plan Full Mock</p>
             <p className="fullExamOverlayMessage">{fullExamAnnouncement}</p>
+          </div>
+        </div>
+      )}
+      {examLaunchStepIndex !== null && (
+        <div className="examLaunchOverlay speakingFlowOverlay" role="dialog" aria-modal="true" aria-labelledby="exam-launch-title">
+          <div className="examLaunchCard speakingFlowOverlayCard">
+            <p className="examLaunchEyebrow">English Plan Speaking</p>
+            <h3 className="examLaunchTitle" id="exam-launch-title">กำลังเตรียมห้องสอบให้คุณ</h3>
+            <p className="examLaunchLead">ทำทีละขั้นตามนี้ — ยังไม่ต้องพูดจนกว่าจะขึ้น GO</p>
+
+            <ol className="examLaunchSteps">
+              {EXAM_LAUNCH_STEPS.map((step, index) => {
+                const state =
+                  index < examLaunchStepIndex
+                    ? 'done'
+                    : index > examLaunchStepIndex
+                      ? 'pending'
+                      : examLaunchStatus === 'running' || examLaunchStatus === 'confirm'
+                        ? 'active'
+                        : examLaunchStatus
+                const isConfirming = state === 'active' && examLaunchStatus === 'confirm'
+                return (
+                  <li key={step.key} className={`examLaunchStep examLaunchStep-${state}`}>
+                    <span className="examLaunchStepMark" aria-hidden="true">
+                      {state === 'done' ? '✓' : state === 'error' ? '!' : state === 'blocked' ? '🔈' : index + 1}
+                    </span>
+                    <span className="examLaunchStepBody">
+                      <span className="examLaunchStepTitle">{step.title}</span>
+                      <span className="examLaunchStepDetail">
+                        {state === 'done'
+                          ? step.doneDetail
+                          : state === 'pending'
+                            ? 'รออยู่'
+                            : state === 'error'
+                              ? examLaunchError
+                              : state === 'blocked'
+                                ? 'เบราว์เซอร์ยังไม่เล่นเสียง — กดปุ่มด้านล่างเพื่อฟังคำถาม'
+                                : isConfirming
+                                  ? 'อ่านคำถามจบแล้ว — กำลังจะนับถอยหลัง'
+                                  : step.detail}
+                      </span>
+                    </span>
+                    {state === 'active' && !isConfirming ? (
+                      <span className="examLaunchSpinner" aria-hidden="true" />
+                    ) : null}
+                  </li>
+                )
+              })}
+            </ol>
+
+            {examLaunchStepIndex === 2 && examLaunchQuestion ? (
+              <blockquote className="examLaunchQuestion">{examLaunchQuestion}</blockquote>
+            ) : null}
+
+            {examLaunchStepIndex === 2 && examLaunchStatus === 'blocked' ? (
+              <div className="examLaunchActions">
+                <button type="button" className="examLaunchPrimaryBtn" onClick={() => resumeExamLaunch('retry')}>
+                  ▶ เล่นเสียงคำถาม
+                </button>
+                <button type="button" className="examLaunchGhostBtn" onClick={() => resumeExamLaunch('skip')}>
+                  อ่านคำถามเองแล้วเริ่มเลย
+                </button>
+              </div>
+            ) : null}
+
+            {examLaunchStepIndex === 2 && examLaunchStatus === 'confirm' ? (
+              <div className="examLaunchActions">
+                <button type="button" className="examLaunchGhostBtn" onClick={() => resumeExamLaunch('retry')}>
+                  🔁 ไม่ได้ยิน — ฟังอีกครั้ง
+                </button>
+                <button type="button" className="examLaunchPrimaryBtn" onClick={() => resumeExamLaunch('continue')}>
+                  ได้ยินแล้ว เริ่มเลย
+                </button>
+              </div>
+            ) : null}
+
+            {examLaunchStatus === 'error' ? (
+              <div className="examLaunchActions">
+                <p className="examLaunchErrorText">{examLaunchError}</p>
+                {audioError ? <p className="examLaunchErrorText">{audioError}</p> : null}
+                <button type="button" className="examLaunchPrimaryBtn" onClick={() => void runExamLaunchSequence()}>
+                  ลองอีกครั้ง
+                </button>
+                <button type="button" className="examLaunchGhostBtn" onClick={closeExamLaunchOverlay}>
+                  กลับไปหน้าเตรียมตัว
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
       )}
