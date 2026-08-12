@@ -18,6 +18,14 @@ import {
   UserEngagementAnalytics,
   type EngagementActorDetail
 } from './admin/UserEngagementAnalytics'
+import { LockedModuleNotice } from './LockedModuleNotice'
+import {
+  DEFAULT_ENABLED_MODULES,
+  hasModuleAccess as resolveModuleAccess,
+  lockedModuleAriaLabel,
+  SKILL_MODULES,
+  type SkillModule
+} from './moduleAccess'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import { VocabPopover } from './VocabPopover'
 import ExamFeedPage from './ExamFeedPage'
@@ -276,14 +284,8 @@ type AdminWorkspaceSection =
   | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'writing essay' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
-type SkillModule = 'speaking' | 'listening' | 'reading' | 'writing'
-const SKILL_MODULES: { key: SkillModule; label: string }[] = [
-  { key: 'speaking', label: 'Speaking' },
-  { key: 'listening', label: 'Listening' },
-  { key: 'reading', label: 'Reading' },
-  { key: 'writing', label: 'Writing' }
-]
-const DEFAULT_ENABLED_MODULES: SkillModule[] = ['speaking', 'reading', 'listening']
+// SkillModule / SKILL_MODULES / DEFAULT_ENABLED_MODULES now live in
+// ./moduleAccess, shared with the locked-course screen.
 type ReadingBankCategory = 'normal' | 'passage3' | 'general-training'
 type ReadingEntryView = 'levels' | 'monthly' | 'journey' | 'full-test' | 'general-training'
 type ReadingWorkspaceMode = 'bank' | 'pdoy'
@@ -7439,11 +7441,7 @@ function App() {
     return trialParam === '1' || trialParam === 'speaking' || path.endsWith('/trial')
   }, [])
   const isTrialUser = authSession?.role === 'trial'
-  const hasModuleAccess = (moduleKey: SkillModule) => {
-    if (authSession?.role === 'admin') return true
-    if (authSession?.role === 'trial') return moduleKey === 'speaking' || moduleKey === 'reading'
-    return Boolean(authSession?.enabledModules?.includes(moduleKey))
-  }
+  const hasModuleAccess = (moduleKey: SkillModule) => resolveModuleAccess(authSession, moduleKey)
   const canAccessSpeaking = hasModuleAccess('speaking')
   const canAccessListening = hasModuleAccess('listening')
   const canAccessReading = hasModuleAccess('reading')
@@ -11815,26 +11813,9 @@ function App() {
     }
   }, [activePage, isStudentNotebookLocked])
 
-  useEffect(() => {
-    if (canAccessWriting) return
-    if (activePage === 'writing') {
-      setActivePage('home')
-    }
-  }, [activePage, canAccessWriting])
-
-  useEffect(() => {
-    if (canAccessReading) return
-    if (activePage === 'reading') {
-      setActivePage('home')
-    }
-  }, [activePage, canAccessReading])
-
-  useEffect(() => {
-    if (canAccessSpeaking) return
-    if (activePage === 'workspace') {
-      setActivePage('home')
-    }
-  }, [activePage, canAccessSpeaking])
+  // A locked skill used to bounce straight back to Home, which looked like the
+  // click had simply failed. The page now stays open and renders
+  // <LockedModuleNotice>, so the student is told which course they are not in.
 
   useEffect(() => {
     if (!authSession?.accessToken) {
@@ -21415,61 +21396,99 @@ function App() {
                 >
                   Home
                 </button>
-                {canAccessSpeaking && (
-                  <button
-                    className={activePage === 'workspace' ? 'active' : ''}
-                    onClick={() => {
-                      resetSession()
-                      setSelectedTestMode('part1')
-                      setSpeakingEntryMode(null)
-                      setTopicBankSearch('')
+                <button
+                  className={`${activePage === 'workspace' ? 'active' : ''}${
+                    canAccessSpeaking ? '' : ' navLocked'
+                  }`.trim()}
+                  aria-label={canAccessSpeaking ? undefined : lockedModuleAriaLabel('speaking')}
+                  onClick={() => {
+                    if (!canAccessSpeaking) {
                       setActivePage('workspace')
-                    }}
-                    type="button"
-                  >
-                    Speaking
-                  </button>
-                )}
-                {canAccessListening && (
-                  <button
-                    className={
-                      activePage === 'listening' ||
-                      activePage === 'listening_foundation_exam' ||
-                      activePage === 'listening_full_test_exam' ||
-                      activePage === 'listening_builder_exam'
-                        ? 'active'
-                        : ''
+                      return
                     }
-                    onClick={() => {
-                      openListeningLanding()
-                    }}
-                    type="button"
-                  >
-                    Listening
-                  </button>
-                )}
-                {canAccessReading && (
-                  <button
-                    className={activePage === 'reading' ? 'active' : ''}
-                    onClick={() => {
-                      openReadingLanding()
-                    }}
-                    type="button"
-                  >
-                    Reading
-                  </button>
-                )}
-                {canAccessWriting && (
-                  <button
-                    className={activePage === 'writing' ? 'active' : ''}
-                    onClick={() => {
-                      openWritingLanding()
-                    }}
-                    type="button"
-                  >
-                    Writing
-                  </button>
-                )}
+                    resetSession()
+                    setSelectedTestMode('part1')
+                    setSpeakingEntryMode(null)
+                    setTopicBankSearch('')
+                    setActivePage('workspace')
+                  }}
+                  type="button"
+                >
+                  Speaking
+                  {!canAccessSpeaking && (
+                    <span className="navLockGlyph" aria-hidden="true">
+                      🔒
+                    </span>
+                  )}
+                </button>
+                <button
+                  className={`${
+                    activePage === 'listening' ||
+                    activePage === 'listening_foundation_exam' ||
+                    activePage === 'listening_full_test_exam' ||
+                    activePage === 'listening_builder_exam'
+                      ? 'active'
+                      : ''
+                  }${canAccessListening ? '' : ' navLocked'}`.trim()}
+                  aria-label={canAccessListening ? undefined : lockedModuleAriaLabel('listening')}
+                  onClick={() => {
+                    if (!canAccessListening) {
+                      setActivePage('listening')
+                      return
+                    }
+                    openListeningLanding()
+                  }}
+                  type="button"
+                >
+                  Listening
+                  {!canAccessListening && (
+                    <span className="navLockGlyph" aria-hidden="true">
+                      🔒
+                    </span>
+                  )}
+                </button>
+                <button
+                  className={`${activePage === 'reading' ? 'active' : ''}${
+                    canAccessReading ? '' : ' navLocked'
+                  }`.trim()}
+                  aria-label={canAccessReading ? undefined : lockedModuleAriaLabel('reading')}
+                  onClick={() => {
+                    if (!canAccessReading) {
+                      setActivePage('reading')
+                      return
+                    }
+                    openReadingLanding()
+                  }}
+                  type="button"
+                >
+                  Reading
+                  {!canAccessReading && (
+                    <span className="navLockGlyph" aria-hidden="true">
+                      🔒
+                    </span>
+                  )}
+                </button>
+                <button
+                  className={`${activePage === 'writing' ? 'active' : ''}${
+                    canAccessWriting ? '' : ' navLocked'
+                  }`.trim()}
+                  aria-label={canAccessWriting ? undefined : lockedModuleAriaLabel('writing')}
+                  onClick={() => {
+                    if (!canAccessWriting) {
+                      setActivePage('writing')
+                      return
+                    }
+                    openWritingLanding()
+                  }}
+                  type="button"
+                >
+                  Writing
+                  {!canAccessWriting && (
+                    <span className="navLockGlyph" aria-hidden="true">
+                      🔒
+                    </span>
+                  )}
+                </button>
                 <button
                   className={activePage === 'notebook' ? 'active' : ''}
                   onClick={() => {
@@ -21572,47 +21591,84 @@ function App() {
                 </div>
               ) : (
                 <div className="homeGrid">
-                  {canAccessSpeaking && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        resetSession()
-                        setSelectedTestMode('part1')
+                  <button
+                    type="button"
+                    className={canAccessSpeaking ? undefined : 'homeLocked'}
+                    aria-label={canAccessSpeaking ? undefined : lockedModuleAriaLabel('speaking')}
+                    onClick={() => {
+                      if (!canAccessSpeaking) {
                         setActivePage('workspace')
-                      }}
-                    >
-                      Speaking
-                    </button>
-                  )}
-                  {canAccessListening && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        openListeningLanding()
-                      }}
-                    >
-                      Listening
-                    </button>
-                  )}
-                  {canAccessReading && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        openReadingLanding()
-                      }}
-                    >
-                      Reading
-                    </button>
-                  )}
-                  {canAccessWriting ? (
-                    <button type="button" onClick={() => openWritingLanding()}>
-                      Writing
-                    </button>
-                  ) : (
-                    <button type="button" disabled>
-                      Writing (Coming Soon)
-                    </button>
-                  )}
+                        return
+                      }
+                      resetSession()
+                      setSelectedTestMode('part1')
+                      setActivePage('workspace')
+                    }}
+                  >
+                    Speaking
+                    {!canAccessSpeaking && (
+                      <span className="navLockGlyph" aria-hidden="true">
+                        🔒
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className={canAccessListening ? undefined : 'homeLocked'}
+                    aria-label={canAccessListening ? undefined : lockedModuleAriaLabel('listening')}
+                    onClick={() => {
+                      if (!canAccessListening) {
+                        setActivePage('listening')
+                        return
+                      }
+                      openListeningLanding()
+                    }}
+                  >
+                    Listening
+                    {!canAccessListening && (
+                      <span className="navLockGlyph" aria-hidden="true">
+                        🔒
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className={canAccessReading ? undefined : 'homeLocked'}
+                    aria-label={canAccessReading ? undefined : lockedModuleAriaLabel('reading')}
+                    onClick={() => {
+                      if (!canAccessReading) {
+                        setActivePage('reading')
+                        return
+                      }
+                      openReadingLanding()
+                    }}
+                  >
+                    Reading
+                    {!canAccessReading && (
+                      <span className="navLockGlyph" aria-hidden="true">
+                        🔒
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className={canAccessWriting ? undefined : 'homeLocked'}
+                    aria-label={canAccessWriting ? undefined : lockedModuleAriaLabel('writing')}
+                    onClick={() => {
+                      if (!canAccessWriting) {
+                        setActivePage('writing')
+                        return
+                      }
+                      openWritingLanding()
+                    }}
+                  >
+                    Writing
+                    {!canAccessWriting && (
+                      <span className="navLockGlyph" aria-hidden="true">
+                        🔒
+                      </span>
+                    )}
+                  </button>
                   <button type="button" disabled>
                     Notebook (Coming Soon)
                   </button>
@@ -22471,15 +22527,11 @@ function App() {
           </div>
         </section>
         ) : (
-          <section className="panel full">
-            <div className="emptyNotebook">
-              <p>Listening ยังไม่พร้อมสำหรับบัญชีนี้ครับ</p>
-              <p>ตอนนี้เปิดให้เฉพาะ student และ admin</p>
-              <button type="button" onClick={() => setActivePage('home')}>
-                Back Home
-              </button>
-            </div>
-          </section>
+          <LockedModuleNotice
+            module="listening"
+            session={authSession}
+            onBackHome={() => setActivePage('home')}
+          />
         )
       ) : activePage === 'listening_foundation_exam' ? (
         canAccessListening ? (
@@ -22545,14 +22597,11 @@ function App() {
             )}
           </section>
         ) : (
-          <section className="panel full">
-            <div className="emptyNotebook">
-              <p>Listening ยังไม่พร้อมสำหรับบัญชีนี้ครับ</p>
-              <button type="button" onClick={() => setActivePage('home')}>
-                Back Home
-              </button>
-            </div>
-          </section>
+          <LockedModuleNotice
+            module="listening"
+            session={authSession}
+            onBackHome={() => setActivePage('home')}
+          />
         )
       ) : activePage === 'listening_full_test_exam' ? (
         canAccessListening ? (
@@ -22676,14 +22725,11 @@ function App() {
             </div>
           </section>
         ) : (
-          <section className="panel full">
-            <div className="emptyNotebook">
-              <p>Listening ยังไม่พร้อมสำหรับบัญชีนี้ครับ</p>
-              <button type="button" onClick={() => setActivePage('home')}>
-                Back Home
-              </button>
-            </div>
-          </section>
+          <LockedModuleNotice
+            module="listening"
+            session={authSession}
+            onBackHome={() => setActivePage('home')}
+          />
         )
       ) : activePage === 'listening_builder_exam' ? (
         canAccessListening ? (
@@ -22745,14 +22791,11 @@ function App() {
             )}
           </section>
         ) : (
-          <section className="panel full">
-            <div className="emptyNotebook">
-              <p>Listening ยังไม่พร้อมสำหรับบัญชีนี้ครับ</p>
-              <button type="button" onClick={() => setActivePage('home')}>
-                Back Home
-              </button>
-            </div>
-          </section>
+          <LockedModuleNotice
+            module="listening"
+            session={authSession}
+            onBackHome={() => setActivePage('home')}
+          />
         )
       ) : activePage === 'reading' ? (
         canAccessReading ? (
@@ -25178,15 +25221,11 @@ function App() {
           </div>
         </section>
         ) : (
-          <section className="panel full">
-            <div className="emptyState">
-              <h3>Reading isn't enabled on your account</h3>
-              <p>Ask your admin to enable Reading access for you.</p>
-              <button type="button" onClick={() => setActivePage('home')}>
-                Back Home
-              </button>
-            </div>
-          </section>
+          <LockedModuleNotice
+            module="reading"
+            session={authSession}
+            onBackHome={() => setActivePage('home')}
+          />
         )
       ) : activePage === 'writing' ? (
         canAccessWriting ? (
@@ -25208,15 +25247,11 @@ function App() {
               }
             />
         ) : (
-          <section className="panel full">
-            <div className="emptyState">
-              <h3>Writing isn't enabled on your account</h3>
-              <p>Ask your admin to enable Writing access for you.</p>
-              <button type="button" onClick={() => setActivePage('home')}>
-                Back Home
-              </button>
-            </div>
-          </section>
+          <LockedModuleNotice
+            module="writing"
+            session={authSession}
+            onBackHome={() => setActivePage('home')}
+          />
         )
       ) : activePage === 'examfeed' ? (
         <ExamFeedPage onOpenCourse={() => setActivePage('home')} />
@@ -30988,15 +31023,11 @@ function App() {
           </div>
           </section>
           ) : (
-            <section className="panel full">
-              <div className="emptyState">
-                <h3>Speaking isn't enabled on your account</h3>
-                <p>Ask your admin to enable Speaking access for you.</p>
-                <button type="button" onClick={() => setActivePage('home')}>
-                  Back Home
-                </button>
-              </div>
-            </section>
+            <LockedModuleNotice
+              module="speaking"
+              session={authSession}
+              onBackHome={() => setActivePage('home')}
+            />
           )
         ) : (
         <section className="panel full notebookPage">
