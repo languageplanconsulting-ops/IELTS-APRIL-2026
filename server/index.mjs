@@ -613,6 +613,73 @@ ${followUpBlock}
 `
 }
 
+/**
+ * Placement test — detectors only, no band.
+ *
+ * The placement ladder is the teacher's own and lives in
+ * `src/placementSpeakingBand.ts`. The model's job here is strictly to count and
+ * quote; the band is computed from these numbers so it never drifts between
+ * students. Everything the normal rubric reports (fluency, referencing,
+ * pronunciation, plus-one plans) is deliberately out of scope.
+ */
+const placementSpeakingSignalsPrompt = ({ questionBreakdown }) => `
+You are marking a short IELTS placement test. Four answers: 2 Part 1 questions and 2 Part 3 questions.
+
+Do NOT give a band score. Report only the signals below, as counts and quotes.
+
+Return only valid JSON with this schema:
+{
+  "tenseErrorCount": number,
+  "tenseErrors": [{ "quote": string, "fix": string }],
+  "articleErrorCount": number,
+  "articleErrors": [{ "quote": string, "fix": string }],
+  "usedPastTense": boolean,
+  "pastTenseCorrect": boolean,
+  "vocabularyErrorCount": number,
+  "vocabularyErrors": [{ "quote": string, "fix": string }],
+  "transitionsUsed": string[],
+  "ideasOrganised": boolean,
+  "b2c1Collocations": string[],
+  "sentenceCountsPerQuestion": number[]
+}
+
+Counting rules:
+- tenseErrorCount counts ONLY present simple and past simple errors: missing third-person -s
+  ("he go"), wrong or missing -ed ("I work yesterday", "I have went"), and wrong auxiliary
+  ("she don't like"). Do NOT count perfect, continuous, conditional or modal errors.
+- articleErrorCount counts missing, extra or wrong a / an / the.
+- usedPastTense is true if the learner attempts past simple anywhere, right or wrong.
+- pastTenseCorrect is true only if every past-tense attempt is correct. If usedPastTense is
+  false, set pastTenseCorrect to false.
+- vocabularyErrorCount counts clear wrong-word or wrong-collocation choices that a teacher
+  would correct ("I am very boring", "do a mistake"). Do NOT count simple-but-correct word
+  choice, and do NOT count the same repeated error twice.
+- transitionsUsed lists the linking words actually used, verbatim: because, however, for
+  example, so, but, also, in addition, that is why. List each distinct one once.
+- ideasOrganised is false when answers are disconnected clauses with no reason, example or
+  result following the main point.
+- b2c1Collocations lists natural collocations at CEFR B2-C1 only, verbatim from the answers
+  ("make a decision" is B1 and does not count; "strike a balance", "a steep learning curve",
+  "hugely rewarding" do). Do not invent any the learner did not say.
+- sentenceCountsPerQuestion has exactly one number per question, in the order given, counting
+  complete sentences in that answer. Count a run-on joined by "and" as one sentence.
+
+Spoken language rules:
+- This is speech-to-text. Ignore fillers ("um", "you know") and self-correction entirely.
+- Never count a mishearing as a learner error. If a word looks like an STT artefact, skip it.
+- Count each distinct error once, even if the learner repeats the same mistake.
+
+Answers:
+${Array.isArray(questionBreakdown) && questionBreakdown.length
+    ? questionBreakdown
+        .map(
+          (item, index) =>
+            `[${index + 1}] ${item.part || 'Part 1'} question: ${item.question || 'Question'}\nAnswer: ${item.punctuatedTranscript || item.rawTranscript || '(empty)'}`
+        )
+        .join('\n\n')
+    : '(none)'}
+`
+
 const fullMockWholeRubricPrompt = ({
   topic,
   prompt,
@@ -14969,6 +15036,286 @@ const runAssessment = async (
     apiUsage: usageTracker.summarize()
   }
 }
+
+/**
+ * Placement speaking — a lean pass over the journey pipeline.
+ *
+ * Reuses the journey's grammar-preserving punctuation step (sentence counts need
+ * punctuation, and `punctuationPrompt` is under orders not to repair grammar),
+ * then asks for detectors only. It skips the journey's pronunciation scoring,
+ * transcript annotation and vocabulary suggestions: the placement report needs
+ * none of them, and this endpoint is public so each call should stay cheap.
+ */
+const runPlacementSpeakingAssessment = async ({ questionResponses }) => {
+  const usageTracker = createApiUsageTracker()
+  const answers = (Array.isArray(questionResponses) ? questionResponses : [])
+    .map((item) => ({
+      part: String(item?.part || '').trim(),
+      question: String(item?.question || '').trim(),
+      response: String(item?.response || '').trim()
+    }))
+    .filter((item) => item.response)
+
+  if (!answers.length) {
+    const error = new Error('No speaking answers were submitted.')
+    error.status = 400
+    throw error
+  }
+
+  const questionBreakdown = await Promise.all(
+    answers.map(async (item) => {
+      let punctuated = item.response
+      try {
+        punctuated = (await callGeminiCleanupText(punctuationPrompt({ rawTranscript: item.response }), usageTracker)) || item.response
+      } catch {
+        // Punctuation is a convenience for sentence counting, not a correctness
+        // requirement — fall back to the raw transcript rather than failing the test.
+      }
+      return {
+        part: item.part,
+        question: item.question,
+        rawTranscript: item.response,
+        punctuatedTranscript: punctuated
+      }
+    })
+  )
+
+  const raw = await callGeminiJson(
+    placementSpeakingSignalsPrompt({ questionBreakdown }),
+    usageTracker,
+    'placement-speaking-signals'
+  )
+
+  const countOf = (value) => Math.max(0, Math.round(Number(value) || 0))
+  const listOf = (value) => (Array.isArray(value) ? value.filter(Boolean) : [])
+  const usedPastTense = Boolean(raw?.usedPastTense)
+  const sentenceCounts = listOf(raw?.sentenceCountsPerQuestion).map(countOf)
+
+  const signals = {
+    tenseErrorCount: countOf(raw?.tenseErrorCount),
+    tenseErrors: listOf(raw?.tenseErrors),
+    articleErrorCount: countOf(raw?.articleErrorCount),
+    articleErrors: listOf(raw?.articleErrors),
+    usedPastTense,
+    // A learner who never reached for past tense cannot have used it correctly.
+    pastTenseCorrect: usedPastTense && Boolean(raw?.pastTenseCorrect),
+    vocabularyErrorCount: countOf(raw?.vocabularyErrorCount),
+    vocabularyErrors: listOf(raw?.vocabularyErrors),
+    transitionsUsed: listOf(raw?.transitionsUsed).map((item) => String(item)),
+    ideasOrganised: Boolean(raw?.ideasOrganised),
+    b2c1Collocations: listOf(raw?.b2c1Collocations).map((item) => String(item)),
+    // One count per answer, so a dropped entry can never look like a short answer.
+    sentenceCountsPerQuestion: questionBreakdown.map((_, index) => sentenceCounts[index] ?? 0)
+  }
+
+  return {
+    signals,
+    questionBreakdown,
+    apiUsage: usageTracker.summarize()
+  }
+}
+
+/**
+ * The placement test has no login, so its endpoints are open to the internet
+ * while calling paid transcription and Gemini. One in-memory bucket per IP is
+ * enough to stop a script from grinding through the quota; it resets on deploy,
+ * which is fine for a test a real student takes once.
+ */
+const placementRateBuckets = new Map()
+const PLACEMENT_RATE_WINDOW_MS = 60 * 60 * 1000
+const PLACEMENT_RATE_MAX = 12
+
+const placementRateLimit = (req, res, next) => {
+  const now = Date.now()
+  const ip = String(req.ip || req.headers['x-forwarded-for'] || 'unknown')
+  const hits = (placementRateBuckets.get(ip) || []).filter((stamp) => now - stamp < PLACEMENT_RATE_WINDOW_MS)
+  if (hits.length >= PLACEMENT_RATE_MAX) {
+    return res.status(429).json({ error: 'ทำแบบทดสอบบ่อยเกินไป กรุณาลองใหม่ในภายหลังครับ' })
+  }
+  hits.push(now)
+  placementRateBuckets.set(ip, hits)
+  if (placementRateBuckets.size > 5000) {
+    for (const [key, stamps] of placementRateBuckets) {
+      if (!stamps.some((stamp) => now - stamp < PLACEMENT_RATE_WINDOW_MS)) placementRateBuckets.delete(key)
+    }
+  }
+  return next()
+}
+
+/**
+ * Placement writing — the Band 7 paragraph.
+ *
+ * The three correction items only prove the grammar is clean. This pass looks at
+ * what actually separates 6.5 from 7: tense and conjugation control across
+ * connected prose, natural word choice, visible linking, and whether the argument
+ * holds together. Detectors only — the band is decided in
+ * `src/placementTestData.ts`.
+ */
+const placementEssayPrompt = ({ taskPrompt, paragraph }) => `
+You are an IELTS Writing Task 2 examiner deciding one thing: is this paragraph Band 7, or not yet?
+
+Do NOT give a band score. Report only the signals below.
+
+Return only valid JSON with this schema:
+{
+  "tenseErrorCount": number,
+  "tenseErrors": [{ "quote": string, "fix": string }],
+  "vocabularyIssueCount": number,
+  "vocabularyIssues": [{ "quote": string, "fix": string }],
+  "transitionsUsed": string[],
+  "logicIsSound": boolean,
+  "logicComment": string,
+  "reasonsThai": string[]
+}
+
+Rules:
+- tenseErrorCount counts tense and conjugation errors: wrong tense for the context,
+  subject-verb disagreement, missing third-person -s, wrong participle or irregular form.
+- vocabularyIssueCount counts wrong word choice and phrasing a native writer would not use.
+  Simple-but-correct vocabulary is NOT an issue; only wrong or awkward usage counts.
+- transitionsUsed lists the linking devices actually present, verbatim ("however", "for example",
+  "as a result", "on the other hand"). List each distinct one once.
+- logicIsSound is false when the paragraph contradicts itself, asserts without support,
+  drifts off the question, or the reasons given do not actually support the position taken.
+- reasonsThai must contain ONE short Thai sentence for EVERY flaw found, written to the
+  student, polite register ending with ครับ, never ค่ะ. Quote the learner's own words when
+  useful. If there are no flaws at all, return an empty array.
+- Judge only this paragraph. Do not penalise it for not being a full essay.
+
+Task 2 question:
+${taskPrompt}
+
+Student's paragraph:
+${paragraph}
+`
+
+app.post('/api/placement/writing-assess', placementRateLimit, async (req, res) => {
+  try {
+    const paragraph = String(req.body?.paragraph || '').trim()
+    const taskPrompt = String(req.body?.taskPrompt || '').trim()
+    if (paragraph.length < 40) {
+      return res.status(400).json({ error: 'ย่อหน้าสั้นเกินไปครับ' })
+    }
+
+    const usageTracker = createApiUsageTracker()
+    const raw = await callGeminiJson(
+      placementEssayPrompt({ taskPrompt, paragraph }),
+      usageTracker,
+      'placement-writing-essay'
+    )
+
+    const countOf = (value) => Math.max(0, Math.round(Number(value) || 0))
+    const listOf = (value) => (Array.isArray(value) ? value.filter(Boolean) : [])
+
+    return res.json({
+      signals: {
+        tenseErrorCount: countOf(raw?.tenseErrorCount),
+        tenseErrors: listOf(raw?.tenseErrors),
+        vocabularyIssueCount: countOf(raw?.vocabularyIssueCount),
+        vocabularyIssues: listOf(raw?.vocabularyIssues),
+        transitionsUsed: listOf(raw?.transitionsUsed).map((item) => String(item)),
+        logicIsSound: Boolean(raw?.logicIsSound),
+        logicComment: String(raw?.logicComment || ''),
+        reasonsThai: listOf(raw?.reasonsThai).map((item) => String(item))
+      },
+      apiUsage: usageTracker.summarize()
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return res.status(500).json({ error: message })
+  }
+})
+
+/**
+ * Placement results.
+ *
+ * Stored whole — every answer, both marked paragraphs of prose, the speaking
+ * transcript and its signals — because the point is that an admin can open a
+ * client's submission months later, when they finally register, and see exactly
+ * what they could and could not do.
+ */
+app.post('/api/placement/result', placementRateLimit, async (req, res) => {
+  try {
+    const body = req.body || {}
+    const record = {
+      student_name: String(body.name || '').trim().slice(0, 200),
+      contact: String(body.contact || '').trim().slice(0, 200),
+      overall_band: String(body.overall || '').slice(0, 12),
+      reading_band: String(body.bands?.reading || '') || null,
+      listening_band: String(body.bands?.listening || '') || null,
+      writing_band: String(body.bands?.writing || '') || null,
+      speaking_band: String(body.bands?.speaking || '') || null,
+      speaking_pending: Boolean(body.speakingPending),
+      // The full transcript of the attempt, kept as JSON so the shape can grow
+      // with the test without another migration.
+      detail: {
+        answers: body.answers || {},
+        wrong: body.wrong || [],
+        speakingTranscripts: body.speakingTranscripts || [],
+        speakingSignals: body.speakingSignals || null,
+        speakingReasons: body.speakingReasons || [],
+        essayParagraph: body.essayParagraph || '',
+        essaySignals: body.essaySignals || null,
+        gates: body.gates || {}
+      }
+    }
+
+    if (!record.student_name) {
+      return res.status(400).json({ error: 'Missing student name' })
+    }
+
+    const rows = await fetchSupabaseJson('/rest/v1/placement_results', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+      body: JSON.stringify(record)
+    })
+    return res.json({ ok: true, id: Array.isArray(rows) ? rows[0]?.id || null : null })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    console.error('Could not save placement result:', message)
+    // Never fail the student's report because the record could not be written.
+    return res.status(200).json({ ok: false, error: message })
+  }
+})
+
+app.get('/api/admin/placement/results', requireAdmin, async (_req, res) => {
+  try {
+    const rows = await fetchSupabaseJson(
+      '/rest/v1/placement_results?select=id,student_name,contact,overall_band,reading_band,listening_band,writing_band,speaking_band,speaking_pending,created_at&order=created_at.desc&limit=500',
+      { headers: buildSupabaseHeaders({ serviceRole: true }) }
+    )
+    return res.json({ results: Array.isArray(rows) ? rows : [] })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return res.status(500).json({ error: message })
+  }
+})
+
+app.get('/api/admin/placement/results/:resultId', requireAdmin, async (req, res) => {
+  try {
+    const rows = await fetchSupabaseJson(
+      `/rest/v1/placement_results?select=*&id=eq.${encodeURIComponent(req.params.resultId)}&limit=1`,
+      { headers: buildSupabaseHeaders({ serviceRole: true }) }
+    )
+    const result = Array.isArray(rows) ? rows[0] : null
+    if (!result) return res.status(404).json({ error: 'Placement result not found' })
+    return res.json({ result })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return res.status(500).json({ error: message })
+  }
+})
+
+app.post('/api/placement/speaking-assess', placementRateLimit, async (req, res) => {
+  try {
+    const result = await runPlacementSpeakingAssessment(req.body || {})
+    return res.json(result)
+  } catch (error) {
+    const status = Number(error?.status) || 500
+    const message = error instanceof Error ? error.message : String(error)
+    return res.status(status).json({ error: message })
+  }
+})
 
 app.post('/api/assess', requireAuth, async (req, res) => {
   try {

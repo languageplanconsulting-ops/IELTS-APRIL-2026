@@ -1,0 +1,1160 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IELTS Placement Test — preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #004aad;
+    --blue-deep: #00337a;
+    --blue-soft: #e8f0fc;
+    --blue-tint: #f4f8ff;
+    --yellow: #ffcc00;
+    --yellow-soft: #fff6d6;
+    --yellow-deep: #d9a800;
+    --ink: #1b2230;
+    --muted: #6b7488;
+    --line: #e8e6df;
+    --paper: #fffdf7;   /* warm, not clinical grey */
+    --card: #ffffff;
+    --good: #1a8a55;
+    --good-soft: #e4f6ec;
+    --bad: #cf4436;
+    --bad-soft: #fdeeec;
+    --r-lg: 28px;
+    --r-md: 18px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Mali', -apple-system, "Noto Sans Thai", sans-serif;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .devstrip {
+    background: #17202f; color: #cfd6e6; font-size: 12px;
+    padding: 7px 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+  .devstrip button {
+    background: #2b3648; color: #dce3f2; border: 0; border-radius: 999px;
+    padding: 4px 12px; font-size: 12px; cursor: pointer; font-family: inherit;
+  }
+
+  /* ---------- shell: one question fills the screen ---------- */
+  .shell { min-height: calc(100dvh - 34px); display: flex; flex-direction: column; }
+  .topbar {
+    position: sticky; top: 0; z-index: 5; background: var(--paper);
+    padding: 14px 20px 10px; border-bottom: 1px solid var(--line);
+  }
+  .topbar .inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+  .segs { display: flex; gap: 6px; flex: 1; }
+  .seg { height: 9px; border-radius: 999px; background: #ece9e0; flex: 1; overflow: hidden; }
+  .seg i { display: block; height: 100%; width: 0; background: var(--blue); border-radius: 999px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+  .seg.done i { width: 100% !important; background: var(--yellow); }
+  .topbar .label { font-size: 13px; color: var(--muted); white-space: nowrap; font-weight: 500; }
+
+  main {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 28px 20px 40px;
+  }
+  .panel { width: 100%; max-width: 720px; }
+  @media (max-width: 640px) {
+    main { align-items: flex-start; padding: 20px 16px 36px; }
+  }
+
+  .fade { animation: rise .42s cubic-bezier(.22,.9,.3,1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  .leaving { animation: sink .18s ease-in both; }
+  @keyframes sink { to { opacity: 0; transform: translateY(-12px); } }
+
+  /* ---------- type ---------- */
+  .eyebrow {
+    font-size: 12.5px; color: var(--blue); letter-spacing: .1em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 6px;
+  }
+  h2 { font-size: clamp(21px, 3.4vw, 27px); margin: 0 0 8px; font-weight: 700; line-height: 1.45; }
+  .lead { font-size: clamp(16px, 2.4vw, 18px); color: var(--muted); margin: 0 0 22px; }
+  .question {
+    font-size: clamp(18px, 2.9vw, 23px); font-weight: 600; line-height: 1.6; margin: 0 0 20px;
+  }
+  .note { font-size: 13.5px; color: var(--muted); }
+
+  /* ---------- surfaces ---------- */
+  .box {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg);
+    padding: clamp(20px, 3.6vw, 34px);
+    box-shadow: 0 2px 0 rgba(27,34,48,.04), 0 14px 34px -22px rgba(27,34,48,.3);
+  }
+  .instruction {
+    background: var(--blue-soft); border-radius: var(--r-md); padding: 14px 18px;
+    font-size: 14.5px; color: var(--blue-deep); margin: 0 0 18px;
+  }
+  .instruction strong { font-weight: 700; }
+  .caution {
+    background: var(--yellow-soft); border-radius: var(--r-md); padding: 14px 18px;
+    font-size: 14.5px; color: #6b5000; margin: 0 0 18px;
+  }
+  .passage {
+    background: var(--blue-tint); border-radius: var(--r-md); padding: 18px 20px;
+    margin: 0 0 22px; font-size: clamp(15px, 2.2vw, 16.5px); line-height: 2;
+  }
+
+  /* ---------- choices ---------- */
+  .choices { display: grid; gap: 11px; }
+  .choice {
+    display: flex; gap: 13px; align-items: flex-start; padding: 15px 18px;
+    border: 2px solid var(--line); border-radius: var(--r-md); cursor: pointer; background: #fff;
+    font-size: clamp(15px, 2.2vw, 16.5px); transition: transform .12s, border-color .15s, background .15s;
+  }
+  .choice:hover { border-color: var(--blue); background: var(--blue-tint); transform: translateY(-1px); }
+  .choice.on { border-color: var(--blue); background: var(--blue-soft); }
+  .choice input { margin-top: 8px; accent-color: var(--blue); }
+  .key {
+    font-weight: 700; min-width: 26px; color: var(--blue);
+  }
+
+  input[type=text] {
+    width: 100%; padding: 15px 18px; border: 2px solid var(--line); border-radius: var(--r-md);
+    font-size: 16.5px; font-family: inherit; background: #fff; color: var(--ink);
+  }
+  input[type=text]:focus { outline: none; border-color: var(--blue); background: var(--blue-tint); }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    background: var(--blue); color: #fff; border: 0; border-radius: 999px;
+    padding: 15px 34px; font-size: 16px; font-family: inherit; cursor: pointer; font-weight: 700;
+    box-shadow: 0 10px 20px -12px rgba(0,74,173,.9); transition: transform .12s, background .15s;
+  }
+  .btn:hover { background: var(--blue-deep); transform: translateY(-1px); }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { background: #c4cbd8; box-shadow: none; cursor: not-allowed; transform: none; }
+  .btn.sun { background: var(--yellow); color: #4a3800; box-shadow: 0 10px 20px -12px rgba(217,168,0,.95); }
+  .btn.sun:hover { background: var(--yellow-deep); }
+  .btn.line {
+    background: #fff; color: var(--blue); border: 2px solid var(--blue); box-shadow: none; padding: 13px 28px;
+  }
+  .btn.line:hover { background: var(--blue-tint); }
+  .btn.line:disabled { color: #a8b1c7; border-color: var(--line); }
+  .actions { display: flex; gap: 12px; align-items: center; margin-top: 26px; flex-wrap: wrap; }
+
+  /* ---------- illustration ---------- */
+  .art { display: block; margin: 0 auto 18px; width: clamp(150px, 34vw, 210px); height: auto; }
+  .art-sm { width: clamp(110px, 24vw, 140px); }
+  /* Character artwork drops in here once the file arrives; the skill illustration
+     above is the stand-in until then. */
+  .mascot { display: block; margin: 0 auto 14px; width: clamp(120px, 26vw, 168px); }
+
+  /* ---------- listening ---------- */
+  .player {
+    background: var(--blue-deep); color: #eaf1ff; border-radius: var(--r-lg); padding: 20px; margin: 0 0 20px;
+  }
+  .player .row { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .player .bar { height: 8px; background: rgba(255,255,255,.18); border-radius: 999px; overflow: hidden; margin: 16px 0 10px; }
+  .player .bar i { display: block; height: 100%; width: 0; background: var(--yellow); border-radius: 999px; }
+  .player button {
+    background: var(--yellow); color: #4a3800; border: 0; border-radius: 999px; padding: 12px 26px;
+    font-weight: 700; cursor: pointer; font-family: inherit; font-size: 15px;
+  }
+  .player button:disabled { background: rgba(255,255,255,.2); color: rgba(255,255,255,.5); cursor: not-allowed; }
+  .player .meta { font-size: 13px; color: #b9cbee; }
+  .notes { background: var(--blue-tint); border-radius: var(--r-md); padding: 18px 20px; }
+  .notes h4 { margin: 0 0 14px; font-size: 15.5px; font-weight: 700; }
+  .notes .line { display: flex; gap: 9px; align-items: center; margin: 14px 0; flex-wrap: wrap; font-size: 16px; }
+  .notes .line input { flex: 1 1 150px; max-width: 220px; padding: 11px 14px; font-size: 15px; }
+  .qgroup { padding: 18px 0; border-top: 1px dashed #cfdcf3; }
+  .qgroup:first-child { border-top: 0; padding-top: 0; }
+
+  /* ---------- writing chart ---------- */
+  .chart { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; margin: 0 0 20px; }
+  .chart svg { width: 100%; height: auto; display: block; }
+  .chart figcaption { font-size: 13px; color: var(--muted); text-align: center; margin-top: 10px; }
+  .sentence { font-size: clamp(16px, 2.4vw, 18.5px); line-height: 2.2; margin: 0 0 18px; }
+  .sentence u { text-decoration-color: var(--yellow-deep); text-decoration-thickness: 3px; text-underline-offset: 6px; }
+
+  /* ---------- speaking ---------- */
+  .rec { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+  .dot { width: 12px; height: 12px; border-radius: 999px; background: var(--bad); animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: .25; transform: scale(.85); } }
+  audio { max-width: 100%; }
+
+  /* ---------- report ---------- */
+  .letter {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
+    padding: clamp(24px, 4vw, 40px); box-shadow: 0 14px 34px -24px rgba(27,34,48,.35);
+  }
+  .letter .from { font-size: 13px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; font-weight: 600; }
+  .verdict {
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    padding: 22px 0; border-bottom: 2px solid var(--yellow); margin-bottom: 22px;
+  }
+  .verdict .num { font-size: clamp(40px, 8vw, 58px); font-weight: 700; color: var(--blue); line-height: 1; }
+  .bandrow {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 15px 0; border-top: 1px solid var(--line); flex-wrap: wrap;
+  }
+  .bandrow .skill { font-weight: 600; }
+  .pill {
+    background: var(--blue-soft); color: var(--blue); font-weight: 700;
+    padding: 6px 18px; border-radius: 999px; font-size: 15.5px; white-space: nowrap;
+  }
+  .pill.low { background: var(--bad-soft); color: var(--bad); }
+  .pill.high { background: var(--good-soft); color: var(--good); }
+  .pill.pending { background: #f0eee7; color: var(--muted); }
+  .fb { border-radius: var(--r-md); padding: 14px 17px; font-size: 14.5px; margin-top: 14px; }
+  .fb.no { background: var(--bad-soft); color: var(--bad); }
+  .fb.info { background: var(--yellow-soft); color: #6b5000; }
+  ul.reasons { margin: 10px 0 0; padding-left: 22px; font-size: 14.5px; color: var(--muted); }
+  ul.reasons li { margin: 6px 0; }
+  .wrongitem { padding: 20px 0; border-top: 1px solid var(--line); }
+  .tag { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .05em; }
+  .sign { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="devstrip">
+  <strong>PREVIEW</strong>
+  <button onclick="go('reading-intro')">Reading</button>
+  <button onclick="go('listening-intro')">Listening</button>
+  <button onclick="go('writing-intro')">Writing</button>
+  <button onclick="go('speaking-intro')">Speaking</button>
+  <button onclick="fillPerfect()">หน้าผล</button>
+  <button onclick="location.reload()">เริ่มใหม่</button>
+</div>
+
+<div class="shell">
+  <div class="topbar" id="topbar">
+    <div class="inner">
+      <div class="segs" id="segs"></div>
+      <span class="label" id="poslabel"></span>
+    </div>
+  </div>
+  <main><div class="panel" id="stage"></div></main>
+</div>
+
+<script>
+/* ---------------------------------------------------------------- artwork */
+/* Rounded, friendly line-art in the brand blue and yellow. Each skill gets one
+   so a screen is never just a wall of text. */
+
+const ART = {
+  clock: `<svg class="art" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="142" rx="66" ry="9" fill="#e8f0fc"/>
+    <circle cx="100" cy="74" r="52" fill="#fff6d6" stroke="#004aad" stroke-width="5"/>
+    <path d="M100 44v32l22 13" stroke="#004aad" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="100" cy="74" r="6" fill="#ffcc00"/>
+    <path d="M56 26 42 14M144 26l14-12" stroke="#ffcc00" stroke-width="6" stroke-linecap="round"/>
+  </svg>`,
+  book: `<svg class="art" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="144" rx="70" ry="8" fill="#e8f0fc"/>
+    <circle cx="150" cy="36" r="20" fill="#ffcc00"/>
+    <circle cx="142" cy="30" r="17" fill="#fffdf7"/>
+    <path d="M34 44c22-10 44-10 66 4v82c-22-14-44-14-66-4V44Z" fill="#fff" stroke="#004aad" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M166 44c-22-10-44-10-66 4v82c22-14 44-14 66-4V44Z" fill="#e8f0fc" stroke="#004aad" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M50 66h34M50 84h30M116 66h34M116 84h30" stroke="#8fb0e4" stroke-width="5" stroke-linecap="round"/>
+  </svg>`,
+  head: `<svg class="art" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="146" rx="60" ry="8" fill="#e8f0fc"/>
+    <path d="M46 104V80a54 54 0 0 1 108 0v24" stroke="#004aad" stroke-width="6" stroke-linecap="round"/>
+    <rect x="30" y="96" width="30" height="44" rx="14" fill="#ffcc00" stroke="#004aad" stroke-width="5"/>
+    <rect x="140" y="96" width="30" height="44" rx="14" fill="#ffcc00" stroke="#004aad" stroke-width="5"/>
+    <path d="M176 96c10 8 10 26 0 34M186 86c16 14 16 46 0 60" stroke="#8fb0e4" stroke-width="5" stroke-linecap="round"/>
+  </svg>`,
+  chart: `<svg class="art" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="146" rx="66" ry="8" fill="#e8f0fc"/>
+    <rect x="34" y="24" width="132" height="106" rx="14" fill="#fff" stroke="#004aad" stroke-width="5"/>
+    <path d="M54 108V86M82 108V70M110 108V54M138 108V38" stroke="#ffcc00" stroke-width="11" stroke-linecap="round"/>
+    <path d="M48 114h108" stroke="#8fb0e4" stroke-width="5" stroke-linecap="round"/>
+  </svg>`,
+  mic: `<svg class="art" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="146" rx="52" ry="8" fill="#e8f0fc"/>
+    <rect x="80" y="20" width="40" height="66" rx="20" fill="#ffcc00" stroke="#004aad" stroke-width="5"/>
+    <path d="M60 74a40 40 0 0 0 80 0M100 114v22M78 138h44" stroke="#004aad" stroke-width="6" stroke-linecap="round"/>
+    <path d="M36 56c-8 12-8 26 0 38M164 56c8 12 8 26 0 38" stroke="#8fb0e4" stroke-width="5" stroke-linecap="round"/>
+  </svg>`,
+  cheer: `<svg class="art" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 26l14 30 33 5-24 23 6 33-29-16-29 16 6-33-24-23 33-5 14-30Z" fill="#ffcc00" stroke="#004aad" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M36 40l-9-9M164 40l9-9M28 92l-12 4M172 92l12 4" stroke="#004aad" stroke-width="5" stroke-linecap="round"/>
+    <path d="M62 132h76" stroke="#8fb0e4" stroke-width="6" stroke-linecap="round"/>
+  </svg>`,
+  done: `<svg class="art" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="146" rx="58" ry="8" fill="#e8f0fc"/>
+    <circle cx="100" cy="74" r="50" fill="#e4f6ec" stroke="#004aad" stroke-width="5"/>
+    <path d="M78 74l16 16 30-32" stroke="#1a8a55" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 24l-8-8M160 24l8-8" stroke="#ffcc00" stroke-width="6" stroke-linecap="round"/>
+  </svg>`
+};
+
+/* ------------------------------------------------------------------ content */
+
+const READING_TFNG = [
+  {
+    id: 'r1',
+    statement: 'The lunar rocks that were brought back are essential to understanding the history of our planet.',
+    context: 'Surprisingly, this episode in the history of the solar system has come to be known as the last heavy bombardment and ended at roughly the same time as the first signs of life on earth. These key discoveries about our planet’s history may never have been made without the samples taken from the moon for chemical analysis and isotopic dating. So, do the Apollo rocks hide any more secrets? All 2,200 samples have been researched, and Randy Korotev, a lunar geochemist at Washington University in St Louis, Missouri, says that it is unlikely that there will be anything groundbreaking left to find from them.',
+    answer: 'TRUE',
+    why: 'ประโยคในบทความบอกว่าการค้นพบสำคัญเหล่านี้ "may never have been made without the samples" คือถ้าไม่มีตัวอย่างหินก็อาจไม่มีการค้นพบเลย ตรงกับคำว่า essential ในโจทย์ครับ'
+  },
+  {
+    id: 'r2',
+    statement: 'All the craters on the moon are roughly the same age, at up to five billion years old.',
+    context: 'This history of all the inner planets has been shaped by collisions and nowhere is that history more visible than the moon. Another surprise was the rocks from the moon’s largest impact craters indicate that all craters are roughly the same age, between 3.8 and 4 billion years old. The moon and, by extension, the Earth must have been caused by a devastating barrage half a billion years after the solar system formed.',
+    answer: 'FALSE',
+    why: 'บทความเห็นด้วยว่าหลุมอุกกาบาตอายุใกล้เคียงกัน แต่ระบุตัวเลขชัดว่า 3.8–4 พันล้านปี ไม่ใช่ถึง 5 พันล้านปี ตัวเลขที่ขัดกันแบบนี้คือ FALSE ไม่ใช่ NOT GIVEN ครับ'
+  },
+  {
+    id: 'r3',
+    statement: 'The rocks collected by Neil Armstrong and Buzz Aldrin were more valuable than the rocks collected by Russian astronauts.',
+    context: 'Whilst the world watched in excitement as Neil Armstrong and Buzz Aldrin landed on the moon, planetary scientists were focused on something else. For them, the value of the mission was the cargo they brought back to earth. By the time Armstrong and Aldrin climbed into the lunar module for the last time, they had gathered 22 kilograms of moon rocks, completely filling a small suitcase. Over five Apollo crews brought back a total collection of 382 kilograms of material containing 2,200 samples.',
+    answer: 'NOT GIVEN',
+    why: 'บทความพูดถึงคุณค่าของหินที่ Apollo เก็บมา แต่ไม่เคยเอ่ยถึงนักบินอวกาศรัสเซียเลย จึงเปรียบเทียบไม่ได้ — ไม่มีข้อมูล = NOT GIVEN ครับ'
+  }
+];
+
+const READING_HEADINGS = [
+  {
+    id: 'h1',
+    label: 'Paragraph C',
+    text: 'Many clues that the lunar rocks contained have taken a couple of years to effectively analyse. Also, some of the conclusions are still debated. A big surprise was the evidence that the early moon was covered by a lot of molten rock. The moon’s mountainous regions are made of anorthosite, a rare rock on earth that forms when light, aluminium-rich minerals float to the top of lava.',
+    options: [['i', 'The scientific value of the rocks'], ['ii', 'The craters of the moon'], ['v', 'The surprising evidence about the moon'], ['ix', 'Study of lunar history']],
+    answer: 'v',
+    why: 'ย่อหน้านี้วางน้ำหนักไว้ที่ "A big surprise was the evidence…" คือหลักฐานที่คาดไม่ถึงเรื่องหินหลอมเหลว ตัวเลือก ix กว้างเกินไปจนใช้ได้กับเกือบทุกย่อหน้า ส่วน i เป็นใจความของย่อหน้า B ครับ'
+  },
+  {
+    id: 'h2',
+    label: 'Paragraph E',
+    text: 'The “giant impact” scenario led to a radical re-evaluation of the history of the early solar system. Before Apollo, planetary scientists watched the collection of objects orbiting the sun like a clockwork mechanism in which collisions were rare and trivial. Now, it is accepted as being a far more active environment, shuffling, colliding or ejecting. This history of all the inner planets has been shaped by collisions and nowhere is that history more visible than the moon.',
+    options: [['iii', 'The mission to collect material on the moon'], ['iv', 'The impact of the rocks discovered'], ['vi', 'The history of the early solar system'], ['ii', 'The craters of the moon']],
+    answer: 'vi',
+    why: 'กับดักคือคำว่า "impact" ในตัวเลือก iv ที่ไปตรงกับ "giant impact" ในย่อหน้า แต่ย่อหน้านี้พูดถึงการที่นักวิทยาศาสตร์ต้องประเมินประวัติระบบสุริยะยุคแรกใหม่ ไม่ใช่ผลกระทบของหิน จึงตอบ vi ครับ'
+  },
+  {
+    id: 'h3',
+    label: 'Paragraph I',
+    text: 'The Apollo rock samples are not finished answering some of the bigger picture questions. What will we discover on the opposite side of the moon’s surface that we are unable to see from the Earth? Can we put together a detailed history of the lava flows that formed the basalts of the lunar seas? Can we discover any samples from deep inside the moon? These are all seen as very good reasons for coming back to the moon. According to Gary Lofgren, a curator of NASA’s lunar rock collection at Johnson Space Centre in Houston, “There’s no lack of target and scientific questions.”',
+    options: [['vii', 'The unknown questions left for the future'], ['viii', 'NASA’s lunar rock collection'], ['ix', 'Study of lunar history'], ['ii', 'The craters of the moon']],
+    answer: 'vii',
+    why: 'กับดักคือชื่อ Gary Lofgren ที่เป็น curator ของ NASA ทำให้ viii ดูเข้าเค้า แต่เขาถูกอ้างเพียงเพื่อสนับสนุนใจความหลัก คือคำถามที่ยังไม่มีคำตอบและเหตุผลที่ควรกลับไปดวงจันทร์ จึงตอบ vii ครับ'
+  }
+];
+
+const LISTENING = {
+  s1: {
+    title: 'งานอาสาสมัครในหมู่บ้าน',
+    url: 'https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-17-academic-listening-2-audio-1.mp3',
+    fileDuration: 473.48, start: 89, end: 186.5,
+    instruction: 'Complete the notes below.<br><strong>Write ONE WORD ONLY for each answer.</strong>',
+    instructionThai: 'เติมคำลงในช่องว่าง ใช้ได้ <strong>คำเดียวเท่านั้น</strong> ต่อหนึ่งข้อครับ',
+    heading: 'Volunteer work — Library',
+    qs: [
+      { n: 1, line: 'Help with ______ books (times to be arranged)', a: ['collecting'], why: 'เสียงพูดว่า "one thing you could do is get involved in collecting them"' },
+      { n: 2, line: 'Help needed to keep ______ of books up to date', a: ['records'], why: 'เสียงพูดว่า "another thing is the records that we keep of the books"' },
+      { n: 3, line: 'Library is in the ______ Room in the village hall', a: ['west'], why: 'เสียงพูดว่า "we simply have the use of a room in the village hall. The West Room."' },
+      { n: 4, line: 'Lunch club: help by providing ______', a: ['transport'], why: 'เสียงพูดว่า "I could help with transport, if that’s of any use."' }
+    ]
+  },
+  s2: {
+    title: 'Oniton Hall',
+    url: 'https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-17-academic-listening-2-audio-2.mp3',
+    fileDuration: 444.08, start: 46, end: 201,
+    instruction: '<strong>Choose the correct letter, A, B or C.</strong>',
+    instructionThai: 'เลือกคำตอบที่ถูกต้องเพียงข้อเดียวในแต่ละคำถามครับ',
+    heading: 'Oniton Hall',
+    qs: [
+      { n: 1, line: 'Many past owners made changes to', a: ['B'],
+        opts: [['A', 'the gardens.'], ['B', 'the house.'], ['C', 'the farm.']],
+        why: 'เสียงพูดว่าเจ้าของเกือบทุกคน "left their mark, generally by adding new rooms… or by demolishing others" ส่วนแปลงดอกไม้เป็นผลงานของเจ้าของคนปัจจุบันคนเดียว' },
+      { n: 2, line: 'Sir Edward Downes built Oniton Hall because he wanted', a: ['C'],
+        opts: [['A', 'a place for discussing politics.'], ['B', 'a place to display his wealth.'], ['C', 'a place for artists and writers.']],
+        why: 'เสียงพูดว่าเขา "hosted meetings of creative and literary people, like painters and poets" ส่วนการเมืองเป็นสิ่งที่เขาต้องการ escape from' },
+      { n: 3, line: 'Visitors can learn about the work of servants in the past from', a: ['C'],
+        opts: [['A', 'audio guides.'], ['B', 'photographs.'], ['C', 'people in costume.']],
+        why: 'เสียงพูดว่า "you’ll see volunteers dressed up as nineteenth-century servants" และบอกว่าสิ่งนี้มา replace audio guide ที่เลิกใช้แล้ว' }
+    ]
+  },
+  s4: {
+    title: 'ภาษาไอซ์แลนด์กับเทคโนโลยีดิจิทัล',
+    url: 'https://engnovate.com/wp-content/uploads/2023/07/cambridge-ielts-17-academic-listening-2-audio-4.mp3',
+    fileDuration: 433.39, start: 71, end: 169.5,
+    instruction: 'Complete the notes below.<br><strong>Write ONE WORD AND/OR A NUMBER for each answer.</strong>',
+    instructionThai: 'เติมคำลงในช่องว่าง ใช้ได้ <strong>คำเดียว และ/หรือ ตัวเลข</strong> ต่อหนึ่งข้อครับ',
+    heading: 'The impact of digital technology on the Icelandic language',
+    qs: [
+      { n: 1, line: 'Icelandic has approximately ______ speakers', a: ['321000', '321,000'], why: 'เสียงพูดว่า "spoken by around 321,000 people"' },
+      { n: 2, line: 'It has a ______ that is still growing', a: ['vocabulary'], why: 'เสียงพูดว่า "the vocabulary of Icelandic is continually increasing"' },
+      { n: 3, line: 'It has its own words for computer-based concepts, such as web browser and ______', a: ['podcast'], why: 'เสียงพูดว่า "there’s an Icelandic word for podcast"' }
+    ]
+  }
+};
+
+const WRITING = {
+  g1: [
+    {
+      id: 'w1a', kind: 'typed',
+      sentence: 'Overall, internet access ~rise~ significantly in all four countries during this period, The UK and Germany consistently had the highest figures, while Italy remain the lowest throughout.',
+      prompt: 'คำที่ขีดเส้นใต้ถูกต้องหรือไม่ ถ้าไม่ถูก ให้พิมพ์คำที่ถูกต้องลงไป ถ้าถูกอยู่แล้วให้กดปุ่มด้านล่างครับ',
+      a: ['rose'],
+      why: 'ประโยคนี้เล่าเรื่องที่จบไปแล้ว ("during this period") และประโยคเดียวกันยังใช้ "had" ซึ่งเป็นอดีต จึงต้องเป็น rose ครับ'
+    },
+    {
+      id: 'w1b', kind: 'choice',
+      sentence: 'Overall, internet access rose significantly in all four countries during this ~period, The UK~ and Germany consistently had the highest figures, while Italy remained the lowest throughout.',
+      prompt: 'เลือกตัวเลือกที่แก้เครื่องหมายวรรคตอนตรงนี้ได้ถูกต้องที่สุดครับ',
+      opts: [['A', 'NO CHANGE'], ['B', 'period. however, the UK'], ['C', 'period, however the UK'], ['D', 'period. However, the UK']],
+      a: ['D'],
+      why: 'ต้นฉบับเอาสองประโยคสมบูรณ์มาต่อกันด้วยลูกน้ำ (comma splice) จึงต้องตัดด้วยจุด — C ยังเป็น comma splice, B ขึ้นประโยคใหม่ด้วยตัวพิมพ์เล็ก เหลือ D ที่ถูกทั้งจุด ตัวพิมพ์ใหญ่ และลูกน้ำหลัง However ครับ'
+    }
+  ],
+  g2: [{
+    id: 'w2', kind: 'typed',
+    sentence: 'In 2000, the percentage of households with internet access was low everywhere. The UK led with ~25% followed by Germany~ at 20% and Italy at 15%, and France had the smallest figure of only 12%.',
+    prompt: 'ถ้าส่วนที่ขีดเส้นใต้ผิด ให้พิมพ์ส่วนนั้นใหม่ให้ถูกต้อง ถ้าถูกอยู่แล้วให้กดปุ่มด้านล่างครับ',
+    a: ['25%, followed by germany'],
+    why: '"followed by Germany at 20%" เป็นส่วนขยายที่ตามหลังใจความหลัก ต้องมีลูกน้ำคั่นก่อนเสมอ จึงเป็น "25%, followed by Germany" ครับ'
+  }],
+  g3: [{
+    id: 'w3', kind: 'choice',
+    sentence: 'By 2010, all four countries had experienced a dramatic increase. Germany rose to 78%, which was slightly higher than the UK’s 75%. France also increased sharply to ~65%, Italy~ only reached 55%, which was the lowest figure in that year.',
+    prompt: 'เลือกตัวเลือกที่ถูกต้องที่สุดครับ',
+    opts: [['A', 'NO CHANGE'], ['B', '65% but Italy'], ['C', '65% whereas Italy'], ['D', '65%, whereas Italy']],
+    a: ['D'],
+    why: 'ต้นฉบับเป็น comma splice อีกครั้ง แก้ด้วยคำเชื่อมแสดงความต่าง (whereas) และคงลูกน้ำไว้หน้าคำเชื่อม — C ขาดลูกน้ำ ส่วน B ขาดลูกน้ำและใช้ but ที่อ่อนกว่าในงานเขียนวิชาการครับ'
+  }]
+};
+
+const SPEAKING_QS = [
+  { part: 'Part 1', q: 'Tell me about the area where you live. What do you like about it?', hint: 'ตอบอย่างน้อย 4 ประโยค และบอกเหตุผลประกอบด้วยครับ' },
+  { part: 'Part 1', q: 'What did you do last weekend?', hint: 'ข้อนี้ต้องเล่าเรื่องที่ผ่านไปแล้ว ระวัง past tense ให้ถูกครับ' },
+  { part: 'Part 3', q: 'How has the way people spend their free time changed over the last twenty years?', hint: 'เปรียบเทียบอดีตกับปัจจุบัน และยกตัวอย่างประกอบครับ' },
+  { part: 'Part 3', q: 'Do you think technology has made people’s lives easier or more stressful? Why?', hint: 'เลือกฝั่งใดฝั่งหนึ่งให้ชัด แล้วให้เหตุผลอย่างน้อย 2 ข้อครับ' }
+];
+
+/* -------------------------------------------------------------------- gates */
+
+const LABELS = {
+  'below5.5': 'ต่ำกว่า 5.5', '5.5-6': '5.5–6.0', '6': '6.0',
+  '6-6.5': '6.0–6.5', '6.5': '6.5', '6.5-7': '6.5–7.0', '7plus': '7.0 ขึ้นไป'
+};
+const MIDPOINTS = { 'below5.5': 5, '5.5-6': 5.75, '6': 6, '6-6.5': 6.25, '6.5': 6.5, '6.5-7': 6.75, '7plus': 7 };
+
+const scoreReading = (t, h) => {
+  if (t === 0) return 'below5.5';
+  if (t < 3) return '5.5-6';
+  if (h === null) return '5.5-6';
+  if (h === 3) return '6.5-7';
+  return h >= 1 ? '6' : '5.5-6';
+};
+const scoreListening = (s1, s2, s4) => {
+  if (s1 <= 1) return 'below5.5';
+  if (s1 < 4) return '5.5-6';
+  if (s2 === null || s2 <= 1) return '5.5-6';
+  if (s2 === 2) return '6';
+  if (s4 === null) return '6.5';
+  return s4 === 3 ? '7plus' : '6.5';
+};
+const scoreWriting = (g1, g2, g3) => {
+  if (g1 === 0) return 'below5.5';
+  if (g1 < 2) return '5.5-6';
+  if (g2 !== true) return '6';
+  if (g3 !== true) return '6-6.5';
+  return '6.5-7';
+};
+const matches = (given, accepted) => {
+  const norm = v => String(v).toLowerCase().replace(/[’']/g, "'").replace(/,(?=\d)/g, '').replace(/\s+/g, ' ').replace(/\.$/, '').trim();
+  return accepted.some(a => norm(a) === norm(given));
+};
+
+/* -------------------------------------------------------------------- state */
+
+const state = {
+  screen: 'warning',
+  ready: false,
+  qi: 0,
+  student: { name: '', contact: '' },
+  answers: {},
+  reading: { tfng: null, headings: null, band: null, wrong: [] },
+  listening: { s1: null, s2: null, s4: null, band: null, wrong: [] },
+  writing: { g1: null, g2: null, g3: null, band: null, wrong: [] },
+  speaking: { band: null, reasons: [], pending: true, clips: {} },
+  cheer: null
+};
+
+let listenPhase = 's1';
+let writePhase = 'g1';
+
+const el = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const withUnderline = t => esc(t).split('~').map((p, i) => (i % 2 ? '<u><strong>' + p + '</strong></u>' : p)).join('');
+
+function go(screen, qi) {
+  const stage = el('stage');
+  stage.classList.add('leaving');
+  setTimeout(() => { state.screen = screen; state.qi = qi || 0; render(); }, 160);
+}
+
+/* Level-up interstitial: shown only when the adaptive test moves a student up,
+   which the intro has already told them means they got the easier set right. */
+function cheer(title, body, next) {
+  state.cheer = { title, body, next };
+  go('cheer');
+}
+
+const S = {};
+
+S.cheer = () => `
+<div class="box fade" style="text-align:center">
+  ${ART.cheer}
+  <h2>${esc(state.cheer.title)}</h2>
+  <p class="lead">${esc(state.cheer.body)}</p>
+  <div class="actions" style="justify-content:center">
+    <button class="btn sun" onclick="go('${state.cheer.next}')">ไปต่อ</button>
+  </div>
+</div>`;
+
+/* ------------------------------------------------------------------ opening */
+
+S.warning = () => `
+<div class="box fade">
+  ${ART.clock}
+  <div class="eyebrow" style="text-align:center">โปรดอ่านก่อนเริ่ม</div>
+  <h2 style="text-align:center">เตรียมตัวให้พร้อมก่อนกดเริ่มครับ</h2>
+  <p class="lead" style="text-align:center">แบบทดสอบนี้ทำได้ครั้งเดียว กรุณาอ่านทั้ง 3 ข้อนี้ให้ครบก่อนครับ</p>
+
+  <div class="caution"><strong>⏱ ต้องมีเวลาว่างต่อเนื่อง 15–20 นาที</strong><br>ระหว่างทำห้ามปิดหน้านี้หรือรีเฟรช เพราะคำตอบจะหายทั้งหมดครับ</div>
+  <div class="caution"><strong>🔒 ทำได้ครั้งเดียวเท่านั้น</strong><br>ผลที่ได้จะถูกใช้จัดระดับคอร์สของคุณจริง จึงไม่สามารถทำซ้ำเพื่อแก้คะแนนได้ครับ</div>
+  <div class="caution"><strong>🎙 ส่วนการพูดต้องใช้ไมโครโฟน</strong><br>เราตรวจการพูดด้วยฐานข้อมูลผลสอบจริงของนักเรียน English Plan กรุณาอยู่ในที่เงียบ พูดด้วยความสามารถของตัวเองจริง ๆ และอย่าใช้ AI หรือสคริปต์ช่วยตอบ เพราะผลที่ได้จะไม่ตรงกับระดับจริงของคุณครับ</div>
+
+  <label class="choice ${state.ready ? 'on' : ''}" onclick="toggleReady()" style="margin-top:6px">
+    <input type="checkbox" ${state.ready ? 'checked' : ''} />
+    <span>ฉันเข้าใจเงื่อนไขทั้งหมดแล้ว และตอนนี้พร้อมทำแบบทดสอบต่อเนื่องจนจบครับ</span>
+  </label>
+
+  <div class="actions">
+    <button class="btn" onclick="go('intro')" ${state.ready ? '' : 'disabled'}>พร้อมแล้ว เริ่มเลย</button>
+    <span class="note">ยังไม่พร้อม? ปิดหน้านี้แล้วกลับมาใหม่ได้ครับ</span>
+  </div>
+</div>`;
+
+function toggleReady() { state.ready = !state.ready; render(); }
+
+S.intro = () => `
+<div class="box fade">
+  <div class="eyebrow">เริ่มต้น</div>
+  <h2>แบบทดสอบวัดระดับ IELTS แบบสั้น</h2>
+  <p class="lead">ใช้เวลาประมาณ 15–20 นาที ครอบคลุมทั้ง 4 ทักษะ ไม่ต้องสมัครสมาชิกครับ</p>
+  <div class="instruction">
+    แบบทดสอบนี้เป็นแบบ <strong>adaptive</strong> — ถ้าตอบข้อง่ายถูก ระบบจะป้อนข้อที่ยากขึ้นให้
+    เพื่อให้ประเมินระดับของคุณได้แม่นยำที่สุดครับ
+  </div>
+  <div style="margin-top:18px">
+    <div class="tag">ชื่อ</div>
+    <input type="text" id="in-name" placeholder="ชื่อ-นามสกุล" style="margin-top:8px" />
+  </div>
+  <div style="margin-top:18px">
+    <div class="tag">LINE ID หรืออีเมล</div>
+    <input type="text" id="in-contact" placeholder="สำหรับส่งผลและคำแนะนำกลับไปครับ" style="margin-top:8px" />
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="startTest()">เริ่มทำแบบทดสอบ</button>
+  </div>
+</div>`;
+
+function startTest() {
+  state.student.name = el('in-name').value.trim();
+  state.student.contact = el('in-contact').value.trim();
+  if (!state.student.name) { alert('กรุณากรอกชื่อก่อนครับ'); return; }
+  go('reading-intro');
+}
+
+/* ------------------------------------------------------------------ reading */
+
+S['reading-intro'] = () => `
+<div class="box fade">
+  ${ART.book}
+  <div class="eyebrow" style="text-align:center">ทักษะที่ 1 จาก 4</div>
+  <h2 style="text-align:center">การอ่าน</h2>
+  <p class="lead" style="text-align:center">ข้อความที่เกี่ยวข้องถูกตัดมาให้แล้ว ไม่ต้องหาเอง — ส่วนนี้วัดการตีความ ไม่ได้วัดความเร็วครับ</p>
+  <div class="instruction">
+    Do the following statements agree with the information in the passage?<br>
+    <strong>TRUE</strong> — the statement agrees with the information<br>
+    <strong>FALSE</strong> — the statement contradicts the information<br>
+    <strong>NOT GIVEN</strong> — there is no information on this
+  </div>
+  <div class="actions"><button class="btn" onclick="go('reading-tfng')">เริ่มข้อแรก</button></div>
+</div>`;
+
+S['reading-tfng'] = () => {
+  const q = READING_TFNG[state.qi];
+  const saved = state.answers[q.id];
+  return `
+<div class="box fade">
+  <div class="eyebrow">การอ่าน · ข้อ ${state.qi + 1} จาก ${READING_TFNG.length}</div>
+  <div class="passage">${esc(q.context)}</div>
+  <p class="question">${esc(q.statement)}</p>
+  <div class="choices">
+    ${['TRUE', 'FALSE', 'NOT GIVEN'].map(o => `
+      <label class="choice ${saved === o ? 'on' : ''}" onclick="setAns('${q.id}','${o}')">
+        <input type="radio" ${saved === o ? 'checked' : ''} /><span class="key">${o}</span>
+      </label>`).join('')}
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="nextTfng()">${state.qi === READING_TFNG.length - 1 ? 'ส่งคำตอบ' : 'ข้อถัดไป'}</button>
+  </div>
+</div>`;
+};
+
+function setAns(id, val) { state.answers[id] = val; render(); }
+
+function nextTfng() {
+  const q = READING_TFNG[state.qi];
+  if (!state.answers[q.id]) { alert('กรุณาเลือกคำตอบก่อนครับ'); return; }
+  if (state.qi < READING_TFNG.length - 1) { go('reading-tfng', state.qi + 1); return; }
+  let correct = 0;
+  READING_TFNG.forEach(x => {
+    if (state.answers[x.id] === x.answer) correct++;
+    else state.reading.wrong.push({ q: x.statement, given: state.answers[x.id], answer: x.answer, why: x.why });
+  });
+  state.reading.tfng = correct;
+  if (correct < 3) { state.reading.band = scoreReading(correct, null); go('listening-intro'); }
+  else cheer('เก่งมากครับ!', 'ชุดแรกผ่านหมด ระบบจะป้อนข้อที่ยากขึ้นให้ เพื่อวัดระดับให้แม่นขึ้นครับ', 'reading-head');
+}
+
+S['reading-head'] = () => {
+  const q = READING_HEADINGS[state.qi];
+  const saved = state.answers[q.id];
+  return `
+<div class="box fade">
+  <div class="eyebrow">การอ่าน · ระดับยากขึ้น · ข้อ ${state.qi + 1} จาก ${READING_HEADINGS.length}</div>
+  <div class="instruction">Choose the correct heading for <strong>${esc(q.label)}</strong>.</div>
+  <div class="passage">${esc(q.text)}</div>
+  <div class="choices">
+    ${q.options.map(([k, t]) => `
+      <label class="choice ${saved === k ? 'on' : ''}" onclick="setAns('${q.id}','${k}')">
+        <input type="radio" ${saved === k ? 'checked' : ''} />
+        <span class="key">${k}</span><span>${esc(t)}</span>
+      </label>`).join('')}
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="nextHead()">${state.qi === READING_HEADINGS.length - 1 ? 'ส่งคำตอบ' : 'ข้อถัดไป'}</button>
+  </div>
+</div>`;
+};
+
+function nextHead() {
+  const q = READING_HEADINGS[state.qi];
+  if (!state.answers[q.id]) { alert('กรุณาเลือกคำตอบก่อนครับ'); return; }
+  if (state.qi < READING_HEADINGS.length - 1) { go('reading-head', state.qi + 1); return; }
+  let correct = 0;
+  READING_HEADINGS.forEach(x => {
+    if (state.answers[x.id] === x.answer) correct++;
+    else state.reading.wrong.push({ q: x.label, given: state.answers[x.id], answer: x.answer, why: x.why });
+  });
+  state.reading.headings = correct;
+  state.reading.band = scoreReading(state.reading.tfng, correct);
+  go('listening-intro');
+}
+
+/* ---------------------------------------------------------------- listening */
+
+let audio = null, playsUsed = 0;
+const MAX_PLAYS = 2;
+
+S['listening-intro'] = () => {
+  const clip = LISTENING[listenPhase];
+  const nth = { s1: 'ชุดที่ 1', s2: 'ระดับยากขึ้น', s4: 'ระดับยากที่สุด' }[listenPhase];
+  return `
+<div class="box fade">
+  ${ART.head}
+  <div class="eyebrow" style="text-align:center">ทักษะที่ 2 จาก 4 · ${nth}</div>
+  <h2 style="text-align:center">การฟัง — ${esc(clip.title)}</h2>
+  <div class="instruction">${clip.instruction}</div>
+  <p class="note" style="margin-bottom:16px">${clip.instructionThai}</p>
+  <div class="caution">เสียงเล่นได้ <strong>2 ครั้ง</strong> — อ่านคำถามให้ครบก่อนกดเล่นครับ คำตอบจะเรียงตามลำดับที่ได้ยิน</div>
+  <div class="actions"><button class="btn" onclick="go('listening-q')">ดูคำถามและเล่นเสียง</button></div>
+</div>`;
+};
+
+S['listening-q'] = () => {
+  const clip = LISTENING[listenPhase];
+  return `
+<div class="box fade">
+  <div class="eyebrow">การฟัง · ${esc(clip.title)}</div>
+  <div class="instruction">${clip.instruction}</div>
+  <div class="player">
+    <div class="row">
+      <button id="play-btn" onclick="playClip()">▶ เล่นเสียง</button>
+      <span class="meta" id="clip-meta">เหลือ ${MAX_PLAYS - playsUsed} ครั้ง · ยาว ${Math.round(clip.end - clip.start)} วินาที</span>
+    </div>
+    <div class="bar"><i id="clip-fill"></i></div>
+    <div class="meta" id="clip-status">ยังไม่ได้เล่น</div>
+  </div>
+  <div class="notes">
+    <h4>${esc(clip.heading)}</h4>
+    ${clip.qs.map(q => q.opts ? `
+      <div class="qgroup">
+        <div class="tag">ข้อ ${q.n}</div>
+        <p class="question" style="font-size:17px;margin:6px 0 14px">${esc(q.line)}</p>
+        <div class="choices">
+          ${q.opts.map(([k, t]) => `<label class="choice"><input type="radio" name="l${listenPhase}-${q.n}" value="${k}" /><span class="key">${k}</span><span>${esc(t)}</span></label>`).join('')}
+        </div>
+      </div>` : `
+      <div class="line">
+        <span>${q.n}.</span>
+        <span>${esc(q.line.split('______')[0])}</span>
+        <input type="text" id="l${listenPhase}-${q.n}" />
+        <span>${esc(q.line.split('______')[1] || '')}</span>
+      </div>`).join('')}
+  </div>
+  <div class="actions"><button class="btn" onclick="submitListening()">ส่งคำตอบ</button></div>
+</div>`;
+};
+
+function playClip() {
+  const clip = LISTENING[listenPhase];
+  if (playsUsed >= MAX_PLAYS) return;
+  playsUsed++;
+  el('play-btn').disabled = true;
+  el('clip-status').textContent = 'กำลังโหลดเสียง…';
+  audio = new Audio(clip.url);
+  audio.addEventListener('loadedmetadata', () => {
+    // A moved or re-encoded file would silently play the wrong stretch, so refuse
+    // to clip unless the duration matches the one these offsets were measured on.
+    if (Math.abs(audio.duration - clip.fileDuration) > 2) {
+      el('clip-status').textContent = '⚠ ไฟล์เสียงไม่ตรงกับที่บันทึกไว้ — กรุณาแจ้งผู้สอนครับ';
+      el('play-btn').disabled = false;
+      playsUsed--; audio = null; return;
+    }
+    audio.currentTime = clip.start;
+    audio.play();
+    el('clip-status').textContent = 'กำลังเล่น…';
+  });
+  audio.addEventListener('timeupdate', () => {
+    const pct = Math.min(100, Math.max(0, ((audio.currentTime - clip.start) / (clip.end - clip.start)) * 100));
+    const f = el('clip-fill'); if (f) f.style.width = pct + '%';
+    if (audio.currentTime >= clip.end) {
+      audio.pause();
+      const s = el('clip-status'); if (s) s.textContent = playsUsed >= MAX_PLAYS ? 'เล่นครบ 2 ครั้งแล้ว' : 'เล่นจบแล้ว — เล่นได้อีก 1 ครั้ง';
+      const m = el('clip-meta'); if (m) m.textContent = 'เหลือ ' + (MAX_PLAYS - playsUsed) + ' ครั้ง';
+      const b = el('play-btn'); if (b) b.disabled = playsUsed >= MAX_PLAYS;
+    }
+  });
+  audio.addEventListener('error', () => {
+    el('clip-status').textContent = '⚠ โหลดเสียงไม่สำเร็จ — ตรวจอินเทอร์เน็ตหรือแจ้งผู้สอนครับ';
+    el('play-btn').disabled = false;
+    playsUsed--;
+  });
+}
+
+function submitListening() {
+  const clip = LISTENING[listenPhase];
+  let correct = 0;
+  clip.qs.forEach(q => {
+    const node = document.querySelector('input[name="l' + listenPhase + '-' + q.n + '"]:checked');
+    const given = q.opts ? (node ? node.value : '') : ((el('l' + listenPhase + '-' + q.n) || {}).value || '');
+    if (given && matches(given, q.a)) correct++;
+    else state.listening.wrong.push({ q: q.line, given: given || '(ไม่ได้ตอบ)', answer: q.a[0], why: q.why });
+  });
+  if (audio) { audio.pause(); audio = null; }
+  playsUsed = 0;
+
+  if (listenPhase === 's1') {
+    state.listening.s1 = correct;
+    if (correct < 4) { state.listening.band = scoreListening(correct, null, null); go('writing-intro'); return; }
+    listenPhase = 's2';
+    cheer('ฟังได้ครบทุกข้อ!', 'ไปต่อที่บทสนทนาที่ยากขึ้นกันครับ', 'listening-intro'); return;
+  }
+  if (listenPhase === 's2') {
+    state.listening.s2 = correct;
+    if (correct < 3) { state.listening.band = scoreListening(state.listening.s1, correct, null); go('writing-intro'); return; }
+    listenPhase = 's4';
+    cheer('ยอดเยี่ยมครับ!', 'ชุดสุดท้ายเป็นเลกเชอร์วิชาการ ระดับเดียวกับ Band 7 ครับ', 'listening-intro'); return;
+  }
+  state.listening.s4 = correct;
+  state.listening.band = scoreListening(state.listening.s1, state.listening.s2, correct);
+  go('writing-intro');
+}
+
+/* ------------------------------------------------------------------ writing */
+
+const CHART_SVG = `
+<svg viewBox="0 0 640 350" role="img" aria-label="Line graph of household internet access">
+  <text x="320" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#1b2230" font-family="Mali, sans-serif">Households with internet access, 2000–2010</text>
+  <g stroke="#ece9e0" stroke-width="1">
+    ${[0, 20, 40, 60, 80, 100].map(v => { const y = 292 - (v / 100) * 236; return `<line x1="62" y1="${y}" x2="612" y2="${y}" />`; }).join('')}
+  </g>
+  <g font-size="12" fill="#6b7488" text-anchor="end" font-family="Mali, sans-serif">
+    ${[0, 20, 40, 60, 80, 100].map(v => { const y = 292 - (v / 100) * 236; return `<text x="54" y="${y + 4}">${v}%</text>`; }).join('')}
+  </g>
+  <line x1="62" y1="292" x2="612" y2="292" stroke="#9aa3ba" stroke-width="1.5" />
+  <line x1="62" y1="54" x2="62" y2="292" stroke="#9aa3ba" stroke-width="1.5" />
+  <g font-size="12" fill="#6b7488" text-anchor="middle" font-family="Mali, sans-serif">
+    <text x="62" y="313">2000</text><text x="337" y="313">2005</text><text x="612" y="313">2010</text>
+  </g>
+  ${[
+    { name: 'UK', colour: '#004aad', pts: [25, 55, 75] },
+    { name: 'Germany', colour: '#1a8a55', pts: [20, 52, 78] },
+    { name: 'France', colour: '#d9a800', pts: [12, 40, 65] },
+    { name: 'Italy', colour: '#cf4436', pts: [15, 33, 55] }
+  ].map(s => {
+    const xs = [62, 337, 612];
+    const pts = s.pts.map((v, i) => xs[i] + ',' + (292 - (v / 100) * 236));
+    const dots = s.pts.map((v, i) => `<circle cx="${xs[i]}" cy="${292 - (v / 100) * 236}" r="5" fill="${s.colour}" />`).join('');
+    return `<polyline points="${pts.join(' ')}" fill="none" stroke="${s.colour}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />${dots}`;
+  }).join('')}
+  <g font-size="12.5" font-family="Mali, sans-serif">
+    ${[{ name: 'UK', c: '#004aad' }, { name: 'Germany', c: '#1a8a55' }, { name: 'France', c: '#d9a800' }, { name: 'Italy', c: '#cf4436' }]
+      .map((s, i) => `<rect x="${86 + i * 132}" y="332" width="16" height="4" rx="2" fill="${s.c}" /><text x="${108 + i * 132}" y="337" fill="#1b2230">${s.name}</text>`).join('')}
+  </g>
+</svg>`;
+
+S['writing-intro'] = () => `
+<div class="box fade">
+  ${ART.chart}
+  <div class="eyebrow" style="text-align:center">ทักษะที่ 3 จาก 4</div>
+  <h2 style="text-align:center">การเขียน</h2>
+  <p class="lead" style="text-align:center">ประโยคต่อไปนี้มาจากบทความบรรยายกราฟด้านล่าง (Writing Task 1) หน้าที่ของคุณคือตรวจแก้ภาษา ไม่ต้องเขียนใหม่ทั้งย่อหน้าครับ</p>
+  <figure class="chart" style="margin:0 0 18px">
+    ${CHART_SVG}
+    <figcaption>The graph below shows the percentage of households with internet access in four European countries between 2000 and 2010.</figcaption>
+  </figure>
+  <div class="actions"><button class="btn" onclick="go('writing-q')">เริ่มข้อแรก</button></div>
+</div>`;
+
+S['writing-q'] = () => {
+  const items = WRITING[writePhase];
+  const item = items[state.qi];
+  const saved = state.answers[item.id] || '';
+  const level = { g1: '', g2: ' · ระดับยากขึ้น', g3: ' · ระดับยากที่สุด' }[writePhase];
+  return `
+<div class="box fade">
+  <div class="eyebrow">การเขียน${level} · ข้อ ${state.qi + 1} จาก ${items.length}</div>
+  <figure class="chart">${CHART_SVG}</figure>
+  <div class="sentence">${withUnderline(item.sentence)}</div>
+  <p class="note" style="margin-bottom:16px">${esc(item.prompt)}</p>
+  ${item.kind === 'typed'
+    ? `<input type="text" id="${item.id}" value="${esc(saved)}" placeholder="พิมพ์คำที่ถูกต้องที่นี่" />
+       <div class="actions" style="margin-top:12px">
+         <button class="btn line" onclick="markNoChange('${item.id}')">ถูกต้องอยู่แล้ว ไม่ต้องแก้</button>
+       </div>`
+    : `<div class="choices">${item.opts.map(([k, t]) => `
+        <label class="choice ${saved === k ? 'on' : ''}" onclick="setAns('${item.id}','${k}')">
+          <input type="radio" ${saved === k ? 'checked' : ''} />
+          <span class="key">${k}</span><span>${esc(t)}</span>
+        </label>`).join('')}</div>`}
+  <div class="actions">
+    <button class="btn" onclick="nextWriting()">${state.qi === items.length - 1 ? 'ส่งคำตอบ' : 'ข้อถัดไป'}</button>
+  </div>
+</div>`;
+};
+
+/**
+ * Without this the student has no way to say "the underlined part is already
+ * right" — being forced to type something gives away that it is wrong.
+ */
+function markNoChange(id) {
+  state.answers[id] = 'NO CHANGE';
+  const field = el(id);
+  if (field) field.value = 'NO CHANGE';
+}
+
+function nextWriting() {
+  const items = WRITING[writePhase];
+  const item = items[state.qi];
+  if (item.kind === 'typed') state.answers[item.id] = (el(item.id).value || '').trim();
+  if (!state.answers[item.id]) { alert('กรุณาตอบก่อนครับ'); return; }
+  if (state.qi < items.length - 1) { go('writing-q', state.qi + 1); return; }
+
+  const check = it => {
+    const ok = matches(state.answers[it.id] || '', it.a);
+    if (!ok) state.writing.wrong.push({ q: it.prompt, given: state.answers[it.id] || '(ไม่ได้ตอบ)', answer: it.a[0], why: it.why });
+    return ok;
+  };
+
+  if (writePhase === 'g1') {
+    const correct = WRITING.g1.filter(check).length;
+    state.writing.g1 = correct;
+    if (correct < WRITING.g1.length) { state.writing.band = scoreWriting(correct, null, null); go('speaking-intro'); return; }
+    writePhase = 'g2';
+    cheer('ตรวจแก้ได้ถูกทั้งสองข้อ!', 'ไปต่อที่ประโยคที่ซับซ้อนขึ้นกันครับ', 'writing-q'); return;
+  }
+  if (writePhase === 'g2') {
+    const ok = check(WRITING.g2[0]);
+    state.writing.g2 = ok;
+    if (!ok) { state.writing.band = scoreWriting(state.writing.g1, false, null); go('speaking-intro'); return; }
+    writePhase = 'g3';
+    cheer('แม่นมากครับ!', 'ข้อสุดท้ายเป็นระดับ Band 7 ครับ', 'writing-q'); return;
+  }
+  const ok = check(WRITING.g3[0]);
+  state.writing.g3 = ok;
+  state.writing.band = scoreWriting(state.writing.g1, state.writing.g2, ok);
+  go('speaking-intro');
+}
+
+/* ----------------------------------------------------------------- speaking */
+
+let recorder = null, chunks = [], recTimer = null, recSeconds = 0;
+
+S['speaking-intro'] = () => `
+<div class="box fade">
+  ${ART.mic}
+  <div class="eyebrow" style="text-align:center">ทักษะที่ 4 จาก 4</div>
+  <h2 style="text-align:center">การพูด</h2>
+  <p class="lead" style="text-align:center">ตอบด้วยเสียงของตัวเองให้ได้อย่างน้อยข้อละ 4 ประโยค ระบบตรวจเฉพาะไวยากรณ์และคำศัพท์ ไม่ได้ตรวจสำเนียงครับ</p>
+  <div class="instruction">
+    You will answer <strong>4 questions</strong> — 2 from Part 1 and 2 from Part 3.<br>
+    Speak naturally. There is no time limit to prepare.
+  </div>
+  <div class="actions"><button class="btn" onclick="go('speaking-q')">เริ่มข้อแรก</button></div>
+</div>`;
+
+S['speaking-q'] = () => {
+  const q = SPEAKING_QS[state.qi];
+  const clip = state.speaking.clips[state.qi];
+  return `
+<div class="box fade">
+  <div class="eyebrow">การพูด · ${q.part} · ข้อ ${state.qi + 1} จาก ${SPEAKING_QS.length}</div>
+  <p class="question" style="font-size:clamp(19px,3vw,24px)">${esc(q.q)}</p>
+  <p class="note">${esc(q.hint)}</p>
+  <div class="rec" id="rec-row">
+    ${clip
+      ? `<audio controls src="${clip.url}"></audio><button class="btn line" onclick="startRec()">อัดใหม่</button>`
+      : `<button class="btn line" onclick="startRec()">🎙 เริ่มอัดเสียง</button>`}
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="nextSpeaking()" ${clip ? '' : 'disabled'}>
+      ${state.qi === SPEAKING_QS.length - 1 ? 'ส่งคำตอบทั้งหมด' : 'ข้อถัดไป'}
+    </button>
+  </div>
+</div>`;
+};
+
+async function startRec() {
+  const row = el('rec-row');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    chunks = [];
+    recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = e => chunks.push(e.data);
+    recorder.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+      state.speaking.clips[state.qi] = { blob, url: URL.createObjectURL(blob), seconds: recSeconds };
+      clearInterval(recTimer);
+      render();
+    };
+    recorder.start();
+    recSeconds = 0;
+    row.innerHTML = '<span class="dot"></span><span class="note" id="rec-time">กำลังอัด 0 วินาที</span><button class="btn line" onclick="stopRec()">■ หยุดอัด</button>';
+    recTimer = setInterval(() => {
+      recSeconds++;
+      const t = el('rec-time');
+      if (t) t.textContent = 'กำลังอัด ' + recSeconds + ' วินาที';
+    }, 1000);
+  } catch (err) {
+    row.innerHTML = '<span class="note">ไม่สามารถเข้าถึงไมโครโฟนได้ กรุณาอนุญาตการใช้ไมค์ในเบราว์เซอร์ครับ</span>';
+  }
+}
+function stopRec() { if (recorder && recorder.state === 'recording') recorder.stop(); }
+
+function nextSpeaking() {
+  if (!state.speaking.clips[state.qi]) return;
+  if (state.qi < SPEAKING_QS.length - 1) { go('speaking-q', state.qi + 1); return; }
+  go('speaking-sending');
+}
+
+S['speaking-sending'] = () => {
+  setTimeout(submitSpeaking, 400);
+  return `
+<div class="box fade" style="text-align:center">
+  ${ART.done}
+  <h2>กำลังตรวจคำตอบของคุณ…</h2>
+  <p class="lead">ระบบกำลังถอดเสียงและตรวจไวยากรณ์กับคำศัพท์ อาจใช้เวลาสักครู่ครับ</p>
+</div>`;
+};
+
+async function submitSpeaking() {
+  try {
+    const responses = [];
+    for (let i = 0; i < SPEAKING_QS.length; i++) {
+      const fd = new FormData();
+      fd.append('audio', state.speaking.clips[i].blob, 'answer' + i + '.webm');
+      const r = await fetch('/api/transcribe', { method: 'POST', body: fd });
+      if (!r.ok) throw new Error('transcribe failed');
+      const data = await r.json();
+      responses.push({ part: SPEAKING_QS[i].part, question: SPEAKING_QS[i].q, response: data.text });
+    }
+    const r2 = await fetch('/api/placement/speaking-assess', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ questionResponses: responses })
+    });
+    if (!r2.ok) throw new Error('assess failed');
+    const { signals } = await r2.json();
+    const result = scoreSpeakingSignals(signals);
+    state.speaking.band = result.band;
+    state.speaking.reasons = result.reasons;
+    state.speaking.pending = false;
+  } catch (err) {
+    // Opened as a plain file there is no server to call; the other three skills
+    // still report, and speaking is shown as awaiting marking rather than faked.
+    state.speaking.pending = true;
+  }
+  go('report');
+}
+
+function scoreSpeakingSignals(s) {
+  const reasons = [];
+  const shortest = s.sentenceCountsPerQuestion.length ? Math.min(...s.sentenceCountsPerQuestion) : 0;
+  const colls = s.b2c1Collocations.length;
+  if (s.vocabularyErrorCount >= 4) {
+    reasons.push('ใช้คำศัพท์ผิดบริบท ' + s.vocabularyErrorCount + ' จุด ทำให้ความหมายสะดุดบ่อยครับ');
+    return { band: 'below5.5', reasons };
+  }
+  if (s.tenseErrorCount > 0 || s.articleErrorCount > 0) {
+    if (s.tenseErrorCount > 0) reasons.push('ยังมี tense ผิด ' + s.tenseErrorCount + ' จุด (present simple / past simple) ครับ');
+    if (s.articleErrorCount > 0) reasons.push('ยังมี article (a / an / the) ผิด ' + s.articleErrorCount + ' จุดครับ');
+    return { band: '5.5-6', reasons };
+  }
+  if (s.vocabularyErrorCount > 0) {
+    reasons.push('ไวยากรณ์สะอาดแล้ว แต่ยังใช้คำศัพท์ผิดบริบท ' + s.vocabularyErrorCount + ' จุดครับ');
+    return { band: '6', reasons };
+  }
+  if (!s.usedPastTense || !s.pastTenseCorrect) {
+    reasons.push(s.usedPastTense ? 'มีการใช้ past tense แต่ยังไม่ถูกต้อง เลยยังขยับขึ้นไม่ได้ครับ' : 'ไม่มีข้อผิดพลาด แต่ยังไม่ได้ใช้ past tense เลยครับ');
+    return { band: '6', reasons };
+  }
+  if (!s.ideasOrganised || s.transitionsUsed.length === 0) {
+    reasons.push(s.transitionsUsed.length === 0 ? 'ไวยากรณ์ถูกต้อง แต่ยังไม่มีคำเชื่อม (transition) เลย ไอเดียจึงยังไม่ต่อกันครับ' : 'ไวยากรณ์ถูกต้อง แต่การเรียบเรียงไอเดียยังไม่เป็นลำดับครับ');
+    return { band: '6-6.5', reasons };
+  }
+  reasons.push('ไม่มี article หรือ tense ผิด และใช้ past tense ได้ถูกต้องครับ');
+  if (shortest < 4) {
+    reasons.push('แต่คำตอบบางข้อสั้นเกินไป เลยหยุดไว้ที่ 6.5 ครับ');
+    return { band: '6.5', reasons };
+  }
+  if (s.sentenceCountsPerQuestion.every(c => c > 4) && colls >= 6) {
+    reasons.push('ตอบยาวครบทุกข้อ และใช้ collocation ระดับ B2–C1 ' + colls + ' จุดครับ');
+    return { band: '7plus', reasons };
+  }
+  reasons.push(colls > 0 ? 'ใช้ collocation ระดับ B2–C1 ' + colls + ' จุด ซึ่งยังไม่พอสำหรับ 7.0 ครับ' : 'แต่คำศัพท์ยังเป็นระดับพื้นฐานเป็นส่วนใหญ่ครับ');
+  return { band: '6.5', reasons };
+}
+
+/* ------------------------------------------------------------------- report */
+
+function pill(band) {
+  if (!band) return '<span class="pill pending">รอผลตรวจ</span>';
+  const cls = (band === 'below5.5' || band === '5.5-6') ? 'low' : (band === '6.5-7' || band === '7plus') ? 'high' : '';
+  return '<span class="pill ' + cls + '">' + LABELS[band] + '</span>';
+}
+
+S.report = () => {
+  const rows = [
+    ['การอ่าน', state.reading.band, state.reading.wrong],
+    ['การฟัง', state.listening.band, state.listening.wrong],
+    ['การเขียน', state.writing.band, state.writing.wrong],
+    ['การพูด', state.speaking.band, []]
+  ];
+  const scored = rows.filter(r => r[1]);
+  const avg = scored.reduce((sum, r) => sum + MIDPOINTS[r[1]], 0) / (scored.length || 1);
+  const overall = (Math.round(avg * 2) / 2).toFixed(1);
+  const weakest = scored.slice().sort((a, b) => MIDPOINTS[a[1]] - MIDPOINTS[b[1]])[0];
+  const allWrong = rows.flatMap(r => r[2].map(w => ({ skill: r[0], ...w })));
+
+  return `
+<div class="letter fade">
+  <div class="from">ผลประเมินระดับ · English Plan</div>
+  <div class="verdict">
+    <div>
+      <div class="note" style="margin-bottom:2px">ระดับโดยประมาณของ ${esc(state.student.name || 'คุณ')}</div>
+      <div class="num">${overall}</div>
+    </div>
+  </div>
+
+  <p style="font-size:16.5px;margin:0 0 18px">
+    เรียนคุณ${esc(state.student.name || '')} ครับ — จากคำตอบทั้งหมดที่ส่งมา ระดับโดยประมาณของคุณอยู่ที่ <strong>${overall}</strong>
+    ${weakest ? 'โดยทักษะที่ควรเริ่มซ่อมก่อนคือ<strong>' + esc(weakest[0]) + '</strong> เพราะเป็นตัวที่ดึงคะแนนรวมลงมากที่สุดครับ' : ''}
+  </p>
+
+  <h2 style="font-size:19px;margin-top:26px">ผลรายทักษะ</h2>
+  ${rows.map(r => `<div class="bandrow"><span class="skill">${r[0]}</span>${pill(r[1])}</div>`).join('')}
+
+  ${state.speaking.reasons.length ? `
+    <div style="margin-top:22px">
+      <div class="tag">เหตุผลของคะแนนการพูด</div>
+      <ul class="reasons">${state.speaking.reasons.map(x => '<li>' + esc(x) + '</li>').join('')}</ul>
+    </div>` : ''}
+  ${state.speaking.pending ? '<div class="fb info">คำตอบส่วนการพูดถูกบันทึกไว้แล้ว ผู้สอนจะตรวจและส่งผลกลับไปครับ</div>' : ''}
+
+  ${allWrong.length ? `
+    <h2 style="font-size:19px;margin-top:30px">จุดที่ควรซ่อม</h2>
+    <p class="note">ดูไว้เพื่อรู้ว่าต้องแก้ตรงไหน ไม่ต้องจำคำตอบครับ</p>
+    ${allWrong.map(w => `
+      <div class="wrongitem">
+        <div class="tag">${esc(w.skill)}</div>
+        <p style="font-weight:600;margin:6px 0 10px">${esc(w.q)}</p>
+        <div class="fb no">ตอบว่า <strong>${esc(w.given)}</strong> · คำตอบที่ถูกคือ <strong>${esc(w.answer)}</strong></div>
+        <p class="note" style="margin-top:10px">${esc(w.why)}</p>
+      </div>`).join('')}` : ''}
+
+  <div class="sign">
+    ผลนี้มาจากแบบทดสอบสั้น ประเมินเทียบกับสถิติผลสอบจริงของนักเรียน English Plan ที่ผ่านมา
+    ไม่ใช่คะแนนสอบอย่างเป็นทางการครับ ทีมผู้สอนจะติดต่อกลับทาง ${esc(state.student.contact || 'ช่องทางที่ให้ไว้')}
+    พร้อมแผนเรียนที่เหมาะกับระดับนี้ครับ
+  </div>
+</div>`;
+};
+
+/* ------------------------------------------------------------------- render */
+
+const SKILL_OF = {
+  warning: null, intro: null, cheer: null,
+  'reading-intro': 0, 'reading-tfng': 0, 'reading-head': 0,
+  'listening-intro': 1, 'listening-q': 1,
+  'writing-intro': 2, 'writing-q': 2,
+  'speaking-intro': 3, 'speaking-q': 3, 'speaking-sending': 3,
+  report: 4
+};
+const SKILL_NAMES = ['การอ่าน', 'การฟัง', 'การเขียน', 'การพูด'];
+
+function render() {
+  const stage = el('stage');
+  stage.classList.remove('leaving');
+  stage.innerHTML = S[state.screen]();
+
+  const active = SKILL_OF[state.screen];
+  el('topbar').style.visibility = active === null ? 'hidden' : 'visible';
+  el('segs').innerHTML = SKILL_NAMES.map((_, i) => {
+    const done = active !== null && (i < active || active === 4);
+    return '<span class="seg ' + (done ? 'done' : '') + '"><i style="width:' + (i === active ? '50%' : '0') + '"></i></span>';
+  }).join('');
+  el('poslabel').textContent = active === 4 ? 'ผลลัพธ์' : (active === null ? '' : SKILL_NAMES[active]);
+}
+
+function fillPerfect() {
+  state.student.name = state.student.name || 'ตัวอย่าง นักเรียน';
+  state.reading = { tfng: 3, headings: 3, band: '6.5-7', wrong: [] };
+  state.listening = { s1: 4, s2: 3, s4: 3, band: '7plus', wrong: [] };
+  state.writing = { g1: 2, g2: true, g3: true, band: '6.5-7', wrong: [] };
+  state.speaking = { band: null, reasons: [], pending: true, clips: {} };
+  go('report');
+}
+
+/* The test cannot be retaken, so a stray refresh or closed tab must not be silent. */
+window.addEventListener('beforeunload', (e) => {
+  if (['warning', 'intro', 'report'].includes(state.screen)) return;
+  e.preventDefault();
+  e.returnValue = '';
+});
+
+render();
+</script>
+</body>
+</html>

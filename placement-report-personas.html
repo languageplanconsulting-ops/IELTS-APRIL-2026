@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Placement report — 3 personas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:#004aad; --blue-deep:#00337a; --blue-soft:#e8f0fc; --blue-tint:#f4f8ff;
+    --yellow:#ffcc00; --yellow-soft:#fff6d6; --yellow-deep:#d9a800;
+    --ink:#1b2230; --muted:#6b7488; --line:#e8e6df; --paper:#fffdf7;
+    --good:#1a8a55; --good-soft:#e4f6ec; --bad:#cf4436; --bad-soft:#fdeeec;
+    --r-lg:28px; --r-md:18px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Mali',sans-serif; line-height:1.8; }
+  .wrap { max-width:760px; margin:0 auto; padding:28px 18px 80px; }
+  .switcher { position:sticky; top:0; z-index:9; background:var(--paper); padding:16px 0 14px; border-bottom:1px solid var(--line); margin-bottom:26px; }
+  .switcher h1 { font-size:17px; margin:0 0 12px; font-weight:700; }
+  .tabs { display:flex; gap:9px; flex-wrap:wrap; }
+  .tab { border:2px solid var(--line); background:#fff; border-radius:999px; padding:9px 20px; font-family:inherit; font-size:14px; cursor:pointer; font-weight:600; color:var(--muted); }
+  .tab.on { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+  .persona-note { background:var(--blue-soft); border-radius:var(--r-md); padding:13px 17px; font-size:14px; color:var(--blue-deep); margin-bottom:20px; }
+
+  .letter { background:#fff; border:1px solid var(--line); border-radius:var(--r-lg); padding:clamp(24px,4vw,40px); box-shadow:0 14px 34px -24px rgba(27,34,48,.35); }
+  .from { font-size:13px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; font-weight:600; }
+  .verdict { padding:22px 0; border-bottom:2px solid var(--yellow); margin-bottom:22px; }
+  .verdict .num { font-size:clamp(40px,8vw,58px); font-weight:700; color:var(--blue); line-height:1; }
+  .note { font-size:13.5px; color:var(--muted); }
+  h2 { font-size:19px; margin:26px 0 8px; font-weight:700; }
+  .bandrow { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:15px 0; border-top:1px solid var(--line); flex-wrap:wrap; }
+  .skill { font-weight:600; }
+  .pill { background:var(--blue-soft); color:var(--blue); font-weight:700; padding:6px 18px; border-radius:999px; font-size:15.5px; white-space:nowrap; }
+  .pill.low { background:var(--bad-soft); color:var(--bad); }
+  .pill.high { background:var(--good-soft); color:var(--good); }
+  .pill.pending { background:#f0eee7; color:var(--muted); }
+  .fb { border-radius:var(--r-md); padding:14px 17px; font-size:14.5px; margin-top:14px; }
+  .fb.no { background:var(--bad-soft); color:var(--bad); }
+  .fb.info { background:var(--yellow-soft); color:#6b5000; }
+  ul.reasons { margin:10px 0 0; padding-left:22px; font-size:14.5px; color:var(--muted); }
+  ul.reasons li { margin:6px 0; }
+  .wrongitem { padding:20px 0; border-top:1px solid var(--line); }
+  .tag { font-size:12px; color:var(--muted); font-weight:600; letter-spacing:.05em; }
+  .sign { margin-top:26px; padding-top:20px; border-top:1px solid var(--line); font-size:14.5px; color:var(--muted); }
+  .essayQuote { background:var(--blue-tint); border-left:3px solid var(--blue); border-radius:var(--r-md); padding:18px 20px; margin:12px 0 18px; font-size:16px; line-height:2; white-space:pre-wrap; }
+  .essayVerdict { background:var(--yellow-soft); border:1px solid var(--yellow); border-radius:var(--r-md); padding:18px 20px; }
+  .counts { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .counts span { background:#fff; border-radius:999px; padding:5px 14px; font-size:13px; color:#6b5000; }
+  .offer { display:block; text-decoration:none; color:inherit; background:var(--blue-tint); border:2px solid var(--blue); border-radius:var(--r-md); padding:20px 22px; margin-top:14px; transition:transform .12s, box-shadow .15s; }
+  .offer:hover { transform:translateY(-2px); box-shadow:0 14px 28px -18px rgba(0,74,173,.8); }
+  .offer.foundation { background:var(--yellow-soft); border-color:var(--yellow); }
+  .offerTag { font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--blue); }
+  .offer.foundation .offerTag { color:#6b5000; }
+  .offerTitle { font-size:18px; font-weight:700; margin-top:4px; line-height:1.5; }
+  .offerPrice { font-size:20px; font-weight:700; color:var(--blue); margin-top:6px; }
+  .offer.foundation .offerPrice { color:#8a6a00; }
+  .offerWhy { font-size:14.5px; color:var(--muted); margin:8px 0 0; }
+  .offerCta { display:inline-block; margin-top:12px; font-weight:700; color:var(--blue); font-size:15px; }
+  a { color:var(--blue); }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="switcher">
+    <h1>รายงานผล — ตัวอย่างผู้เรียน 3 แบบ</h1>
+    <div class="tabs">
+      <button class="tab on" data-p="low">คะแนนต่ำ · 5.5</button>
+      <button class="tab" data-p="mid">คะแนนกลาง · 6.0</button>
+      <button class="tab" data-p="high">คะแนนสูง · 7.0</button>
+    </div>
+  </div>
+  <div id="stage"></div>
+</div>
+
+<script>
+const LABELS = { 'below5.5':'ต่ำกว่า 5.5','5.5-6':'5.5–6.0','6':'6.0','6-6.5':'6.0–6.5','6.5':'6.5','6.5-7':'6.5–7.0','7plus':'7.0 ขึ้นไป' };
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const pill = b => {
+  if (!b) return '<span class="pill pending">รอผลตรวจ</span>';
+  const c = (b==='below5.5'||b==='5.5-6') ? 'low' : (b==='6.5-7'||b==='7plus') ? 'high' : '';
+  return `<span class="pill ${c}">${LABELS[b]}</span>`;
+};
+
+const PERSONAS = {
+  low: {
+    blurb: 'ผู้เรียนที่ไม่ผ่านด่านแรกของเกือบทุกทักษะ — ระบบหยุดถามต่อทันที รายงานจึงสั้นและเน้นจุดที่ต้องซ่อมก่อน',
+    name: 'สมหญิง ใจดี', contact: 'LINE: somying_j', overall: '5.5',
+    bands: { 'การอ่าน':'5.5-6', 'การฟัง':'5.5-6', 'การเขียน':'5.5-6', 'การพูด':'5.5-6' },
+    weakest: 'การฟัง',
+    rec: {
+      headline: 'ทั้ง 4 ทักษะยังต้องเก็บ แนะนำเรียนรวดเดียวจะคุ้มกว่าแยกซื้อครับ',
+      foundation: {
+        title: 'Complete English Grammar Foundation (Pre-inter)', price: '฿2,990',
+        url: 'https://www.language-plan.com/courses/english-grammar-foundation',
+        why: 'ปูพื้นแกรมม่าให้แน่นก่อน เพราะคะแนนที่ค้างอยู่ตอนนี้มาจากพื้นฐาน ไม่ใช่เทคนิคทำข้อสอบครับ'
+      },
+      primary: {
+        title: 'All Skills Package — ครบทั้ง 4 ทักษะ', price: '฿7,990 (3 เดือน) / ฿8,990 (6 เดือน)',
+        url: 'https://www.language-plan.com/pages/ielts-all-skills',
+        why: 'ครอบคลุมทั้ง 4 ทักษะในราคาถูกกว่าซื้อแยกเกือบครึ่ง และเรียนได้ถึง 6 เดือนครับ'
+      }
+    },
+    speakingReasons: [
+      'ยังมี tense ผิด 4 จุด (present simple / past simple) ครับ',
+      'ยังมี article (a / an / the) ผิด 3 จุดครับ'
+    ],
+    wrong: [
+      { skill:'การอ่าน', q:'All the craters on the moon are roughly the same age, at up to five billion years old.', given:'NOT GIVEN', answer:'FALSE',
+        why:'บทความเห็นด้วยว่าหลุมอุกกาบาตอายุใกล้เคียงกัน แต่ระบุตัวเลขชัดว่า 3.8–4 พันล้านปี ไม่ใช่ถึง 5 พันล้านปี ตัวเลขที่ขัดกันแบบนี้คือ FALSE ไม่ใช่ NOT GIVEN ครับ' },
+      { skill:'การอ่าน', q:'The rocks collected by Neil Armstrong and Buzz Aldrin were more valuable than the rocks collected by Russian astronauts.', given:'FALSE', answer:'NOT GIVEN',
+        why:'บทความไม่เคยเอ่ยถึงนักบินอวกาศรัสเซียเลย จึงเปรียบเทียบไม่ได้ — ไม่มีข้อมูล = NOT GIVEN ครับ' },
+      { skill:'การฟัง', q:'Help needed to keep ______ of books up to date', given:'record', answer:'records',
+        why:'เสียงพูดว่า "another thing is the records that we keep of the books" — เป็นพหูพจน์ครับ' },
+      { skill:'การฟัง', q:'Library is in the ______ Room in the village hall', given:'(ไม่ได้ตอบ)', answer:'west',
+        why:'เสียงพูดว่า "we simply have the use of a room in the village hall. The West Room." ครับ' },
+      { skill:'การเขียน', q:'คำที่ขีดเส้นใต้ถูกต้องหรือไม่ ถ้าไม่ถูก ให้พิมพ์คำที่ถูกต้องลงไป', given:'NO CHANGE', answer:'rose',
+        why:'ประโยคนี้เล่าเรื่องที่จบไปแล้ว ("during this period") และประโยคเดียวกันยังใช้ "had" ซึ่งเป็นอดีต จึงต้องเป็น rose ครับ' }
+    ]
+  },
+  mid: {
+    blurb: 'ผู้เรียนที่ผ่านด่านแรกได้ แต่ตกด่านที่ยากขึ้น — เห็นชัดว่าทักษะไหนขึ้นไปได้ ทักษะไหนยังติด',
+    name: 'ธนกร วงศ์สว่าง', contact: 'thanakorn.w@gmail.com', overall: '6.0',
+    bands: { 'การอ่าน':'6', 'การฟัง':'6', 'การเขียน':'6-6.5', 'การพูด':'6' },
+    weakest: 'การอ่าน',
+    rec: {
+      headline: 'ทักษะที่ต้องเก็บคือ การอ่าน การฟัง การพูด ครับ',
+      primary: {
+        title: '3 Skills Package', price: '฿7,590 (3 เดือน) / ฿8,590 (6 เดือน)',
+        url: 'https://www.language-plan.com/pages/ielts-all-skills',
+        why: 'เลือกได้ 3 ทักษะที่ยังไม่ถึงเป้า ถูกกว่าซื้อแยกทีละคอร์สครับ'
+      }
+    },
+    speakingReasons: [
+      'ไม่มีข้อผิดพลาด แต่ยังไม่ได้ใช้ past tense เลยครับ'
+    ],
+    wrong: [
+      { skill:'การอ่าน', q:'Paragraph E', given:'iv', answer:'vi',
+        why:'กับดักคือคำว่า "impact" ในตัวเลือก iv ที่ไปตรงกับ "giant impact" ในย่อหน้า แต่ย่อหน้านี้พูดถึงการประเมินประวัติระบบสุริยะยุคแรกใหม่ ไม่ใช่ผลกระทบของหิน จึงตอบ vi ครับ' },
+      { skill:'การอ่าน', q:'Paragraph I', given:'viii', answer:'vii',
+        why:'กับดักคือชื่อ Gary Lofgren ที่เป็น curator ของ NASA ทำให้ viii ดูเข้าเค้า แต่เขาถูกอ้างเพียงเพื่อสนับสนุนใจความหลัก คือคำถามที่ยังไม่มีคำตอบครับ' },
+      { skill:'การฟัง', q:'Visitors can learn about the work of servants in the past from', given:'A', answer:'C',
+        why:'เสียงบอกว่า audio guide ถูกแทนที่ไปแล้ว ("replace the audio guide we used to have") คำตอบคือ people in costume ครับ' },
+      { skill:'การเขียน', q:'ถ้าส่วนที่ขีดเส้นใต้ผิด ให้พิมพ์ส่วนนั้นใหม่ให้ถูกต้อง', given:'25% followed by Germany', answer:'25%, followed by Germany',
+        why:'"followed by Germany at 20%" เป็นส่วนขยายที่ตามหลังใจความหลัก ต้องมีลูกน้ำคั่นก่อนเสมอครับ' }
+    ]
+  },
+  high: {
+    blurb: 'ผู้เรียนที่ผ่านทุกด่าน จนได้เขียนย่อหน้า Task 2 — รายงานจะแสดงงานเขียนของเขาพร้อมกล่องอธิบายว่าทำไมยังไม่ถึง 7.0',
+    name: 'ปวีณา ศรีสมบูรณ์', contact: 'LINE: paweena.s', overall: '6.5',
+    bands: { 'การอ่าน':'6.5-7', 'การฟัง':'7plus', 'การเขียน':'6-6.5', 'การพูด':'6.5' },
+    weakest: 'การเขียน',
+    rec: {
+      headline: 'เหลือแค่การเขียนที่ยังไม่ถึงเป้าครับ',
+      primary: {
+        title: 'IELTS Academic Writing — Intensive', price: '฿4,990',
+        url: 'https://www.language-plan.com/courses/ielts-writing-5',
+        why: 'ได้แพทเทิร์นการเขียนที่ชัดเจน และส่งงานให้ตรวจพร้อม feedback ภาษาไทยได้มากกว่า 8 ครั้งครับ'
+      }
+    },
+    speakingReasons: [
+      'ไม่มี article หรือ tense ผิด และใช้ past tense ได้ถูกต้องครับ',
+      'ใช้ collocation ระดับ B2–C1 2 จุด ซึ่งยังไม่พอสำหรับ 7.0 ครับ'
+    ],
+    essay: {
+      text: "I think universities should accept students who have the highest marks because they have proved that they can study hard. If a university accept everyone, the quality of the class will drop and teachers cannot help every student. On the other hand, some people who did not get good marks in school can still be very talented, so universities should also look at other things like experience. In my opinion, marks are important but they should not be the only thing that universities consider.",
+      reasons: [
+        'มี subject-verb agreement ผิด 1 จุด: "If a university accept everyone" ต้องเป็น "accepts" ครับ',
+        'คำว่า "other things" กว้างเกินไปสำหรับ Band 7 ควรใช้คำอย่าง "other criteria" หรือ "wider factors" ครับ',
+        'ใช้คำเชื่อมแค่ "On the other hand" กับ "so" — Band 7 ควรมีความหลากหลายมากกว่านี้ครับ'
+      ],
+      counts: { tense: 1, vocab: 1, transitions: 2, logic: true }
+    },
+    wrong: [
+      { skill:'การอ่าน', q:'Paragraph C', given:'ix', answer:'v',
+        why:'ตัวเลือก ix "Study of lunar history" กว้างเกินไปจนใช้ได้กับเกือบทุกย่อหน้า ย่อหน้านี้เน้นที่ "A big surprise was the evidence…" จึงตอบ v ครับ' }
+    ]
+  }
+};
+
+function report(p) {
+  const rows = Object.entries(p.bands).map(([skill, band]) =>
+    `<div class="bandrow"><span class="skill">${skill}</span>${pill(band)}</div>`).join('');
+
+  const essayBlock = p.essay ? `
+    <h2>ย่อหน้าที่คุณเขียน</h2>
+    <div class="essayQuote">${esc(p.essay.text)}</div>
+    <div class="essayVerdict">
+      <div class="tag">ทำไมยังไม่ถึง Band 7.0</div>
+      <ul class="reasons">${p.essay.reasons.map(r => '<li>' + esc(r) + '</li>').join('')}</ul>
+      <div class="counts">
+        <span>tense / conjugation ผิด ${p.essay.counts.tense} จุด</span>
+        <span>คำศัพท์ไม่เป็นธรรมชาติ ${p.essay.counts.vocab} จุด</span>
+        <span>คำเชื่อมที่ใช้ ${p.essay.counts.transitions} คำ</span>
+        <span>ตรรกะ ${p.essay.counts.logic ? 'สมเหตุสมผล' : 'ยังไม่รัดกุม'}</span>
+      </div>
+    </div>` : '';
+
+  return `
+  <div class="persona-note">${esc(p.blurb)}</div>
+  <div class="letter">
+    <div class="from">ผลประเมินระดับ · English Plan</div>
+    <div class="verdict">
+      <div class="note" style="margin-bottom:2px">ระดับโดยประมาณของ ${esc(p.name)}</div>
+      <div class="num">${p.overall}</div>
+    </div>
+    <p style="font-size:16.5px;margin:0 0 18px">
+      เรียนคุณ${esc(p.name)} ครับ — จากคำตอบทั้งหมดที่ส่งมา ระดับโดยประมาณของคุณอยู่ที่ <strong>${p.overall}</strong>
+      โดยทักษะที่ควรเริ่มซ่อมก่อนคือ<strong>${esc(p.weakest)}</strong> เพราะเป็นตัวที่ดึงคะแนนรวมลงมากที่สุดครับ
+    </p>
+
+    <h2>ผลรายทักษะ</h2>
+    ${rows}
+
+    <div style="margin-top:22px">
+      <div class="tag">เหตุผลของคะแนนการพูด</div>
+      <ul class="reasons">${p.speakingReasons.map(r => '<li>' + esc(r) + '</li>').join('')}</ul>
+    </div>
+
+    ${essayBlock}
+
+    <h2>จุดที่ควรซ่อม</h2>
+    <p class="note">ดูไว้เพื่อรู้ว่าต้องแก้ตรงไหน ไม่ต้องจำคำตอบครับ</p>
+    ${p.wrong.map(w => `
+      <div class="wrongitem">
+        <div class="tag">${esc(w.skill)}</div>
+        <p style="font-weight:600;margin:6px 0 10px">${esc(w.q)}</p>
+        <div class="fb no">ตอบว่า <strong>${esc(w.given)}</strong> · คำตอบที่ถูกคือ <strong>${esc(w.answer)}</strong></div>
+        <p class="note" style="margin-top:10px">${esc(w.why)}</p>
+      </div>`).join('')}
+
+    <h2>คอร์สที่เหมาะกับคุณ</h2>
+    <p class="note">${esc(p.rec.headline)}</p>
+    ${p.rec.foundation ? `
+      <a class="offer foundation" href="${p.rec.foundation.url}" target="_blank" rel="noreferrer">
+        <div class="offerTag">เริ่มจากตรงนี้ก่อน</div>
+        <div class="offerTitle">${esc(p.rec.foundation.title)}</div>
+        <div class="offerPrice">${esc(p.rec.foundation.price)}</div>
+        <p class="offerWhy">${esc(p.rec.foundation.why)}</p>
+      </a>` : ''}
+    <a class="offer" href="${p.rec.primary.url}" target="_blank" rel="noreferrer">
+      <div class="offerTag">แนะนำสำหรับคุณ</div>
+      <div class="offerTitle">${esc(p.rec.primary.title)}</div>
+      <div class="offerPrice">${esc(p.rec.primary.price)}</div>
+      <p class="offerWhy">${esc(p.rec.primary.why)}</p>
+      <span class="offerCta">ดูรายละเอียดคอร์ส →</span>
+    </a>
+    <p class="note" style="margin-top:14px">
+      อยากเทียบแพ็กเกจอื่นก่อนตัดสินใจ?
+      <a href="https://www.language-plan.com/pages/ielts-all-skills" target="_blank" rel="noreferrer">ดูแพ็กเกจ IELTS ทั้งหมด</a>
+    </p>
+
+    <div class="sign">
+      ผลนี้มาจากแบบทดสอบสั้น ประเมินเทียบกับสถิติผลสอบจริงของนักเรียน English Plan ที่ผ่านมา
+      ไม่ใช่คะแนนสอบอย่างเป็นทางการครับ นักเรียนของเราได้ Band 7 ขึ้นไปเดือนละ 10 คนขึ้นไป
+      และทุกคอร์สมี feedback เป็นภาษาไทยจากพี่ดอยโดยตรงครับ
+    </div>
+  </div>`;
+}
+
+const stage = document.getElementById('stage');
+const show = key => {
+  stage.innerHTML = report(PERSONAS[key]);
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.p === key));
+};
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => show(t.dataset.p)));
+show('low');
+</script>
+</body>
+</html>

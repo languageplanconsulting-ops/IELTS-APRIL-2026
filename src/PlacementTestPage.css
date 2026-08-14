@@ -1,0 +1,237 @@
+/*
+ * Placement test — public, no-login page.
+ *
+ * Every rule is scoped under `.plc` because index.css ships global element
+ * styles (and some blanket button resets) that would otherwise reach in here.
+ */
+
+.plc {
+  --plc-blue: #004aad;
+  --plc-blue-deep: #00337a;
+  --plc-blue-soft: #e8f0fc;
+  --plc-blue-tint: #f4f8ff;
+  --plc-yellow: #ffcc00;
+  --plc-yellow-soft: #fff6d6;
+  --plc-yellow-deep: #d9a800;
+  --plc-ink: #1b2230;
+  --plc-muted: #6b7488;
+  --plc-line: #e8e6df;
+  --plc-paper: #fffdf7;
+  --plc-good: #1a8a55;
+  --plc-good-soft: #e4f6ec;
+  --plc-bad: #cf4436;
+  --plc-bad-soft: #fdeeec;
+  --plc-r-lg: 28px;
+  --plc-r-md: 18px;
+
+  min-height: 100dvh;
+  background: var(--plc-paper);
+  color: var(--plc-ink);
+  font-family: 'Mali', -apple-system, 'Noto Sans Thai', sans-serif;
+  line-height: 1.8;
+  display: flex;
+  flex-direction: column;
+}
+.plc *,
+.plc *::before,
+.plc *::after { box-sizing: border-box; }
+
+.plcTop {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--plc-paper);
+  padding: 14px 20px 10px;
+  border-bottom: 1px solid var(--plc-line);
+}
+.plcTopInner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+.plcSegs { display: flex; gap: 6px; flex: 1; }
+.plcSeg { height: 9px; border-radius: 999px; background: #ece9e0; flex: 1; overflow: hidden; }
+.plcSeg > i { display: block; height: 100%; width: 0; background: var(--plc-blue); border-radius: 999px; transition: width .5s cubic-bezier(.4, 0, .2, 1); }
+.plcSeg.isDone > i { width: 100%; background: var(--plc-yellow); }
+.plcTopLabel { font-size: 13px; color: var(--plc-muted); white-space: nowrap; font-weight: 500; }
+
+.plcMain { flex: 1; display: flex; align-items: center; justify-content: center; padding: 28px 20px 40px; }
+.plcPanel { width: 100%; max-width: 720px; }
+@media (max-width: 640px) {
+  .plcMain { align-items: flex-start; padding: 20px 16px 36px; }
+}
+
+.plcFade { animation: plcRise .42s cubic-bezier(.22, .9, .3, 1) both; }
+@keyframes plcRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .plcFade { animation: none; }
+  .plcSeg > i { transition: none; }
+}
+
+.plcEyebrow { font-size: 12.5px; color: var(--plc-blue); letter-spacing: .1em; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+.plc h2 { font-size: clamp(21px, 3.4vw, 27px); margin: 0 0 8px; font-weight: 700; line-height: 1.45; }
+.plcLead { font-size: clamp(16px, 2.4vw, 18px); color: var(--plc-muted); margin: 0 0 22px; }
+.plcQuestion { font-size: clamp(18px, 2.9vw, 23px); font-weight: 600; line-height: 1.6; margin: 0 0 20px; }
+.plcNote { font-size: 13.5px; color: var(--plc-muted); }
+.plcCentre { text-align: center; }
+
+.plcBox {
+  background: #fff;
+  border: 1px solid var(--plc-line);
+  border-radius: var(--plc-r-lg);
+  padding: clamp(20px, 3.6vw, 34px);
+  box-shadow: 0 2px 0 rgba(27, 34, 48, .04), 0 14px 34px -22px rgba(27, 34, 48, .3);
+}
+.plcInstruction { background: var(--plc-blue-soft); border-radius: var(--plc-r-md); padding: 14px 18px; font-size: 14.5px; color: var(--plc-blue-deep); margin: 0 0 18px; }
+.plcCaution { background: var(--plc-yellow-soft); border-radius: var(--plc-r-md); padding: 14px 18px; font-size: 14.5px; color: #6b5000; margin: 0 0 18px; }
+.plcPassage { background: var(--plc-blue-tint); border-radius: var(--plc-r-md); padding: 18px 20px; margin: 0 0 22px; font-size: clamp(15px, 2.2vw, 16.5px); line-height: 2; }
+
+.plcChoices { display: grid; gap: 11px; }
+.plcChoice {
+  display: flex; gap: 13px; align-items: flex-start; padding: 15px 18px;
+  border: 2px solid var(--plc-line); border-radius: var(--plc-r-md); cursor: pointer; background: #fff;
+  font-size: clamp(15px, 2.2vw, 16.5px);
+  transition: transform .12s, border-color .15s, background .15s;
+  text-align: left; width: 100%; font-family: inherit; color: inherit; line-height: inherit;
+}
+.plcChoice:hover { border-color: var(--plc-blue); background: var(--plc-blue-tint); transform: translateY(-1px); }
+.plcChoice.isOn { border-color: var(--plc-blue); background: var(--plc-blue-soft); }
+.plcChoiceKey { font-weight: 700; min-width: 26px; color: var(--plc-blue); }
+
+.plc input[type='text'] {
+  width: 100%; padding: 15px 18px; border: 2px solid var(--plc-line); border-radius: var(--plc-r-md);
+  font-size: 16.5px; font-family: inherit; background: #fff; color: var(--plc-ink);
+}
+.plc input[type='text']:focus { outline: none; border-color: var(--plc-blue); background: var(--plc-blue-tint); }
+
+.plcBtn {
+  background: var(--plc-blue); color: #fff; border: 0; border-radius: 999px;
+  padding: 15px 34px; font-size: 16px; font-family: inherit; cursor: pointer; font-weight: 700;
+  box-shadow: 0 10px 20px -12px rgba(0, 74, 173, .9);
+  transition: transform .12s, background .15s;
+}
+.plcBtn:hover:not(:disabled) { background: var(--plc-blue-deep); transform: translateY(-1px); }
+.plcBtn:active:not(:disabled) { transform: translateY(1px); }
+.plcBtn:disabled { background: #c4cbd8; box-shadow: none; cursor: not-allowed; transform: none; }
+.plcBtn.isSun { background: var(--plc-yellow); color: #4a3800; box-shadow: 0 10px 20px -12px rgba(217, 168, 0, .95); }
+.plcBtn.isSun:hover:not(:disabled) { background: var(--plc-yellow-deep); }
+.plcBtn.isLine { background: #fff; color: var(--plc-blue); border: 2px solid var(--plc-blue); box-shadow: none; padding: 13px 28px; }
+.plcBtn.isLine:hover:not(:disabled) { background: var(--plc-blue-tint); }
+.plcBtn.isLine:disabled { color: #a8b1c7; border-color: var(--plc-line); background: #fff; }
+.plcActions { display: flex; gap: 12px; align-items: center; margin-top: 26px; flex-wrap: wrap; }
+
+.plcArt { display: block; margin: 0 auto 18px; width: clamp(150px, 34vw, 210px); height: auto; }
+/* Character artwork replaces the skill illustration once the asset lands. */
+.plcMascot { display: block; margin: 0 auto 14px; width: clamp(120px, 26vw, 168px); height: auto; }
+
+.plcPlayer { background: var(--plc-blue-deep); color: #eaf1ff; border-radius: var(--plc-r-lg); padding: 20px; margin: 0 0 20px; }
+.plcPlayerRow { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
+.plcPlayerBar { height: 8px; background: rgba(255, 255, 255, .18); border-radius: 999px; overflow: hidden; margin: 16px 0 10px; }
+.plcPlayerBar > i { display: block; height: 100%; width: 0; background: var(--plc-yellow); border-radius: 999px; }
+.plcPlayer button {
+  background: var(--plc-yellow); color: #4a3800; border: 0; border-radius: 999px; padding: 12px 26px;
+  font-weight: 700; cursor: pointer; font-family: inherit; font-size: 15px;
+}
+.plcPlayer button:disabled { background: rgba(255, 255, 255, .2); color: rgba(255, 255, 255, .5); cursor: not-allowed; }
+.plcPlayerMeta { font-size: 13px; color: #b9cbee; }
+
+.plcNotes { background: var(--plc-blue-tint); border-radius: var(--plc-r-md); padding: 18px 20px; }
+.plcNotes h4 { margin: 0 0 14px; font-size: 15.5px; font-weight: 700; }
+.plcNoteLine { display: flex; gap: 9px; align-items: center; margin: 14px 0; flex-wrap: wrap; font-size: 16px; }
+.plcNoteLine input { flex: 1 1 150px; max-width: 220px; padding: 11px 14px !important; font-size: 15px !important; }
+.plcQGroup { padding: 18px 0; border-top: 1px dashed #cfdcf3; }
+.plcQGroup:first-child { border-top: 0; padding-top: 0; }
+
+.plcChart { background: #fff; border: 1px solid var(--plc-line); border-radius: var(--plc-r-md); padding: 14px; margin: 0 0 20px; }
+.plcChart svg { width: 100%; height: auto; display: block; }
+.plcChart figcaption { font-size: 13px; color: var(--plc-muted); text-align: center; margin-top: 10px; }
+.plcSentence { font-size: clamp(16px, 2.4vw, 18.5px); line-height: 2.2; margin: 0 0 18px; }
+.plcSentence u { text-decoration-color: var(--plc-yellow-deep); text-decoration-thickness: 3px; text-underline-offset: 6px; }
+
+.plcTextarea {
+  width: 100%; min-height: 220px; padding: 16px 18px;
+  border: 2px solid var(--plc-line); border-radius: var(--plc-r-md);
+  font-size: 16px; font-family: inherit; line-height: 2; background: #fff; color: var(--plc-ink);
+  resize: vertical;
+}
+.plcTextarea:focus { outline: none; border-color: var(--plc-blue); background: var(--plc-blue-tint); }
+
+.plcEssayQuote {
+  background: var(--plc-blue-tint); border-left: 3px solid var(--plc-blue);
+  border-radius: var(--plc-r-md); padding: 18px 20px; margin: 12px 0 18px;
+  font-size: 16px; line-height: 2; white-space: pre-wrap;
+}
+.plcEssayVerdict {
+  background: var(--plc-yellow-soft); border: 1px solid var(--plc-yellow);
+  border-radius: var(--plc-r-md); padding: 18px 20px;
+}
+.plcEssayCounts {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;
+}
+.plcEssayCounts span {
+  background: #fff; border-radius: 999px; padding: 5px 14px; font-size: 13px; color: #6b5000;
+}
+
+.plcRec { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+.plcDot { width: 12px; height: 12px; border-radius: 999px; background: var(--plc-bad); animation: plcPulse 1s infinite; }
+@keyframes plcPulse { 50% { opacity: .25; transform: scale(.85); } }
+.plc audio { max-width: 100%; }
+
+.plcLetter {
+  background: #fff; border: 1px solid var(--plc-line); border-radius: var(--plc-r-lg);
+  padding: clamp(24px, 4vw, 40px); box-shadow: 0 14px 34px -24px rgba(27, 34, 48, .35);
+}
+.plcFrom { font-size: 13px; color: var(--plc-muted); letter-spacing: .06em; text-transform: uppercase; font-weight: 600; }
+.plcVerdict { padding: 22px 0; border-bottom: 2px solid var(--plc-yellow); margin-bottom: 22px; }
+.plcVerdictNum { font-size: clamp(40px, 8vw, 58px); font-weight: 700; color: var(--plc-blue); line-height: 1; }
+.plcBandRow { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 15px 0; border-top: 1px solid var(--plc-line); flex-wrap: wrap; }
+.plcSkill { font-weight: 600; }
+.plcPill { background: var(--plc-blue-soft); color: var(--plc-blue); font-weight: 700; padding: 6px 18px; border-radius: 999px; font-size: 15.5px; white-space: nowrap; }
+.plcPill.isLow { background: var(--plc-bad-soft); color: var(--plc-bad); }
+.plcPill.isHigh { background: var(--plc-good-soft); color: var(--plc-good); }
+.plcPill.isPending { background: #f0eee7; color: var(--plc-muted); }
+.plcFb { border-radius: var(--plc-r-md); padding: 14px 17px; font-size: 14.5px; margin-top: 14px; }
+.plcFb.isNo { background: var(--plc-bad-soft); color: var(--plc-bad); }
+.plcFb.isInfo { background: var(--plc-yellow-soft); color: #6b5000; }
+.plcReasons { margin: 10px 0 0; padding-left: 22px; font-size: 14.5px; color: var(--plc-muted); }
+.plcReasons li { margin: 6px 0; }
+.plcWrongItem { padding: 20px 0; border-top: 1px solid var(--plc-line); }
+.plcTag { font-size: 12px; color: var(--plc-muted); font-weight: 600; letter-spacing: .05em; }
+.plcGaps { display: grid; gap: 12px; margin-top: 14px; }
+.plcGap {
+  background: var(--plc-yellow-soft); border: 1px solid var(--plc-yellow);
+  border-radius: var(--plc-r-md); padding: 16px 18px;
+}
+.plcGapHead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.plcGapSkill { font-weight: 700; font-size: 16px; }
+.plcGapBand { font-size: 13px; color: #8a6a00; font-weight: 600; }
+.plcGapMissing { margin: 6px 0 0; font-size: 14.5px; color: #6b5000; }
+.plcGapLesson { margin: 10px 0 0; font-size: 14px; color: var(--plc-ink); }
+.plcGapLessonTag {
+  display: inline-block; background: #fff; border-radius: 999px;
+  padding: 2px 10px; font-size: 12px; font-weight: 700; color: #8a6a00; margin-right: 6px;
+}
+
+.plcOffer {
+  display: flex; gap: 18px; align-items: flex-start; text-decoration: none; color: inherit;
+  background: var(--plc-blue-tint); border: 2px solid var(--plc-blue);
+  border-radius: var(--plc-r-md); padding: 18px; margin-top: 16px;
+  transition: transform .12s, box-shadow .15s;
+}
+.plcOffer:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -18px rgba(0, 74, 173, .8); }
+.plcOfferThumb {
+  width: 148px; height: auto; border-radius: 12px; flex: 0 0 auto;
+  background: #fff; border: 1px solid var(--plc-line);
+}
+.plcOfferBody { flex: 1 1 auto; min-width: 0; }
+@media (max-width: 560px) {
+  .plcOffer { flex-direction: column; }
+  .plcOfferThumb { width: 100%; }
+}
+.plcOfferTag {
+  font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--plc-blue);
+}
+.plcOfferTitle { font-size: 18px; font-weight: 700; margin-top: 4px; line-height: 1.5; }
+.plcOfferPrice { font-size: 20px; font-weight: 700; color: var(--plc-blue); margin-top: 6px; }
+.plcOfferWhy { font-size: 14.5px; color: var(--plc-muted); margin: 8px 0 0; }
+.plcOfferCta { display: inline-block; margin-top: 12px; font-weight: 700; color: var(--plc-blue); font-size: 15px; }
+.plc a { color: var(--plc-blue); }
+
+.plcSign { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--plc-line); font-size: 14.5px; color: var(--plc-muted); }

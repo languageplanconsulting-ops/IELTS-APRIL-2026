@@ -1,0 +1,62 @@
+/* Admin list + detail for placement submissions. Scoped under .plcAdmin. */
+
+.plcAdmin { font-family: 'Anuphan', 'Inter', sans-serif; color: #0f172a; }
+.plcAdminHead {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.plcAdmin h3 { margin: 0 0 4px; font-size: 20px; }
+.plcAdmin h4 { margin: 0 0 10px; font-size: 15px; }
+.plcAdminMeta { margin: 0; font-size: 13.5px; color: #64748b; }
+.plcAdminWarn {
+  background: #fff6e0; color: #9a6700; border-radius: 10px;
+  padding: 10px 14px; font-size: 13.5px; margin: 12px 0;
+}
+.plcAdminSearch {
+  padding: 9px 14px; border: 1px solid #e2e8f0; border-radius: 999px;
+  font-size: 14px; font-family: inherit; min-width: 240px;
+}
+.plcAdminBack {
+  background: none; border: 0; color: #004aad; font-family: inherit;
+  font-size: 14px; cursor: pointer; padding: 0 0 14px;
+}
+.plcAdminOverall { font-size: 34px; font-weight: 800; color: #004aad; line-height: 1; }
+
+.plcAdminBands { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.plcAdminBand {
+  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
+  padding: 10px 16px; display: flex; flex-direction: column; gap: 2px; min-width: 108px;
+}
+.plcAdminBand span { font-size: 12px; color: #64748b; }
+.plcAdminBand strong { font-size: 15px; }
+
+.plcAdminSection { margin-top: 26px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+.plcAdminQuote {
+  margin: 0; background: #f8fbff; border-left: 3px solid #004aad; border-radius: 10px;
+  padding: 14px 16px; font-size: 14.5px; line-height: 1.9; white-space: pre-wrap;
+}
+.plcAdminQa { margin-bottom: 16px; }
+.plcAdminQ { margin: 0 0 6px; font-weight: 600; font-size: 14.5px; }
+.plcAdminTag {
+  display: inline-block; font-size: 11.5px; color: #64748b; font-weight: 600;
+  letter-spacing: .04em; margin-bottom: 4px;
+}
+.plcAdminSignals { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.plcAdminSignals span {
+  background: #eef2ff; color: #3730a3; border-radius: 999px; padding: 4px 12px; font-size: 12.5px;
+}
+.plcAdminList { margin: 12px 0 0; padding-left: 20px; font-size: 14px; color: #475569; }
+.plcAdminList li { margin: 5px 0; }
+.plcAdminRaw {
+  background: #0f172a; color: #cbd5e1; border-radius: 12px; padding: 16px;
+  font-family: 'Ubuntu Mono', monospace; font-size: 12.5px; overflow-x: auto; line-height: 1.7;
+}
+
+.plcAdminTable { width: 100%; border-collapse: collapse; font-size: 14px; }
+.plcAdminTable th {
+  text-align: left; font-size: 12px; color: #64748b; font-weight: 600;
+  padding: 10px 12px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;
+}
+.plcAdminTable td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+.plcAdminTable tbody tr { cursor: pointer; }
+.plcAdminTable tbody tr:hover { background: #f8fbff; }
