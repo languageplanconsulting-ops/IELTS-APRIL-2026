@@ -1,0 +1,2986 @@
+/* ==========================================================================
+   ENGLISH PLAN · SPEAKING — CONSOLE STYLE
+   --------------------------------------------------------------------------
+   VISUAL LAYER ONLY. This file changes no markup, no class names, no state,
+   no logic. It restyles the existing DOM of the Speaking journey.
+
+   Scope
+     .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme  — the whole journey section (hub, topic bank, prep,
+                            live exam, AND the report; saved reports reuse the
+                            same markup via openSavedReportSnapshot, so they
+                            inherit this styling automatically)
+     overlay roots       — modals render at App root, outside the section, so
+                            each is scoped by its own class below
+
+   Report note
+     Every rule touching the report is presentational only: colour, border,
+     spacing, radius, type. No layout rule hides, reorders or collapses report
+     content, so nothing the assessor returns can become unreachable.
+
+   About !important
+     App.css declares !important 2,449 times, much of it inside
+     `.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme`. To win without editing that file, matching rules
+     here carry !important too, on visual properties only. As old blocks are
+     deleted (see the six duplicate .speakingPromptCard definitions in
+     App.css), the matching !important here can be dropped.
+
+   Design tokens
+     4 brand colours · 5 neutrals · 4 tints · 3 radii · 6 spaces · 7 type sizes
+     0 shadows · 0 gradients
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay,
+.questionCountdownOverlay,
+.fullExamOverlay {
+  /* ------------------------------------------------------------------
+     WARM BRIEF PALETTE (English Plan design brief).
+     Token NAMES are unchanged so every existing rule still resolves;
+     only the VALUES shift from the cold console to warm paper + brand.
+     ------------------------------------------------------------------ */
+  --c-blue: #004aad;
+  --c-blue-deep: #00337a;
+  --c-blue-tint: #e8f0fc;       /* selected / active fill (blue-soft) */
+  --c-blue-line: #cadcf3;
+  --c-yellow: #ffcc00;
+  --c-yellow-tint: #fff6d6;
+  --c-yellow-line: #ecd98f;
+  --c-yellow-ink: #6b5200;
+  --c-white: #ffffff;           /* cards stay white … */
+  --c-paper: #fffdf7;           /* … on warm paper (page background) */
+  --c-ink: #1b2230;
+  --c-ink-2: #3d4658;
+  --c-muted: #6b7488;
+  --c-line: #e8e6df;            /* warm hairline, never cold blue-grey */
+  --c-line-strong: #d8d3c4;
+  --c-soft: #f6f1e4;            /* warm quiet fill for header bars */
+
+  --c-r-sm: 12px;
+  --c-r: 18px;
+  --c-r-lg: 28px;
+  --c-r-pill: 999px;
+
+  /* Depth: a hairline of contact plus a wide soft lift (cards); a
+     coloured lift for primary buttons. */
+  --c-shadow: 0 2px 0 rgba(27, 34, 48, .04), 0 14px 34px -22px rgba(27, 34, 48, .3);
+  --c-btn-shadow: 0 10px 20px -12px rgba(0, 74, 173, .9);
+
+  --c-s1: 4px;
+  --c-s2: 8px;
+  --c-s3: 12px;
+  --c-s4: 16px;
+  --c-s5: 24px;
+  --c-s6: 32px;
+
+  --c-t-micro: 0.64rem;
+  --c-t-sm: 0.8rem;
+  --c-t-base: 0.9rem;
+  --c-t-lg: 1.04rem;
+  --c-t-q: 1.28rem;
+  --c-t-num: 1.7rem;
+  --c-t-hero: 3.2rem;
+}
+
+/* ==========================================================================
+   1 · RESET WITHIN SCOPE
+   Strip the accumulated decoration so borders and space can do the work.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme * {
+  font-family: 'Mali', 'Anuphan', 'Noto Sans Thai', system-ui, -apple-system, sans-serif !important;
+  letter-spacing: normal !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme {
+  background: var(--c-paper) !important;
+  color: var(--c-ink) !important;
+  font-size: var(--c-t-base);
+  line-height: 1.7;
+  gap: var(--c-s4) !important;
+}
+
+/* No shadows anywhere in the journey. Console uses lines. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme *,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay *,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay *,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay *,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Decorative ambient layers: orbs, glows, brand strips, animated bars. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideAmbient,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingAmbient,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideOrb,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideGridGlow,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingBrandStrip,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wlpAccentRule,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveButtonGlow,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreAmbient,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreOrb,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreGridGlow,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreBandChipGlow {
+  display: none !important;
+}
+
+/* Audio bars: keep the element (it signals recording) but make it a calm,
+   static level strip instead of ten animated columns. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBars {
+  display: flex !important;
+  gap: 2px !important;
+  height: 6px !important;
+  margin: 0 0 var(--c-s3) !important;
+  background: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBar {
+  flex: 1 !important;
+  height: 6px !important;
+  border-radius: 2px !important;
+  background: var(--c-blue-line) !important;
+  animation: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBarsPaused .audioBar {
+  background: var(--c-line) !important;
+}
+
+/* ==========================================================================
+   2 · SHARED PRIMITIVES — panel / bar / row / cell
+   Every card in the journey resolves to one of these.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .card,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stageCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .panel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingControlCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepNotebookCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepMicCheck,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepHeadsUp,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepThaiPracticeGuide,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveNoteCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptBox,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuide,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .phaseInfoCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .trialBriefCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .trialUsedCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroup,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixesPanel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachPanel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBoxV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioConsultCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportDisclaimerCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptBrief,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .resultCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .notebookQuickAddBar,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .subBlockV2 {
+  background: var(--c-white) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  padding: var(--c-s3) !important;
+  margin: 0 0 var(--c-s3) !important;
+  backdrop-filter: none !important;
+}
+
+/* Section eyebrows / kickers / labels — the small-caps micro label. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wlpKicker,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .category,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionLabel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptTag,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2Eyebrow,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .nextAttemptEyebrow,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2Eyebrow,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideEyebrow,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyEyebrow,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordionTip,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part2NotebookLabel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepMicCheckTitle,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepHeadsUpTitle,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptTitle,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .questionCountdownLabel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .flabel {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--c-muted) !important;
+  margin: 0 0 var(--c-s1) !important;
+}
+
+/* Headings */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubH1 {
+  font-size: 1.6rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.025em !important;
+  color: var(--c-ink) !important;
+  margin: 0 0 var(--c-s1) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowTitle,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2Title,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroupTitle {
+  font-size: var(--c-t-lg) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.015em !important;
+  color: var(--c-ink) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubLead,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowSub,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptSub,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .meta {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  margin: 0 !important;
+}
+
+/* Pills / badges / tags */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketBadge,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .bandPill,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .targetBandPill,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .assessmentInfoPill,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankCount,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroupCount,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .subBlockCount,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabLevelBadge,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2Pill,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2GroupCount,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyChip,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .previewStep {
+  display: inline-block !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  border: 1px solid var(--c-blue-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  background: var(--c-blue-tint) !important;
+  color: var(--c-blue) !important;
+  padding: 2px 6px !important;
+  white-space: nowrap !important;
+}
+
+/* ==========================================================================
+   3 · BUTTONS
+   Primary = solid blue. Secondary = white with a line. Yellow is reserved.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryNextBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .btn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .saveNotebookBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveButton,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioConsultButton {
+  background: var(--c-blue) !important;
+  color: var(--c-white) !important;
+  border: 1px solid var(--c-blue) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: 9px 14px !important;
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  cursor: pointer !important;
+  transition: background 120ms ease !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryNextBtn:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveButton:hover {
+  background: var(--c-blue-deep) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .secondary,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .cancelBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .micCheckBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .micCheckRetry,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reviewScriptBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .ladderSaveBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .redeemBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioConsultButton-secondary,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pauseBtn {
+  background: var(--c-white) !important;
+  color: var(--c-ink-2) !important;
+  border: 1px solid var(--c-line-strong) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: 7px 12px !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  cursor: pointer !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .secondary:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .cancelBtn:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .ladderSaveBtn:hover {
+  background: var(--c-soft) !important;
+}
+
+/* Destructive: outlined, never a filled red block. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .dangerBtn {
+  background: var(--c-white) !important;
+  color: var(--c-ink-2) !important;
+  border: 1px solid var(--c-line-strong) !important;
+  border-radius: var(--c-r-sm) !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  padding: 7px 12px !important;
+}
+
+/* Paused is a state, so it earns yellow. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pauseBtnActive {
+  background: var(--c-yellow-tint) !important;
+  border-color: var(--c-yellow-line) !important;
+  color: var(--c-yellow-ink) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .controls,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepControls,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingControls {
+  display: flex !important;
+  gap: var(--c-s2) !important;
+  flex-wrap: wrap !important;
+  margin: var(--c-s3) 0 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepControls .primaryReadyBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingControls .primaryNextBtn {
+  flex: 1 1 220px !important;
+}
+
+/* ==========================================================================
+   4 · HUB — mode tickets become console rows
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubShell,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubIntro,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingHubShell {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 0 var(--c-s3) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathBoard {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPath {
+  display: block !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  overflow: hidden !important;
+  background: var(--c-white) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s3) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 0 var(--c-s3) !important;
+  background: none !important;
+  margin: 0 !important;
+  animation: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep.is-done {
+  background: var(--c-blue-tint) !important;
+}
+
+/* The step node: a plain index, not a progress medallion. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathNode {
+  flex: none !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 20px !important;
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--c-muted) !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: 0.06em !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep.is-done .wgTicketPathNode {
+  color: var(--c-blue) !important;
+}
+
+/* Hide the emoji stamps: Console gets its rhythm from the index column. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketStamp {
+  display: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s3) !important;
+  flex: 1 !important;
+  width: 100% !important;
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 10px 0 !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  transform: none !important;
+  animation: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket.sgTicketActive {
+  background: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketBody {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: block !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketTitleRow {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  margin-bottom: 2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketTitleRow strong {
+  font-size: var(--c-t-lg) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--c-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketSub {
+  display: block !important;
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  line-height: 1.45 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketGo {
+  flex: none !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  color: var(--c-blue) !important;
+  white-space: nowrap !important;
+}
+
+/* Full mock flow preview: a single line of steps, not a banner. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fullMockPreviewBanner {
+  background: var(--c-soft) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  padding: var(--c-s3) !important;
+  margin: var(--c-s3) 0 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fullMockPreviewTitle {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--c-muted) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fullMockPreviewSteps,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .trialFlowSteps {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .previewArrow {
+  color: var(--c-line-strong) !important;
+  font-size: var(--c-t-sm) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .previewStepFinal {
+  border-color: var(--c-blue) !important;
+  background: var(--c-blue) !important;
+  color: var(--c-white) !important;
+}
+
+/* ==========================================================================
+   5 · TOPIC BANK — cards become table rows
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingTopicBank {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingBankHead,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowHead {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 0 var(--c-s3) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankToolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  flex-wrap: wrap !important;
+  background: var(--c-soft) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+  margin: 0 0 var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankSearchWrap {
+  flex: 1 1 220px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankSearchInput {
+  width: 100% !important;
+  background: var(--c-white) !important;
+  border: 1px solid var(--c-line-strong) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: 7px 10px !important;
+  font-size: var(--c-t-base) !important;
+  color: var(--c-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankSearchInput:focus {
+  outline: 2px solid var(--c-blue) !important;
+  outline-offset: -1px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankToolbarMeta {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle {
+  display: flex !important;
+  gap: 2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button {
+  background: var(--c-white) !important;
+  border: 1px solid var(--c-line-strong) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: 5px 11px !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink-2) !important;
+  cursor: pointer !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button.active {
+  background: var(--c-blue) !important;
+  border-color: var(--c-blue) !important;
+  color: var(--c-white) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroup {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroupHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-soft) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 7px var(--c-s3) !important;
+  margin: 0 !important;
+}
+
+/* Cards become rows. The Grid/List toggle still does something visible:
+   List = one column, Grid = two columns of rows on wide screens. Leaving a
+   control that produces no change would repeat the dead-tab-strip problem. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailGrid,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankCardGrid,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailGrid--list,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicketGrid {
+  display: block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+  padding: 0 !important;
+}
+@media (min-width: 900px) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailGrid--grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 !important;
+  }
+  /* Column rule between the two columns, no gap so rows stay flush. */
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailGrid--grid .thumbnailCard:nth-child(odd) {
+    border-right: 1px solid var(--c-line) !important;
+  }
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s3) !important;
+  background: var(--c-white) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  padding: 9px var(--c-s3) !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  cursor: pointer !important;
+  transform: none !important;
+  animation: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard:last-child,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard:hover {
+  background: var(--c-soft) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard--selected,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard.sgTicketActive {
+  background: var(--c-blue-tint) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard:focus-visible {
+  outline: 2px solid var(--c-blue) !important;
+  outline-offset: -2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicketActions {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  flex: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankEmpty {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  padding: var(--c-s4) !important;
+  border: 1px dashed var(--c-line-strong) !important;
+  border-radius: var(--c-r) !important;
+}
+
+/* ==========================================================================
+   6 · PREP
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepStageV2 {
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgPrepTimer,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .timer {
+  font-size: var(--c-t-num) !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.03em !important;
+  color: var(--c-ink) !important;
+  margin: 0 0 var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepTimeEstimate {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  border-left: 3px solid var(--c-blue) !important;
+  padding: 0 0 0 var(--c-s3) !important;
+  margin: 0 0 var(--c-s3) !important;
+  background: none !important;
+  border-radius: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepHeadsUp {
+  border-left: 3px solid var(--c-yellow) !important;
+  background: var(--c-yellow-tint) !important;
+  border-color: var(--c-yellow-line) !important;
+}
+
+/* Full mock stepper: a horizontal rail of equal segments. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepProgressStepper {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 2px !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  overflow: hidden !important;
+  margin: 0 0 var(--c-s3) !important;
+  background: var(--c-white) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stepperStep {
+  flex: 1 !important;
+  display: block !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+  border-right: 1px solid var(--c-line) !important;
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-ink-2) !important;
+  background: var(--c-white) !important;
+  min-width: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stepperStep:last-child {
+  border-right: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stepperActive {
+  background: var(--c-blue-tint) !important;
+  color: var(--c-blue-deep) !important;
+  font-weight: 700 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stepperDot,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stepperLine {
+  display: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stepperMeta {
+  display: block !important;
+  font-size: var(--c-t-micro) !important;
+  color: var(--c-muted) !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  margin-top: 2px !important;
+}
+
+/* Accordions */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordionWrap {
+  display: block !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordion {
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  background: var(--c-white) !important;
+  margin: 0 0 var(--c-s2) !important;
+  overflow: hidden !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordion > summary {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-soft) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 8px var(--c-s3) !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+  cursor: pointer !important;
+  list-style: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordion > summary::-webkit-details-marker {
+  display: none !important;
+}
+/* Replace the native disclosure triangle rather than just removing it —
+   the summary still needs to read as expandable. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordion > summary::after {
+  content: '+' !important;
+  margin-left: auto !important;
+  font-size: var(--c-t-lg) !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  color: var(--c-muted) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordion[open] > summary::after {
+  content: '−' !important;
+  color: var(--c-blue) !important;
+}
+
+/* Question note grid → stacked rows */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .questionNoteGrid {
+  display: block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .questionNoteItem {
+  display: block !important;
+  background: var(--c-white) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  padding: var(--c-s3) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .questionNoteItem:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .questionNotePrompt {
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+
+/* Inputs */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme textarea,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part2NotebookTextarea,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptTextarea,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .scriptReviewTextarea,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme select,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme input[type='text'],
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme input[type='search'] {
+  width: 100% !important;
+  background: var(--c-white) !important;
+  border: 1px solid var(--c-line-strong) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: 8px 10px !important;
+  font-size: var(--c-t-base) !important;
+  line-height: 1.5 !important;
+  color: var(--c-ink) !important;
+  resize: vertical !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme textarea:focus,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme select:focus,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme input:focus {
+  outline: 2px solid var(--c-blue) !important;
+  outline-offset: -1px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part2NotebookHint,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptHint {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  margin: var(--c-s2) 0 0 !important;
+}
+
+/* Mic check states */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .micCheckRecording,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .micCheckPlaying {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-blue) !important;
+  font-weight: 700 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .micCheckSuccess p {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-blue-deep) !important;
+  font-weight: 700 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .micCheckError p {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-yellow-ink) !important;
+  font-weight: 700 !important;
+}
+
+/* ==========================================================================
+   7 · LIVE EXAM
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingStageWrap {
+  background: none !important;
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingExamLane {
+  border: none !important;
+  padding: 0 !important;
+  background: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingTopToolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  flex-wrap: wrap !important;
+  background: var(--c-soft) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+  margin: 0 0 var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingTopToolbar .pauseBtn {
+  margin-left: auto !important;
+}
+
+/* Full-mock progress: segmented bar, tabular label. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .globalProgressBar {
+  position: relative !important;
+  height: 6px !important;
+  background: var(--c-line) !important;
+  border: none !important;
+  border-radius: 2px !important;
+  overflow: visible !important;
+  margin: 0 0 var(--c-s4) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .globalProgressFill {
+  height: 6px !important;
+  background: var(--c-blue) !important;
+  border-radius: 2px !important;
+  transition: width 200ms ease !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .globalProgressLabel {
+  position: absolute !important;
+  right: 0 !important;
+  top: 10px !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--c-muted) !important;
+  font-variant-numeric: tabular-nums !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPanelLayout {
+  display: grid !important;
+  grid-template-columns: 1.15fr 0.85fr !important;
+  gap: var(--c-s3) !important;
+  align-items: start !important;
+}
+
+/* The exam question — the single largest thing on the screen. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard h3,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part2BigQuestion {
+  font-size: var(--c-t-q) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.3 !important;
+  color: var(--c-ink) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard ul {
+  margin: 0 0 var(--c-s2) !important;
+  padding-left: 18px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard li {
+  font-size: var(--c-t-base) !important;
+  color: var(--c-ink-2) !important;
+  margin-bottom: 2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptPill {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--c-muted) !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingFlowSwap {
+  animation: none !important;
+}
+
+/* Timer — tabular so digits never shift. Yellow only when low. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .bigTimer {
+  font-size: var(--c-t-hero) !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.05em !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  color: var(--c-ink) !important;
+  background: none !important;
+  padding: var(--c-s3) 0 var(--c-s2) !important;
+  margin: 0 !important;
+  animation: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .bigTimerLow {
+  color: var(--c-yellow-ink) !important;
+  background: var(--c-yellow-tint) !important;
+  border-radius: var(--c-r-sm) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .lowTimeWarning {
+  text-align: center !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--c-yellow-ink) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+
+/* Recording indicator */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .recordingPill {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 0 var(--c-s2) !important;
+  color: var(--c-blue) !important;
+  animation: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .recordingPill-paused {
+  color: var(--c-yellow-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .recordingDot {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 999px !important;
+  background: var(--c-blue) !important;
+  animation: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .recordingPill-paused .recordingDot {
+  background: var(--c-yellow) !important;
+}
+
+/* Live transcript */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptHeader {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  flex-wrap: wrap !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 0 0 var(--c-s2) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptStatusLive,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptStatusIdle,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptWordCount {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  font-variant-numeric: tabular-nums !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptStatusLive {
+  color: var(--c-blue) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptStatusIdle,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptWordCount {
+  color: var(--c-muted) !important;
+  margin-left: auto !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .interim {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  font-style: normal !important;
+  margin: var(--c-s2) 0 0 !important;
+}
+
+/* Live length guide → a compact cell grid */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideHeader h4 {
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCount {
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+  color: var(--c-blue) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideGrid {
+  display: flex !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  overflow: hidden !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard {
+  flex: 1 !important;
+  padding: var(--c-s2) !important;
+  border-right: 1px solid var(--c-line) !important;
+  background: var(--c-white) !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard:last-child {
+  border-right: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard-hit {
+  background: var(--c-blue-tint) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideBand {
+  display: block !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--c-muted) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard strong {
+  font-size: var(--c-t-sm) !important;
+  font-variant-numeric: tabular-nums !important;
+  color: var(--c-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard p {
+  font-size: var(--c-t-micro) !important;
+  color: var(--c-muted) !important;
+  margin: 2px 0 0 !important;
+}
+
+/* Rest period */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodCard {
+  text-align: center !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodCard h3 {
+  font-size: var(--c-t-lg) !important;
+  font-weight: 700 !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodMessage {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodTips {
+  border-top: 1px solid var(--c-line) !important;
+  margin: var(--c-s3) 0 0 !important;
+  padding: var(--c-s3) 0 0 !important;
+  text-align: left !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodTips p {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-ink-2) !important;
+  padding: var(--c-s1) 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restCountdownRing {
+  width: auto !important;
+  height: auto !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: none !important;
+  font-size: var(--c-t-hero) !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.05em !important;
+  color: var(--c-ink) !important;
+  margin: var(--c-s3) auto 0 !important;
+  animation: none !important;
+}
+
+/* Errors stay legible without turning the screen into an alert. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .error {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-yellow-ink) !important;
+  background: var(--c-yellow-tint) !important;
+  border: 1px solid var(--c-yellow-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+  margin: var(--c-s2) 0 !important;
+}
+
+/* ==========================================================================
+   8 · OVERLAYS & MODALS (rendered outside .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme)
+   ========================================================================== */
+
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay,
+.questionCountdownOverlay,
+.fullExamOverlay,
+.speakingFlowOverlay {
+  background: rgba(13, 13, 13, 0.42) !important;
+  backdrop-filter: none !important;
+}
+
+.expectedScoreCard,
+.answerReviewCard,
+.scriptReviewCard,
+.loadingModalCard,
+.questionCountdownCard,
+.fullExamOverlayCard,
+.speakingFlowOverlayCard {
+  background: #ffffff !important;
+  border: 1px solid #c9d0d8 !important;
+  border-radius: 6px !important;
+  padding: 20px !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.expectedScoreCard h3,
+.answerReviewCard h3,
+.scriptReviewCard h3 {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.015em !important;
+  color: #0d0d0d !important;
+}
+.expectedScoreEyebrow,
+.answerReviewEyebrow,
+.scriptReviewEyebrow {
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: #6b7480 !important;
+}
+.expectedScoreLead,
+.expectedScoreHint,
+.answerReviewLead,
+.answerReviewSupport,
+.scriptReviewLead {
+  font-size: 0.78rem !important;
+  color: #6b7480 !important;
+}
+
+/* Expected-score band chips → rows */
+.expectedScoreBandRail {
+  display: block !important;
+  border: 1px solid #e3e7ec !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+}
+.expectedScoreBandChip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  background: #ffffff !important;
+  border: none !important;
+  border-bottom: 1px solid #e3e7ec !important;
+  border-radius: 0 !important;
+  padding: 10px 12px !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+.expectedScoreBandChip:last-child {
+  border-bottom: none !important;
+}
+.expectedScoreBandChip.is-active {
+  background: #eaf1fb !important;
+}
+.expectedScoreBandChipLabel {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: #0d0d0d !important;
+}
+.expectedScoreBandChipSub {
+  font-size: 0.78rem !important;
+  color: #6b7480 !important;
+}
+.expectedScoreBandChipState {
+  margin-left: auto !important;
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #6b7480 !important;
+}
+.expectedScoreBandChip.is-active .expectedScoreBandChipState {
+  color: #004aad !important;
+}
+.expectedScoreWarningCard,
+.expectedScoreTipCard {
+  background: #fff6d6 !important;
+  border: 1px solid #e8cf7a !important;
+  border-radius: 3px !important;
+  padding: 10px 12px !important;
+}
+.expectedScoreBackBtn,
+.answerReviewRetryBtn,
+.scriptReviewBackBtn {
+  background: #ffffff !important;
+  color: #3d4654 !important;
+  border: 1px solid #c9d0d8 !important;
+  border-radius: 3px !important;
+  padding: 9px 14px !important;
+  font-weight: 700 !important;
+  font-size: 0.86rem !important;
+}
+.expectedScoreReadyBtn,
+.answerReviewConfirmBtn,
+.scriptReviewDoneBtn {
+  background: #004aad !important;
+  color: #ffffff !important;
+  border: 1px solid #004aad !important;
+  border-radius: 3px !important;
+  padding: 9px 14px !important;
+  font-weight: 700 !important;
+  font-size: 0.86rem !important;
+}
+.expectedScoreReadyBtn:disabled {
+  background: #c9d0d8 !important;
+  border-color: #c9d0d8 !important;
+  color: #ffffff !important;
+}
+
+.answerReviewQuestionCard,
+.scriptReviewQuestionCard {
+  background: #f7f9fc !important;
+  border: 1px solid #e3e7ec !important;
+  border-radius: 3px !important;
+  padding: 10px 12px !important;
+}
+.answerReviewQuestionText {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: #0d0d0d !important;
+}
+.scriptReviewQuestionNumber {
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #6b7480 !important;
+}
+
+/* Loading modal */
+.loadingSpinnerRing {
+  border-color: #e3e7ec !important;
+  border-top-color: #004aad !important;
+}
+.loadingSpinnerCore {
+  background: none !important;
+  color: #004aad !important;
+  font-weight: 800 !important;
+  font-size: 0.78rem !important;
+}
+.loadingPercent {
+  font-size: 2.4rem !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.04em !important;
+  color: #004aad !important;
+}
+.loadingBadge {
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  background: #eaf1fb !important;
+  color: #004aad !important;
+  border: 1px solid #bfd4ee !important;
+  border-radius: 3px !important;
+  padding: 3px 8px !important;
+}
+.loadingSteps {
+  display: flex !important;
+  border: 1px solid #e3e7ec !important;
+  border-radius: 3px !important;
+  overflow: hidden !important;
+}
+.loadingSteps span {
+  flex: 1 !important;
+  padding: 6px 4px !important;
+  border-right: 1px solid #e3e7ec !important;
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: #6b7480 !important;
+  text-align: center !important;
+  background: #ffffff !important;
+}
+.loadingSteps span:last-child {
+  border-right: none !important;
+}
+.loadingStepActive {
+  background: #fff6d6 !important;
+  color: #6b5200 !important;
+}
+.loadingStepDone {
+  background: #eaf1fb !important;
+  color: #004aad !important;
+}
+.loadingProgressTrack {
+  background: #e3e7ec !important;
+  border-radius: 2px !important;
+  height: 6px !important;
+}
+.loadingProgressFill {
+  background: #004aad !important;
+  border-radius: 2px !important;
+  height: 6px !important;
+}
+.loadingEta p,
+.loadingPhraseTh,
+.loadingPhraseEn,
+.loadingRuntimeMessage,
+.loadingBackgroundHint {
+  font-size: 0.78rem !important;
+  color: #6b7480 !important;
+}
+
+/* Countdown */
+.questionCountdownNumber {
+  font-size: 4rem !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.05em !important;
+  color: #0d0d0d !important;
+}
+.questionCountdownCard-go .questionCountdownNumber {
+  color: #004aad !important;
+}
+
+/* ==========================================================================
+   9 · REPORT
+   Presentation only. Nothing is hidden, reordered or truncated — every
+   section the assessor returns still renders, in the same order.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportShowcase {
+  display: grid !important;
+  grid-template-columns: 0.8fr 2.2fr !important;
+  gap: var(--c-s3) !important;
+  align-items: start !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .resultCard {
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportV2 {
+  display: block !important;
+}
+
+/* Band header: a stat row, tabular numerals. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyBar {
+  background: var(--c-white) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  padding: var(--c-s3) !important;
+  margin: 0 0 var(--c-s3) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 5 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyMain {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s4) !important;
+  flex-wrap: wrap !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyBand {
+  font-size: 2.6rem !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.045em !important;
+  line-height: 1 !important;
+  color: var(--c-blue) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyCalc {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  font-variant-numeric: tabular-nums !important;
+  margin: var(--c-s1) 0 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyChips {
+  display: flex !important;
+  gap: var(--c-s2) !important;
+  flex-wrap: wrap !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyChip strong {
+  font-variant-numeric: tabular-nums !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyActions {
+  margin-left: auto !important;
+}
+
+/* Provider tabs: only one option renders today, so make it a quiet label
+   rather than a 62px-tall control. Nothing is removed. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .providerTabs {
+  display: flex !important;
+  gap: var(--c-s2) !important;
+  grid-template-columns: none !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .providerTabs button {
+  background: var(--c-white) !important;
+  border: 1px solid var(--c-line-strong) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: 4px 10px !important;
+  min-height: 0 !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--c-muted) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .providerTabs button.active {
+  background: var(--c-blue-tint) !important;
+  border-color: var(--c-blue-line) !important;
+  color: var(--c-blue) !important;
+}
+
+/* Prompt sidebar */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptBrief h3 {
+  font-size: var(--c-t-lg) !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  color: var(--c-ink) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptBrief ul {
+  margin: 0 !important;
+  padding-left: 18px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptBrief li {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-ink-2) !important;
+}
+
+/* Disclaimer */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportDisclaimerCard {
+  background: var(--c-soft) !important;
+  border-left: 3px solid var(--c-line-strong) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportDisclaimerCard p {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+}
+
+/* Top fixes — the one place yellow is allowed in the report. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixesPanel {
+  border-left: 3px solid var(--c-yellow) !important;
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixesHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-yellow-tint) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 8px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixesHeader h4 {
+  font-size: var(--c-t-sm) !important;
+  font-weight: 800 !important;
+  color: var(--c-yellow-ink) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixesHeader span {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--c-yellow-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixesList {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixItem {
+  display: flex !important;
+  gap: var(--c-s3) !important;
+  align-items: flex-start !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: var(--c-s3) !important;
+  margin: 0 !important;
+  background: var(--c-white) !important;
+  border-radius: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixItem:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixIndex {
+  flex: none !important;
+  width: auto !important;
+  min-width: 18px !important;
+  height: auto !important;
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--c-muted) !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixLabel {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: var(--c-blue) !important;
+  margin: 0 0 2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixTitle {
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+  margin: 0 0 2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixDetail {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-ink-2) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+
+/* Report sections */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2 {
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2Top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-soft) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 8px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2Body {
+  padding: var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2Tone-warm {
+  background: var(--c-white) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .insightV2 p,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .analysisText,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .focusLeadV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .modelNotes {
+  font-size: var(--c-t-base) !important;
+  color: var(--c-ink-2) !important;
+  line-height: 1.6 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .subBlockV2 {
+  padding: 0 !important;
+  margin: var(--c-s3) 0 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .subBlockHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-soft) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 7px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .subBlockHeader h5 {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--c-muted) !important;
+  margin: 0 !important;
+}
+
+/* Evidence / mistake cards → rows */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .suggestionGridV2 {
+  display: block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .suggestionCardV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .mistakeCardV2 {
+  background: var(--c-white) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  padding: var(--c-s3) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .suggestionCardV2:last-child,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .mistakeCardV2:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .quoteText,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .mockMistakeIssue {
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fixText {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-ink-2) !important;
+}
+
+/* Vocabulary upgrades */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2 {
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2Header,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2GroupHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-soft) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 7px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2Body {
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2Grid {
+  display: block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2Item {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  flex-wrap: wrap !important;
+  background: var(--c-white) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  padding: 9px var(--c-s3) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2Item:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabFrom {
+  font-size: var(--c-t-base) !important;
+  color: var(--c-muted) !important;
+  text-decoration: line-through !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabTo {
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabArrow {
+  color: var(--c-line-strong) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabThai {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabUpgradeMetaRow {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  flex-wrap: wrap !important;
+}
+
+/* Part 3 coaching */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachPanel {
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-soft) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 8px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachHeader h4 {
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachItem {
+  background: var(--c-white) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  padding: var(--c-s3) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachItem:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachQuestion {
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachMissingList {
+  margin: 0 0 var(--c-s2) !important;
+  padding-left: 18px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachMissingList li {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-yellow-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachSuggestion {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-ink-2) !important;
+}
+
+/* Transcript & audio */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBoxV2 {
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptV2Body,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .punctuatedTranscriptBox {
+  padding: var(--c-s3) !important;
+  font-size: var(--c-t-base) !important;
+  line-height: 1.7 !important;
+  color: var(--c-ink-2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBoxHeader {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-soft) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 7px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme audio {
+  width: 100% !important;
+}
+
+/* Band gap bar */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .bandGapBar {
+  height: 6px !important;
+  background: var(--c-line) !important;
+  border-radius: 2px !important;
+  border: none !important;
+  overflow: visible !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .bandGapFill {
+  height: 6px !important;
+  background: var(--c-blue) !important;
+  border-radius: 2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .bandGapMark {
+  background: var(--c-yellow) !important;
+  border: none !important;
+}
+
+/* Next steps */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .nextStepsGrid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  gap: var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .nextStepCard {
+  background: var(--c-white) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: var(--c-s3) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .nextStepIcon {
+  display: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .nextStepTitle {
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .nextStepDesc {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+}
+
+/* Notebook quick-add */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .notebookQuickAddBar {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  flex-wrap: wrap !important;
+  background: var(--c-soft) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .notebookQuickAddBar select {
+  width: auto !important;
+  min-width: 180px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .notebookSaveToast,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveToast {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  background: var(--c-blue-tint) !important;
+  border: 1px solid var(--c-blue-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+  animation: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .notebookSaveToastSparkle,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveToastSparkle,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveButtonIcon {
+  display: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .notebookSaveToastTitle {
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  color: var(--c-blue-deep) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .notebookSaveToastText {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-ink-2) !important;
+}
+
+/* Pronunciation risk list */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pronRiskBlock {
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  overflow: hidden !important;
+  margin: var(--c-s3) 0 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pronRiskHeader {
+  background: var(--c-soft) !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 7px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pronRiskList {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pronRiskItem {
+  display: flex !important;
+  gap: var(--c-s2) !important;
+  align-items: baseline !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  padding: 8px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pronRiskItem:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pronRiskWord {
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+  font-size: var(--c-t-base) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pronRiskReason {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+}
+
+/* ==========================================================================
+   10 · RESPONSIVE
+   Console's density is an advantage on small screens: columns stack,
+   type stays legible, nothing is hidden.
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPanelLayout,
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportShowcase {
+    grid-template-columns: 1fr !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepProgressStepper {
+    flex-wrap: wrap !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stepperStep {
+    flex: 1 1 33% !important;
+    border-bottom: 1px solid var(--c-line) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .bigTimer {
+    font-size: 2.4rem !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyBand {
+    font-size: 2.1rem !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideGrid {
+    flex-wrap: wrap !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard {
+    flex: 1 1 50% !important;
+    border-bottom: 1px solid var(--c-line) !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard,
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket,
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep {
+    flex-wrap: wrap !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingTopToolbar .pauseBtn {
+    margin-left: 0 !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepControls .primaryReadyBtn,
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingControls .primaryNextBtn {
+    flex: 1 1 100% !important;
+  }
+}
+
+/* Respect reduced-motion preferences: nothing here animates anyway. */
+@media (prefers-reduced-motion: reduce) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme *,
+  .expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay *,
+  .answerReviewOverlay.answerReviewOverlay.answerReviewOverlay *,
+  .scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay *,
+  .loadingModalOverlay.loadingModalOverlay.loadingModalOverlay * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   11 · CASCADE NEUTRALISATION
+   App.css sets these on compound selectors that outrank a plain
+   `.speakingFlowTheme .x` rule. Declared explicitly so nothing from the older
+   "sticker card" treatment survives: hard offset shadows, 3px ink borders,
+   cream fills, yellow selection outlines and hover nudges.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard--selected,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.sgTicketActive,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket.sgTicketActive,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep.is-done {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: background 120ms ease !important;
+}
+
+/* Topic rows: flat list rows, not offset sticker cards. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard {
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: center !important;
+  gap: var(--c-s3) !important;
+  background: var(--c-white) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  padding: 9px var(--c-s3) !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard:last-child {
+  border-bottom: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard:hover {
+  background: var(--c-soft) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard--selected,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.sgTicketActive {
+  background: var(--c-blue-tint) !important;
+}
+
+/* Keyboard focus must stay visible — blue, matching the system. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard:focus-visible,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket:focus-visible,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme button:focus-visible,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankSearchInput:focus {
+  outline: 2px solid var(--c-blue) !important;
+  outline-offset: -2px !important;
+}
+
+/* The topic grid containers carry two classes in App.css. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicketGrid.thumbnailGrid--list {
+  display: block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicketGrid.thumbnailGrid--grid {
+  display: block !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+}
+@media (min-width: 900px) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicketGrid.thumbnailGrid--grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 !important;
+  }
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme
+    .sgTopicTicketGrid.thumbnailGrid--grid
+    .thumbnailCard:nth-child(odd) {
+    border-right: 1px solid var(--c-line) !important;
+  }
+}
+
+/* Flow steps: a single horizontal line of chips. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fullMockPreviewSteps,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .trialFlowSteps {
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .previewStep {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 0 !important;
+  border: 1px solid var(--c-blue-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  background: var(--c-blue-tint) !important;
+  color: var(--c-blue) !important;
+  padding: 3px 8px !important;
+  font-size: var(--c-t-micro) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .previewStepFinal {
+  background: var(--c-blue) !important;
+  border-color: var(--c-blue) !important;
+  color: var(--c-white) !important;
+}
+
+/* Toolbars stay horizontal. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankToolbar,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingTopToolbar {
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankSearchInput {
+  min-height: 0 !important;
+  border-radius: var(--c-r-sm) !important;
+  font-size: var(--c-t-base) !important;
+  font-weight: 400 !important;
+}
+
+/* View toggle: bordered segmented control, blue for the active option. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle {
+  border: 1px solid var(--c-line-strong) !important;
+  border-radius: var(--c-r-sm) !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button {
+  min-height: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: var(--c-white) !important;
+  color: var(--c-ink-2) !important;
+  padding: 5px 11px !important;
+  font-size: var(--c-t-sm) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankViewToggle button.active {
+  background: var(--c-blue) !important;
+  color: var(--c-white) !important;
+}
+
+/* Group headers lose the 2px ink underline. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroupHeader {
+  border-bottom: 1px solid var(--c-line) !important;
+  margin: 0 !important;
+  padding: 7px var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroupTitle {
+  color: var(--c-ink) !important;
+}
+
+/* ==========================================================================
+   12 · TOPIC CARD SPAN RESET
+   App.css line ~4249 turns EVERY <span> inside .thumbnailCard into an
+   uppercase pill with a border and a blur. The topic row's title, subtitle
+   and action wrapper are all spans, so each was rendering as its own boxed
+   chip. Reset them, then re-apply the badge treatment only to the badge.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  color: inherit !important;
+  backdrop-filter: none !important;
+  align-self: auto !important;
+  box-shadow: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.wgTicketBody,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketBody {
+  display: block !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.wgTicketTitleRow,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketTitleRow {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  margin-bottom: 2px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.wgTicketTitleRow strong,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketTitleRow strong {
+  font-size: var(--c-t-lg) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+  color: var(--c-ink) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.wgTicketSub,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketSub {
+  display: block !important;
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  line-height: 1.45 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.wgTicketGo,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketGo {
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  color: var(--c-blue) !important;
+  white-space: nowrap !important;
+}
+
+/* Badges keep the tag treatment — they are the one span that should read
+   as a chip. Specificity must clear the reset above. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.wgTicketBadge,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketBadge {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  border: 1px solid var(--c-blue-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  background: var(--c-blue-tint) !important;
+  color: var(--c-blue) !important;
+  padding: 2px 6px !important;
+  white-space: nowrap !important;
+}
+
+/* Actions sit at the end of the row, never wrapping to a second line. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.sgTopicTicketActions {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--c-s2) !important;
+  flex: 0 0 auto !important;
+  grid-column: auto !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket .topicCardStartBtn {
+  width: auto !important;
+  padding: 6px 12px !important;
+  font-size: var(--c-t-sm) !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+}
+
+/* Group header: a bar, not a boxed card. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroupHeader {
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: var(--c-soft) !important;
+}
+
+/* Rows read left-to-right: label, then value, then action. App.css centres
+   .thumbnailCard content for the old card layout. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard *,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket * {
+  text-align: left !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankToolbar {
+  padding: var(--c-s2) var(--c-s3) !important;
+  min-height: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroup {
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+/* ==========================================================================
+   13 · WritingGuidePage.css INHERITANCE
+   The Speaking hub reuses the writing guide's `wgTicket*` classes, so that
+   stylesheet also applies here: a gradient "path" line, column-stacked
+   tickets and centred hub copy. Neutralised so Speaking reads as rows.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPath::before,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPath::after,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep::before,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep::after,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathBoard::before,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathBoard::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep {
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Hub copy is left-aligned like every other row in the journey. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubIntro,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubIntro *,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubShell,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowHead,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowHead *,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingBankHead,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingBankHead * {
+  text-align: left !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+@media (max-width: 640px) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.thumbnailCard,
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPathStep {
+    flex-wrap: wrap !important;
+  }
+}
+
+/* ==========================================================================
+   14 · COLOUR LEAKS ON THE LIVE SCREEN
+   App.css paints the live note yellow (#ffd95c), the transcript status green
+   (#dcfce7 / #0f766e) and the word-count chip cyan (#ecfeff). Yellow is
+   reserved for low-time and the top fix; green and cyan are off-brand.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .questionNotePrompt-live {
+  background: var(--c-soft) !important;
+  border-left: 3px solid var(--c-blue) !important;
+  border-radius: 0 !important;
+  color: var(--c-ink) !important;
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+  margin: var(--c-s2) 0 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptStatusLive {
+  background: var(--c-blue-tint) !important;
+  color: var(--c-blue) !important;
+  border: 1px solid var(--c-blue-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: 2px 6px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptStatusIdle {
+  background: var(--c-soft) !important;
+  color: var(--c-muted) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  padding: 2px 6px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCount,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptWordCount {
+  display: inline-flex !important;
+  min-width: 0 !important;
+  background: var(--c-white) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  color: var(--c-blue) !important;
+  padding: 2px 8px !important;
+}
+
+/* Report evidence: App.css uses red/green fills for mistake vs fix. The
+   strike-through and the arrow already carry that meaning, so the brand
+   holds — ink for what was said, blue for the correction. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .mistakeCardV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .suggestionCardV2 {
+  background: var(--c-white) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .quoteText,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .mockMistakeIssue {
+  background: var(--c-soft) !important;
+  border: none !important;
+  border-left: 3px solid var(--c-line-strong) !important;
+  border-radius: 0 !important;
+  color: var(--c-ink) !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fixText {
+  background: var(--c-blue-tint) !important;
+  border: none !important;
+  border-left: 3px solid var(--c-blue) !important;
+  border-radius: 0 !important;
+  color: var(--c-blue-deep) !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+  margin-top: var(--c-s1) !important;
+}
+
+/* The live note keeps only its blue rule — App.css also gives it a 2px ink box. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .questionNotePrompt-live {
+  border-top: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Low-time warning is a warning, not an error: yellow, not red. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .lowTimeWarning {
+  background: var(--c-yellow-tint) !important;
+  border: 1px solid var(--c-yellow-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  color: var(--c-yellow-ink) !important;
+  padding: 4px 8px !important;
+  margin: var(--c-s2) 0 !important;
+}
+
+/* Rest tips read as quiet rows, not bordered boxes. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodTips p {
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 7px 0 !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodTips p:last-child {
+  border-bottom: none !important;
+}
+
+/* Evidence quotes: the strike-through carries "this was wrong" — the red does
+   not need to. Keeps the palette to brand. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .quoteText,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .quoteText *,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .mockMistakeIssue,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .mockMistakeIssue * {
+  color: var(--c-ink-2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fixText,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fixText * {
+  color: var(--c-blue-deep) !important;
+}
+
+/* Provider tabs sit inline; they must not stretch to the full report width. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .providerTabs {
+  display: inline-flex !important;
+  width: auto !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .providerTabs button {
+  flex: 0 0 auto !important;
+  width: auto !important;
+}
+
+/* Strike-through line and vocab chips were the last non-brand colours:
+   red rule (#ef4444), pink "from" fill (#fff1f2), green "to" fill (#dcfce7). */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .quoteText,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .mockMistakeIssue,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabFrom {
+  text-decoration-color: var(--c-muted) !important;
+  text-decoration-thickness: 1px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabFrom {
+  background: var(--c-soft) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  color: var(--c-muted) !important;
+  padding: 2px 7px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabTo {
+  background: var(--c-blue-tint) !important;
+  border: 1px solid var(--c-blue-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  color: var(--c-blue-deep) !important;
+  padding: 2px 7px !important;
+}
+
+/* ==========================================================================
+   15 · LAYOUT & HIERARCHY PASS
+   Sections 1–14 removed decoration but never composed the result: panels
+   stretched into empty voids, and the type scale was applied to the wrong
+   elements. Three faults fixed here.
+
+   (a) HIERARCHY IS INVERTED IN THE MARKUP.
+       Question modes render `<h3>Question 2/4</h3><p>{the question}</p>` —
+       the counter is the heading and the question is body copy. Full mock does
+       the same with `<h3>Part 2 - Speaking</h3>` above `.part2BigQuestion`.
+       So: demote the counter to a micro label, promote the question.
+       Standalone Part 2 (where the h3 IS the question) is excluded by the
+       :has() guards below.
+
+   (b) PANELS STRETCHED. Grid items filled the tallest row and left large
+       empty areas inside bordered cards. Cards now size to content.
+
+   (c) NO VERTICAL RHYTHM. One gap (12px) between panels, one padding (12px)
+       inside them, no 24-40px voids.
+   ========================================================================== */
+
+/* ---- (b) cards size to their content, never to the grid row ---- */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPanelLayout,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportShowcase {
+  align-items: start !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingControlCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .card,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .stageCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .panel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveNoteCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptBox,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptBoxLarge,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuide,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptBrief,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .resultCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fullMockPreviewBanner,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepStageV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankToolbar,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingTopToolbar {
+  height: auto !important;
+  min-height: 0 !important;
+  align-self: start !important;
+}
+
+/* ---- (c) one rhythm everywhere ---- */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingFlowStage,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .attemptFlow,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingStageWrap,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingExamLane {
+  display: block !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingFlowStage > * + *,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .attemptFlow > * + *,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingStageWrap > * + * {
+  margin-top: var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard > * + *,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingControlCard > * + * {
+  margin-top: var(--c-s2) !important;
+}
+
+/* ---- (a) THE FIX THAT MATTERS: question hierarchy ---- */
+
+/* Counter / phase heading → quiet micro label. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard h3:has(+ p:not(.promptSub)),
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard:has(.part2BigQuestion) h3 {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--c-muted) !important;
+  margin: 0 0 var(--c-s1) !important;
+  line-height: 1.4 !important;
+}
+
+/* The actual question → the largest thing in the content column. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard h3:has(+ p:not(.promptSub)) + p,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard .part2BigQuestion,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard > h3:not(:has(+ p:not(.promptSub))) {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.3 !important;
+  color: var(--c-ink) !important;
+  margin: 0 0 var(--c-s3) !important;
+  text-transform: none !important;
+}
+
+/* Supporting copy recedes and is never shouted in caps. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptSub {
+  font-size: var(--c-t-sm) !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  color: var(--c-muted) !important;
+  margin: 0 0 var(--c-s1) !important;
+}
+
+/* Upcoming questions: a compact list, not a floating grey slab. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard ul {
+  background: none !important;
+  border: none !important;
+  border-left: 2px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  padding: 0 0 0 var(--c-s3) !important;
+  margin: 0 0 var(--c-s2) !important;
+  list-style: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard li {
+  font-size: var(--c-t-sm) !important;
+  color: var(--c-muted) !important;
+  margin: 0 0 3px !important;
+  padding: 0 !important;
+}
+
+/* Phase pill → one slim line, not a card. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .phaseInfoCard {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: var(--c-s2) !important;
+  background: none !important;
+  border: none !important;
+  border-bottom: 1px solid var(--c-line) !important;
+  border-radius: 0 !important;
+  padding: 0 0 var(--c-s2) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .phaseInfoText {
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+  color: var(--c-ink) !important;
+  margin: 0 !important;
+}
+
+/* Live note: a labelled block, tight to the question above it. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveNoteCard {
+  background: var(--c-soft) !important;
+  border: none !important;
+  border-left: 3px solid var(--c-blue) !important;
+  border-radius: 0 !important;
+  padding: var(--c-s2) var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .handNoteText {
+  font-size: var(--c-t-base) !important;
+  color: var(--c-ink-2) !important;
+  margin: 0 !important;
+}
+
+/* Buttons: normal height. They were filling the column. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryNextBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reviewScriptBtn {
+  min-height: 0 !important;
+  padding: 10px 14px !important;
+  line-height: 1.3 !important;
+}
+
+/* Timer block: the numerals and their label sit together as one unit. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .bigTimer {
+  padding: var(--c-s2) 0 0 !important;
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .recordingPill {
+  padding: 0 0 var(--c-s1) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBars {
+  margin: var(--c-s2) 0 !important;
+}
+
+/* Prep: the timer is meta, the prompt is the content. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgPrepTimer {
+  font-size: var(--c-t-lg) !important;
+  color: var(--c-muted) !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgPromptBrief h3 {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.3 !important;
+  margin: 0 0 var(--c-s2) !important;
+}
+
+/* Hub: the flow strip is one line; it had a tall empty floor. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fullMockPreviewBanner {
+  padding: var(--c-s2) var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubH1 {
+  font-size: 1.35rem !important;
+  margin: 0 0 var(--c-s1) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideHubLead {
+  margin: 0 0 var(--c-s3) !important;
+}
+
+/* Report: band block reads as one unit, not three floating pieces. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyBar {
+  padding: var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyBand {
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyEyebrow {
+  margin: 0 0 2px !important;
+}
+
+/* ==========================================================================
+   16 · LIVE SCREEN — SINGLE COLUMN, FULL WIDTH
+   The two-column split left a ~650px empty area: the prompt column holds
+   ~180px of content while the control column holds ~800px. Console is a
+   dense layout, so the fix is one full-width column with a horizontal
+   control strip — status, timer, level, action on one line — then the
+   transcript and length guide spanning the full width beneath it.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPanelLayout {
+  display: block !important;
+  grid-template-columns: none !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPanelLayout > * + * {
+  margin-top: var(--c-s3) !important;
+}
+
+/* The control card becomes one strip. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: var(--c-s3) !important;
+  padding: var(--c-s3) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > * {
+  margin: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .recordingPill {
+  order: 1 !important;
+  flex: 0 0 auto !important;
+  padding: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .bigTimer {
+  order: 2 !important;
+  flex: 0 0 auto !important;
+  font-size: 2.2rem !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .lowTimeWarning {
+  order: 3 !important;
+  flex: 0 0 auto !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .audioBars {
+  order: 4 !important;
+  flex: 1 1 100px !important;
+  min-width: 60px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .controls {
+  order: 5 !important;
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .controls .primaryNextBtn {
+  flex: 0 0 auto !important;
+  min-width: 200px !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .reviewScriptBtn {
+  order: 6 !important;
+  flex: 0 0 auto !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .liveTranscriptBox,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .liveLengthGuide,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .meta,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .error {
+  order: 7 !important;
+  flex: 1 1 100% !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .liveLengthGuide { order: 8 !important; }
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .meta { order: 9 !important; }
+
+/* Transcript fills the width it now has. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptTextarea {
+  min-height: 96px !important;
+}
+
+/* Prompt card spans full width: question, note and cues share one line-length. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard .speakingFlowSwap {
+  max-width: 78ch !important;
+}
+
+/* Report: the prompt rail is narrow reference material, the report is content. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportShowcase {
+  grid-template-columns: minmax(200px, 0.55fr) 2.45fr !important;
+}
+
+/* Status sits inline with the timer, not on its own centred line. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard > .recordingPill {
+  width: auto !important;
+  justify-content: flex-start !important;
+}
+/* Band thresholds are a 3-cell row, always. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideGrid {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideCard {
+  flex: 1 1 0 !important;
+  border-bottom: none !important;
+}
+/* Length guide header sits on one line with its count. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuideHeader {
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+}
+
+/* Save buttons were stretching to ragged widths; size them to their label. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .ladderSaveBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .saveNotebookBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: max-content !important;
+  padding: 5px 11px !important;
+  font-size: var(--c-t-sm) !important;
+}
+/* Tighten the fix list: three items should read as a list, not three cards. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixItem {
+  padding: var(--c-s2) var(--c-s3) !important;
+  gap: var(--c-s2) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixDetail {
+  margin: 0 0 var(--c-s1) !important;
+}
+
+/* WritingGuidePage.css gives .wgTicketGo `display:flex; width:100%` for its own
+   stacked ticket. As a flex item in a row that consumes the whole width and
+   collapses the title to 0. Constrain it to its label. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketGo,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.wgTicketGo {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: max-content !important;
+  margin-left: auto !important;
+  justify-content: flex-end !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketBody,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard span.wgTicketBody {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicket span.wgTicketTitleRow strong {
+  white-space: normal !important;
+  word-break: normal !important;
+}
+
+/* ==========================================================================
+   17 · WARM BRIEF (English Plan design brief)
+   The console stripped depth to a flat line-drawing. The brief asks for warm
+   paper, Mali, soft radii and a little brand depth back: a two-layer card
+   shadow, pill buttons with a coloured lift, one yellow accent.
+
+   Everything below is presentational and appended on purpose. It reuses the
+   exact selectors the rules above use, so equal-specificity ties resolve here
+   (later source wins); the card/overlay shadows carry four classes to clear
+   the `* { box-shadow:none }` blanket in section 1. No markup, class name,
+   state or layout rule is touched.
+   ========================================================================== */
+
+/* ---- Depth returns to the outer cards (never the row-ified children) ---- */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPath,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .fullMockPreviewBanner,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroup,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepProgressStepper,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordion,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepNotebookCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepMicCheck,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepThaiPracticeGuide,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPromptCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingControlCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingPerformanceCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveTranscriptBox,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .liveLengthGuide,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .restPeriodCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .trialBriefCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .trialUsedCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyBar,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachPanel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixesPanel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBoxV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioConsultCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pronRiskBlock,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .promptBrief,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .nextStepCard {
+  box-shadow: var(--c-shadow) !important;
+}
+
+/* Group containers that clip their rows keep the soft corner. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicBankGroup,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sectionV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .vocabV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .part3CoachPanel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topFixesPanel,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .transcriptV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioBoxV2,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .wgTicketPath {
+  overflow: hidden !important;
+}
+
+/* ---- Buttons become pills. Primary carries the coloured lift. ---- */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryNextBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .btn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .saveNotebookBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveButton,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioConsultButton,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .secondary,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .cancelBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .micCheckBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .micCheckRetry,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reviewScriptBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .ladderSaveBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .redeemBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .audioConsultButton-secondary,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowBack,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .pauseBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .dangerBtn {
+  border-radius: var(--c-r-pill) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryNextBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveButton {
+  box-shadow: var(--c-btn-shadow) !important;
+  transition: background 120ms ease, transform 120ms ease !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryNextBtn:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn:hover,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveButton:hover {
+  transform: translateY(-1px) !important;
+}
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryReadyBtn:active,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .primaryNextBtn:active,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .topicCardStartBtn:active,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportSaveButton:active {
+  transform: translateY(1px) !important;
+}
+
+/* ---- Selected rows read as chosen: a blue accent bar down the left. ---- */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard--selected,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard.sgTicketActive,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket.sgTicketActive,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .expectedScoreBandChip.is-active {
+  box-shadow: inset 3px 0 0 var(--c-blue) !important;
+}
+
+/* ---- One yellow accent: the hero band number gets the brief's underline. ---- */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportStickyBand {
+  position: relative !important;
+  display: inline-block !important;
+  padding-bottom: 4px !important;
+  background-image: linear-gradient(var(--c-yellow), var(--c-yellow)) !important;
+  background-repeat: no-repeat !important;
+  background-position: 0 100% !important;
+  background-size: 100% 8px !important;
+}
+
+/* ==========================================================================
+   18 · WARM BRIEF — MODALS
+   The overlays render outside .speakingFlowTheme, so the font rule and the
+   token retheme do not reach their hardcoded hex. Bring them onto the brief:
+   Mali, warm paper, soft radius, the same card lift and pill buttons.
+   ========================================================================== */
+
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay *,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay *,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay *,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay *,
+.questionCountdownOverlay .questionCountdownCard,
+.questionCountdownOverlay .questionCountdownCard *,
+.fullExamOverlay .fullExamOverlayCard,
+.fullExamOverlay .fullExamOverlayCard * {
+  font-family: 'Mali', 'Anuphan', 'Noto Sans Thai', system-ui, -apple-system, sans-serif !important;
+}
+
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreCard,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay .answerReviewCard,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay .scriptReviewCard,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay .loadingModalCard,
+.questionCountdownOverlay .questionCountdownCard,
+.fullExamOverlay .fullExamOverlayCard,
+.speakingFlowOverlay .speakingFlowOverlayCard {
+  background: var(--c-paper) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r-lg) !important;
+  box-shadow: var(--c-shadow) !important;
+}
+
+/* Modal buttons match the journey: pills, coloured lift on the confirm. */
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay button,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay button,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay button {
+  border-radius: var(--c-r-pill) !important;
+}
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreReadyBtn,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay .answerReviewConfirmBtn,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay .scriptReviewDoneBtn {
+  box-shadow: var(--c-btn-shadow) !important;
+}
+
+/* Round the modal's inner blocks so nothing reads as a cold 3px console chip. */
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreBandRail,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreWarningCard,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreTipCard,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay .answerReviewQuestionCard,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay .scriptReviewQuestionCard,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay .loadingSteps {
+  border-radius: var(--c-r-sm) !important;
+  border-color: var(--c-line) !important;
+}
