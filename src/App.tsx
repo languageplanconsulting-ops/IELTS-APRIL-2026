@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type PointerEvent, type ReactNode } from 'react'
 import './App.css'
 import './ExpectedScoreModal.css'
+import './SpeakingConsole.css'
 import { WritingGuidePage } from './WritingGuidePage'
 import { CourseHomePage } from './CourseHomePage'
 import { WritingReportView } from './WritingReportView'
