@@ -25333,6 +25333,7 @@ textarea {
   .adminOnly-videos,
   .adminOnly-video-studio,
   .adminOnly-task1-qa,
+  .adminOnly-placement,
   .adminOnly-settings
 ) {
   display: none !important;
@@ -25348,6 +25349,7 @@ textarea {
 .workspace .adminPanelPage[data-admin-section='videos'] .adminOnly-videos,
 .workspace .adminPanelPage[data-admin-section='video-studio'] .adminOnly-video-studio,
 .workspace .adminPanelPage[data-admin-section='task1-qa'] .adminOnly-task1-qa,
+.workspace .adminPanelPage[data-admin-section='placement'] .adminOnly-placement,
 .workspace .adminPanelPage[data-admin-section='settings'] .adminOnly-settings {
   display: grid !important;
 }
@@ -29862,4 +29864,32 @@ textarea {
   color: #0f172a;
   font-size: 0.9rem;
   line-height: 1.5;
+}
+
+/* Free placement-test entry, shown above the reading level board. */
+.placementEntryCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  border: 2px solid #004aad;
+  background: linear-gradient(135deg, #f4f8ff, #fff6d6);
+  text-decoration: none;
+  color: #1b2230;
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+.placementEntryCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -18px rgba(0, 74, 173, 0.8);
+}
+.placementEntryIcon { font-size: 26px; line-height: 1; }
+.placementEntryText { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.placementEntryText strong { font-size: 15.5px; }
+.placementEntryText span { font-size: 13.5px; color: #6b7488; }
+.placementEntryGo { font-weight: 700; color: #004aad; white-space: nowrap; font-size: 14px; }
+@media (max-width: 560px) {
+  .placementEntryCard { flex-wrap: wrap; }
+  .placementEntryGo { width: 100%; text-align: right; }
 }

@@ -13,6 +13,7 @@ import type {
   WritingTask2ReportSnapshot
 } from './writingReportTypes'
 import { LandingPageDraft } from './admin/LandingPageDraft'
+import { PlacementResults } from './admin/PlacementResults'
 import { Task1QaReview } from './admin/Task1QaReview'
 import {
   normalizeEngagementActorDetail,
@@ -282,6 +283,7 @@ type AdminWorkspaceSection =
   | 'videos'
   | 'video-studio'
   | 'task1-qa'
+  | 'placement'
   | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'writing essay' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
@@ -2976,6 +2978,7 @@ const ADMIN_WORKSPACE_SECTIONS: Array<{
   { id: 'videos', label: 'Speaking Videos', shortLabel: 'VD', description: 'Record Part 2 samples', group: 'Content Studio' },
   { id: 'video-studio', label: 'Video Studio', shortLabel: 'VS', description: 'Prepare AI-render video decks', group: 'Content Studio' },
   { id: 'task1-qa', label: 'Task 1 QA Review', shortLabel: 'T1', description: 'Review essays against real charts', group: 'Content Studio' },
+  { id: 'placement', label: 'Placement Results', shortLabel: 'PL', description: 'Free test submissions to follow up', group: 'People & Insights' },
   { id: 'landing', label: 'Landing Preview', shortLabel: 'LP', description: 'Preview the public landing page', group: 'System' },
   { id: 'settings', label: 'Settings', shortLabel: 'ST', description: 'Topics and quality tools', group: 'System' }
 ]
@@ -22852,6 +22855,16 @@ function App() {
 
           {readingWorkspaceMode === 'bank' && readingAttemptStage === 'bank' && !readingEntryCategory && readingEntryView === 'levels' && (
             <div className="readingEntryShell">
+              {/* Free placement test — the entry point for anyone who does not yet
+                  know which level to start at. Opens the public /placement page. */}
+              <a className="placementEntryCard" href="/placement">
+                <span className="placementEntryIcon" aria-hidden="true">🎯</span>
+                <span className="placementEntryText">
+                  <strong>ยังไม่รู้ว่าตัวเองอยู่ระดับไหน?</strong>
+                  <span>ทำแบบทดสอบวัดระดับฟรี 15–20 นาที ครบทั้ง 4 ทักษะ รู้ผลทันที</span>
+                </span>
+                <span className="placementEntryGo">เริ่มทดสอบ →</span>
+              </a>
               <div className="readingPathBoard">
                 <div className="readingPath" role="list">
                   <div className="readingPathStep is-done" role="listitem" style={{ '--motion-stagger': 0 } as CSSProperties}>
@@ -25443,6 +25456,15 @@ function App() {
                         }))
                       }))}
                   />
+                </div>
+                <div className="panel adminSectionCard adminOnly-placement">
+                  <div className="adminSectionHeader">
+                    <div>
+                      <p className="sectionLabel">Leads</p>
+                      <h3>Placement Results</h3>
+                    </div>
+                  </div>
+                  <PlacementResults authToken={authSession?.accessToken ?? ''} />
                 </div>
                 <div className="panel adminSectionCard adminOnly-task1-qa">
                   <div className="adminSectionHeader">

@@ -15234,6 +15234,73 @@ app.post('/api/placement/writing-assess', placementRateLimit, async (req, res) =
  * client's submission months later, when they finally register, and see exactly
  * what they could and could not do.
  */
+/**
+ * Where placement results are kept.
+ *
+ * The table in supabase/placement-results.sql is the better home — it sorts and
+ * searches. But creating it needs someone with SQL-editor access, and a result
+ * that is lost while waiting for that is lost forever. So the writer falls back
+ * to a private Storage bucket, which the service-role key can create by itself,
+ * and the admin reader looks in both. Run the SQL whenever you like; rows land
+ * in the table from that moment and the bucket keeps everything from before.
+ */
+const PLACEMENT_BUCKET = 'placement-results'
+let placementBucketReady = false
+
+const ensurePlacementBucket = async () => {
+  if (placementBucketReady) return
+  ensureSupabaseConfigured()
+  try {
+    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(PLACEMENT_BUCKET)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+  } catch (error) {
+    if (!isSupabaseMissingResourceError(error)) throw error
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ id: PLACEMENT_BUCKET, name: PLACEMENT_BUCKET, public: false })
+    })
+  }
+  placementBucketReady = true
+}
+
+const savePlacementResultToBucket = async (record) => {
+  await ensurePlacementBucket()
+  // Timestamp first so a plain object listing comes back newest-last, and the
+  // name stays unique without needing the database to mint an id.
+  const objectName = `${new Date().toISOString().replace(/[:.]/g, '-')}-${randomUUID()}.json`
+  await supabaseRequest(`/storage/v1/object/${encodeURIComponent(PLACEMENT_BUCKET)}/${encodeURIComponent(objectName)}`, {
+    method: 'POST',
+    headers: buildSupabaseHeaders({ serviceRole: true }),
+    body: JSON.stringify({ ...record, id: objectName, created_at: new Date().toISOString() })
+  })
+  return objectName
+}
+
+const readPlacementResultsFromBucket = async () => {
+  await ensurePlacementBucket()
+  const listing = await fetchSupabaseJson(`/storage/v1/object/list/${encodeURIComponent(PLACEMENT_BUCKET)}`, {
+    method: 'POST',
+    headers: buildSupabaseHeaders({ serviceRole: true }),
+    body: JSON.stringify({ prefix: '', limit: 500, sortBy: { column: 'name', order: 'desc' } })
+  })
+  const names = (Array.isArray(listing) ? listing : []).map((item) => item?.name).filter(Boolean)
+  const results = []
+  for (const name of names) {
+    try {
+      const response = await supabaseRequest(
+        `/storage/v1/object/${encodeURIComponent(PLACEMENT_BUCKET)}/${encodeURIComponent(name)}`,
+        { headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false }) }
+      )
+      results.push(await response.json())
+    } catch {
+      // One unreadable object must not hide every other submission.
+    }
+  }
+  return results
+}
+
 app.post('/api/placement/result', placementRateLimit, async (req, res) => {
   try {
     const body = req.body || {}
@@ -15264,12 +15331,19 @@ app.post('/api/placement/result', placementRateLimit, async (req, res) => {
       return res.status(400).json({ error: 'Missing student name' })
     }
 
-    const rows = await fetchSupabaseJson('/rest/v1/placement_results', {
-      method: 'POST',
-      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
-      body: JSON.stringify(record)
-    })
-    return res.json({ ok: true, id: Array.isArray(rows) ? rows[0]?.id || null : null })
+    try {
+      const rows = await fetchSupabaseJson('/rest/v1/placement_results', {
+        method: 'POST',
+        headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=representation' }),
+        body: JSON.stringify(record)
+      })
+      return res.json({ ok: true, storedIn: 'table', id: Array.isArray(rows) ? rows[0]?.id || null : null })
+    } catch (tableError) {
+      // The table has not been created yet — keep the result rather than drop it.
+      const id = await savePlacementResultToBucket(record)
+      console.warn('placement_results table unavailable, stored in bucket instead:', tableError?.message || tableError)
+      return res.json({ ok: true, storedIn: 'bucket', id })
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     console.error('Could not save placement result:', message)
@@ -15280,11 +15354,30 @@ app.post('/api/placement/result', placementRateLimit, async (req, res) => {
 
 app.get('/api/admin/placement/results', requireAdmin, async (_req, res) => {
   try {
-    const rows = await fetchSupabaseJson(
-      '/rest/v1/placement_results?select=id,student_name,contact,overall_band,reading_band,listening_band,writing_band,speaking_band,speaking_pending,created_at&order=created_at.desc&limit=500',
-      { headers: buildSupabaseHeaders({ serviceRole: true }) }
+    // Read both homes and merge, so nothing recorded before the table existed
+    // disappears from the admin list once it does.
+    let tableRows = []
+    try {
+      const rows = await fetchSupabaseJson(
+        '/rest/v1/placement_results?select=id,student_name,contact,overall_band,reading_band,listening_band,writing_band,speaking_band,speaking_pending,created_at&order=created_at.desc&limit=500',
+        { headers: buildSupabaseHeaders({ serviceRole: true }) }
+      )
+      tableRows = Array.isArray(rows) ? rows : []
+    } catch {
+      // Table not created yet.
+    }
+
+    let bucketRows = []
+    try {
+      bucketRows = (await readPlacementResultsFromBucket()).map((item) => ({ ...item, detail: undefined }))
+    } catch {
+      // Bucket not created yet either — nothing has been submitted.
+    }
+
+    const merged = [...tableRows, ...bucketRows].sort(
+      (a, b) => String(b.created_at || '').localeCompare(String(a.created_at || ''))
     )
-    return res.json({ results: Array.isArray(rows) ? rows : [] })
+    return res.json({ results: merged })
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     return res.status(500).json({ error: message })
@@ -15293,8 +15386,20 @@ app.get('/api/admin/placement/results', requireAdmin, async (_req, res) => {
 
 app.get('/api/admin/placement/results/:resultId', requireAdmin, async (req, res) => {
   try {
+    const id = String(req.params.resultId || '')
+
+    // Bucket-stored results carry a .json id; table rows carry a uuid.
+    if (id.endsWith('.json')) {
+      await ensurePlacementBucket()
+      const response = await supabaseRequest(
+        `/storage/v1/object/${encodeURIComponent(PLACEMENT_BUCKET)}/${encodeURIComponent(id)}`,
+        { headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false }) }
+      )
+      return res.json({ result: await response.json() })
+    }
+
     const rows = await fetchSupabaseJson(
-      `/rest/v1/placement_results?select=*&id=eq.${encodeURIComponent(req.params.resultId)}&limit=1`,
+      `/rest/v1/placement_results?select=*&id=eq.${encodeURIComponent(id)}&limit=1`,
       { headers: buildSupabaseHeaders({ serviceRole: true }) }
     )
     const result = Array.isArray(rows) ? rows[0] : null

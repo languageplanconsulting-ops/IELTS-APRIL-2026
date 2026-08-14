@@ -1418,6 +1418,16 @@ export function WritingGuidePage({
               </p>
               <span className="wlpAccentRule" aria-hidden="true" />
             </div>
+            {/* Free placement test — same entry point as the reading panel, for
+                anyone who does not yet know which level to start from. */}
+            <a className="placementEntryCard" href="/placement">
+              <span className="placementEntryIcon" aria-hidden="true">🎯</span>
+              <span className="placementEntryText">
+                <strong>ยังไม่รู้ว่าตัวเองอยู่ระดับไหน?</strong>
+                <span>ทำแบบทดสอบวัดระดับฟรี 15–20 นาที ครบทั้ง 4 ทักษะ รู้ผลทันที</span>
+              </span>
+              <span className="placementEntryGo">เริ่มทดสอบ →</span>
+            </a>
             <div className="wgTicketPathBoard" aria-label="ทางลัด Writing">
               <div className="wgTicketPath">
                 <div className="wgTicketPathStep is-done" style={{ '--motion-stagger': 0 } as CSSProperties}>
