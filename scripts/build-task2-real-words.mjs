@@ -24,6 +24,12 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const OUT = path.join(ROOT, 'src/writingTask2RealWords.ts')
 
 const dict = loadDictionary()
+if (!dict) {
+  // Unlike the verifiers, this script writes the frozen word list. Producing one
+  // from a partial dictionary would bake wrong verdicts into the app.
+  console.error('Cannot regenerate the Task 2 word list: no system dictionary at /usr/share/dict/words.')
+  process.exit(1)
+}
 
 // Corpus of human-written model-essay prose. An inflection is only accepted as
 // an option if it actually occurs here — spelling rules alone cannot tell that

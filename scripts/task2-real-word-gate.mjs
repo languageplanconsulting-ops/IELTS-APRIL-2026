@@ -41,7 +41,17 @@ const DICT_SUPPLEMENT = [
   'houseware', 'housewares', 'housemate', 'housemates'
 ]
 
+/**
+ * Returns null when the machine has no system word list.
+ *
+ * This gate is an authoring-time check: it runs where the content is written,
+ * against the OS dictionary. Build images generally ship without
+ * `/usr/share/dict/words`, and a missing dictionary there used to take the whole
+ * production build down. Callers decide what to do with null — a verifier skips,
+ * a generator refuses.
+ */
 export const loadDictionary = () => {
+  if (!fs.existsSync(DICT_PATH)) return null
   const raw = fs.readFileSync(DICT_PATH, 'utf8')
   const dict = new Set(
     raw
