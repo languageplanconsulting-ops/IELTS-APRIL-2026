@@ -14,7 +14,13 @@
 import type { PlacementBandKey } from './placementTestData'
 
 const SITE = 'https://www.language-plan.com'
-const CDN = 'https://import.cdn.thinkific.com/563960'
+/**
+ * Thumbnails are served from our own /public rather than hotlinked from
+ * Thinkific: the course platform can rename or move an asset at any time, and a
+ * broken image in the one card meant to sell the course is the worst place for
+ * it. Source files are the same 740x420 artwork used on the course pages.
+ */
+const THUMB = '/course-thumbnails'
 
 export type SkillKey = 'reading' | 'listening' | 'writing' | 'speaking'
 
@@ -47,25 +53,25 @@ const COURSES = {
     title: 'IELTS Academic Writing — Intensive',
     priceThb: '฿4,990',
     url: `${SITE}/courses/ielts-writing-5`,
-    imageUrl: `${CDN}/54IJMT4NSSuO4HPUAVug_11.png`
+    imageUrl: `${THUMB}/writing-intensive.png`
   },
   reading: {
     title: 'Intensive Academic Reading for IELTS',
     priceThb: '฿3,990',
     url: `${SITE}/courses/intensive-academic-reading-for-ielts`,
-    imageUrl: `${CDN}/t1nYjGlTTL2eK0pDaDcC_12.png`
+    imageUrl: `${THUMB}/reading-intensive.png`
   },
   listening: {
     title: 'Listening for Band 7',
     priceThb: '฿1,990',
     url: `${SITE}/courses/listening-for-band-7`,
-    imageUrl: `${CDN}/vMlJAp6SEmFru8uiEA0A_14.png`
+    imageUrl: `${THUMB}/listening-band7.png`
   },
   speaking: {
     title: 'Speaking Intensive for IELTS',
     priceThb: '฿2,990',
     url: `${SITE}/courses/0-day-speaking-challenge-for-ielts`,
-    imageUrl: `${CDN}/bXDhzeTR9u130qWZY3zQ_13.png`
+    imageUrl: `${THUMB}/speaking-intensive.png`
   }
 } as const
 
@@ -79,25 +85,25 @@ const BUNDLES = {
     title: 'All Skills Package — ครบทั้ง 4 ทักษะ',
     priceThb: '฿7,990 (3 เดือน) / ฿8,990 (6 เดือน)',
     url: `${SITE}/pages/ielts-all-skills`,
-    imageUrl: `${CDN}/54IJMT4NSSuO4HPUAVug_11.png`
+    imageUrl: `${THUMB}/writing-intensive.png`
   },
   threeSkills: {
     title: '3 Skills Package',
     priceThb: '฿7,590 (3 เดือน) / ฿8,590 (6 เดือน)',
     url: `${SITE}/pages/ielts-all-skills`,
-    imageUrl: `${CDN}/t1nYjGlTTL2eK0pDaDcC_12.png`
+    imageUrl: `${THUMB}/reading-intensive.png`
   },
   writingPlusOne: {
     title: 'Writing + Reading หรือ Speaking',
     priceThb: '฿5,990 (3 เดือน) / ฿6,990 (6 เดือน)',
     url: `${SITE}/pages/ielts-all-skills`,
-    imageUrl: `${CDN}/54IJMT4NSSuO4HPUAVug_11.png`
+    imageUrl: `${THUMB}/writing-intensive.png`
   },
   twoSkillsNoWriting: {
     title: '2 Skills (ไม่รวม Writing)',
     priceThb: '฿4,990 (3 เดือน) / ฿5,590 (6 เดือน)',
     url: `${SITE}/pages/ielts-all-skills`,
-    imageUrl: `${CDN}/vMlJAp6SEmFru8uiEA0A_14.png`
+    imageUrl: `${THUMB}/listening-band7.png`
   }
 } as const
 

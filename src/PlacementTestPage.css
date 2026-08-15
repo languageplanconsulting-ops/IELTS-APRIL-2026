@@ -231,7 +231,7 @@
   /* No lazy loading and an explicit ratio: with height:auto the box collapses to
      a couple of pixels before the image arrives, which both suppresses the lazy
      fetch and shifts the card when it finally lands. */
-  width: 148px; aspect-ratio: 16 / 9; object-fit: cover;
+  width: 148px; aspect-ratio: 37 / 21; object-fit: cover;
   border-radius: 12px; flex: 0 0 auto;
   background: var(--plc-blue-soft); border: 1px solid var(--plc-line);
 }
