@@ -36,6 +36,18 @@
 .plc *::before,
 .plc *::after { box-sizing: border-box; }
 
+/*
+ * index.css sets `font-family: var(--font-ui) !important` on a selector list
+ * that includes bare `button` and `input`. That beats `font-family: inherit`,
+ * so every control on this page rendered in the app's UI font while the prose
+ * around it was Mali. Nothing here is deliberately a different face, so the
+ * whole subtree is pinned — the only way to win against an !important.
+ */
+.plc,
+.plc * {
+  font-family: 'Mali', -apple-system, 'Noto Sans Thai', sans-serif !important;
+}
+
 .plcTop {
   position: sticky;
   top: 0;
