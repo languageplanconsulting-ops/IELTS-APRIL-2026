@@ -454,6 +454,7 @@ export default function PlacementTestPage() {
     ? (Math.round((scored.reduce((sum, row) => sum + PLACEMENT_BAND_MIDPOINTS[row.band!], 0) / scored.length) * 2) / 2).toFixed(1)
     : '—'
   const weakest = scored.slice().sort((a, b) => PLACEMENT_BAND_MIDPOINTS[a.band!] - PLACEMENT_BAND_MIDPOINTS[b.band!])[0]
+  const dragging = scored.filter((row) => PLACEMENT_BAND_MIDPOINTS[row.band!] <= Number(overall) - 1)
 
   const recommendation = useMemo(() => recommendCourses({
     reading: readingBand, listening: listeningBand, writing: writingBand, speaking: speakingBand
@@ -887,8 +888,20 @@ export default function PlacementTestPage() {
               <div className="plcNote" style={{ marginBottom: 2 }}>ระดับโดยประมาณของ {name || 'คุณ'}</div>
               <div className="plcVerdictNum">{overall}</div>
             </div>
+            {/* The headline is an average, so a single collapsed skill can hide
+                inside it. Name it outright rather than let the big number imply
+                the student is ready. */}
+            {dragging.length ? (
+              <div className="plcDrag">
+                <strong>ตัวเลขนี้เป็นค่าเฉลี่ยครับ</strong>
+                <span>
+                  {dragging.map((row) => `${row.skill} อยู่ที่ ${PLACEMENT_BAND_LABELS[row.band!]}`).join(' และ ')}
+                  {' '}ซึ่งต่ำกว่าคะแนนรวมมาก ถ้าไปสอบจริงตอนนี้ คะแนน overall จะถูกทักษะนี้ดึงลงครับ
+                </span>
+              </div>
+            ) : null}
             <p style={{ fontSize: 16.5, margin: '0 0 18px' }}>
-              เรียนคุณ{name} ครับ — จากคำตอบทั้งหมดที่ส่งมา ระดับโดยประมาณของคุณอยู่ที่ <strong>{overall}</strong>
+              คุณ{name} ครับ — จากคำตอบทั้งหมดที่ส่งมา ระดับโดยประมาณของคุณอยู่ที่ <strong>{overall}</strong>
               {weakest ? <> โดยทักษะที่ควรเริ่มซ่อมก่อนคือ<strong>{weakest.skill}</strong> เพราะเป็นตัวที่ดึงคะแนนรวมลงมากที่สุดครับ</> : null}
             </p>
 

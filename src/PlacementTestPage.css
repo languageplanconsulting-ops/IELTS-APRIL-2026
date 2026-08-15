@@ -251,3 +251,13 @@
 .plc a { color: var(--plc-blue); }
 
 .plcSign { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--plc-line); font-size: 14.5px; color: var(--plc-muted); }
+
+/* Shown when a single skill sits a full band or more below the headline
+   average, so the big number cannot imply a readiness the student lacks. */
+.plcDrag {
+  display: flex; flex-direction: column; gap: 4px;
+  background: var(--plc-bad-soft); color: var(--plc-bad);
+  border-radius: var(--plc-r-md); padding: 14px 17px; margin: -8px 0 20px;
+  font-size: 14.5px;
+}
+.plcDrag strong { font-weight: 700; }
