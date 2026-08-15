@@ -969,7 +969,7 @@ export default function PlacementTestPage() {
             ) : null}
 
             <a className="plcOffer" href={recommendation.primary.url} target="_blank" rel="noreferrer">
-              <img className="plcOfferThumb" src={recommendation.primary.imageUrl} alt={recommendation.primary.title} loading="lazy" />
+              <img className="plcOfferThumb" src={recommendation.primary.imageUrl} alt={recommendation.primary.title} />
               <div className="plcOfferBody">
                 <div className="plcOfferTag">แนะนำสำหรับคุณ</div>
                 <div className="plcOfferTitle">{recommendation.primary.title}</div>
