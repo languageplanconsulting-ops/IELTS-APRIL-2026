@@ -7085,8 +7085,10 @@ function App() {
   const [userPasswordInput, setUserPasswordInput] = useState('')
   const [trialEmailInput, setTrialEmailInput] = useState('')
   const [trialPasswordInput, setTrialPasswordInput] = useState('')
-  const [trialAuthMode, setTrialAuthMode] = useState<'signup' | 'signin'>('signup')
+  const [trialAuthMode, setTrialAuthMode] = useState<'signup' | 'signin'>('signin')
   const [trialSignupStep, setTrialSignupStep] = useState<'email' | 'password'>('email')
+  // Starts off so the sign-up form never flashes before the server answers.
+  const [trialSignupEnabled, setTrialSignupEnabled] = useState(false)
   const [signupNameInput, setSignupNameInput] = useState('')
   const [signupEmailInput, setSignupEmailInput] = useState('')
   const [signupPasswordInput, setSignupPasswordInput] = useState('')
@@ -7277,6 +7279,7 @@ function App() {
   const [selectedTestMode, setSelectedTestMode] = useState<SpeakingTestMode>('part1')
   const [speakingEntryMode, setSpeakingEntryMode] = useState<SpeakingEntryMode>(null)
   const [topicBankSearch, setTopicBankSearch] = useState('')
+  const [topicBankScrollTick, setTopicBankScrollTick] = useState(0)
   const [topicBankView, setTopicBankView] = useState<'grid' | 'list'>('list')
   const [topicBankFocusIndex, setTopicBankFocusIndex] = useState(0)
   const [isTranscribing, setIsTranscribing] = useState(false)
@@ -7444,6 +7447,22 @@ function App() {
     const path = window.location.pathname.replace(/\/+$/, '').toLowerCase()
     return trialParam === '1' || trialParam === 'speaking' || path.endsWith('/trial')
   }, [])
+  useEffect(() => {
+    if (!isTrialRouteRequested) return
+    let cancelled = false
+    void fetch('/api/public/config')
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        if (!cancelled && payload?.trialSignupEnabled) {
+          setTrialSignupEnabled(true)
+          setTrialAuthMode('signup')
+        }
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [isTrialRouteRequested])
   const isTrialUser = authSession?.role === 'trial'
   const hasModuleAccess = (moduleKey: SkillModule) => resolveModuleAccess(authSession, moduleKey)
   const canAccessSpeaking = hasModuleAccess('speaking')
@@ -7524,6 +7543,7 @@ function App() {
   const readingPdoyProgressSyncedSignatureRef = useRef('')
   const notebookEntriesRef = useRef<NotebookEntry[]>([])
   const customSectionsRef = useRef<string[]>([])
+  const speakingTopicBankRef = useRef<HTMLDivElement | null>(null)
   const readingHintMarkRef = useRef<HTMLElement | null>(null)
   const readingPassagePanelRef = useRef<HTMLElement | null>(null)
   const readingPassageBodyRef = useRef<HTMLDivElement | null>(null)
@@ -12032,6 +12052,16 @@ function App() {
     const interval = window.setInterval(tick, 1000)
     return () => window.clearInterval(interval)
   }, [readingAttemptStage, readingExamStartedAt])
+
+  useEffect(() => {
+    if (!topicBankScrollTick) return
+    const bank = speakingTopicBankRef.current
+    if (!bank) return
+    const frame = window.requestAnimationFrame(() => {
+      bank.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [topicBankScrollTick])
 
   useEffect(() => {
     if (readingReportPendingJumpTo === null) return
@@ -17801,6 +17831,11 @@ function App() {
   }
 
   const handleTrialSignupSubmit = async () => {
+    if (!trialSignupEnabled) {
+      setAuthNotice('')
+      setAuthError('ตอนนี้ปิดรับ trial ใหม่ชั่วคราวครับ กรุณาสมัครบัญชีปกติแล้วรอแอดมินเปิดสิทธิ์ให้')
+      return
+    }
     const email = normalizeEmail(trialEmailInput)
     const password = trialPasswordInput.trim()
 
@@ -21472,6 +21507,11 @@ function App() {
                     </span>
                   )}
                 </button>
+                {/* Free placement test — a full page of its own at /placement, so
+                    this is a link rather than an activePage switch. */}
+                <a className="navPlacementLink" href="/placement">
+                  วัดระดับฟรี
+                </a>
                 <button
                   className={`${activePage === 'writing' ? 'active' : ''}${
                     canAccessWriting ? '' : ' navLocked'
@@ -21725,20 +21765,24 @@ function App() {
                   </section>
                   <section className="authPanel trialAuthPanel">
                     <div className="authPanelHeader">
-                      <p className="sectionLabel">ทดลองใช้ฟรี 1 ครั้ง</p>
+                      <p className="sectionLabel">
+                        {trialSignupEnabled ? 'ทดลองใช้ฟรี 1 ครั้ง' : 'เข้าสู่ Trial เดิมของคุณ'}
+                      </p>
                       <div className="authModeTabs">
-                        <button
-                          type="button"
-                          className={trialAuthMode === 'signup' ? 'active' : ''}
-                          onClick={() => {
-                            setTrialAuthMode('signup')
-                            setTrialSignupStep('email')
-                            setAuthError('')
-                            setAuthNotice('')
-                          }}
-                        >
-                          เริ่ม Trial ใหม่
-                        </button>
+                        {trialSignupEnabled && (
+                          <button
+                            type="button"
+                            className={trialAuthMode === 'signup' ? 'active' : ''}
+                            onClick={() => {
+                              setTrialAuthMode('signup')
+                              setTrialSignupStep('email')
+                              setAuthError('')
+                              setAuthNotice('')
+                            }}
+                          >
+                            เริ่ม Trial ใหม่
+                          </button>
+                        )}
                         <button
                           type="button"
                           className={trialAuthMode === 'signin' ? 'active' : ''}
@@ -21752,14 +21796,23 @@ function App() {
                         </button>
                       </div>
                     </div>
-                    <p className="meta">
-                      สิทธิ์นี้เป็นการทดลองใช้แบบ one-time trial only ต่อ 1 อีเมลครับ หลังเริ่มแล้วควรเผื่อเวลาไว้ประมาณ 5-7 นาที
-                    </p>
-                    <div className="trialChecklist">
-                      <div className="trialChecklistItem">✉️ กรอกอีเมลก่อน แล้วตั้งรหัสผ่านเพื่อเข้า trial</div>
-                      <div className="trialChecklistItem">📝 เตรียมปากกาและสมุด เพราะคุณจะมีเวลาเตรียมคำตอบ 1 นาที</div>
-                      <div className="trialChecklistItem">🎤 จากนั้นต้องพูด 2 นาที และตอบ follow-up อีก 3 ข้อ</div>
-                    </div>
+                    {trialSignupEnabled ? (
+                      <>
+                        <p className="meta">
+                          สิทธิ์นี้เป็นการทดลองใช้แบบ one-time trial only ต่อ 1 อีเมลครับ หลังเริ่มแล้วควรเผื่อเวลาไว้ประมาณ 5-7 นาที
+                        </p>
+                        <div className="trialChecklist">
+                          <div className="trialChecklistItem">✉️ กรอกอีเมลก่อน แล้วตั้งรหัสผ่านเพื่อเข้า trial</div>
+                          <div className="trialChecklistItem">📝 เตรียมปากกาและสมุด เพราะคุณจะมีเวลาเตรียมคำตอบ 1 นาที</div>
+                          <div className="trialChecklistItem">🎤 จากนั้นต้องพูด 2 นาที และตอบ follow-up อีก 3 ข้อ</div>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="meta">
+                        ตอนนี้ปิดรับ trial ใหม่ชั่วคราวครับ ถ้าคุณเคยเริ่ม trial ไว้แล้ว เข้าสู่ระบบด้วยอีเมลเดิมได้เลย
+                        ส่วนผู้ที่ต้องการเรียนจริง กรุณาสมัครบัญชีปกติแล้วรอแอดมินเปิดสิทธิ์ให้ครับ
+                      </p>
+                    )}
                     <div className="authForm">
                       <label>
                         อีเมล
@@ -29197,6 +29250,7 @@ function App() {
                               setSpeakingEntryMode('practice')
                               setSelectedTestMode(item.mode)
                               setTopicBankSearch('')
+                              setTopicBankScrollTick((tick) => tick + 1)
                             }}
                           >
                             <span className={`wgTicketStamp ${item.stamp}`} aria-hidden="true">
@@ -29230,6 +29284,7 @@ function App() {
                           setSpeakingEntryMode('full')
                           setSelectedTestMode('full')
                           setTopicBankSearch('')
+                          setTopicBankScrollTick((tick) => tick + 1)
                         }}
                       >
                         <span className="wgTicketStamp wgTicketStamp-blue" aria-hidden="true">
@@ -29274,7 +29329,7 @@ function App() {
                 )}
               </div>
 
-              {speakingEntryMode && <div className="speakingTopicBank" role="region" aria-label="Speaking question bank">
+              {speakingEntryMode && <div className="speakingTopicBank" ref={speakingTopicBankRef} role="region" aria-label="Speaking question bank">
                 <div className="writingGuideFlowHead speakingBankHead">
                   <p className="wlpKicker">
                     {speakingEntryMode === 'full'

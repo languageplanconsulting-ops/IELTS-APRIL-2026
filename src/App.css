@@ -29893,3 +29893,23 @@ textarea {
   .placementEntryCard { flex-wrap: wrap; }
   .placementEntryGo { width: 100%; text-align: right; }
 }
+
+/* Placement-test link in the main nav. Matches the nav buttons but reads as the
+   one free thing on the bar, so it carries the brand yellow. */
+.navPlacementLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #ffcc00;
+  color: #4a3800 !important;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+.navPlacementLink:hover {
+  background: #d9a800;
+  transform: translateY(-1px);
+}
