@@ -666,15 +666,41 @@ Counting rules:
 
 Spoken language rules:
 - This is speech-to-text. Ignore fillers ("um", "you know") and self-correction entirely.
-- Never count a mishearing as a learner error. If a word looks like an STT artefact, skip it.
-- Count each distinct error once, even if the learner repeats the same mistake.
+- A grammatical form is NEVER a transcription artefact. Missing third-person -s, missing
+  -ed, a wrong auxiliary, a missing plural -s and a missing article are always learner
+  errors — transcribers reproduce what was said, they do not delete grammar. Only treat a
+  word as a mishearing when it is the WRONG WORD and the intended one is obvious from
+  context ("cell belief" for "self-belief"). Never excuse a grammar mistake this way.
+- Count every occurrence of a tense or article error, not one per type. Vocabulary errors
+  are counted once per distinct wrong word.
+
+Worked examples — these are all learner errors and must be counted:
+- "It have many shop" → 2 tense/agreement ("have" for "has") plus a missing plural is a
+  vocabulary/grammar slip; count the agreement error.
+- "I go to the market" when describing last weekend → past simple error ("went").
+- "We buy some food" in a past narrative → past simple error ("bought").
+- "is close to my office" with no subject → missing subject, count as a tense/agreement error.
+- "many thing" → missing plural.
+- "on phone", "in the past they play outside" → missing article ("on the phone") and a past
+  tense error respectively.
+
+CRITICAL — which text to judge:
+- Judge tense, articles, plurals, vocabulary, transitions and collocations ONLY from the
+  VERBATIM line. That is what the student actually said.
+- The PUNCTUATED line has been through a cleanup pass that adds punctuation. It also
+  silently repairs grammar — it will show "he has" where the student said "he have". Use it
+  for NOTHING except counting sentences.
+- If the two lines disagree about a word, the VERBATIM line is the truth. Never let the
+  punctuated version talk you out of an error you can see in the verbatim text.
 
 Answers:
 ${Array.isArray(questionBreakdown) && questionBreakdown.length
     ? questionBreakdown
         .map(
           (item, index) =>
-            `[${index + 1}] ${item.part || 'Part 1'} question: ${item.question || 'Question'}\nAnswer: ${item.punctuatedTranscript || item.rawTranscript || '(empty)'}`
+            `[${index + 1}] ${item.part || 'Part 1'} question: ${item.question || 'Question'}\n` +
+            `VERBATIM (judge this): ${item.rawTranscript || '(empty)'}\n` +
+            `PUNCTUATED (sentence count only): ${item.punctuatedTranscript || item.rawTranscript || '(empty)'}`
         )
         .join('\n\n')
     : '(none)'}

@@ -21507,11 +21507,6 @@ function App() {
                     </span>
                   )}
                 </button>
-                {/* Free placement test — a full page of its own at /placement, so
-                    this is a link rather than an activePage switch. */}
-                <a className="navPlacementLink" href="/placement">
-                  วัดระดับฟรี
-                </a>
                 <button
                   className={`${activePage === 'writing' ? 'active' : ''}${
                     canAccessWriting ? '' : ' navLocked'
@@ -21713,6 +21708,11 @@ function App() {
                       </span>
                     )}
                   </button>
+                  {/* Free placement test. A link, not an activePage switch:
+                      /placement is its own page mounted outside the app shell. */}
+                  <a className="homePlacementButton" href="/placement">
+                    วัดระดับฟรี · Placement Test
+                  </a>
                   <button type="button" disabled>
                     Notebook (Coming Soon)
                   </button>

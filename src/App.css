@@ -29913,3 +29913,28 @@ textarea {
   background: #d9a800;
   transform: translateY(-1px);
 }
+
+/* Placement test in the Learning Space grid. Sits with the skill buttons but
+   inverts the palette so the one free thing reads differently from the rest. */
+.homePlacementButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 800;
+  background: #0f2e85;
+  color: #ffffff !important;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 0 #071b52;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.homePlacementButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 #071b52;
+}
+.homePlacementButton:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 #071b52;
+}
