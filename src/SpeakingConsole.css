@@ -512,6 +512,9 @@
   background: none !important;
   border: none !important;
   padding: 0 !important;
+  /* the bank is scrolled into view when a part ticket is clicked — keep a little
+     air above it so the "เลือกหัวข้อที่อยากฝึก" head isn't flush with the top */
+  scroll-margin-top: 18px !important;
 }
 .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingBankHead,
 .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .writingGuideFlowHead {
@@ -627,6 +630,14 @@
   cursor: pointer !important;
   transform: none !important;
   animation: none !important;
+  /* The topic bank renders every row up front (80+ for Part 3). Let the browser
+     skip layout/paint for rows that are off-screen, and isolate each row so a
+     hover landing mid-scroll can't reflow its neighbours. Kills the scroll jank
+     with no visual change. `auto` intrinsic size self-corrects after first paint
+     so wrapped titles don't shift. */
+  content-visibility: auto !important;
+  contain-intrinsic-size: auto 52px !important;
+  contain: layout paint !important;
 }
 .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .thumbnailCard:last-child,
 .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .sgTopicTicket:last-child {
