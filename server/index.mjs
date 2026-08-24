@@ -114,6 +114,19 @@ app.use(express.urlencoded({
 const GEMINI_PRICING_VERIFIED_AT = '2026-05-02'
 const GEMINI_PRICING_SOURCE_URL = 'https://ai.google.dev/gemini-api/docs/pricing?hl=en'
 const GEMINI_STANDARD_PRICING_USD_PER_1M_TOKENS = {
+  // NOTE: gemini-3.5-flash / -lite figures below are provisional — copied from the
+  // 2.5-flash tier as a placeholder until the published Gemini 3.5 pricing is
+  // confirmed against GEMINI_PRICING_SOURCE_URL. Cost analytics only; not billed.
+  'gemini-3.5-flash': {
+    inputText: 0.3,
+    inputAudio: 1.0,
+    outputText: 2.5
+  },
+  'gemini-3.5-flash-lite': {
+    inputText: 0.1,
+    inputAudio: 0.3,
+    outputText: 0.4
+  },
   'gemini-2.5-flash': {
     inputText: 0.3,
     inputAudio: 1.0,
@@ -130,6 +143,14 @@ const GEMINI_STANDARD_PRICING_USD_PER_1M_TOKENS = {
     outputText: 0.4
   }
 }
+
+// The single model the whole app runs on. Override with GEMINI_MODEL in .env.
+// Per-operation overrides (GEMINI_ASSESSMENT_MODEL, GEMINI_TEXT_MODEL,
+// GEMINI_CLEANUP_MODEL, GEMINI_TRANSCRIPTION_MODEL) still win when set.
+const GEMINI_DEFAULT_MODEL = String(process.env.GEMINI_MODEL || 'gemini-3.5-flash').trim()
+const GEMINI_DEFAULT_LITE_MODEL = String(
+  process.env.GEMINI_LITE_MODEL || 'gemini-3.5-flash-lite'
+).trim()
 
 const roundUsdAmount = (value, digits = 8) => Number(Number(value || 0).toFixed(digits))
 
@@ -192,6 +213,18 @@ const normalizeGeminiUsageMetadata = (payload) => {
 const pickGeminiPricingForModel = (model) => {
   const normalized = String(model || '').trim().toLowerCase()
   if (!normalized) return null
+  if (normalized.startsWith('gemini-3') && normalized.includes('flash-lite')) {
+    return {
+      modelFamily: 'gemini-3.5-flash-lite',
+      ...GEMINI_STANDARD_PRICING_USD_PER_1M_TOKENS['gemini-3.5-flash-lite']
+    }
+  }
+  if (normalized.startsWith('gemini-3') && normalized.includes('flash')) {
+    return {
+      modelFamily: 'gemini-3.5-flash',
+      ...GEMINI_STANDARD_PRICING_USD_PER_1M_TOKENS['gemini-3.5-flash']
+    }
+  }
   if (normalized.startsWith('gemini-2.5-flash-lite')) {
     return {
       modelFamily: 'gemini-2.5-flash-lite',
@@ -3105,6 +3138,12 @@ const ADMIN_SIGNUP_NOTIFY_EMAIL = normalizeEmail(
 const APP_BASE_URL = String(process.env.APP_BASE_URL || '').trim().replace(/\/+$/, '')
 const ACCESS_APPROVAL_SECRET = String(process.env.ACCESS_APPROVAL_SECRET || ADMIN_PANEL_CODE || 'language-plan').trim()
 const ACCESS_APPROVAL_TOKEN_TTL_MS = 1000 * 60 * 60 * 24 * 7
+// The one-time free trial hands out an ACTIVE account to anyone with an email
+// address, so it stays off unless it is switched on deliberately. While it is
+// off, every new account has to be granted access by an admin.
+const TRIAL_SIGNUP_ENABLED = ['1', 'true', 'yes', 'on'].includes(
+  String(process.env.TRIAL_SIGNUP_ENABLED || '').trim().toLowerCase()
+)
 const THINKIFIC_WEBHOOK_SECRET = String(process.env.THINKIFIC_WEBHOOK_SECRET || '').trim()
 const THINKIFIC_ALLOWED_COURSE_IDS = String(process.env.THINKIFIC_ALLOWED_COURSE_IDS || '')
   .split(',')
@@ -10446,8 +10485,7 @@ const estimatePronunciationBand = (whisperJson) => {
 
 const GEMINI_TRANSCRIPTION_MODELS = [
   process.env.GEMINI_TRANSCRIPTION_MODEL,
-  'gemini-2.5-flash',
-  'gemini-2.0-flash'
+  GEMINI_DEFAULT_MODEL
 ].filter(Boolean)
 
 const normalizeAudioMimeType = (rawMimeType) => {
@@ -10844,10 +10882,10 @@ const transcribeWithEmergencyFallback = async ({ audioBase64, audioMimeType, pri
       })
       return {
         provider: 'gemini-backup',
-        engine: 'gemini-2.5-flash-backup',
+        engine: `${GEMINI_DEFAULT_MODEL}-backup`,
         quality,
         result: google,
-        diagnostics: [{ provider: 'gemini-backup', engine: 'gemini-2.5-flash-backup', quality }],
+        diagnostics: [{ provider: 'gemini-backup', engine: `${GEMINI_DEFAULT_MODEL}-backup`, quality }],
         errors
       }
     } catch (error) {
@@ -11265,8 +11303,8 @@ const callGemini = async (prompt, usageTracker) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = [
-    String(process.env.GEMINI_ASSESSMENT_MODEL || 'gemini-2.5-flash').trim(),
-    'gemini-2.5-flash'
+    String(process.env.GEMINI_ASSESSMENT_MODEL || GEMINI_DEFAULT_MODEL).trim(),
+    GEMINI_DEFAULT_MODEL
   ].filter(Boolean)
   const tried = []
   for (const model of [...new Set(candidates)]) {
@@ -11356,8 +11394,8 @@ const callGeminiText = async (prompt, usageTracker, operation = 'text') => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = [
-    String(process.env.GEMINI_TEXT_MODEL || process.env.GEMINI_ASSESSMENT_MODEL || 'gemini-2.5-flash').trim(),
-    'gemini-2.5-flash'
+    String(process.env.GEMINI_TEXT_MODEL || process.env.GEMINI_ASSESSMENT_MODEL || GEMINI_DEFAULT_MODEL).trim(),
+    GEMINI_DEFAULT_MODEL
   ].filter(Boolean)
   const tried = []
   for (const model of [...new Set(candidates)]) {
@@ -11404,9 +11442,8 @@ const callGeminiCleanupText = async (prompt, usageTracker) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = [
-    String(process.env.GEMINI_CLEANUP_MODEL || 'gemini-2.5-flash-lite').trim(),
-    'gemini-2.5-flash',
-    'gemini-2.0-flash'
+    String(process.env.GEMINI_CLEANUP_MODEL || GEMINI_DEFAULT_LITE_MODEL).trim(),
+    GEMINI_DEFAULT_MODEL
   ].filter(Boolean)
   const tried = []
   for (const model of [...new Set(candidates)]) {
@@ -11594,7 +11631,9 @@ app.post('/api/auth/signup', async (req, res) => {
 
     const existingProfile = await loadUserProfileByEmail(email)
     if (existingProfile?.id) {
-      if (isTrialProfileRecord(existingProfile)) {
+      // Re-activating a trial account here would hand out never-expiring access
+      // with no admin approval, so it only runs while trials are switched on.
+      if (TRIAL_SIGNUP_ENABLED && isTrialProfileRecord(existingProfile)) {
         await supabaseRequest('/rest/v1/learner_access', {
           method: 'POST',
           headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
@@ -11693,6 +11732,16 @@ app.post('/api/auth/signup', async (req, res) => {
 
 app.post('/api/auth/trial-signup', async (req, res) => {
   try {
+    if (!TRIAL_SIGNUP_ENABLED) {
+      return res.status(403).json({
+        error: {
+          status: 403,
+          type: 'trial_signup_disabled',
+          message:
+            'ตอนนี้ปิดรับการทดลองใช้ฟรีชั่วคราวครับ กรุณาสมัครบัญชีปกติแล้วรอแอดมินเปิดสิทธิ์ให้'
+        }
+      })
+    }
     ensureSupabaseConfigured()
     const email = normalizeEmail(req.body?.email)
     const password = String(req.body?.password || '').trim()
@@ -13733,6 +13782,12 @@ app.get('/api/health', (_, res) => {
   res.json({ ok: true })
 })
 
+// Public, unauthenticated: lets the trial landing page hide the sign-up form
+// instead of letting people fill it in and hit a 403 on submit.
+app.get('/api/public/config', (_, res) => {
+  res.json({ trialSignupEnabled: TRIAL_SIGNUP_ENABLED })
+})
+
 app.get('/api/speaking-sample-videos', requireAuth, async (_req, res) => {
   try {
     const records = await loadSpeakingSampleVideoRecords()
@@ -13966,7 +14021,7 @@ Rules:
 - Do not wrap the JSON in code fences.`
 
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
-        'gemini-2.5-flash'
+        GEMINI_DEFAULT_MODEL
       )}:generateContent?key=${apiKey}`
 
       const response = await safeFetch(
@@ -14052,7 +14107,7 @@ Rules:
       const transcript = subtitles.map((s) => s.text).join(' ')
       return res.json({
         provider: 'gemini',
-        model: 'gemini-2.5-flash',
+        model: GEMINI_DEFAULT_MODEL,
         confidenceQuality: 0.8,
         language: String(parsed?.language || 'auto'),
         transcript,
