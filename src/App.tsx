@@ -2490,7 +2490,13 @@ const renderReportTicks = (
 const renderUnlockChecklist = (
   keyPrefix: string,
   targetBand: number,
-  plans: NonNullable<ComponentReport['plusOneChecklist']>
+  plans: NonNullable<ComponentReport['plusOneChecklist']>,
+  onSavePlan?: (plan: {
+    quote: string
+    fix?: string
+    originalText?: string
+    improvedText?: string
+  }) => void
 ) => {
   if (!plans.length) return null
   return (
@@ -2499,34 +2505,61 @@ const renderUnlockChecklist = (
         <div className="unlockChecklistIcon">🔓</div>
         <div>
           <h5>วิธีปลดล็อคคะแนน BAND {targetBand.toFixed(1)}</h5>
-          <p>คุณต้องเพิ่มความซับซ้อนตาม checklist ของ band ถัดไปดังนี้:</p>
+          <p>นำประโยคที่คุณพูดจริงมาปรับ ตามตัวอย่างด้านล่างเพื่อขยับขึ้น band ถัดไปครับ:</p>
         </div>
       </div>
       <ol className="unlockChecklistList">
         {plans.map((plan, idx) => {
           const requirement = plan.requirement || plan.quote
-          const suggestionText = plan.fix || plan.improvedText || ''
+          const suggestionText = plan.improvedText || plan.fix || ''
+          // A real "you said X" gets struck through; a generic recommendation
+          // (no originalText) is shown as advice only.
+          const personalized = Boolean(plan.isPersonalized && plan.originalText && suggestionText)
           return (
             <li key={`${keyPrefix}-unlock-${idx}`} className="unlockChecklistItem">
               <div className="unlockChecklistRequirementRow">
                 <span className="unlockChecklistBox" aria-hidden="true" />
                 <div className="unlockChecklistRequirementBody">
                   <p className="unlockChecklistRequirement">{requirement}</p>
-                  {plan.statusThai && <p className="unlockChecklistStatus">สถานะ: {plan.statusThai}</p>}
                 </div>
               </div>
               {(plan.originalText || suggestionText) && (
                 <div className="unlockChecklistSuggestion">
-                  <p className="unlockChecklistSuggestionLabel">ข้อเสนอแนะ:</p>
-                  {plan.originalText && (
-                    <p className="unlockChecklistOriginal">
-                      ลองเปลี่ยนประโยคที่คุณพูดว่า <span>{plan.originalText}</span>
-                    </p>
+                  {personalized ? (
+                    <>
+                      <p className="unlockChecklistOriginal">
+                        <span className="ladderStepTag">คุณพูดว่า</span>
+                        <s>{stripOuterQuotes(plan.originalText || '')}</s>
+                      </p>
+                      <p className="unlockChecklistImproved">
+                        <span className="ladderStepTag is-good">พูดแบบนี้แทน</span>
+                        {stripOuterQuotes(suggestionText)}
+                      </p>
+                      {plan.reasonThai && <p className="unlockChecklistWhy">{plan.reasonThai}</p>}
+                    </>
+                  ) : (
+                    <>
+                      <p className="unlockChecklistSuggestionLabel">ข้อเสนอแนะ:</p>
+                      {suggestionText && (
+                        <p className="unlockChecklistImproved">{renderReportEmphasis(suggestionText)}</p>
+                      )}
+                    </>
                   )}
-                  {suggestionText && (
-                    <p className="unlockChecklistImproved">
-                      ให้เป็น <strong>{suggestionText}</strong>
-                    </p>
+                  {onSavePlan && (personalized || suggestionText) && (
+                    <button
+                      type="button"
+                      className="ladderSaveBtn"
+                      onClick={() =>
+                        onSavePlan({
+                          quote: plan.originalText || plan.quote,
+                          fix: suggestionText,
+                          originalText: plan.originalText,
+                          improvedText: suggestionText
+                        })
+                      }
+                    >
+                      ＋ บันทึกลง Notebook
+                    </button>
                   )}
                 </div>
               )}
@@ -30714,7 +30747,17 @@ function App() {
                                               </div>
                                             </div>
                                           )}
-                                          {renderUnlockChecklist(String(key), targetBand, report.plusOneChecklist || [])}
+                                          {renderUnlockChecklist(
+                                            String(key),
+                                            targetBand,
+                                            report.plusOneChecklist || [],
+                                            (plan) =>
+                                              savePlanToNotebook({
+                                                criterion: label,
+                                                quote: plan.originalText || plan.quote,
+                                                fix: plan.improvedText || plan.fix || ''
+                                              })
+                                          )}
                                         </div>
                                       </section>
                                     )

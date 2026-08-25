@@ -1062,8 +1062,8 @@ ${Array.isArray(questionBreakdown) && questionBreakdown.length
 const unlockRewritePrompt = ({ testMode, criterionLabel, targetBand, requirements, punctuatedTranscript, questionBreakdown }) => `
 You are an English Plan IELTS Speaking coach.
 
-The learner needs to reach Band ${targetBand} for ${criterionLabel}. For EACH requirement below,
-find one sentence the learner actually said and rewrite it so that it satisfies that requirement.
+The learner needs to reach Band ${targetBand} for ${criterionLabel}. Pick 1 to 4 portions of what
+the learner ACTUALLY said and rewrite each one so it would help unlock Band ${targetBand}.
 
 Return only valid JSON with this schema:
 {
@@ -1077,16 +1077,18 @@ Return only valid JSON with this schema:
   ]
 }
 
-Requirements (use this exact wording in "requirement"):
+The Band ${targetBand} criteria to aim for (as guidance — you do NOT have to cover every one, and you do
+not have to reuse this wording):
 ${requirements.map((item, index) => `[${index}] ${item}`).join('\n')}
 
 Rules:
-- Return one item per requirement, in the same order, at most ${requirements.length}.
-- originalText MUST be copied verbatim from the learner transcript — one full sentence, no edits, no ellipsis.
-- Pick the sentence that best demonstrates the gap for THAT requirement; do not reuse the same originalText for two items.
-- If no sentence is a good fit for a requirement, omit that item entirely rather than inventing one.
-- improvedText is the SAME idea rewritten in natural spoken English so it now meets the requirement.
+- Return between 1 and 4 items — only the most useful fixes. Do not pad the list.
+- Choose the portions of the transcript where a rewrite would most clearly raise the ${criterionLabel} band.
+- originalText MUST be copied verbatim from the learner transcript — one clause or one full sentence, no edits, no ellipsis.
+- Never reuse the same originalText for two items.
+- improvedText is the SAME idea rewritten in natural spoken English so it now reaches Band ${targetBand}.
 - Keep improvedText close to the learner's own content and length. It must sound sayable out loud, not like a written essay.
+- "requirement" is a SHORT Thai label (a few words) naming what this fix improves, e.g. "ใช้ complex sentence", "เพิ่มคำเชื่อม", "ยกระดับคำศัพท์".
 - reasonThai explains in Thai what changed and why it earns the higher band, in one or two sentences.
 - Use the polite Thai register with "ครับ" and never "ค่ะ".
 
@@ -7468,6 +7470,11 @@ const requireAuth = async (req, res, next) => {
       return next()
     }
     const { user, profile } = await verifySupabaseAccessToken(token)
+    // A valid token only proves the person signed in (e.g. via Google). It does
+    // NOT mean the owner approved them. Enforce the approval gate here so an
+    // unapproved learner cannot read content straight from the API, bypassing
+    // the UI. Admins are exempted inside ensureActiveStudentAccess.
+    ensureActiveStudentAccess(profile)
     req.auth = { accessToken: token, user, profile }
     next()
   } catch (error) {
@@ -8420,6 +8427,25 @@ const buildChecklistUnlockItems = ({
   unlockRewrites
 }) => {
   const targetBand = getNextBandTarget(currentBand)
+  // Prefer the personalised path: 1-4 portions the learner actually said, each
+  // with its rewrite. These render as ✗ struck-through original / ✓ green
+  // suggestion with a Save button, which is what the unlock section is for.
+  const rewrites = Array.isArray(unlockRewrites) ? unlockRewrites : []
+  if (rewrites.length) {
+    return rewrites.slice(0, MAX_UNLOCK_ITEMS).map((rewrite) => ({
+      requirement: rewrite.requirement || '',
+      statusThai: rewrite.reasonThai || '',
+      quote: rewrite.originalText,
+      fix: rewrite.improvedText,
+      originalText: rewrite.originalText,
+      improvedText: rewrite.improvedText,
+      reasonThai: rewrite.reasonThai || '',
+      isPersonalized: true
+    }))
+  }
+
+  // Fallback only when no verified rewrite came back: show the next-band
+  // requirements as generic coaching lines.
   const requirements = getNextBandRequirementBank({
     criterion,
     targetBand,
@@ -8433,21 +8459,6 @@ const buildChecklistUnlockItems = ({
       questionBreakdown,
       plusOnePlan
     })
-    // Prefer the learner's own sentence + its rewrite; fall back to the generic
-    // coaching line only when no verified rewrite came back for this requirement.
-    const rewrite = unlockRewrites instanceof Map ? unlockRewrites.get(requirement) : null
-    if (rewrite) {
-      return {
-        requirement,
-        statusThai: rewrite.reasonThai || detail.statusThai || '',
-        quote: rewrite.originalText,
-        fix: rewrite.improvedText,
-        originalText: rewrite.originalText,
-        improvedText: rewrite.improvedText,
-        reasonThai: rewrite.reasonThai || '',
-        isPersonalized: true
-      }
-    }
     return {
       requirement,
       statusThai: detail.statusThai || '',
@@ -9756,11 +9767,11 @@ const buildUnlockRewrites = async ({
   usageTracker
 }) => {
   const wanted = (Array.isArray(requirements) ? requirements : []).slice(0, MAX_UNLOCK_ITEMS)
-  if (!wanted.length) return new Map()
+  if (!wanted.length) return []
   const comparableSource = normalizeForQuoteMatch(
     [punctuatedTranscript, ...(Array.isArray(questionBreakdown) ? questionBreakdown : []).map((item) => item?.punctuatedTranscript || item?.rawTranscript || '')].join(' ')
   )
-  if (!comparableSource) return new Map()
+  if (!comparableSource) return []
 
   try {
     const payload = await callGeminiCleanupJson(
@@ -9775,33 +9786,45 @@ const buildUnlockRewrites = async ({
       usageTracker
     )
     const items = Array.isArray(payload?.items) ? payload.items : []
-    const byRequirement = new Map()
-    const usedOriginals = new Set()
-
-    for (const item of items) {
-      const requirement = String(item?.requirement || '').replace(/\s+/g, ' ').trim()
-      const originalText = String(item?.originalText || '').replace(/\s+/g, ' ').trim()
-      const improvedText = String(item?.improvedText || '').replace(/\s+/g, ' ').trim()
-      if (!requirement || !originalText || !improvedText) continue
-      const matchedRequirement = wanted.find((entry) => normalizeForQuoteMatch(entry) === normalizeForQuoteMatch(requirement))
-      if (!matchedRequirement || byRequirement.has(matchedRequirement)) continue
-      // The quote has to be something the learner really said.
-      const comparableQuote = normalizeForQuoteMatch(originalText)
-      if (!comparableQuote || !comparableSource.includes(comparableQuote)) continue
-      if (usedOriginals.has(comparableQuote)) continue
-      // A "rewrite" identical to the original teaches nothing.
-      if (normalizeForQuoteMatch(improvedText) === comparableQuote) continue
-      usedOriginals.add(comparableQuote)
-      byRequirement.set(matchedRequirement, {
-        originalText,
-        improvedText,
-        reasonThai: normalizeThaiRegisterText(String(item?.reasonThai || '').trim())
-      })
-    }
-    return byRequirement
+    return filterUnlockRewrites(items, comparableSource)
   } catch {
-    return new Map()
+    return []
   }
+}
+
+/**
+ * Keep only the model's rewrites that quote the learner verbatim. The model now
+ * picks 1-4 portions of the learner's own transcript rather than answering a
+ * fixed requirement bank, so we preserve the order it returned and drop any
+ * quote that isn't really in the transcript (a hallucination) or that "rewrites"
+ * a sentence into itself (teaches nothing). Pure and side-effect free so it can
+ * be unit tested without calling the model.
+ */
+const filterUnlockRewrites = (items, comparableSource) => {
+  const rewrites = []
+  const usedOriginals = new Set()
+
+  for (const item of Array.isArray(items) ? items : []) {
+    const requirement = String(item?.requirement || '').replace(/\s+/g, ' ').trim()
+    const originalText = String(item?.originalText || '').replace(/\s+/g, ' ').trim()
+    const improvedText = String(item?.improvedText || '').replace(/\s+/g, ' ').trim()
+    if (!originalText || !improvedText) continue
+    // The quote has to be something the learner really said.
+    const comparableQuote = normalizeForQuoteMatch(originalText)
+    if (!comparableQuote || !comparableSource.includes(comparableQuote)) continue
+    if (usedOriginals.has(comparableQuote)) continue
+    // A "rewrite" identical to the original teaches nothing.
+    if (normalizeForQuoteMatch(improvedText) === comparableQuote) continue
+    usedOriginals.add(comparableQuote)
+    rewrites.push({
+      requirement: normalizeThaiRegisterText(requirement),
+      originalText,
+      improvedText,
+      reasonThai: normalizeThaiRegisterText(String(item?.reasonThai || '').trim())
+    })
+    if (rewrites.length >= MAX_UNLOCK_ITEMS) break
+  }
+  return rewrites
 }
 
 /**
@@ -16468,3 +16491,12 @@ if (isDirectRun) {
 }
 
 export default app
+
+// Test-only surface for the personalised unlock pipeline (see
+// scripts/test-unlock-personalization.mjs). Not used by the running server.
+export const __testables = {
+  filterUnlockRewrites,
+  buildChecklistUnlockItems,
+  normalizeForQuoteMatch,
+  getNextBandTarget
+}
