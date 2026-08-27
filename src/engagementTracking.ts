@@ -59,6 +59,21 @@ export const shouldCountEngagement = ({
   lastInteractionAt: number
 }) => visible && now - lastInteractionAt <= ENGAGEMENT_IDLE_MS
 
+// Watching a video or listening to audio produces no pointer/keyboard events, so
+// input-only activity detection silently drops that time (it was why listening
+// recorded nothing). Treat any playing media element as live engagement.
+export const isMediaPlaying = () => {
+  if (typeof document === 'undefined') return false
+  const elements = document.querySelectorAll('video, audio')
+  for (const node of Array.from(elements)) {
+    const media = node as HTMLMediaElement
+    if (!media.paused && !media.ended && media.currentTime > 0 && media.readyState >= 2) {
+      return true
+    }
+  }
+  return false
+}
+
 export const formatEngagementDuration = (seconds: number) => {
   const safe = Math.max(0, Math.round(Number(seconds) || 0))
   const hours = Math.floor(safe / 3600)
@@ -159,11 +174,14 @@ export function useEngagementTracker({
       const currentAuth = authRef.current
       const currentContext = contextRef.current
       const isVisible = document.visibilityState === 'visible'
-      const isActive = shouldCountEngagement({
-        visible: isVisible,
-        now,
-        lastInteractionAt: lastInteractionRef.current
-      })
+      const isActive =
+        shouldCountEngagement({
+          visible: isVisible,
+          now,
+          lastInteractionAt: lastInteractionRef.current
+        }) ||
+        // Keep the segment alive while media plays, even without input events.
+        (isVisible && isMediaPlaying())
 
       if (!currentAuth?.accessToken || !currentContext) {
         stopSegment()
@@ -217,7 +235,17 @@ export function useEngagementTracker({
     }
 
     const handlePageHide = () => stopSegment(true)
-    const interactionEvents: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'touchstart', 'scroll']
+    // 'mousemove'/'wheel' capture reading and video-watching, where a learner
+    // moves the cursor or scrolls a passage but never clicks or types — without
+    // them, contemplative writing and reading time was undercounted.
+    const interactionEvents: Array<keyof WindowEventMap> = [
+      'pointerdown',
+      'keydown',
+      'touchstart',
+      'scroll',
+      'mousemove',
+      'wheel'
+    ]
     interactionEvents.forEach((eventName) =>
       window.addEventListener(eventName, noteInteraction, { passive: true })
     )

@@ -552,7 +552,42 @@
   overflow: hidden;
 }
 
+/* A blue accent edge so sample-video cards read as "featured". */
+.speakingTopicBank .thumbnailCard.thumbnailCard--has-pdoy-sample::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: #004aad;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* "🎬 ดูตัวอย่างการตอบจากพี่ดอย" — the prioritised, highlighted cue. */
+.speakingTopicBank .sgSampleCallout {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 6px;
+  padding: 4px 11px;
+  border-radius: 10px;
+  background: #eaf1fd;
+  color: #004aad;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
 @media (max-width: 720px) {
+  .speakingTopicBank .sgSampleCallout {
+    white-space: normal;
+  }
+
   .speakingP2SamplePanelHeader {
     flex-direction: column;
     align-items: flex-start;

@@ -21,7 +21,7 @@ create table if not exists public.profiles (
 
 create table if not exists public.learner_access (
   user_id uuid primary key references public.profiles(id) on delete cascade,
-  status text not null default 'active' check (status in ('active', 'inactive')),
+  status text not null default 'inactive' check (status in ('active', 'inactive')),
   starts_at timestamptz not null default timezone('utc', now()),
   expires_at timestamptz,
   feedback_credits integer not null default 50 check (feedback_credits >= 0),
@@ -33,6 +33,12 @@ create table if not exists public.learner_access (
 
 alter table if exists public.learner_access
   add column if not exists enabled_modules text[] not null default '{speaking,reading,listening}';
+
+-- New accounts must wait for owner approval. Applies to existing databases where
+-- the column was created with the old 'active' default. Only changes the default
+-- for FUTURE inserts (e.g. Google sign-ins); existing rows are left untouched.
+alter table if exists public.learner_access
+  alter column status set default 'inactive';
 
 create table if not exists public.user_notebooks (
   user_id uuid primary key references public.profiles(id) on delete cascade,

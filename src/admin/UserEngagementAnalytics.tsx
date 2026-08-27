@@ -445,7 +445,9 @@ function ActorJourneyDrawer({
 }
 
 export function UserEngagementAnalytics({ accessToken }: { accessToken: string }) {
-  const [period, setPeriod] = useState<EngagementPeriod>('day')
+  // Default to All Time: a Day default made every learner who studied on a
+  // different day read as absent/0, which looked like broken tracking.
+  const [period, setPeriod] = useState<EngagementPeriod>('total')
   const [day, setDay] = useState(() => new Date().toISOString().slice(0, 10))
   const [week, setWeek] = useState(() => new Date().toISOString().slice(0, 10))
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7))

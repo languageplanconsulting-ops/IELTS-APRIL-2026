@@ -3,6 +3,7 @@ import {
   ENGAGEMENT_IDLE_MS,
   buildEngagementContextKey,
   formatEngagementDuration,
+  isMediaPlaying,
   shouldCountEngagement
 } from '../src/engagementTracking'
 
@@ -22,6 +23,12 @@ assert.equal(
   shouldCountEngagement({ visible: false, now, lastInteractionAt: now }),
   false,
   'Hidden tabs must never count.'
+)
+
+assert.equal(
+  isMediaPlaying(),
+  false,
+  'isMediaPlaying must be safe (and false) when there is no DOM.'
 )
 
 assert.equal(formatEngagementDuration(0), '0s')

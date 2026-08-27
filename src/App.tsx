@@ -147,6 +147,7 @@ import {
   resolveSpeakingPart2SampleVideo,
   type SpeakingPart2SampleVideo
 } from './speakingPart2SampleVideos'
+import { resolveSpeakingPart3SampleVideo } from './speakingPart3SampleVideos'
 import { speakingSampleSubtitleNotesToVocabularyGuideItems } from './speakingSampleSubtitleNotes'
 import {
   ADMIN_VIDEO_STUDIO_STEPS,
@@ -819,6 +820,7 @@ const topicHasSpeakingSampleInBank = (
   }
   if (mode === 'part1' || mode === 'part3') {
     if (hasUploadedSpeakingSampleAsset(assets, buildSpeakingSampleTopicId(mode, topic.id))) return true
+    if (mode === 'part3' && resolveSpeakingPart3SampleVideo(topic.id)) return true
     const questions = getSpeakingTopicQuestionList(topic)
     return questions.some((_, index) =>
       hasUploadedSpeakingSampleAsset(assets, buildSpeakingSampleQuestionId(mode, topic.id, index))
@@ -10964,6 +10966,14 @@ function App() {
     if (topicSample) {
       return [{ id: `${part}-topic-sample`, label: `${partLabel} model answer`, sample: topicSample }]
     }
+    // Fall back to the Drive-hosted Part 3 reels when nothing has been uploaded
+    // for this topic. These answer the whole topic, so they are topic-level.
+    if (part === 'part3') {
+      const driveSample = resolveSpeakingPart3SampleVideo(topic.id)
+      if (driveSample) {
+        return [{ id: 'part3-topic-sample', label: `${partLabel} model answer`, sample: driveSample }]
+      }
+    }
     return questions
       .map((question, index) => {
         const sample = getUploadedSpeakingSampleForQuestion(
@@ -16317,7 +16327,7 @@ function App() {
       (attemptStage === 'prep' || attemptStage === 'speaking') &&
       !window.confirm('Full Exam จะถูกตัดเครดิตแม้หยุดกลางคัน ต้องการออกตอนนี้ใช่ไหม?')
     ) {
-      return
+      return false
     }
     setTranscript('')
     setInterimTranscript('')
@@ -16366,7 +16376,79 @@ function App() {
       window.clearInterval(pauseIntervalRef.current)
       pauseIntervalRef.current = null
     }
+    return true
   }
+
+  // ── In-app browser history ───────────────────────────────────────────────
+  // The whole app is one component that switches "areas" with useState, so the
+  // browser only ever has the single page-load entry — pressing Back leaves the
+  // app entirely (back to the marketing landing page). We give each area its own
+  // history entry so Back walks: attempt → topic bank → part hub → home, and
+  // only leaves the app once you Back past home.
+  const navSnapshot = useMemo(
+    () => ({
+      page: activePage,
+      entryMode: activePage === 'workspace' ? speakingEntryMode : null,
+      mode: selectedTestMode,
+      inAttempt: activePage === 'workspace' && attemptStage !== 'idle',
+    }),
+    [activePage, speakingEntryMode, selectedTestMode, attemptStage]
+  )
+  const navKey = `${navSnapshot.page}|${navSnapshot.entryMode}|${navSnapshot.mode}|${navSnapshot.inAttempt}`
+  const navReadyRef = useRef(false)
+  const navSuppressPushRef = useRef(false)
+  const currentNavRef = useRef(navSnapshot)
+  const resetSessionRef = useRef(resetSession)
+  useEffect(() => {
+    resetSessionRef.current = resetSession
+  })
+
+  // Push a history entry whenever the user navigates forward to a new area.
+  useEffect(() => {
+    currentNavRef.current = navSnapshot
+    if (!navReadyRef.current) {
+      navReadyRef.current = true
+      window.history.replaceState({ nav: navSnapshot }, '')
+      return
+    }
+    if (navSuppressPushRef.current) {
+      navSuppressPushRef.current = false
+      return
+    }
+    window.history.pushState({ nav: navSnapshot }, '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navKey])
+
+  // When the user presses Back/Forward, restore the area from the popped entry.
+  useEffect(() => {
+    const onPopState = (event: PopStateEvent) => {
+      const target = ((event.state && event.state.nav) as typeof navSnapshot | undefined) ?? {
+        page: 'home' as AppPage,
+        entryMode: null,
+        mode: 'part1' as SpeakingTestMode,
+        inAttempt: false,
+      }
+      // Leaving a live attempt → tear it down (may confirm for a full mock).
+      if (currentNavRef.current.inAttempt && !target.inAttempt) {
+        const didReset = resetSessionRef.current()
+        if (!didReset) {
+          // User cancelled the exit — restore the history position we just left.
+          window.history.pushState({ nav: currentNavRef.current }, '')
+          return
+        }
+      }
+      navSuppressPushRef.current = true
+      setActivePage(target.page)
+      if (target.page === 'workspace') {
+        setSelectedTestMode(target.mode)
+        setSpeakingEntryMode(target.entryMode)
+      } else {
+        setSpeakingEntryMode(null)
+      }
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
 
   const startMicCheck = async () => {
     setMicCheckStatus('recording')
@@ -29223,6 +29305,7 @@ function App() {
               </div>
             ) : (
             <>
+              {!speakingEntryMode && (
               <div className="writingGuideHubShell speakingHubShell">
                 <div className="writingGuideHubIntro">
                   <p className="wlpKicker">IELTS Speaking · English Plan Institute</p>
@@ -29361,9 +29444,13 @@ function App() {
                   </div>
                 )}
               </div>
+              )}
 
               {speakingEntryMode && <div className="speakingTopicBank" ref={speakingTopicBankRef} role="region" aria-label="Speaking question bank">
                 <div className="writingGuideFlowHead speakingBankHead">
+                  <button type="button" className="writingGuideFlowBack" onClick={() => window.history.back()}>
+                    ← กลับหน้าเลือกพาร์ต
+                  </button>
                   <p className="wlpKicker">
                     {speakingEntryMode === 'full'
                       ? 'Full Mock · คลังหัวข้อ'
@@ -29486,8 +29573,12 @@ function App() {
                                   {hasAttempted
                                     ? `Latest score: ${latestScore.toFixed(1)}`
                                     : 'Not attempted yet'}
-                                  {topicHasSpeakingSample ? ' · มี sample video' : ''}
                                 </span>
+                                {topicHasSpeakingSample && (
+                                  <span className="sgSampleCallout">
+                                    🎬 ดูตัวอย่างการตอบจากพี่ดอย
+                                  </span>
+                                )}
                               </span>
                               <span className="sgTopicTicketActions">
                                 {hasAttempted && (
@@ -29529,7 +29620,7 @@ function App() {
           {attemptStage !== 'idle' && activeTopic && (
             <div className="attemptFlow" data-stage={attemptStage}>
               <div className="writingGuideFlowHead speakingAttemptHead">
-                <button type="button" className="writingGuideFlowBack" onClick={resetSession}>
+                <button type="button" className="writingGuideFlowBack" onClick={() => window.history.back()}>
                   ← กลับคลังหัวข้อ
                 </button>
                 <p className="wlpKicker">
@@ -29953,7 +30044,7 @@ function App() {
                     <button type="button" className="primaryReadyBtn" onClick={() => void skipPreparation()}>
                       {isTrialSpeakingFlow ? 'ฉันพร้อมแล้ว เริ่ม Trial ตอนนี้' : "I'm ready"}
                     </button>
-                    <button type="button" className="secondary cancelBtn" onClick={resetSession}>
+                    <button type="button" className="secondary cancelBtn" onClick={() => window.history.back()}>
                       {isTrialSpeakingFlow ? 'ยกเลิก' : 'Cancel'}
                     </button>
                   </div>
@@ -29969,7 +30060,7 @@ function App() {
                     </div>
                   )}
                   <div className="speakingTopToolbar">
-                    <button type="button" className="writingGuideFlowBack dangerBtn" onClick={resetSession}>
+                    <button type="button" className="writingGuideFlowBack dangerBtn" onClick={() => window.history.back()}>
                       Exit Exam
                     </button>
                     <div className="assessmentInfoPill">
@@ -31109,8 +31200,7 @@ function App() {
                             window.location.href = 'https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts'
                             return
                           }
-                          setSelectedTestMode(selectedTestMode)
-                          resetSession()
+                          window.history.back()
                         }}
                       >
                         <span className="nextStepIcon">{isTrialUser ? '🚀' : '🔄'}</span>
@@ -31129,7 +31219,7 @@ function App() {
                       <button
                         type="button"
                         className="nextStepCard"
-                        onClick={isTrialUser ? handleLogout : resetSession}
+                        onClick={isTrialUser ? handleLogout : () => window.history.back()}
                       >
                         <span className="nextStepIcon">{isTrialUser ? '👋' : '📚'}</span>
                         <span className="nextStepTitle">{isTrialUser ? 'ออกจาก Trial' : 'เลือก Topic ใหม่'}</span>

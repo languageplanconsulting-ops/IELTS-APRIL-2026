@@ -4,15 +4,34 @@
     {
       "name": "dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev:client"],
+      "runtimeArgs": [
+        "run",
+        "dev:client"
+      ],
       "port": 5173,
       "autoPort": true
     },
     {
       "name": "api",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev:api"],
+      "runtimeArgs": [
+        "run",
+        "dev:api"
+      ],
       "port": 8787
+    },
+    {
+      "name": "speaking-harness",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "--yes",
+        "serve",
+        "--no-clipboard",
+        "-l",
+        "4321",
+        "/private/tmp/claude-501/-Users-natchanon-IELTS-SPEAKING/0617b8bb-32c3-4d0a-87e7-8eefacab5a78/scratchpad/harness"
+      ],
+      "port": 4321
     }
   ]
 }
