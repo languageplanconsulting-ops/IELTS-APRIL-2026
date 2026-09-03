@@ -18,6 +18,8 @@ export type NotebookEntriesViewProps = {
   selectedSection: string
   onSelectSection: (section: string) => void
   filteredNotebookEntries: NotebookEntryLike[]
+  /** Per-tab totals, so the tabs show where the saved work actually is. */
+  sectionCounts?: Record<string, number>
   readOnly?: boolean
   onRemoveEntry?: (entryId: string) => void
   onUpdateNote?: (entryId: string, note: string) => void
@@ -40,6 +42,7 @@ export function NotebookEntriesView({
   selectedSection,
   onSelectSection,
   filteredNotebookEntries,
+  sectionCounts,
   readOnly = false,
   onRemoveEntry,
   onUpdateNote,
@@ -49,18 +52,22 @@ export function NotebookEntriesView({
   return (
     <>
       <div className="notebookTabs" role="tablist" aria-label="Notebook sections">
-        {notebookSectionTabs.map((sectionName) => (
-          <button
-            key={sectionName}
-            type="button"
-            role="tab"
-            aria-selected={selectedSection === sectionName}
-            className={selectedSection === sectionName ? 'active' : ''}
-            onClick={() => onSelectSection(sectionName)}
-          >
-            {sectionName}
-          </button>
-        ))}
+        {notebookSectionTabs.map((sectionName) => {
+          const count = sectionCounts?.[sectionName] ?? 0
+          return (
+            <button
+              key={sectionName}
+              type="button"
+              role="tab"
+              aria-selected={selectedSection === sectionName}
+              className={selectedSection === sectionName ? 'active' : ''}
+              onClick={() => onSelectSection(sectionName)}
+            >
+              {sectionName}
+              {count > 0 && <span className="notebookTabCount">{count}</span>}
+            </button>
+          )
+        })}
       </div>
 
       {!readOnly && onCreateCustomSection ? (

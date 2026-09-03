@@ -5186,6 +5186,27 @@ body,
   color: #fff;
 }
 
+/* Count badge on each notebook tab. Specificity kept above the blanket
+   `.notebookTabs button` rules so the pill keeps its own colours. */
+.notebookTabs button .notebookTabCount {
+  display: inline-block;
+  min-width: 18px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e8f0fe;
+  color: var(--brand-primary);
+  font-size: 0.75em;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+
+.notebookTabs button.active .notebookTabCount {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--brand-primary);
+}
+
 .customSectionRow {
   display: flex;
   gap: 8px;

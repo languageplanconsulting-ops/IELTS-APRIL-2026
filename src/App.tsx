@@ -6793,6 +6793,31 @@ const mergeNotebookEntries = (remote: NotebookEntry[], local: NotebookEntry[]) =
 const mergeNotebookCustomSections = (remote: string[], local: string[]) =>
   Array.from(new Set([...remote, ...local].map((name) => String(name || '').trim()).filter(Boolean)))
 
+/** Does this entry belong under the tab labelled `section`? Mirrors the tab
+ *  filter exactly: built-in sections match by name, custom ones by label. */
+const notebookEntryMatchesSection = (
+  entry: { section: string; customSectionName?: string },
+  section: string
+) =>
+  section === 'custom'
+    ? entry.section === 'custom'
+    : entry.section === section ||
+      (entry.section === 'custom' && entry.customSectionName === section)
+
+/** Per-tab totals. Without these the tabs give no hint where the saved work is,
+ *  so a student landing on an empty Speaking tab reads the "no items" copy as
+ *  "nothing I saved was kept". */
+const countNotebookEntriesBySection = (
+  entries: { section: string; customSectionName?: string }[],
+  sections: string[]
+): Record<string, number> => {
+  const counts: Record<string, number> = {}
+  for (const section of sections) {
+    counts[section] = entries.filter((entry) => notebookEntryMatchesSection(entry, section)).length
+  }
+  return counts
+}
+
 const parseStoredScores = (value: string | null): Record<string, number> => {
   if (!value) return {}
   try {
@@ -7565,6 +7590,9 @@ function App() {
   const examLaunchBusyRef = useRef(false)
   const examLaunchResumeRef = useRef<((action: ExamLaunchAction) => void) | null>(null)
   const notebookLoadedRef = useRef(false)
+  /** Guards the one-shot "open on a tab that has something in it" jump so it
+   *  never fights the student's own tab clicks. Reset per hydration. */
+  const notebookAutoSectionRef = useRef(false)
   const notebookSyncTimeoutRef = useRef<number | null>(null)
   const notebookSyncedSignatureRef = useRef('')
   const readingAttemptsSyncTimeoutRef = useRef<number | null>(null)
@@ -8549,6 +8577,7 @@ function App() {
     setIsNotebookHydrating(true)
     setNotebookSyncError('')
     notebookLoadedRef.current = false
+    notebookAutoSectionRef.current = false
     notebookSyncedSignatureRef.current = ''
 
     try {
@@ -8692,6 +8721,7 @@ function App() {
       fullExamAnnouncementTimeoutRef.current = null
     }
     notebookLoadedRef.current = false
+    notebookAutoSectionRef.current = false
     notebookSyncedSignatureRef.current = ''
     readingAttemptsSyncedSignatureRef.current = ''
     listeningAttemptsSyncedSignatureRef.current = ''
@@ -11166,15 +11196,29 @@ function App() {
     [customSections]
   )
   const filteredNotebookEntries = useMemo(
-    () =>
-      notebookEntries.filter((entry) =>
-        selectedNotebookSection === 'custom'
-          ? entry.section === 'custom'
-          : entry.section === selectedNotebookSection ||
-            (entry.section === 'custom' && entry.customSectionName === selectedNotebookSection)
-      ),
+    () => notebookEntries.filter((entry) => notebookEntryMatchesSection(entry, selectedNotebookSection)),
     [notebookEntries, selectedNotebookSection]
   )
+  const notebookSectionCounts = useMemo(
+    () => countNotebookEntriesBySection(notebookEntries, notebookSectionTabs),
+    [notebookEntries, notebookSectionTabs]
+  )
+
+  // Hydration always lands the student on "speaking". If their saved work lives
+  // under Writing or a custom section, that tab is empty and the "no items yet"
+  // copy reads as "nothing was saved" — so open on the first tab that has
+  // something. One shot per hydration; their own tab clicks then stand.
+  useEffect(() => {
+    if (isNotebookHydrating || !notebookLoadedRef.current) return
+    if (notebookAutoSectionRef.current) return
+    if (notebookEntries.length === 0) return
+    notebookAutoSectionRef.current = true
+    if (notebookEntries.some((entry) => notebookEntryMatchesSection(entry, selectedNotebookSection))) return
+    const firstPopulated = notebookSectionTabs.find((section) =>
+      notebookEntries.some((entry) => notebookEntryMatchesSection(entry, section))
+    )
+    if (firstPopulated) setSelectedNotebookSection(firstPopulated)
+  }, [isNotebookHydrating, notebookEntries, notebookSectionTabs, selectedNotebookSection])
   const currentLoadingPhrase = ANALYSIS_LOADING_PHRASES[loadingPhraseCursor % ANALYSIS_LOADING_PHRASES.length]
   const latestRuntimeMessage = assessmentRuntimeMessages[assessmentRuntimeMessages.length - 1] || ''
   const roundedAssessmentProgress = Math.round(assessmentProgress)
@@ -21514,13 +21558,13 @@ function App() {
 
   const adminUserFilteredNotebookEntries = useMemo(() => {
     const entries = adminUserNotebook?.entries || []
-    return entries.filter((entry) =>
-      adminUserDetailSelectedSection === 'custom'
-        ? entry.section === 'custom'
-        : entry.section === adminUserDetailSelectedSection ||
-          (entry.section === 'custom' && entry.customSectionName === adminUserDetailSelectedSection)
-    )
+    return entries.filter((entry) => notebookEntryMatchesSection(entry, adminUserDetailSelectedSection))
   }, [adminUserNotebook, adminUserDetailSelectedSection])
+
+  const adminUserNotebookSectionCounts = useMemo(
+    () => countNotebookEntriesBySection(adminUserNotebook?.entries || [], adminUserNotebookSectionTabs),
+    [adminUserNotebook, adminUserNotebookSectionTabs]
+  )
 
   return (
     <main className="workspace">
@@ -31293,6 +31337,7 @@ function App() {
             selectedSection={selectedNotebookSection}
             onSelectSection={setSelectedNotebookSection}
             filteredNotebookEntries={filteredNotebookEntries}
+            sectionCounts={notebookSectionCounts}
             readOnly={false}
             onRemoveEntry={removeNotebookEntry}
             onUpdateNote={updateNotebookPersonalNote}
@@ -31970,6 +32015,7 @@ function App() {
                       selectedSection={adminUserDetailSelectedSection}
                       onSelectSection={setAdminUserDetailSelectedSection}
                       filteredNotebookEntries={adminUserFilteredNotebookEntries}
+                      sectionCounts={adminUserNotebookSectionCounts}
                       readOnly
                       onOpenSavedReport={(snapshot) =>
                         snapshot?.kind === 'writing' || snapshot?.kind === 'writing-task2'
