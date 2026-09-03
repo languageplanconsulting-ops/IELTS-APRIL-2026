@@ -6807,6 +6807,21 @@ const notebookEntryMatchesSection = (
 /** Per-tab totals. Without these the tabs give no hint where the saved work is,
  *  so a student landing on an empty Speaking tab reads the "no items" copy as
  *  "nothing I saved was kept". */
+/** Any custom label that entries actually carry. A tab only exists if its name
+ *  is in customSections, so a label that went missing there (a failed section
+ *  sync, or the 50-section sanitiser cap) would leave those entries with no tab
+ *  to click — saved work the student can never reach. Derive from the entries
+ *  themselves as a backstop. */
+const notebookSectionsFromEntries = (entries: { section: string; customSectionName?: string }[]) =>
+  Array.from(
+    new Set(
+      entries
+        .filter((entry) => entry.section === 'custom')
+        .map((entry) => String(entry.customSectionName || '').trim())
+        .filter(Boolean)
+    )
+  )
+
 const countNotebookEntriesBySection = (
   entries: { section: string; customSectionName?: string }[],
   sections: string[]
@@ -11192,8 +11207,19 @@ function App() {
   }, [isFullExamMode, fullExamPhaseSeconds, remainingTalkSeconds])
 
   const notebookSectionTabs = useMemo(
-    () => ['speaking', 'writing', 'writing essay', 'listening', 'reading', ...customSections],
-    [customSections]
+    () =>
+      Array.from(
+        new Set([
+          'speaking',
+          'writing',
+          'writing essay',
+          'listening',
+          'reading',
+          ...customSections,
+          ...notebookSectionsFromEntries(notebookEntries)
+        ])
+      ),
+    [customSections, notebookEntries]
   )
   const filteredNotebookEntries = useMemo(
     () => notebookEntries.filter((entry) => notebookEntryMatchesSection(entry, selectedNotebookSection)),
@@ -21545,14 +21571,18 @@ function App() {
   }
 
   const adminUserNotebookSectionTabs = useMemo(
-    () => [
-      'speaking',
-      'writing',
-      'writing essay',
-      'listening',
-      'reading',
-      ...(adminUserNotebook?.customSections || [])
-    ],
+    () =>
+      Array.from(
+        new Set([
+          'speaking',
+          'writing',
+          'writing essay',
+          'listening',
+          'reading',
+          ...(adminUserNotebook?.customSections || []),
+          ...notebookSectionsFromEntries(adminUserNotebook?.entries || [])
+        ])
+      ),
     [adminUserNotebook]
   )
 
