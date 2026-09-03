@@ -7474,7 +7474,6 @@ function App() {
   const [selectedExpectedScore, setSelectedExpectedScore] = useState<string>('')
   const [answerReviewModal, setAnswerReviewModal] = useState<AnswerReviewModalState | null>(null)
   const [scriptReviewModal, setScriptReviewModal] = useState<ScriptReviewModalState | null>(null)
-  const isStudentNotebookLocked = authSession?.role === 'student'
   const isTrialRouteRequested = useMemo(() => {
     if (typeof window === 'undefined') return false
     const params = new URLSearchParams(window.location.search)
@@ -11874,11 +11873,14 @@ function App() {
   ])
 
   useEffect(() => {
-    if (!isStudentNotebookLocked) return
-    if (['notebook', 'admin'].includes(activePage)) {
+    // Students/trials must never land on the admin panel. Deliberately not
+    // keyed on `role !== 'admin'`: while auth is rehydrating the role is
+    // undefined, and that would bounce a real admin off their own page.
+    if (authSession?.role !== 'student' && authSession?.role !== 'trial') return
+    if (activePage === 'admin') {
       setActivePage('home')
     }
-  }, [activePage, isStudentNotebookLocked])
+  }, [activePage, authSession?.role])
 
   // A locked skill used to bounce straight back to Home, which looked like the
   // click had simply failed. The page now stays open and renders
@@ -21646,13 +21648,11 @@ function App() {
                 <button
                   className={activePage === 'notebook' ? 'active' : ''}
                   onClick={() => {
-                    if (isStudentNotebookLocked) return
                     setActivePage('notebook')
                   }}
                   type="button"
-                  disabled={isStudentNotebookLocked}
                 >
-                  {isStudentNotebookLocked ? 'Notebook (Coming Soon)' : 'Notebook'}
+                  Notebook
                 </button>
               </>
             )}
@@ -21828,8 +21828,8 @@ function App() {
                   <a className="homePlacementButton" href="/placement">
                     วัดระดับฟรี · Placement Test
                   </a>
-                  <button type="button" disabled>
-                    Notebook (Coming Soon)
+                  <button type="button" onClick={() => setActivePage('notebook')}>
+                    Notebook
                   </button>
                   {authSession.role === 'admin' ? (
                     <button
@@ -31210,11 +31210,14 @@ function App() {
                       <button
                         type="button"
                         className="nextStepCard"
-                        disabled
+                        disabled={isTrialUser}
+                        onClick={isTrialUser ? undefined : () => setActivePage('notebook')}
                       >
                         <span className="nextStepIcon">📓</span>
-                        <span className="nextStepTitle">Notebook (Coming Soon)</span>
-                        <span className="nextStepDesc">ตอนนี้โฟกัสที่ Speaking ก่อน</span>
+                        <span className="nextStepTitle">Notebook</span>
+                        <span className="nextStepDesc">
+                          {isTrialUser ? 'ปลดล็อกคอร์สเต็มเพื่อเก็บโน้ต' : 'ดูคำแนะนำ +1 band ที่บันทึกไว้'}
+                        </span>
                       </button>
                       <button
                         type="button"
