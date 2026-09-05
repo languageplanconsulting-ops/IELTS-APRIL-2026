@@ -398,6 +398,19 @@ type AdminAssessmentReportSummary = {
   objectPath: string
 }
 
+type AdminSpeakingLearnerActivity = {
+  key: string
+  userId: string | null
+  learnerName: string
+  learnerEmail: string
+  attempts: AdminAssessmentReportSummary[]
+  attemptCount: number
+  latestBand: number
+  averageBand: number
+  totalCostUsd: number
+  lastAttemptAt: string | null
+}
+
 type AdminActivityEvent = {
   id: string
   page: string
@@ -3007,7 +3020,7 @@ const ADMIN_WORKSPACE_SECTIONS: Array<{
   { id: 'learners', label: 'Learners', shortLabel: 'LR', description: 'Access, credits, and expiry', group: 'People & Insights' },
   { id: 'analytics', label: 'Analytics', shortLabel: 'AN', description: 'Engagement, journeys, and costs', group: 'People & Insights' },
   { id: 'support', label: 'Support Inbox', shortLabel: 'SP', description: 'Student questions and issues', group: 'People & Insights' },
-  { id: 'reports', label: 'Speaking Reports', shortLabel: 'RP', description: 'Review saved attempts', group: 'People & Insights' },
+  { id: 'reports', label: 'Speaking Reports', shortLabel: 'RP', description: 'Activity, scores, and full reports', group: 'People & Insights' },
   { id: 'reading', label: 'Reading Generator', shortLabel: 'RD', description: 'Create and publish exams', group: 'Content Studio' },
   { id: 'audio', label: 'Question Audio', shortLabel: 'AU', description: 'Manage the TTS library', group: 'Content Studio' },
   { id: 'videos', label: 'Speaking Videos', shortLabel: 'VD', description: 'Record Part 2 samples', group: 'Content Studio' },
@@ -7179,6 +7192,8 @@ function App() {
   const [mySupportReports, setMySupportReports] = useState<SupportReportRecord[]>([])
   const [adminSupportReports, setAdminSupportReports] = useState<SupportReportRecord[]>([])
   const [adminAssessmentReports, setAdminAssessmentReports] = useState<AdminAssessmentReportSummary[]>([])
+  const [adminSpeakingReportQuery, setAdminSpeakingReportQuery] = useState('')
+  const [adminSpeakingReportSince, setAdminSpeakingReportSince] = useState('')
   const [, setAdminReadingPdoyProgress] = useState<AdminReadingPdoyProgressSummary[]>([])
   const [notebookSaveNotice, setNotebookSaveNotice] = useState('')
   const [practiceActionToast, setPracticeActionToast] = useState<PracticeActionToastState>(null)
@@ -7187,6 +7202,7 @@ function App() {
     text: string
     icon: string
   } | null>(null)
+  const [speakingReportSaved, setSpeakingReportSaved] = useState(false)
   const [adminLearnerNameInput, setAdminLearnerNameInput] = useState('')
   const [adminLearnerEmailInput, setAdminLearnerEmailInput] = useState('')
   const [adminLearnerPasswordInput, setAdminLearnerPasswordInput] = useState('')
@@ -7610,6 +7626,7 @@ function App() {
   const notebookAutoSectionRef = useRef(false)
   const notebookSyncTimeoutRef = useRef<number | null>(null)
   const notebookSyncedSignatureRef = useRef('')
+  const speakingReportSavedRef = useRef(false)
   const readingAttemptsSyncTimeoutRef = useRef<number | null>(null)
   const readingAttemptsSyncedSignatureRef = useRef('')
   const listeningAttemptsSyncTimeoutRef = useRef<number | null>(null)
@@ -9344,6 +9361,68 @@ function App() {
     () => adminSpeakingCostLast30Days.reduce((sum, item) => sum + item.reports, 0),
     [adminSpeakingCostLast30Days]
   )
+  const adminSpeakingFilteredReports = useMemo(() => {
+    const query = adminSpeakingReportQuery.trim().toLowerCase()
+    const sinceMs = adminSpeakingReportSince ? Date.parse(`${adminSpeakingReportSince}T00:00:00+07:00`) : 0
+    return adminAssessmentReports.filter((report) => {
+      if (sinceMs) {
+        const createdMs = Date.parse(report.createdAt || '')
+        if (!Number.isFinite(createdMs) || createdMs < sinceMs) return false
+      }
+      if (!query) return true
+      return [report.learnerName, report.learnerEmail, report.topicTitle, report.testMode, report.topicCategory].some(
+        (value) => String(value || '').toLowerCase().includes(query)
+      )
+    })
+  }, [adminAssessmentReports, adminSpeakingReportQuery, adminSpeakingReportSince])
+  const adminSpeakingLearnerActivity = useMemo<AdminSpeakingLearnerActivity[]>(() => {
+    const groups = new Map<string, AdminAssessmentReportSummary[]>()
+    for (const report of adminSpeakingFilteredReports) {
+      const key = report.userId || report.learnerEmail.trim().toLowerCase() || report.id
+      const list = groups.get(key) || []
+      list.push(report)
+      groups.set(key, list)
+    }
+    return [...groups.entries()]
+      .map(([key, attempts]) => {
+        const sorted = attempts
+          .slice()
+          .sort((a, b) => Date.parse(b.createdAt || '') - Date.parse(a.createdAt || ''))
+        const latest = sorted[0]
+        return {
+          key,
+          userId: latest?.userId || null,
+          learnerName: latest?.learnerName || 'Student',
+          learnerEmail: latest?.learnerEmail || '',
+          attempts: sorted,
+          attemptCount: sorted.length,
+          latestBand: Number(latest?.overallBand || 0),
+          averageBand: sorted.reduce((sum, item) => sum + Number(item.overallBand || 0), 0) / Math.max(sorted.length, 1),
+          totalCostUsd: sorted.reduce((sum, item) => sum + Number(item.apiCostUsd || 0), 0),
+          lastAttemptAt: latest?.createdAt || null
+        }
+      })
+      .sort((a, b) => Date.parse(b.lastAttemptAt || '') - Date.parse(a.lastAttemptAt || ''))
+  }, [adminSpeakingFilteredReports])
+  const adminSpeakingActivityStats = useMemo(() => {
+    const uniqueLearners = adminSpeakingLearnerActivity.length
+    const attemptCount = adminSpeakingFilteredReports.length
+    const totalCostUsd = adminSpeakingFilteredReports.reduce((sum, report) => sum + Number(report.apiCostUsd || 0), 0)
+    const averageBand =
+      attemptCount === 0
+        ? 0
+        : adminSpeakingFilteredReports.reduce((sum, report) => sum + Number(report.overallBand || 0), 0) / attemptCount
+    return { uniqueLearners, attemptCount, totalCostUsd, averageBand }
+  }, [adminSpeakingFilteredReports, adminSpeakingLearnerActivity])
+  const adminUserSpeakingReports = useMemo(() => {
+    if (!adminUserDetailView) return []
+    const email = adminUserDetailView.email.trim().toLowerCase()
+    return adminAssessmentReports.filter(
+      (report) =>
+        (report.userId && report.userId === adminUserDetailView.userId) ||
+        (email && report.learnerEmail.trim().toLowerCase() === email)
+    )
+  }, [adminAssessmentReports, adminUserDetailView])
   const adminSpeakingWeeklyCostPath = useMemo(
     () => buildAdminCostLinePath(adminSpeakingCostLast7Days.map((item) => item.cost)),
     [adminSpeakingCostLast7Days]
@@ -12572,7 +12651,7 @@ function App() {
     })
   }
 
-  const saveFullReportToNotebook = (report: AssessmentReport) => {
+  const saveFullReportToNotebook = (report: AssessmentReport, options?: { auto?: boolean }) => {
     const customSectionName = 'saved reports'
     const nextSections = customSectionsRef.current.includes(customSectionName)
       ? customSectionsRef.current
@@ -12603,17 +12682,28 @@ function App() {
     const nextEntries = [nextEntry, ...notebookEntriesRef.current]
     setNotebookEntries(nextEntries)
     setSelectedNotebookSection(customSectionName)
-    setNotebookSaveNotice('Added to notebook')
+    speakingReportSavedRef.current = true
+    setSpeakingReportSaved(true)
+    setNotebookSaveNotice(options?.auto ? 'Saved automatically' : 'Added to notebook')
     setReportActionToast({
       icon: '✦',
-      title: 'Saved for future revision',
-      text: 'บันทึก report เรียบร้อยแล้วครับ กลับมาทบทวนจุดอ่อนชุดนี้ได้ทุกเมื่อเลย'
+      title: options?.auto ? 'Saved automatically' : 'Saved for future revision',
+      text: options?.auto
+        ? 'ระบบเซฟ report ให้อัตโนมัติแล้วครับ แอดมินเห็นคะแนนและรายงานเต็มได้เลย ไม่ต้องกดเซฟ'
+        : 'บันทึก report เรียบร้อยแล้วครับ กลับมาทบทวนจุดอ่อนชุดนี้ได้ทุกเมื่อเลย'
     })
     void syncNotebookSnapshotToSupabase({
       entries: nextEntries,
       sections: nextSections,
-      successNotice: 'Added to notebook and synced to your account'
+      successNotice: options?.auto
+        ? 'Saved automatically and synced to your account'
+        : 'Added to notebook and synced to your account'
     })
+  }
+
+  const autoSaveSpeakingReport = (report: AssessmentResult | AssessmentReport | null | undefined) => {
+    if (!report || isTrialUser || speakingReportSavedRef.current) return
+    saveFullReportToNotebook(report as AssessmentReport, { auto: true })
   }
 
   const handleDownloadCurrentRecording = async () => {
@@ -16413,6 +16503,8 @@ function App() {
     latestAudioBlobRef.current = null
     setAttemptStage('idle')
     setAssessmentResult(null)
+    speakingReportSavedRef.current = false
+    setSpeakingReportSaved(false)
     setAssessmentError('')
     setAssessmentRuntimeMessages([])
     setAssessmentProgress(0)
@@ -17219,6 +17311,8 @@ function App() {
     setIsFullMockAssessmentLoading(effectiveMode === 'full')
     setAssessmentCountdownSeconds(effectiveMode === 'full' ? 300 : 0)
     setAssessmentError('')
+    speakingReportSavedRef.current = false
+    setSpeakingReportSaved(false)
 
     try {
       // Deliberately not gating on the health probe here: the real /api/assess call
@@ -17317,6 +17411,7 @@ function App() {
         setAssessmentProgress(100)
         setAssessmentProgressTarget(100)
         setAttemptStage('result')
+        autoSaveSpeakingReport(directResult)
         return
       }
 
@@ -17391,6 +17486,7 @@ function App() {
           setAssessmentProgress(100)
           setAssessmentProgressTarget(100)
           setAttemptStage('result')
+          autoSaveSpeakingReport(completedResult)
           resolve()
         }
 
@@ -26213,41 +26309,122 @@ function App() {
                 <div className="panel adminSectionCard adminOnly-reports">
                   <div className="adminSectionHeader">
                     <div>
-                      <p className="sectionLabel">Speaking Reports</p>
-                      <h3>All Learner Attempted Reports</h3>
+                      <p className="sectionLabel">Speaking activity</p>
+                      <h3>Learners, scores, and full reports</h3>
                     </div>
-                    <span className="adminInlineStatus">{adminAssessmentReports.length} saved</span>
+                    <span className="adminInlineStatus">{adminSpeakingActivityStats.attemptCount} attempts</span>
                   </div>
                   <p className="meta">
-                    Every completed speaking assessment is saved automatically. Open any learner attempt to review the full report in the same report UI.
+                    Every completed speaking assessment is saved. Grouped by learner so you can see all attempts, scores, estimated Gemini cost, and open the same full report the student received.
                   </p>
+                  <div className="adminAnalyticsGrid adminSpeakingActivityStats">
+                    <article className="adminAnalyticsStat">
+                      <span>Learners</span>
+                      <strong>{adminSpeakingActivityStats.uniqueLearners}</strong>
+                      <p>with at least one scored attempt</p>
+                    </article>
+                    <article className="adminAnalyticsStat">
+                      <span>Attempts</span>
+                      <strong>{adminSpeakingActivityStats.attemptCount}</strong>
+                      <p>completed speaking assessments</p>
+                    </article>
+                    <article className="adminAnalyticsStat">
+                      <span>Average band</span>
+                      <strong>
+                        {adminSpeakingActivityStats.attemptCount
+                          ? adminSpeakingActivityStats.averageBand.toFixed(1)
+                          : '—'}
+                      </strong>
+                      <p>across the filtered attempts</p>
+                    </article>
+                    <article className="adminAnalyticsStat">
+                      <span>Estimated API cost</span>
+                      <strong>{formatUsdCost(adminSpeakingActivityStats.totalCostUsd)}</strong>
+                      <p>Gemini tokens billed on these reports</p>
+                    </article>
+                  </div>
+                  <div className="adminSpeakingActivityToolbar">
+                    <label className="adminSearchField">
+                      <span>Search learners or topics</span>
+                      <input
+                        type="search"
+                        value={adminSpeakingReportQuery}
+                        onChange={(event) => setAdminSpeakingReportQuery(event.target.value)}
+                        placeholder="Name, email, topic, or Part 1 / 2 / 3"
+                      />
+                    </label>
+                    <label className="adminSearchField">
+                      <span>From date</span>
+                      <input
+                        type="date"
+                        value={adminSpeakingReportSince}
+                        onChange={(event) => setAdminSpeakingReportSince(event.target.value)}
+                      />
+                    </label>
+                    <div className="adminSpeakingDateChips">
+                      <button
+                        type="button"
+                        className={!adminSpeakingReportSince ? 'active' : ''}
+                        onClick={() => setAdminSpeakingReportSince('')}
+                      >
+                        All time
+                      </button>
+                      <button
+                        type="button"
+                        className={adminSpeakingReportSince === '2026-09-01' ? 'active' : ''}
+                        onClick={() => setAdminSpeakingReportSince('2026-09-01')}
+                      >
+                        Since 1 Sep
+                      </button>
+                    </div>
+                  </div>
                   <div className="subscriptionList adminLearnerList">
-                    {adminAssessmentReports.length === 0 ? (
-                      <p className="meta">No speaking reports have been saved yet.</p>
+                    {adminSpeakingLearnerActivity.length === 0 ? (
+                      <p className="meta">
+                        {adminAssessmentReports.length === 0
+                          ? 'No speaking reports have been saved yet.'
+                          : 'No speaking attempts match this search or date filter.'}
+                      </p>
                     ) : (
-                      adminAssessmentReports.map((report) => (
-                        <article key={`assessment-report-${report.id}`} className="subscriptionCard adminLearnerCard">
+                      adminSpeakingLearnerActivity.map((learner) => (
+                        <article key={`speaking-activity-${learner.key}`} className="subscriptionCard adminLearnerCard">
                           <div className="subscriptionTopRow">
                             <div>
-                              <h3>{report.learnerName}</h3>
-                              <p className="subscriptionEmail">{report.learnerEmail}</p>
+                              <h3>{learner.learnerName}</h3>
+                              <p className="subscriptionEmail">{learner.learnerEmail || 'No email'}</p>
                             </div>
                             <div className="adminLearnerBadges">
-                              <span className="bandPill">{report.topicCategory}</span>
-                              <span className="bandPill">Band {report.overallBand.toFixed(1)}</span>
+                              <span className="bandPill">{learner.attemptCount} attempt{learner.attemptCount === 1 ? '' : 's'}</span>
+                              <span className="bandPill">Latest {learner.latestBand.toFixed(1)}</span>
+                              <span className="bandPill">Avg {learner.averageBand.toFixed(1)}</span>
                             </div>
                           </div>
                           <div className="adminLearnerMetaGrid">
-                            <p className="meta">Test: {report.testMode.toUpperCase()}</p>
-                            <p className="meta">Topic: {report.topicTitle}</p>
-                            <p className="meta">Provider: {report.provider}</p>
-                            <p className="meta">Model calls: {report.totalCalls.toLocaleString()}</p>
-                            <p className="meta">Saved: {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Unknown'}</p>
+                            <p className="meta">Last attempt: {learner.lastAttemptAt ? new Date(learner.lastAttemptAt).toLocaleString() : 'Unknown'}</p>
+                            <p className="meta">Estimated cost: {formatUsdCost(learner.totalCostUsd)}</p>
                           </div>
-                          <div className="adminActionRow">
-                            <button type="button" className="secondary" onClick={() => void openAdminAssessmentReport(report.id)}>
-                              Open Full Report
-                            </button>
+                          <div className="adminSpeakingAttemptList">
+                            {learner.attempts.map((report) => (
+                              <div key={`speaking-attempt-${report.id}`} className="adminSpeakingAttemptRow">
+                                <div>
+                                  <strong>
+                                    {SPEAKING_MODE_LABELS[report.testMode]} · {report.topicTitle}
+                                  </strong>
+                                  <p className="meta">
+                                    {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Unknown'} · {report.provider} · {report.totalTokens.toLocaleString()} tokens
+                                  </p>
+                                </div>
+                                <span className="bandPill">Band {report.overallBand.toFixed(1)}</span>
+                                <span className="meta">{formatUsdCost(report.apiCostUsd)}</span>
+                                <button
+                                  type="button"
+                                  className="secondary"
+                                  onClick={() => void openAdminAssessmentReport(report.id)}
+                                >
+                                  Open full report
+                                </button>
+                              </div>
+                            ))}
                           </div>
                         </article>
                       ))
@@ -30655,13 +30832,17 @@ function App() {
                                 <button
                                   type="button"
                                   className="reportSaveButton"
-                                  onClick={() => saveFullReportToNotebook(activeReport)}
+                                  disabled={speakingReportSaved}
+                                  onClick={() => {
+                                    if (speakingReportSaved) return
+                                    saveFullReportToNotebook(activeReport)
+                                  }}
                                 >
                                   <span className="reportSaveButtonGlow" aria-hidden="true" />
                                   <span className="reportSaveButtonIcon" aria-hidden="true">
                                     ✦
                                   </span>
-                                  <span>Save Full Report</span>
+                                  <span>{speakingReportSaved ? 'Saved automatically' : 'Save Full Report'}</span>
                                 </button>
                               </div>
                             </div>
@@ -31246,9 +31427,13 @@ function App() {
                             <button
                               type="button"
                               className="audioConsultButton audioConsultButton-secondary"
-                              onClick={() => assessmentResult && saveFullReportToNotebook(assessmentResult)}
+                              disabled={speakingReportSaved}
+                              onClick={() => {
+                                if (!assessmentResult || speakingReportSaved) return
+                                saveFullReportToNotebook(assessmentResult)
+                              }}
                             >
-                              ✦ Save report for revision
+                              {speakingReportSaved ? '✦ Saved automatically' : '✦ Save report for revision'}
                             </button>
                             <button
                               type="button"
@@ -31976,25 +32161,24 @@ function App() {
                   <div className="adminUserScoresSections">
                     <div className="adminUserScoresSection">
                       <h4>Speaking</h4>
-                      {adminAssessmentReports.filter((report) => report.userId === adminUserDetailView.userId)
-                        .length === 0 ? (
+                      {adminUserSpeakingReports.length === 0 ? (
                         <p className="meta">No saved speaking reports yet.</p>
                       ) : (
-                        adminAssessmentReports
-                          .filter((report) => report.userId === adminUserDetailView.userId)
-                          .map((report) => (
+                        adminUserSpeakingReports.map((report) => (
                             <article key={report.id} className="adminUserScoreRow">
-                              <span>{report.topicTitle}</span>
-                              <span className="bandPill">Band {report.overallBand}</span>
+                              <span className="adminUserScoreTitle">
+                                {SPEAKING_MODE_LABELS[report.testMode]} · {report.topicTitle}
+                              </span>
+                              <span className="bandPill">Band {report.overallBand.toFixed(1)}</span>
                               <span className="meta">
-                                {report.createdAt ? new Date(report.createdAt).toLocaleString() : ''}
+                                {report.createdAt ? new Date(report.createdAt).toLocaleString() : ''} · {formatUsdCost(report.apiCostUsd)}
                               </span>
                               <button
                                 type="button"
                                 className="secondary"
                                 onClick={() => void openAdminAssessmentReport(report.id)}
                               >
-                                Open
+                                Open full report
                               </button>
                             </article>
                           ))

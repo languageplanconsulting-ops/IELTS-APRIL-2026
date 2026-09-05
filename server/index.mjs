@@ -2876,7 +2876,14 @@ const getOrCreateQuestionAudioAsset = async (
 
 const persistAssessmentReportForUser = async ({ userId, profile, requestBody, result }) => {
   const normalizedUserId = normalizeOptionalUuid(userId)
-  if (!normalizedUserId || !profile || !result || typeof result !== 'object') return null
+  if (!normalizedUserId || !profile || !result || typeof result !== 'object') {
+    console.error('Could not persist assessment report: missing user, profile, or result.', {
+      hasUserId: Boolean(normalizedUserId),
+      hasProfile: Boolean(profile),
+      hasResult: Boolean(result && typeof result === 'object')
+    })
+    return null
+  }
 
   const reportId = randomUUID()
   const createdAt = new Date().toISOString()
@@ -15588,15 +15595,17 @@ app.post('/api/assess/start', requireAuth, async (req, res) => {
       message
     })
   })
-    .then((result) => {
-      void persistAssessmentReportForUser({
-        userId: req.auth.user.id,
-        profile: req.auth.profile,
-        requestBody: req.body || {},
-        result
-      }).catch((persistError) => {
+    .then(async (result) => {
+      try {
+        await persistAssessmentReportForUser({
+          userId: req.auth.user.id,
+          profile: req.auth.profile,
+          requestBody: req.body || {},
+          result
+        })
+      } catch (persistError) {
         console.error('Could not persist assessment report:', persistError)
-      })
+      }
       updateAssessmentJob(jobId, {
         status: 'completed',
         progress: 100,
