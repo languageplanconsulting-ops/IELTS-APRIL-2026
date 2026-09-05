@@ -161,6 +161,24 @@ const GEMINI_ASSESSMENT_MODELS = [
   .map((value) => String(value || '').trim())
   .filter(Boolean)
 const isRetryableGeminiHttpStatus = (status) => status === 429 || status === 503
+const OPENAI_API_KEY = String(process.env.OPENAI_API_KEY || '').trim()
+const OPENAI_PRICING_SOURCE_URL = 'https://openai.com/api/pricing/'
+const OPENAI_PRICING_VERIFIED_AT = '2026-09-05'
+const OPENAI_STANDARD_PRICING_USD_PER_1M_TOKENS = {
+  'gpt-4.1-mini': { inputText: 0.4, outputText: 1.6 },
+  'gpt-4o-mini': { inputText: 0.15, outputText: 0.6 },
+  'gpt-4.1': { inputText: 2.0, outputText: 8.0 },
+  'gpt-4o': { inputText: 2.5, outputText: 10.0 }
+}
+const OPENAI_ASSESSMENT_MODELS = [
+  process.env.OPENAI_ASSESSMENT_MODEL,
+  'gpt-4.1-mini',
+  'gpt-4o-mini'
+]
+  .map((value) => String(value || '').trim())
+  .filter(Boolean)
+const hasOpenAIScoring = Boolean(OPENAI_API_KEY)
+const isRetryableOpenAIHttpStatus = (status) => status === 429 || status === 503
 
 const roundUsdAmount = (value, digits = 8) => Number(Number(value || 0).toFixed(digits))
 
@@ -313,6 +331,50 @@ const calculateGeminiApiCost = ({ model, usageMetadata, fallbackInputModality = 
     pricingVersion: {
       source: GEMINI_PRICING_SOURCE_URL,
       verifiedAt: GEMINI_PRICING_VERIFIED_AT
+    }
+  }
+}
+
+const pickOpenAIPricingForModel = (model) => {
+  const normalized = String(model || '').trim().toLowerCase()
+  if (normalized.startsWith('gpt-4.1-mini')) {
+    return { modelFamily: 'gpt-4.1-mini', ...OPENAI_STANDARD_PRICING_USD_PER_1M_TOKENS['gpt-4.1-mini'] }
+  }
+  if (normalized.startsWith('gpt-4o-mini')) {
+    return { modelFamily: 'gpt-4o-mini', ...OPENAI_STANDARD_PRICING_USD_PER_1M_TOKENS['gpt-4o-mini'] }
+  }
+  if (normalized.startsWith('gpt-4.1')) {
+    return { modelFamily: 'gpt-4.1', ...OPENAI_STANDARD_PRICING_USD_PER_1M_TOKENS['gpt-4.1'] }
+  }
+  if (normalized.startsWith('gpt-4o')) {
+    return { modelFamily: 'gpt-4o', ...OPENAI_STANDARD_PRICING_USD_PER_1M_TOKENS['gpt-4o'] }
+  }
+  return { modelFamily: 'gpt-4.1-mini', ...OPENAI_STANDARD_PRICING_USD_PER_1M_TOKENS['gpt-4.1-mini'] }
+}
+
+const calculateOpenAIApiCost = ({ model, usage }) => {
+  const promptTokenCount = Math.max(0, Number(usage?.prompt_tokens || usage?.input_tokens || 0) || 0)
+  const candidatesTokenCount = Math.max(0, Number(usage?.completion_tokens || usage?.output_tokens || 0) || 0)
+  const totalTokenCount = Math.max(
+    0,
+    Number(usage?.total_tokens || promptTokenCount + candidatesTokenCount) || 0
+  )
+  const pricing = pickOpenAIPricingForModel(model)
+  const inputCostUsd = promptTokenCount * (pricing.inputText / 1_000_000)
+  const outputCostUsd = candidatesTokenCount * (pricing.outputText / 1_000_000)
+  return {
+    provider: 'openai',
+    model: String(model || ''),
+    modelFamily: pricing.modelFamily,
+    promptTokenCount,
+    candidatesTokenCount,
+    totalTokenCount,
+    inputCostUsd: roundUsdAmount(inputCostUsd),
+    outputCostUsd: roundUsdAmount(outputCostUsd),
+    totalCostUsd: roundUsdAmount(inputCostUsd + outputCostUsd),
+    pricingVersion: {
+      source: OPENAI_PRICING_SOURCE_URL,
+      verifiedAt: OPENAI_PRICING_VERIFIED_AT
     }
   }
 }
@@ -11363,7 +11425,7 @@ const callGemini = async (prompt, usageTracker) => {
   const candidates = GEMINI_ASSESSMENT_MODELS
   const tried = []
   for (const model of [...new Set(candidates)]) {
-    const maxAttempts = 4
+    const maxAttempts = hasOpenAIScoring ? 2 : 4
     for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
       const response = await safeFetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
@@ -11416,9 +11478,110 @@ const callGemini = async (prompt, usageTracker) => {
   throw new Error(`Gemini failed on all models. ${tried.join(' | ')}`)
 }
 
+const callOpenAI = async (prompt, usageTracker) => {
+  if (!OPENAI_API_KEY) throw new Error('Missing OPENAI_API_KEY')
+  const tried = []
+  for (const model of [...new Set(OPENAI_ASSESSMENT_MODELS)]) {
+    const maxAttempts = 3
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      const response = await safeFetch(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model,
+            temperature: 0.2,
+            response_format: { type: 'json_object' },
+            max_tokens: 12000,
+            messages: [
+              {
+                role: 'system',
+                content:
+                  'You are an IELTS Speaking examiner. Return only valid JSON matching the requested schema. Do not wrap the JSON in markdown.'
+              },
+              { role: 'user', content: String(prompt || '') }
+            ]
+          })
+        },
+        { timeoutMs: 65000, retries: 1, retryDelayMs: 1500 }
+      )
+      if (response.ok) {
+        const data = await response.json()
+        const text = data?.choices?.[0]?.message?.content
+        if (!text) {
+          tried.push(`${model}#${attempt}: empty text`)
+          continue
+        }
+        usageTracker?.record({
+          ...calculateOpenAIApiCost({ model, usage: data?.usage }),
+          operation: 'assessment'
+        })
+        try {
+          return normalizeAssessment(parseModelJson(text), model)
+        } catch (error) {
+          tried.push(
+            `${model}#${attempt}: parse failed ${sanitizeErrorMessage(error?.message || error).slice(0, 120)}`
+          )
+          continue
+        }
+      }
+      const body = await response.text().catch(() => '')
+      tried.push(`${model}#${attempt}: ${response.status} ${sanitizeErrorMessage(body).slice(0, 120)}`)
+      if (isRetryableOpenAIHttpStatus(response.status) && attempt < maxAttempts) {
+        await sleep(1800 * attempt * attempt)
+        continue
+      }
+      break
+    }
+  }
+  throw new Error(`OpenAI failed on all models. ${tried.join(' | ')}`)
+}
+
+const scoringProviderKey = (provider) => {
+  const lower = String(provider || '').toLowerCase()
+  if (lower.includes('gpt') || lower.includes('openai')) return 'openai'
+  return 'gemini'
+}
+
+const callScoringModel = async (prompt, usageTracker, onProgress) => {
+  try {
+    return await callGemini(prompt, usageTracker)
+  } catch (geminiError) {
+    if (!hasOpenAIScoring) throw geminiError
+    const geminiMessage = sanitizeErrorMessage(
+      geminiError instanceof Error ? geminiError.message : String(geminiError)
+    )
+    onProgress?.(
+      72,
+      'Gemini was busy. Scoring this attempt with the backup model so you still get a real report.'
+    )
+    try {
+      return await callOpenAI(prompt, usageTracker)
+    } catch (openaiError) {
+      const openaiMessage = sanitizeErrorMessage(
+        openaiError instanceof Error ? openaiError.message : String(openaiError)
+      )
+      throw new Error(
+        `Could not score this attempt with Gemini or OpenAI. Gemini: ${geminiMessage} OpenAI: ${openaiMessage}`
+      )
+    }
+  }
+}
+
 const GEMINI_ASSESSMENT_REPORT_ATTEMPTS = Math.max(
   1,
-  Math.min(8, Math.round(Number(process.env.GEMINI_ASSESSMENT_REPORT_ATTEMPTS || 6)) || 6)
+  Math.min(
+    8,
+    Math.round(
+      Number(
+        process.env.GEMINI_ASSESSMENT_REPORT_ATTEMPTS || (hasOpenAIScoring ? 2 : 6)
+      )
+    ) || (hasOpenAIScoring ? 2 : 6)
+  )
 )
 const GEMINI_ASSESSMENT_RETRY_DELAY_MS = Math.max(
   800,
@@ -11572,7 +11735,7 @@ const buildFullMockAssessmentReport = async ({
   safeProgress(64, 'Scoring grammar, vocabulary, and fluency across the full mock as one performance.')
 
   return buildFinalReport({
-    result: await callGemini(
+    result: await callScoringModel(
       fullMockWholeRubricPrompt({
         topic,
         prompt,
@@ -11582,7 +11745,8 @@ const buildFullMockAssessmentReport = async ({
         durationSeconds,
         questionBreakdown
       }),
-      usageTracker
+      usageTracker,
+      safeProgress
     ),
     testMode: 'full',
     pronunciationBand,
@@ -15063,7 +15227,7 @@ const runAssessment = async (
           })
         : normalizedAssessmentMode === 'trialSpeaking'
           ? await buildFinalReport({
-              result: await callGemini(
+              result: await callScoringModel(
                 trialSpeakingRubricPrompt({
                   topic,
                   prompt,
@@ -15073,7 +15237,8 @@ const runAssessment = async (
                   durationSeconds: Number(durationSeconds || 0),
                   questionBreakdown
                 }),
-                usageTracker
+                usageTracker,
+                onProgress
               ),
               testMode: 'part2',
               pronunciationBand,
@@ -15087,7 +15252,7 @@ const runAssessment = async (
               questionBreakdown
             })
           : await buildFinalReport({
-              result: await callGemini(
+              result: await callScoringModel(
                 rubricPrompt({
                   testMode: String(testMode || 'part2'),
                   topic,
@@ -15098,7 +15263,8 @@ const runAssessment = async (
                   durationSeconds: Number(durationSeconds || 0),
                   questionBreakdown
                 }),
-                usageTracker
+                usageTracker,
+                onProgress
               ),
               testMode: String(testMode || 'part2'),
               pronunciationBand,
@@ -15111,38 +15277,48 @@ const runAssessment = async (
               punctuationErrors,
               questionBreakdown
             })
-    const geminiReport = await runGeminiAssessmentReportWithRetries({
+    const scoredReport = await runGeminiAssessmentReportWithRetries({
       buildReport: buildGeminiReport,
       onProgress
     })
-    if (String(geminiReport?.provider || '').toLowerCase().includes('fallback')) {
-      throw new Error('Refusing to return a fallback speaking score. Gemini scoring is required.')
+    if (String(scoredReport?.provider || '').toLowerCase().includes('fallback')) {
+      throw new Error('Refusing to return a fallback speaking score. A real scoring model is required.')
     }
-    comparisons.gemini = geminiReport
+    const providerKey = scoringProviderKey(scoredReport?.provider)
+    comparisons[providerKey] = scoredReport
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
-    errors.push(`gemini: ${message}`)
+    errors.push(`scoring: ${message}`)
     throw new Error(
-      `Could not score this attempt with Gemini. The student was not given a fallback band. ${message}`
+      `Could not score this attempt. The student was not given a fallback band. ${message}`
     )
   }
 
-  const primaryProvider = 'gemini'
+  const primaryProvider = Object.keys(comparisons)[0] || 'gemini'
   const primaryReport = comparisons[primaryProvider]
   if (primaryReport) {
-    const enrichedQuestionBreakdown = await buildTranscriptAnnotations({
-      testMode: String(testMode || 'part2'),
-      questionBreakdown: primaryReport.questionBreakdown || [],
-      part3AnswerCoaching: primaryReport.part3AnswerCoaching || [],
-      componentReports: primaryReport.componentReports || {},
-      usageTracker
-    })
-    const enrichedVocabularySuggestions = await buildCustomVocabularySuggestions({
-      testMode: String(testMode || 'part2'),
-      punctuatedTranscript: primaryReport.punctuatedTranscript || punctuatedTranscript,
-      questionBreakdown: enrichedQuestionBreakdown,
-      usageTracker
-    })
+    let enrichedQuestionBreakdown = primaryReport.questionBreakdown || []
+    let enrichedVocabularySuggestions = primaryReport.vocabularyLevelUpSuggestions || []
+    try {
+      enrichedQuestionBreakdown = await buildTranscriptAnnotations({
+        testMode: String(testMode || 'part2'),
+        questionBreakdown: primaryReport.questionBreakdown || [],
+        part3AnswerCoaching: primaryReport.part3AnswerCoaching || [],
+        componentReports: primaryReport.componentReports || {},
+        usageTracker
+      })
+      enrichedVocabularySuggestions = await buildCustomVocabularySuggestions({
+        testMode: String(testMode || 'part2'),
+        punctuatedTranscript: primaryReport.punctuatedTranscript || punctuatedTranscript,
+        questionBreakdown: enrichedQuestionBreakdown,
+        usageTracker
+      })
+    } catch (enrichError) {
+      console.warn(
+        'Speaking report extras skipped after scoring:',
+        sanitizeErrorMessage(enrichError instanceof Error ? enrichError.message : String(enrichError))
+      )
+    }
     const topFixes = buildTopFixesFromReport({
       componentReports: primaryReport.componentReports || {},
       questionBreakdown: enrichedQuestionBreakdown,
@@ -15565,7 +15741,7 @@ app.post('/api/assess', requireAuth, async (req, res) => {
     }
     const result = await runAssessment(req.body || {})
     if (String(result?.provider || '').toLowerCase().includes('fallback')) {
-      throw new Error('Refusing to return a fallback speaking score. Gemini scoring is required.')
+      throw new Error('Refusing to return a fallback speaking score. A real scoring model is required.')
     }
     try {
       await persistAssessmentReportForUser({
@@ -15630,7 +15806,7 @@ app.post('/api/assess/start', requireAuth, async (req, res) => {
   })
     .then(async (result) => {
       if (String(result?.provider || '').toLowerCase().includes('fallback')) {
-        throw new Error('Refusing to return a fallback speaking score. Gemini scoring is required.')
+        throw new Error('Refusing to return a fallback speaking score. A real scoring model is required.')
       }
       try {
         await persistAssessmentReportForUser({

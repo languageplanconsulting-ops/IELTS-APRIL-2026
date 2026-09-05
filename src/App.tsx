@@ -18325,7 +18325,9 @@ function App() {
     const raw = String(value || '').trim()
     if (!raw) return "english plan's database"
     const lower = raw.toLowerCase()
-    if (lower.includes('gemini')) return "english plan's database"
+    if (lower.includes('gemini') || lower.includes('openai') || lower.includes('gpt')) {
+      return "english plan's database"
+    }
     return raw
   }
 
@@ -30716,8 +30718,14 @@ function App() {
                       </aside>
                       <div className="stageCard resultCard">
                         <div className="providerTabs">
-                          {(['gemini'] as const).map((providerName) => {
-                            const hasReport = Boolean(assessmentResult.comparisons?.[providerName])
+                          {(
+                            Object.keys(assessmentResult.comparisons || {}).length
+                              ? Object.keys(assessmentResult.comparisons || {})
+                              : [assessmentResult.primaryProvider || 'gemini']
+                          ).map((providerName) => {
+                            const hasReport = Boolean(
+                              assessmentResult.comparisons?.[providerName] || assessmentResult.primaryProvider === providerName
+                            )
                             return (
                               <button
                                 key={providerName}
@@ -31260,7 +31268,7 @@ function App() {
                               <p className="modelNotes">
                                 <strong>หมายเหตุ:</strong>{' '}
                                 {String(activeReport.modelNotes || '').replace(
-                                  /gemini(?:-2\.5-flash)?/gi,
+                                  /gemini(?:-[\w.]+)?|openai|gpt-[\w.]+/gi,
                                   "english plan's database"
                                 )}
                               </p>
