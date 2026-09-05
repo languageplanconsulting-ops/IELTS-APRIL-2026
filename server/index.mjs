@@ -151,6 +151,16 @@ const GEMINI_DEFAULT_MODEL = String(process.env.GEMINI_MODEL || 'gemini-3.5-flas
 const GEMINI_DEFAULT_LITE_MODEL = String(
   process.env.GEMINI_LITE_MODEL || 'gemini-3.5-flash-lite'
 ).trim()
+const GEMINI_ASSESSMENT_MODELS = [
+  process.env.GEMINI_ASSESSMENT_MODEL,
+  GEMINI_DEFAULT_MODEL,
+  GEMINI_DEFAULT_LITE_MODEL,
+  'gemini-2.5-flash',
+  'gemini-2.5-flash-lite'
+]
+  .map((value) => String(value || '').trim())
+  .filter(Boolean)
+const isRetryableGeminiHttpStatus = (status) => status === 429 || status === 503
 
 const roundUsdAmount = (value, digits = 8) => Number(Number(value || 0).toFixed(digits))
 
@@ -7649,6 +7659,24 @@ const decrementLearnerCredits = async ({ userId, assessmentMode }) => {
   return mapCreditProfile(updatedProfile)
 }
 
+const restoreLearnerCredits = async ({ userId, assessmentMode }) => {
+  const profile = await loadUserProfileWithAccess(userId)
+  if (!profile || String(profile?.role || 'student') === 'admin') return null
+  if (isTrialProfileRecord(profile)) return null
+
+  const feedbackRemaining = Math.max(0, Number(profile?.learner_access?.feedback_credits ?? 0))
+  const fullMockRemaining = Math.max(0, Number(profile?.learner_access?.full_mock_credits ?? 0))
+  await supabaseRequest(`/rest/v1/learner_access?user_id=eq.${encodeURIComponent(userId)}`, {
+    method: 'PATCH',
+    headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'return=minimal' }),
+    body: JSON.stringify({
+      feedback_credits: feedbackRemaining + 1,
+      ...(assessmentMode === 'fullMock' ? { full_mock_credits: fullMockRemaining + 1 } : {})
+    })
+  })
+  return mapCreditProfile(await loadUserProfileWithAccess(userId))
+}
+
 const generateFallbackAssessment = ({ punctuatedTranscript, topic, providerReason, testMode }) => {
   const normalizedText = String(punctuatedTranscript || '').trim()
   const wordCount = normalizedText ? normalizedText.split(/\s+/).filter(Boolean).length : 0
@@ -11332,53 +11360,57 @@ const transcribeWithGoogle = async ({ audioBase64, audioMimeType, usageTracker }
 const callGemini = async (prompt, usageTracker) => {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
-  const candidates = [
-    String(process.env.GEMINI_ASSESSMENT_MODEL || GEMINI_DEFAULT_MODEL).trim(),
-    GEMINI_DEFAULT_MODEL
-  ].filter(Boolean)
+  const candidates = GEMINI_ASSESSMENT_MODELS
   const tried = []
   for (const model of [...new Set(candidates)]) {
-    const response = await safeFetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
-        })
-      },
-      { timeoutMs: 65000, retries: 2, retryDelayMs: 1200 }
-    )
-    if (!response.ok) {
-      const body = await response.text().catch(() => '')
-      tried.push(`${model}: ${response.status} ${body.slice(0, 120)}`)
-      continue
-    }
-    const data = await response.json()
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text
-    if (!text) {
-      tried.push(`${model}: empty text`)
-      continue
-    }
-    const costBreakdown = calculateGeminiApiCost({
-      model,
-      usageMetadata: data?.usageMetadata,
-      fallbackInputModality: 'TEXT'
-    })
-    if (costBreakdown) {
-      usageTracker?.record({
-        ...costBreakdown,
-        operation: 'assessment'
-      })
-    }
-    try {
-      return normalizeAssessment(parseModelJson(text), model)
-    } catch (error) {
-      tried.push(
-        `${model}: parse failed ${sanitizeErrorMessage(error?.message || error).slice(0, 120)}`
+    const maxAttempts = 4
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      const response = await safeFetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
+          })
+        },
+        { timeoutMs: 65000, retries: 1, retryDelayMs: 1500 }
       )
-      continue
+      if (response.ok) {
+        const data = await response.json()
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text
+        if (!text) {
+          tried.push(`${model}#${attempt}: empty text`)
+          continue
+        }
+        const costBreakdown = calculateGeminiApiCost({
+          model,
+          usageMetadata: data?.usageMetadata,
+          fallbackInputModality: 'TEXT'
+        })
+        if (costBreakdown) {
+          usageTracker?.record({
+            ...costBreakdown,
+            operation: 'assessment'
+          })
+        }
+        try {
+          return normalizeAssessment(parseModelJson(text), model)
+        } catch (error) {
+          tried.push(
+            `${model}#${attempt}: parse failed ${sanitizeErrorMessage(error?.message || error).slice(0, 120)}`
+          )
+          continue
+        }
+      }
+      const body = await response.text().catch(() => '')
+      tried.push(`${model}#${attempt}: ${response.status} ${body.slice(0, 120)}`)
+      if (isRetryableGeminiHttpStatus(response.status) && attempt < maxAttempts) {
+        await sleep(1800 * attempt * attempt)
+        continue
+      }
+      break
     }
   }
   throw new Error(`Gemini failed on all models. ${tried.join(' | ')}`)
@@ -11386,11 +11418,11 @@ const callGemini = async (prompt, usageTracker) => {
 
 const GEMINI_ASSESSMENT_REPORT_ATTEMPTS = Math.max(
   1,
-  Math.min(5, Math.round(Number(process.env.GEMINI_ASSESSMENT_REPORT_ATTEMPTS || 3)) || 3)
+  Math.min(8, Math.round(Number(process.env.GEMINI_ASSESSMENT_REPORT_ATTEMPTS || 6)) || 6)
 )
 const GEMINI_ASSESSMENT_RETRY_DELAY_MS = Math.max(
-  500,
-  Math.min(5000, Math.round(Number(process.env.GEMINI_ASSESSMENT_RETRY_DELAY_MS || 1600)) || 1600)
+  800,
+  Math.min(8000, Math.round(Number(process.env.GEMINI_ASSESSMENT_RETRY_DELAY_MS || 2200)) || 2200)
 )
 
 const runGeminiAssessmentReportWithRetries = async ({ buildReport, onProgress }) => {
@@ -11399,8 +11431,8 @@ const runGeminiAssessmentReportWithRetries = async ({ buildReport, onProgress })
     try {
       if (attempt > 1) {
         onProgress(
-          Math.min(88, 58 + attempt * 7),
-          `Main scoring model was busy. Retrying assessment API (${attempt}/${GEMINI_ASSESSMENT_REPORT_ATTEMPTS}) for the full report.`
+          Math.min(88, 58 + attempt * 5),
+          `Scoring model was busy. Retrying Gemini assessment (${attempt}/${GEMINI_ASSESSMENT_REPORT_ATTEMPTS}).`
         )
       }
       return await buildReport()
@@ -11409,8 +11441,8 @@ const runGeminiAssessmentReportWithRetries = async ({ buildReport, onProgress })
       errors.push(`attempt ${attempt}: ${message}`)
       if (attempt >= GEMINI_ASSESSMENT_REPORT_ATTEMPTS) break
       onProgress(
-        Math.min(86, 56 + attempt * 7),
-        'Main scoring model did not return a usable report yet. Trying the API again before using backup mode.'
+        Math.min(86, 56 + attempt * 5),
+        'Gemini did not return a usable report yet. Waiting, then trying the scoring API again.'
       )
       await sleep(GEMINI_ASSESSMENT_RETRY_DELAY_MS * attempt)
     }
@@ -15083,28 +15115,16 @@ const runAssessment = async (
       buildReport: buildGeminiReport,
       onProgress
     })
+    if (String(geminiReport?.provider || '').toLowerCase().includes('fallback')) {
+      throw new Error('Refusing to return a fallback speaking score. Gemini scoring is required.')
+    }
     comparisons.gemini = geminiReport
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     errors.push(`gemini: ${message}`)
-    comparisons.gemini = await buildFinalReport({
-      result: generateFallbackAssessment({
-        punctuatedTranscript,
-        topic,
-        providerReason: message,
-        testMode: String(testMode || 'part2')
-      }),
-      testMode: String(testMode || 'part2'),
-      pronunciationBand,
-      pronunciationEngine,
-      pronunciationFallbackReason,
-      pronunciationMetrics,
-      pronunciationEstimate,
-      wordAnalysis,
-      punctuatedTranscript,
-      punctuationErrors,
-      questionBreakdown
-    })
+    throw new Error(
+      `Could not score this attempt with Gemini. The student was not given a fallback band. ${message}`
+    )
   }
 
   const primaryProvider = 'gemini'
@@ -15544,6 +15564,9 @@ app.post('/api/assess', requireAuth, async (req, res) => {
       })
     }
     const result = await runAssessment(req.body || {})
+    if (String(result?.provider || '').toLowerCase().includes('fallback')) {
+      throw new Error('Refusing to return a fallback speaking score. Gemini scoring is required.')
+    }
     try {
       await persistAssessmentReportForUser({
         userId: req.auth.user.id,
@@ -15556,6 +15579,16 @@ app.post('/api/assess', requireAuth, async (req, res) => {
     }
     return res.json(result)
   } catch (error) {
+    if (String(req.auth?.profile?.role || 'student') !== 'admin') {
+      try {
+        await restoreLearnerCredits({
+          userId: req.auth.user.id,
+          assessmentMode: req.body?.assessmentMode
+        })
+      } catch (restoreError) {
+        console.error('Could not restore credits after failed assessment:', restoreError)
+      }
+    }
     const message = error instanceof Error ? error.message : String(error)
     return res.status(500).json({ error: message })
   }
@@ -15596,6 +15629,9 @@ app.post('/api/assess/start', requireAuth, async (req, res) => {
     })
   })
     .then(async (result) => {
+      if (String(result?.provider || '').toLowerCase().includes('fallback')) {
+        throw new Error('Refusing to return a fallback speaking score. Gemini scoring is required.')
+      }
       try {
         await persistAssessmentReportForUser({
           userId: req.auth.user.id,
@@ -15613,7 +15649,17 @@ app.post('/api/assess/start', requireAuth, async (req, res) => {
         result
       })
     })
-    .catch((error) => {
+    .catch(async (error) => {
+      if (String(req.auth?.profile?.role || 'student') !== 'admin') {
+        try {
+          await restoreLearnerCredits({
+            userId: req.auth.user.id,
+            assessmentMode: req.body?.assessmentMode
+          })
+        } catch (restoreError) {
+          console.error('Could not restore credits after failed assessment:', restoreError)
+        }
+      }
       updateAssessmentJob(jobId, {
         status: 'failed',
         progress: 100,
