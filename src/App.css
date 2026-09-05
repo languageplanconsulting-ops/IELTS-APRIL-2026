@@ -16229,6 +16229,61 @@ body,
   border-radius: 16px;
 }
 
+.highlightSummaryPanel {
+  overflow: hidden;
+}
+
+.highlightBlock {
+  padding: 4px 20px 18px;
+}
+
+.highlightBlock + .highlightBlock {
+  border-top: 1px solid #eef2f7;
+  padding-top: 16px;
+}
+
+.highlightBlockTitle {
+  margin: 0 0 10px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.highlightStrengthList,
+.highlightWeakList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.highlightStrengthItem,
+.highlightWeakItem {
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid #e6ecf5;
+  border-radius: 16px;
+}
+
+.highlightStrengthItem p,
+.highlightWeakItem .ladderStepWhy {
+  margin: 6px 0 0;
+  color: #334155;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.highlightWeakItem .ladderStepFrom,
+.highlightWeakItem .ladderStepTo {
+  margin-top: 8px;
+}
+
+.highlightWeakItem .ladderSaveBtn {
+  margin-top: 10px;
+}
+
 .nextAttemptPanel,
 .part3CoachPanel {
   border: 1px solid #dbeafe;

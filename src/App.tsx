@@ -30,6 +30,11 @@ import {
 } from './moduleAccess'
 import { GeneralTrainingReadingPage } from './GeneralTrainingReadingPage'
 import { VocabPopover } from './VocabPopover'
+import {
+  buildHighlightSummary,
+  highlightCriterionLabel,
+  type HighlightSummary
+} from './speakingHighlightSummary'
 import ExamFeedPage from './ExamFeedPage'
 import BiteSizePage from './BiteSizePage'
 import { AdminVideoStudio } from './AdminVideoStudio'
@@ -1120,6 +1125,8 @@ type AssessmentReport = {
   strengths: string[]
   improvements: string[]
   modelNotes: string
+  expectedScore?: string
+  highlightSummary?: HighlightSummary
 }
 
 type AssessmentResult = AssessmentReport & {
@@ -1708,76 +1715,152 @@ const EXPECTED_SCORE_OPTIONS: Array<{
   {
     id: 'band5',
     label: 'Band 5',
-    subtitle: 'ระดับพื้นฐาน (Modest Level)',
+    subtitle: 'Modest',
     bullets: [
       {
-        point: 'พยายามพูดให้ต่อเนื่องและพูดให้จบความคิดในแต่ละประโยค',
-        example: `P'Doy's Recommendation: เช่น แทนที่จะหยุดที่ "I like it because..." ให้พูดต่อจนจบว่า "I like it because it helps me relax after school."`
+        point: 'Grammar: simple tense ยังผิดได้ และ conjunction ยังไม่แม่น แต่ต้องไม่พูดจนคนฟังตามความหมายไม่ทัน',
+        example: `P'Doy's Recommendation: โฟกัสประโยคสั้นให้จบก่อน เช่น "I go there every weekend because it is relaxing." ดีกว่าพยายามใช้ประโยคยากแล้วผิดจนความหมายเพี้ยน`
       },
       {
-        point: 'ใช้คำศัพท์พื้นฐานที่คุ้นเคยและโครงสร้างประโยคง่าย ๆ ก่อน',
-        example: `P'Doy's Recommendation: เช่น ใช้ "I usually go there with my friends" ดีกว่าพยายามใช้ประโยคยากแล้วผิดหลายจุด`
+        point: 'Vocabulary: ใช้ collocation ระดับ A2-B1 ที่คุ้นเคย คำผิดได้บ่อย แต่ประโยคที่ฟังไม่รู้เรื่องไม่ควรเกิน 2-3 ประโยค',
+        example: `P'Doy's Recommendation: ใช้คำง่ายให้ถูกบริบท เช่น "spare time", "art class", "go to work" ดีกว่าฝืนใช้คำยากแล้วคนฟังงง`
       },
       {
-        point: 'หยุดคิดได้ แต่พยายามอย่าเงียบนานเกินไป',
-        example: `P'Doy's Recommendation: ถ้าคิดไม่ออก ให้ใช้ตัวช่วยอย่าง "To be honest..." หรือ "Let me think for a moment..." แล้วพูดต่อทันที`
+        point: 'Fluency: พูดให้จบความคิดได้ แม้จะสะดุดและ referencing ยังไม่ครบ แต่ความหมายโดยรวมต้องยังตามได้',
+        example: `P'Doy's Recommendation: ถ้าคิดไม่ออก ให้ใช้ "To be honest..." แล้วพูดต่อทันที อย่าเงียบจนผู้ฟังตามไม่ทัน`
+      }
+    ]
+  },
+  {
+    id: 'band55',
+    label: 'Band 5.5',
+    subtitle: 'Modest+',
+    bullets: [
+      {
+        point: 'Grammar: simple tense ผิดได้เป็นบางครั้ง conjunction ถูกบ้างผิดบ้าง และ grammar error ประมาณ 5 จุด แต่โดยรวมยังเข้าใจได้',
+        example: `P'Doy's Recommendation: เชื่อมเหตุผลให้ครบอย่างน้อย 1 ครั้ง เช่น "I like it because it helps me relax." แม้ tense จะยังพลาดบ้าง`
+      },
+      {
+        point: 'Vocabulary: collocation ส่วนใหญ่ยังเป็น A2-B1 มีคำผิดได้ค่อนข้างบ่อย แต่ประโยคที่ฟังไม่รู้เรื่องไม่เกิน 1-2 ประโยค',
+        example: `P'Doy's Recommendation: ยึด collocation พื้นฐานให้ถูก เช่น "draw a picture", "in my free time" ก่อนคิดคำยาก`
+      },
+      {
+        point: 'Fluency: referencing มีได้บ้างแม้ผิด และความลื่นไหลสะดุดเป็นบางช่วงได้ ถ้าโดยรวมยังพอเข้าใจ',
+        example: `P'Doy's Recommendation: ใช้ this / that / so เพื่อชี้กลับสิ่งที่พูดไปแล้ว เช่น "I tried it once. That was why I stopped."`
       }
     ]
   },
   {
     id: 'band6',
     label: 'Band 6',
-    subtitle: 'ระดับใช้งานได้ดี (Competent Level)',
+    subtitle: 'Competent',
     bullets: [
       {
-        point: 'จำไว้เสมอว่า ศัพท์ง่ายแต่ใช้ถูก ดีกว่าศัพท์ยากแต่ใช้ผิด',
-        example: `P'Doy's Recommendation: เช่น ใช้ "important" ให้ถูกในประโยคก่อน ดีกว่าฝืนใช้ "significant" แล้ววางผิดตำแหน่ง`
+        point: 'Grammar: simple tense ผิดไม่เกิน 3 ครั้ง past tense ยังพลาดได้ conjunction ยังไม่ครบ และ grammar error ได้มากกว่า 5 จุด แต่ยังพอเข้าใจ',
+        example: `P'Doy's Recommendation: ตรวจ present simple ให้ถูกก่อน เช่น "He goes to work every day" ไม่ใช่ "He go to work every day"`
       },
       {
-        point: 'มี grammar mistakes ได้บ้าง แต่ต้องไม่ทำให้ความหมายเพี้ยน',
-        example: `P'Doy's Recommendation: เช่น "He go to work every day" ยังพอเดาได้ แต่เป้าคือปรับให้เป็น "He goes to work every day."`
+        point: 'Vocabulary: collocation ส่วนใหญ่ A2-B1 มีคำที่ใช้ผิดได้บ่อย แต่คนฟังยังพอเข้าใจความหมาย',
+        example: `P'Doy's Recommendation: ศัพท์ง่ายแต่ใช้ถูกดีกว่าศัพท์ยากแต่ผิด เช่น ใช้ "important" ให้เข้าประโยค ดีกว่าฝืนใช้ "significant" แล้ววางผิด`
       },
       {
-        point: 'ออกเสียง plural -s, present simple -s และ past tense -ed ให้ชัด',
-        example: `P'Doy's Recommendation: เช่น "students", "works", "wanted" ถ้าออกเสียงท้ายชัด คะแนนความแม่นจะดูดีขึ้นทันที`
+        point: 'Fluency: พูดให้ต่อเนื่องพอที่คนฟังตามได้ hesitation และ filler ได้ ถ้าไม่รบกวนความเข้าใจ referencing ยังไม่มีหรือผิดบางครั้งได้',
+        example: `P'Doy's Recommendation: ออกเสียง plural -s, present -s และ past -ed ให้ชัด เช่น "students", "works", "wanted"`
+      }
+    ]
+  },
+  {
+    id: 'band65',
+    label: 'Band 6.5',
+    subtitle: 'Competent+',
+    bullets: [
+      {
+        point: 'Grammar: simple tense ถูกต้องเป็นส่วนใหญ่ พยายามใช้ subordinating conjunction อย่างน้อย 1 ครั้ง และ grammar error เหลือ 4-5 จุดที่ยังเข้าใจได้ตลอด',
+        example: `P'Doy's Recommendation: ใส่ because / although / when ให้เป็นนิสัย เช่น "Although I was tired, I still finished the work."`
+      },
+      {
+        point: 'Vocabulary: มี collocation ระดับ B1+ อย่างน้อย 2-3 จุด และ lexical error ได้ไม่เกิน 1 จุด',
+        example: `P'Doy's Recommendation: ยกระดับคำง่ายเป็น collocation เช่น "free time" เป็น "spare time" หรือ "very tired" เป็น "completely worn out" แบบพอดี`
+      },
+      {
+        point: 'Fluency: ใช้ referencing อย่างน้อย 2 ครั้ง แม้ผิดได้บางครั้ง และมี hesitation ตามธรรมชาติได้',
+        example: `P'Doy's Recommendation: ชี้กลับสิ่งที่พูดแล้วด้วย it / that / this เช่น "I used to draw a lot. I haven't really kept it up though."`
       }
     ]
   },
   {
     id: 'band7',
     label: 'Band 7',
-    subtitle: 'ระดับดีเยี่ยม (Proficient Level)',
+    subtitle: 'Good',
     bullets: [
       {
-        point: 'ในแต่ละคำตอบ แค่มีคำระดับ C1 ประมาณ 2-3 คำที่ใช้ได้เป็นธรรมชาติก็พอ',
-        example: `P'Doy's Recommendation: เช่น เปลี่ยนจาก "very important" เป็น "essential" หรือจาก "help me a lot" เป็น "benefit me greatly" แบบพอดี ๆ`
+        point: 'Grammar: simple tense ต้องถูกต้อง ใช้ subordinating conjunction ได้ และยอมรับ grammar mistakes ที่ไม่รบกวนความเข้าใจได้ไม่เกิน 3 จุด ถ้าเป็น Part 3 ต้องมี passive ถูกต้องอย่างน้อย 1 ครั้ง',
+        example: `P'Doy's Recommendation: ระวัง singular/plural และ present -s เช่น "Students need support" ไม่ใช่ "Student need support" ใน Part 3 ลอง "A lot of information is shared online nowadays."`
       },
       {
-        point: 'ระวัง singular/plural, present simple -s และ past tense endings ให้มาก',
-        example: `P'Doy's Recommendation: เช่น เวลาอธิบายเรื่องทั่วไปพูด "Students need support" ไม่ใช่ "Student need support"`
+        point: 'Vocabulary: มี collocation ระดับ B1+ ประมาณ 2-5 จุด และไม่มี lexical error',
+        example: `P'Doy's Recommendation: ตรวจเฉพาะคำที่ผิดจริง เช่น "those arts" ต้องเป็น "the art" หรือ "those artworks" วลีที่ถูกแล้ว เช่น "prefer something more logical" ไม่ต้องเปลี่ยน`
       },
       {
-        point: 'ถ้าเป็น Part 3 ควรใช้ passive voice ให้ถูกต้องอย่างน้อย 1 ครั้ง',
-        example: `P'Doy's Recommendation: เช่น "A lot of information is shared online nowadays." จะช่วยดัน grammar range ให้ดูสูงขึ้น`
+        point: 'Fluency: ใช้ referencing ถูกต้องอย่างน้อย 2 ครั้ง และมี pause/filler ตามธรรมชาติได้',
+        example: `P'Doy's Recommendation: พูดให้จบเหตุผลแล้วชี้กลับด้วย that / this เช่น "That is the main reason I prefer it."`
       }
     ]
   },
   {
-    id: 'band89',
-    label: 'Band 8 - 9',
-    subtitle: 'ระดับเชี่ยวชาญ (Expert Level)',
+    id: 'band75',
+    label: 'Band 7.5',
+    subtitle: 'Good+',
     bullets: [
       {
-        point: 'ใช้คำศัพท์ระดับ C1-C2 ให้เป็นธรรมชาติ ไม่ใช่ยัดคำยากแบบฝืน ๆ',
-        example: `P'Doy's Recommendation: เช่น ใช้ "a valuable opportunity" หรือ "a long-term benefit" ในบริบทที่เข้าจริง ดีกว่าใส่คำยากแบบลอย ๆ`
+        point: 'Grammar: simple tense ถูกต้องครบ เริ่มใช้ perfect หรือ past tense ถูกอย่างน้อย 1 ครั้ง subordinating conjunction ต้องถูก และ grammar mistakes ที่ไม่รบกวนความเข้าใจไม่เกิน 2 จุด ถ้าเป็น Part 3 ต้องมี passive อย่างน้อย 1 ครั้ง',
+        example: `P'Doy's Recommendation: แทรก present perfect ตามจริง เช่น "I have always preferred logical subjects." แล้วตามด้วย because / although ให้ครบ`
       },
       {
-        point: 'ไวยากรณ์ควรแทบไม่มีข้อผิดพลาด และควบคุมประโยคซับซ้อนกับ conditionals ได้',
-        example: `P'Doy's Recommendation: เช่น "If more funding were provided, the system would become far more effective."`
+        point: 'Vocabulary: มี collocation ระดับ B1+ ประมาณ 5-6 จุด มี C1-C2 อย่างน้อย 1 จุด และไม่มี lexical error',
+        example: `P'Doy's Recommendation: ใช้ C1 ให้เข้าบริบทจริง 1 จุดก็พอ เช่น "I don't have a creative bone in my body" หรือ "it has become part of my routine"`
       },
       {
-        point: 'ถ้าเป็น Part 3 ควรใช้ passive voice หลายครั้ง: Band 8 อย่างน้อย 2 ครั้ง และ Band 9 อย่างน้อย 3 ครั้ง',
-        example: `P'Doy's Recommendation: เช่น "It is often argued that...", "More attention should be given to..." และ "The issue is usually overlooked."`
+        point: 'Fluency: referencing ถูกต้องอย่างน้อย 3 ครั้ง พูดได้ลื่นต่อเนื่อง และ self-correction เล็กน้อยได้ถ้าทำให้ความหมายชัดขึ้น',
+        example: `P'Doy's Recommendation: ถ้าพูดผิด ให้แก้ทันทีแบบธรรมชาติ เช่น "I was... I have actually been interested in it since high school."`
+      }
+    ]
+  },
+  {
+    id: 'band8',
+    label: 'Band 8',
+    subtitle: 'Very Good',
+    bullets: [
+      {
+        point: 'Grammar: ใช้ perfect tense, past tense และ subordinating conjunction ได้โดยไม่มีข้อผิดพลาด ถ้าเป็น Part 3 ต้องใช้ passive ถูกต้องอย่างน้อย 2 ครั้ง',
+        example: `P'Doy's Recommendation: ใน Part 3 วาง passive ให้เป็นธรรมชาติ 2 จุด เช่น "It is often argued that..." และ "More attention should be given to..."`
+      },
+      {
+        point: 'Vocabulary: มี collocation ระดับ B1+ มากกว่า 4-5 จุด มี C1-C2 อย่างน้อย 1 จุด และไม่มี lexical error',
+        example: `P'Doy's Recommendation: ใช้คำ C1 ให้เข้าเรื่องจริง เช่น "a valuable opportunity" หรือ "a long-term benefit" อย่ายัดคำยากแบบลอย ๆ`
+      },
+      {
+        point: 'Fluency: referencing ถูกต้องมากกว่า 3 ครั้ง พูดได้ต่อเนื่อง และ self-correction ได้ถ้าทำให้ความหมายชัดขึ้น',
+        example: `P'Doy's Recommendation: เชื่อมไอเดียด้วย that / this / those แล้วขยายต่อทันที เช่น "That kind of pressure actually pushed me to manage my time better."`
+      }
+    ]
+  },
+  {
+    id: 'band85',
+    label: 'Band 8.5',
+    subtitle: 'Expert-',
+    bullets: [
+      {
+        point: 'Grammar: ใกล้ Band 9 — ควบคุม conditionals, perfect tense และ past tense ได้แทบไม่มีผิด ถ้าเป็น Part 3 ใช้ passive ถูกต้องอย่างน้อย 2-3 ครั้ง',
+        example: `P'Doy's Recommendation: ใช้ conditional ให้ฟังพูดได้จริง เช่น "If more funding were provided, the system would become far more effective."`
+      },
+      {
+        point: 'Vocabulary: collocation ต้องหนาขึ้น มี C1-C2 หลายจุด และไม่มี lexical error',
+        example: `P'Doy's Recommendation: กระจายคำ C1-C2 ตามคำตอบ เช่น "a valuable opportunity", "a long-term benefit" และ "it is usually overlooked" ให้เข้าบริบท`
+      },
+      {
+        point: 'Fluency: referencing เกือบครบและถูกต้อง ลื่นไหลต่อเนื่อง hesitation ได้เฉพาะแบบธรรมชาติเล็กน้อย',
+        example: `P'Doy's Recommendation: พูดให้เป็นสายความคิดเดียว แล้วชี้กลับด้วย this / that / those โดยไม่สะดุดจนเสียจังหวะ`
       }
     ]
   }
@@ -17355,6 +17438,7 @@ function App() {
         ),
         assessmentMode: isTrialSpeakingFlow ? 'trialSpeaking' : effectiveMode === 'full' ? 'fullMock' : 'standard',
         durationSeconds: Math.max(0, Math.round(durationSeconds)),
+        expectedScore: selectedExpectedScore || undefined,
         audioBase64: null,
         audioMimeType: null
       }
@@ -30751,45 +30835,20 @@ function App() {
                           ]
                           const computeTargetBand = (band: number) =>
                             Math.min(9, band >= 9 ? 9 : band % 1 === 0.5 ? Math.ceil(band) : band + 1)
-                          const topFixes: Array<{ label: string; title: string; detail: string }> = []
-                          if (isMockFullReport && activeReport.mockFullReport) {
-                            const mfr = activeReport.mockFullReport
-                            const pickFirst = (
-                              label: string,
-                              list?: Array<{ quote: string; fix: string }>
-                            ) => {
-                              const first = (list || [])[0]
-                              if (first && first.quote && first.fix) {
-                                topFixes.push({ label, title: first.quote, detail: first.fix })
-                              }
-                            }
-                            pickFirst('Fluency (Part 2)', mfr.section2.fluencyReport?.plusOneChecklist)
-                            pickFirst('Vocabulary (Part 3)', mfr.section3.lexicalReport?.plusOneChecklist)
-                            pickFirst('Grammar (Part 3)', mfr.section3.grammarReport?.plusOneChecklist)
-                            if (
-                              topFixes.length === 0 &&
-                              mfr.section2.fluencyReport?.plusOnePlan?.[0]
-                            ) {
-                              const plan = mfr.section2.fluencyReport.plusOnePlan[0]
-                              topFixes.push({
-                                label: 'Fluency',
-                                title: plan.quote,
-                                detail: plan.fix
-                              })
-                            }
-                          } else if (activeReport.componentReports) {
-                            const cr = activeReport.componentReports
-                            ;([
-                              ['Grammar', cr.grammar],
-                              ['Vocabulary', cr.lexical],
-                              ['Fluency', cr.fluency]
-                            ] as const).forEach(([lbl, rep]) => {
-                              const first = rep?.plusOneChecklist?.[0] || rep?.plusOnePlan?.[0]
-                              if (first && first.quote && first.fix) {
-                                topFixes.push({ label: lbl, title: first.quote, detail: first.fix })
-                              }
+                          const highlightSummary =
+                            activeReport.highlightSummary ||
+                            buildHighlightSummary({
+                              expectedScoreId: activeReport.expectedScore || selectedExpectedScore || 'explore',
+                              strengths: activeReport.strengths,
+                              grammarMistakes: activeReport.componentReports?.grammar?.grammarMistakes,
+                              vocabularyLevelUpSuggestions: activeReport.vocabularyLevelUpSuggestions,
+                              componentReports: activeReport.componentReports,
+                              mockGrammarMistakes: activeReport.mockFullReport?.section1?.grammarMistakes
                             })
-                          }
+                          const hasHighlightSummary =
+                            highlightSummary.strengths.length > 0 ||
+                            Boolean(highlightSummary.grammarWeakness) ||
+                            Boolean(highlightSummary.vocabWeakness)
                           const vocabSuggestions = activeReport.vocabularyLevelUpSuggestions || []
                           const vocabLevelOrder = ['B1', 'B2', 'C1', 'C2', 'A2', 'A1']
                           const vocabByLevel: Record<string, typeof vocabSuggestions> = {}
@@ -30897,37 +30956,112 @@ function App() {
                                     </div>
                                   </section>
                                 )}
-                              {topFixes.length > 0 && (
-                                <aside className="topFixesPanel">
+                              {hasHighlightSummary && (
+                                <aside className="topFixesPanel highlightSummaryPanel">
                                   <header className="topFixesHeader">
-                                    <h4>เริ่มแก้จากนี่ก่อน — ลำดับสำคัญที่สุด</h4>
-                                    <span>{topFixes.length} priorities</span>
+                                    <h4>แก้ตรงนี้ก่อนเลย</h4>
+                                    <span>เป้า {highlightSummary.expectedBandLabel}</span>
                                   </header>
-                                  <ol className="topFixesList">
-                                    {topFixes.map((fix, idx) => (
-                                      <li key={`top-fix-${idx}`} className="topFixItem">
-                                        <span className="topFixIndex">{idx + 1}</span>
-                                        <div className="topFixBody">
-                                          <p className="topFixLabel">{fix.label}</p>
-                                          <p className="topFixTitle">{fix.title}</p>
-                                          <p className="topFixDetail">{fix.detail}</p>
-                                          <button
-                                            type="button"
-                                            className="ladderSaveBtn"
-                                            onClick={() =>
-                                              savePlanToNotebook({
-                                                criterion: fix.label,
-                                                quote: fix.title,
-                                                fix: fix.detail
-                                              })
-                                            }
-                                          >
-                                            ＋ บันทึกลง Notebook
-                                          </button>
-                                        </div>
-                                      </li>
-                                    ))}
-                                  </ol>
+                                  {highlightSummary.strengths.length > 0 && (
+                                    <section className="highlightBlock">
+                                      <h5 className="highlightBlockTitle">จุดที่ทำได้ดี</h5>
+                                      <ul className="highlightStrengthList">
+                                        {highlightSummary.strengths.map((item, idx) => (
+                                          <li key={`highlight-strength-${idx}`} className="highlightStrengthItem">
+                                            <span className="topFixLabel">{highlightCriterionLabel(item.criterion)}</span>
+                                            <p>{item.text}</p>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </section>
+                                  )}
+                                  {(highlightSummary.grammarWeakness || highlightSummary.vocabWeakness) && (
+                                    <section className="highlightBlock highlightBlockWeak">
+                                      <h5 className="highlightBlockTitle">จุดที่เป็นจุดอ่อน</h5>
+                                      <div className="highlightWeakList">
+                                        {highlightSummary.grammarWeakness && (
+                                          <article className="highlightWeakItem">
+                                            <p className="topFixLabel">
+                                              GRAMMAR · {highlightSummary.grammarWeakness.errorType}
+                                            </p>
+                                            <p className="ladderStepFrom">
+                                              <span className="ladderStepTag">คุณพูดว่า</span>
+                                              <s>{stripOuterQuotes(highlightSummary.grammarWeakness.originalText)}</s>
+                                            </p>
+                                            <p className="ladderStepTo">
+                                              <span className="ladderStepTag is-good">พูดแบบนี้แทน</span>
+                                              <span className="ladderStepToFixed">
+                                                {stripOuterQuotes(highlightSummary.grammarWeakness.correctedText)}
+                                              </span>
+                                            </p>
+                                            {highlightSummary.grammarWeakness.reasonThai && (
+                                              <p className="ladderStepWhy">
+                                                {highlightSummary.grammarWeakness.reasonThai}
+                                              </p>
+                                            )}
+                                            <button
+                                              type="button"
+                                              className="ladderSaveBtn"
+                                              onClick={() =>
+                                                savePlanToNotebook({
+                                                  criterion: 'Grammar',
+                                                  quote: highlightSummary.grammarWeakness?.originalText || '',
+                                                  fix: highlightSummary.grammarWeakness?.correctedText || ''
+                                                })
+                                              }
+                                            >
+                                              ＋ บันทึกลง Notebook
+                                            </button>
+                                          </article>
+                                        )}
+                                        {highlightSummary.vocabWeakness && (
+                                          <article className="highlightWeakItem">
+                                            <p className="topFixLabel">
+                                              VOCABULARY
+                                              {highlightSummary.vocabWeakness.level
+                                                ? ` · ${highlightSummary.vocabWeakness.level}`
+                                                : ''}
+                                            </p>
+                                            <p className="ladderStepFrom">
+                                              <span className="ladderStepTag">คุณพูดว่า</span>
+                                              <s>{stripOuterQuotes(highlightSummary.vocabWeakness.sourcePhrase)}</s>
+                                            </p>
+                                            <p className="ladderStepTo">
+                                              <span className="ladderStepTag is-good">พูดแบบนี้แทน</span>
+                                              <span className="ladderStepToFixed">
+                                                {stripOuterQuotes(highlightSummary.vocabWeakness.replacement)}
+                                              </span>
+                                            </p>
+                                            {(highlightSummary.vocabWeakness.thaiMeaning ||
+                                              highlightSummary.vocabWeakness.reasonThai) && (
+                                              <p className="ladderStepWhy">
+                                                {[
+                                                  highlightSummary.vocabWeakness.thaiMeaning,
+                                                  highlightSummary.vocabWeakness.reasonThai
+                                                ]
+                                                  .filter(Boolean)
+                                                  .join(' ')}
+                                              </p>
+                                            )}
+                                            <button
+                                              type="button"
+                                              className="ladderSaveBtn"
+                                              onClick={() =>
+                                                savePlanToNotebook({
+                                                  criterion: 'Vocabulary',
+                                                  quote: highlightSummary.vocabWeakness?.sourcePhrase || '',
+                                                  fix: highlightSummary.vocabWeakness?.replacement || '',
+                                                  thaiMeaning: highlightSummary.vocabWeakness?.thaiMeaning
+                                                })
+                                              }
+                                            >
+                                              ＋ บันทึกลง Notebook
+                                            </button>
+                                          </article>
+                                        )}
+                                      </div>
+                                    </section>
+                                  )}
                                 </aside>
                               )}
                               <div className="notebookQuickAddBar">
@@ -31773,7 +31907,9 @@ function App() {
                         <span className="expectedScoreBandChipLabel">{option.label}</span>
                         <span className="expectedScoreBandChipSub">{option.subtitle}</span>
                       </span>
-                      <span className="expectedScoreBandChipState">{isActive ? 'เลือกแล้ว' : 'กดเพื่อเลือก'}</span>
+                      {isActive ? (
+                        <span className="expectedScoreBandChipState">เลือกแล้ว</span>
+                      ) : null}
                     </button>
                   )
                 })}

@@ -156,7 +156,7 @@
 
 .expectedScoreBandRail {
   display: grid;
-  gap: 10px;
+  gap: 6px;
   align-content: start;
   overflow: auto;
   padding-right: 2px;
@@ -166,13 +166,13 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   width: 100%;
-  padding: 14px 14px 14px 16px;
+  padding: 9px 12px 9px 14px;
   text-align: left;
   border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 16px;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.78);
   cursor: pointer;
   transition:
@@ -276,16 +276,33 @@
   background: #f59e0b;
 }
 
+.expectedScoreBandChip-band55.is-active::before {
+  background: #fb923c;
+}
+
 .expectedScoreBandChip-band6.is-active::before {
   background: var(--bc-blue);
+}
+
+.expectedScoreBandChip-band65.is-active::before {
+  background: #38bdf8;
 }
 
 .expectedScoreBandChip-band7.is-active::before {
   background: var(--bc-yellow);
 }
 
+.expectedScoreBandChip-band75.is-active::before {
+  background: #a3e635;
+}
+
+.expectedScoreBandChip-band8.is-active::before,
 .expectedScoreBandChip-band89.is-active::before {
   background: #4f46e5;
+}
+
+.expectedScoreBandChip-band85.is-active::before {
+  background: #7c3aed;
 }
 
 .expectedScoreDetailPanel {

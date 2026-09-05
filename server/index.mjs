@@ -454,21 +454,22 @@ Band 5: simple tense ผิด ไม่มี tense shift ที่ถูกต
 Band 4: เหมือน band 5 และรบกวนความเข้าใจชัดเจน
 
 คำศัพท์ (Vocabulary)
+กฎสำคัญ: ความเป็นธรรมชาติ (naturalness) ไม่ใช่เกณฑ์ ให้ตรวจเฉพาะคำที่ผิดจริงเท่านั้น — ใช้คำผิดความหมาย ผิด collocation หรือทำให้เข้าใจไม่ได้ วลีที่ถูกความหมาย เช่น "prefer something more logical" ห้ามนับเป็น error แม้จะมีวลีที่ฟัง native กว่า
 Band 9: ${
   testMode === 'part1' || testMode === 'part3'
-    ? 'collocation อย่างน้อย 10 จุด และ C1-C2 อย่างน้อย 5 จุด ไม่มีคำผิดธรรมชาติ'
-    : 'collocation > 6 (B1+) และ C1-C2 อย่างน้อย 2 ไม่มีคำผิดธรรมชาติ'
+    ? 'collocation อย่างน้อย 10 จุด และ C1-C2 อย่างน้อย 5 จุด ไม่มี lexical error'
+    : 'collocation > 6 (B1+) และ C1-C2 อย่างน้อย 2 ไม่มี lexical error'
 }
-Band 8: collocation > 4-5 (B1+) และ C1-C2 อย่างน้อย 1 ไม่มีคำผิดธรรมชาติ
+Band 8: collocation > 4-5 (B1+) และ C1-C2 อย่างน้อย 1 ไม่มี lexical error
 Band 7.5: ${
   testMode === 'part1' || testMode === 'part3'
-    ? 'collocation 5-6 จุด (B1+) และ C1-C2 อย่างน้อย 1 จุด ไม่มี lexical error และคำแปลกหูไม่เกิน 2 ครั้ง'
-    : 'collocation 4-5 จุด (B1+) ไม่มี lexical error และคำแปลกหูไม่เกิน 2 ครั้ง (ยังไม่จำเป็นต้องมี C1-C2 หรือมีได้ 0-1 จุด)'
+    ? 'collocation 5-6 จุด (B1+) และ C1-C2 อย่างน้อย 1 จุด ไม่มี lexical error'
+    : 'collocation 4-5 จุด (B1+) ไม่มี lexical error (ยังไม่จำเป็นต้องมี C1-C2 หรือมีได้ 0-1 จุด)'
 }
-Band 7: collocation 2-5 (B1+) ไม่มี lexical error และคำแปลกหูไม่เกิน 3 ครั้ง
-Band 6.5: collocation 2-3 จุด (B1+) มี lexical error ได้ไม่เกิน 1 จุด คำแปลกหู/ผิดบริบทไม่เกิน 4 ครั้ง แต่ยังเข้าใจได้
-Band 6: collocation ส่วนใหญ่ A2-B1 มีคำแปลกหู/ผิดบ่อยแต่ยังพอเข้าใจ
-Band 5.5: collocation ส่วนใหญ่ A2-B1 มีคำผิด/แปลกหูค่อนข้างบ่อย และมีประโยคที่เข้าใจไม่ได้ 1-2 ประโยค
+Band 7: collocation 2-5 (B1+) ไม่มี lexical error
+Band 6.5: collocation 2-3 จุด (B1+) มี lexical error ได้ไม่เกิน 1 จุด แต่ยังเข้าใจได้
+Band 6: collocation ส่วนใหญ่ A2-B1 มี lexical error ได้บ่อยแต่ยังพอเข้าใจ
+Band 5.5: collocation ส่วนใหญ่ A2-B1 มีคำผิดค่อนข้างบ่อย และมีประโยคที่เข้าใจไม่ได้ 1-2 ประโยค
 Band 5: collocation ส่วนใหญ่ A2-B1 มีคำผิดบ่อยและมีประโยคเข้าใจไม่ได้มากกว่า 2-3 ประโยค
 Band 4: collocation ส่วนใหญ่ A1-B1 มีคำผิดบ่อยและมีประโยคเข้าใจไม่ได้มากกว่า 3 ประโยค
 
@@ -571,10 +572,10 @@ Rules:
 - requiredTicks[].evidence must list EVERY item from the submitted text that satisfies that requirement (up to 10), not just one example — e.g. for a collocation tick, list all the collocations found; for a linking-words tick, list every linker used
 - plusOnePlan should include as many actionable quote+fix items as possible (prefer 12-20 when evidence supports it)
 - analysisSignals.grammarErrorCount = count clear grammatical errors across the submitted answer(s)
-- analysisSignals.vocabularyIssueCount = count clear vocabulary mistakes or awkward lexical choices across the submitted answer(s)
+- analysisSignals.vocabularyIssueCount = count vocabulary that is WRONG only: wrong word, wrong meaning, or a collocation that is incorrect. Do NOT count phrases that are correct English but less native-like, less idiomatic, or "not natural". Example: "prefer something more logical" is correct and must NOT be counted.
 - analysisSignals.meaningImpact must be one of: "none", "minor", "major"
 - Use "none" when there are many mistakes but the answer is still very understandable.
-- Use "minor" when there is awkward phrasing but the speaker's intent still stays clear overall.
+- Use "minor" when there are some wrong words but the speaker's intent still stays clear overall.
 - Use "major" only when repeated mistakes alter or obscure the speaker's intended meaning.
 - Fluency must not go below Band 6 just because of frequent grammar mistakes when meaning remains understandable.
 - Fluency should fall to Band 5 or Band 4 only when grammar mistakes alter or seriously obscure the speaker's intent.
@@ -694,7 +695,7 @@ Rules:
 - requiredTicks must reflect the chosen band's logic
 - requiredTicks[].evidence must list EVERY matching item from the submitted text (up to 10), not just one example
 - analysisSignals.grammarErrorCount = count clear grammatical errors across the whole task
-- analysisSignals.vocabularyIssueCount = count clear vocabulary issues across the whole task
+- analysisSignals.vocabularyIssueCount = count vocabulary that is WRONG only (wrong word, wrong meaning, incorrect collocation). Do not count correct English that is merely less natural.
 - analysisSignals.meaningImpact must be one of: "none", "minor", "major"
 - strengths: 2-4 bullet-sized strings
 - improvements: 2-4 actionable strings
@@ -917,19 +918,21 @@ Band 4:
 - Make grammar mistakes throughout, with over 50% hindering understanding and creating misunderstanding of intent
 
 Vocabulary
+Naturalness is not a factor. Do not penalise correct English that is simply simple, translated, or less native-like. Only count vocabulary that is WRONG.
+
 Band 9:
 - Use at least 6 B2-C2 level collocations
-- No awkward vocabulary use and no vocabulary mistakes
+- No vocabulary mistakes
 - At least 4 C2 level vocabulary items
 
 Band 8:
 - Use at least 6 B2-C2 level collocations
-- No awkward vocabulary use and no vocabulary mistakes
+- No vocabulary mistakes
 - At least 2 C2 level vocabulary items
 
 Band 7:
 - Use at least 6 B1+ collocations
-- No wrong word use, up to 3 awkward phrases allowed
+- No wrong word use
 
 Band 6:
 - Mostly use basic vocabulary
@@ -1057,21 +1060,19 @@ Return only valid JSON with this schema:
 }
 
 Rules:
-- Generate 4-10 suggestions only when the learner actually used a phrase that can be improved.
+- Suggest a replacement ONLY when the learner's phrase is WRONG: wrong word, wrong meaning, or an incorrect collocation.
+- Naturalness is NOT a factor. Do not replace a correct phrase just because another option sounds more native, more idiomatic, more fluent, or higher-level.
+- Example of a correct phrase that must NOT be suggested: "prefer something more logical" is fine. Do not change it to "have a more logical mindset" or any idiom.
 - Every sourcePhrase must appear verbatim in the learner transcript.
-- replacement must be a more natural or more precise phrase for IELTS speaking, not just a synonym list.
-- Prioritize spoken English over academic or essay-style English.
-- Prefer conversational, natural, high-scoring spoken phrases that a candidate could realistically say under time pressure.
-- Avoid upgrades that sound too formal, too literary, too academic, or like written IELTS essays unless the original answer clearly needs that exact register.
-- If two possible upgrades exist, choose the one that sounds more natural when spoken aloud.
-- Do NOT fix grammar globally. Focus only on vocabulary, collocation, phrasing, and naturalness.
+- replacement must correct the wrong word or collocation, staying close to the learner's meaning.
+- Do NOT fix grammar here. Grammar-only issues belong in the grammar report.
 - sourceQuestionIndex is zero-based. Use -1 if the transcript is not question-split.
 - level should be one of: A2, B1, B2, C1, C2.
 - thaiMeaning and reasonThai must be Thai.
 - Use the polite Thai register with "ครับ" and never "ค่ะ".
 - Avoid repeating the same replacement idea.
-- If the answer is already strong, still provide a few meaningful refinement ideas instead of generic fillers.
-- In reasonThai, explain briefly why the new phrase sounds more natural in spoken English.
+- In reasonThai, explain why the original is WRONG, not why another phrase sounds nicer.
+- If there is no wrong vocabulary, return an empty suggestions array. Do not invent style upgrades.
 
 Test mode: ${testMode}
 Full punctuated transcript:
@@ -8405,7 +8406,7 @@ const summarizeRequirementProgress = ({ requirement, punctuatedTranscript, quest
     normalizedRequirement.includes('คำผิดบริบท')
   ) {
     return {
-      statusThai: 'สถานะ: ข้อนี้ผ่านเมื่อไม่มีคำที่ผิดบริบทหรือฟังแปลกหูเลยครับ',
+      statusThai: 'สถานะ: ข้อนี้ผ่านเมื่อไม่มีคำที่ผิดความหมายหรือผิด collocation ครับ',
       originalText: '',
       improvedText:
         'วิธีทำให้ผ่าน: (1) เลี่ยงคำเติมอย่าง "you know", "a lot of" — เปลี่ยนเป็น "quite a few", "a great deal of" ' +
@@ -9233,7 +9234,7 @@ const buildQuestionModeFluencyRequiredTicks = ({ band, signals, punctuatedTransc
         evidence: fallbackEvidence
       },
       {
-        requirement: 'No vocabulary mistakes or awkward wording',
+        requirement: 'No vocabulary mistakes',
         isMet: signals.vocabularyIssueCount === 0,
         evidence: fallbackEvidence
       }
@@ -9254,7 +9255,7 @@ const buildQuestionModeFluencyRequiredTicks = ({ band, signals, punctuatedTransc
         evidence: fallbackEvidence
       },
       {
-        requirement: 'No more than 1 vocabulary mistake or awkward phrase',
+        requirement: 'No more than 1 vocabulary mistake',
         isMet: signals.vocabularyIssueCount !== null ? signals.vocabularyIssueCount <= 1 : false,
         evidence: fallbackEvidence
       }
@@ -9275,7 +9276,7 @@ const buildQuestionModeFluencyRequiredTicks = ({ band, signals, punctuatedTransc
         evidence: fallbackEvidence
       },
       {
-        requirement: 'No more than 3 vocabulary mistakes or awkward phrases',
+        requirement: 'No more than 3 vocabulary mistakes',
         isMet: signals.vocabularyIssueCount !== null ? signals.vocabularyIssueCount <= 3 : false,
         evidence: fallbackEvidence
       }
@@ -9452,31 +9453,29 @@ const STANDARD_CHECKLIST_REQUIREMENTS = {
     9: [
       'มี collocation มากกว่า 6 คำในระดับ B1 ขึ้นไป',
       'มี collocation ระดับ C1-C2 อย่างน้อย 2 คำ',
-      'ไม่มี lexical choice ที่ผิดหรือฟังแปลกหูเลย'
+      'ไม่มี lexical error'
     ],
     8: [
       'มี collocation มากกว่า 4-5 คำในระดับ B1 ขึ้นไป',
       'มี collocation ระดับ C1-C2 อย่างน้อย 1 คำ',
-      'ไม่มี lexical choice ที่ผิดหรือฟังแปลกหูเลย'
+      'ไม่มี lexical error'
     ],
     7: [
       'มี collocation มากกว่า 2-5 คำในระดับ B1 ขึ้นไป',
-      'ไม่มี lexical error สำคัญ',
-      'มีคำที่ฟังแปลกหูได้ไม่เกิน 3 ครั้ง'
+      'ไม่มี lexical error'
     ],
     6: [
       'collocation และคำศัพท์ส่วนใหญ่อยู่ระดับ A2-B1',
-      'มีคำที่ฟังแปลกหูและ lexical error ตลอดการพูด',
-      'ยังพอเข้าใจความหมายได้'
+      'มี lexical error ได้แต่ยังพอเข้าใจความหมาย'
     ],
     5: [
       'collocation และคำศัพท์ส่วนใหญ่อยู่ระดับ A2-B1',
-      'มีคำที่ฟังแปลกหูและ lexical error ตลอดการพูด',
+      'มี lexical error ตลอดการพูด',
       'มีประโยคที่เข้าใจไม่ได้มากกว่า 2-3 ประโยค'
     ],
     4: [
       'collocation และคำศัพท์ส่วนใหญ่อยู่ระดับ A1-B1',
-      'มีคำที่ฟังแปลกหูและ lexical error ตลอดการพูด',
+      'มี lexical error ตลอดการพูด',
       'มีประโยคที่เข้าใจไม่ได้มากกว่า 3 ประโยค'
     ]
   },
@@ -9530,9 +9529,9 @@ const PART2_GRAMMAR_REQUIREMENTS = {
 
 const PART13_LEXICAL_REQUIREMENTS = {
   9: [
-    'มี collocation อย่างน้อย 10 คำที่ใช้ได้เป็นธรรมชาติ',
+    'มี collocation อย่างน้อย 10 คำ',
     'มีคำศัพท์ระดับ C1-C2 อย่างน้อย 5 คำ',
-    'ไม่มี lexical choice ที่ผิดหรือฟังแปลกหูเลย'
+    'ไม่มี lexical error'
   ]
 }
 
@@ -9574,16 +9573,16 @@ const FULL_MOCK_WHOLE_CHECKLIST_REQUIREMENTS = {
     9: [
       'ใช้กลุ่มคำที่มักใช้คู่กัน (Collocations) ในระดับ B2-C2 อย่างน้อย 6 กลุ่มคำ',
       'ใช้คำศัพท์ระดับวิชาการขั้นสูง (C2 level) อย่างน้อย 4 คำ',
-      'ไม่มี การใช้คำศัพท์ที่ฟังดูขัดหู/ไม่เป็นธรรมชาติ (No awkward use) และไม่มีการใช้คำผิดบริบทเลย'
+      'ไม่มี lexical error (คำผิดความหมายหรือผิด collocation) — ความเป็นธรรมชาติไม่ใช่เกณฑ์'
     ],
     8: [
       'ใช้กลุ่มคำที่มักใช้คู่กัน (Collocations) ในระดับ B2-C2 อย่างน้อย 6 กลุ่มคำ',
       'ใช้คำศัพท์ระดับวิชาการขั้นสูง (C2 level) อย่างน้อย 2 คำ',
-      'ไม่มี การใช้คำศัพท์ที่ฟังดูขัดหู/ไม่เป็นธรรมชาติ และไม่มีการใช้คำผิดบริบท'
+      'ไม่มี lexical error'
     ],
     7: [
       'ใช้กลุ่มคำที่มักใช้คู่กัน (Collocations) ในระดับ B1 ขึ้นไป อย่างน้อย 6 กลุ่มคำ',
-      'ไม่มี การใช้คำผิดความหมาย (Wrong use) แต่อาจอนุโลมให้มีการใช้คำที่ฟังดูไม่เป็นธรรมชาติ (Awkwardness) ได้สูงสุด 3 จุด'
+      'ไม่มี การใช้คำผิดความหมาย (Wrong use)'
     ],
     6: [
       'ใช้คำศัพท์พื้นฐานทั่วไปเป็นหลัก',
@@ -15054,7 +15053,8 @@ const runAssessment = async (
     durationSeconds,
     audioBase64,
     audioMimeType,
-    assessmentMode
+    assessmentMode,
+    expectedScore
   },
   onProgress = () => {}
 ) => {
@@ -15329,7 +15329,8 @@ const runAssessment = async (
       ...primaryReport,
       questionBreakdown: enrichedQuestionBreakdown,
       vocabularyLevelUpSuggestions: enrichedVocabularySuggestions,
-      topFixes
+      topFixes,
+      expectedScore: String(expectedScore || '').trim() || undefined
     }
   }
   onProgress(92, 'Generating your detailed score report.')
@@ -15337,6 +15338,7 @@ const runAssessment = async (
   onProgress(100, 'Your report is ready.')
   return {
     ...comparisons[primaryProvider],
+    expectedScore: String(expectedScore || '').trim() || undefined,
     primaryProvider,
     comparisons,
     comparisonErrors: errors,
