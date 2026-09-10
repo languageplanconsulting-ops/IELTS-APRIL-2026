@@ -1056,6 +1056,42 @@ type FullExamPhase = 'part1' | 'part2_prep' | 'part2_speaking' | 'rest' | 'part3
 
 type AttemptStage = 'idle' | 'prep' | 'speaking' | 'assessing' | 'result'
 
+// A speaking attempt whose scoring failed, kept locally so we can silently retry
+// it later (e.g. the next time the student opens the app) and, once it succeeds,
+// drop the finished report into their notebook with a "your failed test is saved"
+// popup. The full submitted payload is stored so the retry needs no re-recording.
+type PendingSpeakingAssessment = {
+  id: string
+  payload: Record<string, unknown>
+  topicTitle: string
+  topicCategory: string
+  prompt: string
+  cues: string[]
+  testMode: SpeakingTestMode
+  createdAt: string
+  attempts: number
+  lastError?: string
+}
+const PENDING_ASSESS_KEY = 'pendingSpeakingAssessments:v1'
+const PENDING_ASSESS_MAX_ATTEMPTS = 40
+const PENDING_ASSESS_MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000
+const loadPendingAssessments = (): PendingSpeakingAssessment[] => {
+  try {
+    const raw = window.localStorage.getItem(PENDING_ASSESS_KEY)
+    const parsed = raw ? JSON.parse(raw) : []
+    return Array.isArray(parsed) ? (parsed as PendingSpeakingAssessment[]) : []
+  } catch {
+    return []
+  }
+}
+const savePendingAssessments = (list: PendingSpeakingAssessment[]): void => {
+  try {
+    window.localStorage.setItem(PENDING_ASSESS_KEY, JSON.stringify(list))
+  } catch {
+    // Best-effort: a full/blocked localStorage just means no offline retry queue.
+  }
+}
+
 type AssessmentReport = {
   provider: string
   nextAttemptFocusThai?: string
@@ -7286,6 +7322,9 @@ function App() {
     icon: string
   } | null>(null)
   const [speakingReportSaved, setSpeakingReportSaved] = useState(false)
+  // Popup shown when a previously-failed speaking test is recovered in the background.
+  const [recoveredReportNotice, setRecoveredReportNotice] = useState<{ topicTitle: string; count: number } | null>(null)
+  const pendingAssessRetryRunningRef = useRef(false)
   const [adminLearnerNameInput, setAdminLearnerNameInput] = useState('')
   const [adminLearnerEmailInput, setAdminLearnerEmailInput] = useState('')
   const [adminLearnerPasswordInput, setAdminLearnerPasswordInput] = useState('')
@@ -12789,6 +12828,117 @@ function App() {
     saveFullReportToNotebook(report as AssessmentReport, { auto: true })
   }
 
+  // Save a report recovered from the offline retry queue. Unlike saveFullReportToNotebook
+  // this takes the topic context explicitly (from the stored pending item) rather than
+  // reading current component state, since the student may be on a different screen now.
+  const saveRecoveredReportToNotebook = (
+    report: AssessmentResult,
+    item: PendingSpeakingAssessment
+  ) => {
+    const customSectionName = 'saved reports'
+    const nextSections = customSectionsRef.current.includes(customSectionName)
+      ? customSectionsRef.current
+      : [...customSectionsRef.current, customSectionName]
+    setCustomSections(nextSections)
+    const nextEntry: NotebookEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      section: 'custom',
+      customSectionName,
+      topicTitle: item.topicTitle || 'Saved report',
+      criterion: 'Full Report',
+      quote: `กู้รายงานที่เคยตรวจไม่สำเร็จของ "${item.topicTitle || 'แบบทดสอบ'}" สำเร็จแล้ว`,
+      fix: 'เปิดรายงานฉบับเต็มนี้เพื่อดูคะแนนและ feedback ได้เลย',
+      thaiMeaning: '',
+      personalNote: '',
+      savedReportSnapshot: {
+        testMode: item.testMode,
+        topicTitle: item.topicTitle || 'Saved report',
+        topicCategory: item.topicCategory || 'Speaking',
+        prompt: item.prompt || '',
+        cues: Array.isArray(item.cues) ? item.cues : [],
+        report,
+        selectedProvider: report.primaryProvider || 'gemini'
+      },
+      createdAt: new Date().toISOString()
+    }
+    const nextEntries = [nextEntry, ...notebookEntriesRef.current]
+    setNotebookEntries(nextEntries)
+    void syncNotebookSnapshotToSupabase({
+      entries: nextEntries,
+      sections: nextSections,
+      successNotice: undefined
+    })
+  }
+
+  // Background retry: whenever a signed-in (non-trial) student is in the app, walk the
+  // local queue of speaking attempts whose scoring failed and try /api/assess again.
+  // The server re-scores (Gemini → OpenAI backup) and persists to the admin store on
+  // success; here we drop the finished report into the student's notebook and show a
+  // popup so they know their failed test was saved. Stale/looping items are pruned.
+  useEffect(() => {
+    if (!authSession || isTrialUser) return
+    let cancelled = false
+
+    const processQueue = async () => {
+      if (pendingAssessRetryRunningRef.current) return
+      if (loadPendingAssessments().length === 0) return
+      pendingAssessRetryRunningRef.current = true
+      let recovered = 0
+      let lastTopic = ''
+      try {
+        for (const item of loadPendingAssessments()) {
+          if (cancelled) break
+          const tooOld = Date.now() - Date.parse(item.createdAt || '') > PENDING_ASSESS_MAX_AGE_MS
+          if ((item.attempts || 0) >= PENDING_ASSESS_MAX_ATTEMPTS || tooOld) {
+            savePendingAssessments(loadPendingAssessments().filter((x) => x.id !== item.id))
+            continue
+          }
+          try {
+            const resp = await fetch('/api/assess', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+              body: JSON.stringify(item.payload)
+            })
+            if (!resp.ok) {
+              throw new Error((await resp.text().catch(() => '')) || `status ${resp.status}`)
+            }
+            const result = (await resp.json()) as AssessmentResult
+            savePendingAssessments(loadPendingAssessments().filter((x) => x.id !== item.id))
+            saveRecoveredReportToNotebook(result, item)
+            recovered += 1
+            lastTopic = item.topicTitle || lastTopic
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error)
+            savePendingAssessments(
+              loadPendingAssessments().map((x) =>
+                x.id === item.id ? { ...x, attempts: (x.attempts || 0) + 1, lastError: message.slice(0, 200) } : x
+              )
+            )
+          }
+        }
+      } finally {
+        pendingAssessRetryRunningRef.current = false
+      }
+      if (!cancelled && recovered > 0) {
+        setRecoveredReportNotice({ topicTitle: lastTopic || 'แบบทดสอบ', count: recovered })
+        try {
+          const mePayload = await fetchJson<AuthApiResponse>('/api/auth/me', { headers: getAuthHeaders() })
+          setCreditProfile(mePayload.creditProfile)
+        } catch {
+          // Non-fatal: the notebook entry is already saved even if the credit refresh fails.
+        }
+      }
+    }
+
+    void processQueue()
+    const interval = window.setInterval(() => void processQueue(), 60000)
+    return () => {
+      cancelled = true
+      window.clearInterval(interval)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authSession, isTrialUser])
+
   const handleDownloadCurrentRecording = async () => {
     if (!audioUrl) return
     try {
@@ -17397,6 +17547,10 @@ function App() {
     speakingReportSavedRef.current = false
     setSpeakingReportSaved(false)
 
+    // Captured once the request body is built, so the catch can queue it for a later
+    // background retry if scoring fails (see the pending-assessment retry effect).
+    let recoveryPayload: PendingSpeakingAssessment | null = null
+
     try {
       // Deliberately not gating on the health probe here: the real /api/assess call
       // below reports precise errors, and a flaky probe used to block valid attempts
@@ -17441,6 +17595,21 @@ function App() {
         expectedScore: selectedExpectedScore || undefined,
         audioBase64: null,
         audioMimeType: null
+      }
+      // Non-trial attempts are eligible for offline retry: keep the exact payload plus
+      // enough topic context to rebuild the notebook entry if scoring fails now.
+      if (!isTrialSpeakingFlow && !isTrialUser) {
+        recoveryPayload = {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          payload: assessmentRequestBody,
+          topicTitle: String(options?.forcedTopic || activeTopic?.title || 'แบบทดสอบ Speaking'),
+          topicCategory: String(activeTopic?.category || 'Speaking'),
+          prompt: String(options?.forcedPrompt || activeTopic?.prompt || ''),
+          cues: (options?.forcedCues ?? activeTopic?.cues ?? []) as string[],
+          testMode: effectiveMode,
+          createdAt: new Date().toISOString(),
+          attempts: 0
+        }
       }
       const useDirectAssessmentFlow = shouldUseDirectAssessmentFlow()
 
@@ -17682,7 +17851,24 @@ function App() {
       const message = error instanceof Error ? error.message : 'Unknown assessment error'
       setIsFullMockAssessmentLoading(false)
       setAssessmentCountdownSeconds(0)
-      setAssessmentError(`Assessment failed: ${message}`)
+      // If we captured a scoreable payload, queue it for a silent background retry
+      // instead of just showing an error — the student's answer is not lost, and the
+      // finished report will land in their notebook (with a popup) once it succeeds.
+      if (recoveryPayload) {
+        try {
+          const queued = loadPendingAssessments()
+          queued.push({ ...recoveryPayload, lastError: message.slice(0, 200) })
+          savePendingAssessments(queued)
+          setAssessmentError(
+            'ระบบตรวจไม่สำเร็จในตอนนี้ แต่เราเก็บคำตอบของคุณไว้แล้วและจะตรวจให้ใหม่อัตโนมัติ ' +
+              'เมื่อเสร็จ รายงานจะถูกบันทึกไว้ในสมุดโน้ตของคุณ (คุณเปิดแอปทิ้งไว้สักครู่ หรือกลับมาเปิดใหม่ก็ได้)'
+          )
+        } catch {
+          setAssessmentError(`Assessment failed: ${message}`)
+        }
+      } else {
+        setAssessmentError(`Assessment failed: ${message}`)
+      }
       setAssessmentProgress(100)
       setAssessmentProgressTarget(100)
       setAttemptStage('result')
@@ -32410,6 +32596,77 @@ function App() {
         </div>
       )}
       <PracticeActionToast toast={practiceActionToast} onDismiss={dismissPracticeActionToast} />
+      {recoveredReportNotice && (
+        <div
+          role="status"
+          style={{
+            position: 'fixed',
+            left: '50%',
+            bottom: '24px',
+            transform: 'translateX(-50%)',
+            zIndex: 4000,
+            maxWidth: 'min(92vw, 440px)',
+            background: '#0f9d58',
+            color: '#ffffff',
+            borderRadius: '14px',
+            padding: '16px 18px',
+            boxShadow: '0 12px 32px rgba(0,0,0,0.28)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+            <span style={{ fontSize: '20px', lineHeight: 1 }}>✅</span>
+            <div>
+              <p style={{ margin: 0, fontWeight: 700 }}>ตรวจสำเร็จแล้ว!</p>
+              <p style={{ margin: '4px 0 0', fontSize: '13px', lineHeight: 1.45 }}>
+                {recoveredReportNotice.count > 1
+                  ? `แบบทดสอบที่ตรวจไม่สำเร็จก่อนหน้านี้ ${recoveredReportNotice.count} ชุด ตรวจเสร็จแล้ว`
+                  : `แบบทดสอบ "${recoveredReportNotice.topicTitle}" ที่เคยตรวจไม่สำเร็จ ตรวจเสร็จแล้ว`}{' '}
+                และถูกบันทึกไว้ในสมุดโน้ตของคุณเรียบร้อย
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+            <button
+              type="button"
+              onClick={() => setRecoveredReportNotice(null)}
+              style={{
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.6)',
+                color: '#ffffff',
+                borderRadius: '8px',
+                padding: '6px 12px',
+                cursor: 'pointer',
+                fontSize: '13px'
+              }}
+            >
+              ปิด
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedNotebookSection('saved reports')
+                setActivePage('notebook')
+                setRecoveredReportNotice(null)
+              }}
+              style={{
+                background: '#ffffff',
+                border: 'none',
+                color: '#0f9d58',
+                borderRadius: '8px',
+                padding: '6px 14px',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: 700
+              }}
+            >
+              เปิดสมุดโน้ต
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
