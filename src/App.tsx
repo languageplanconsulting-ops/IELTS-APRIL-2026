@@ -30827,6 +30827,27 @@ function App() {
                           const activeReport =
                             assessmentResult.comparisons?.[selectedProvider] ?? assessmentResult
                           const overallBand = activeReport.totalScore ?? activeReport.overallBand
+                          // Guard: a saved report can arrive without criteria / band (empty
+                          // or partial stored payload). Without this the unconditional
+                          // .toFixed() / criteria access below throws and blanks the whole
+                          // report card, so "view feedback" silently does nothing.
+                          if (
+                            !activeReport ||
+                            !activeReport.criteria ||
+                            typeof activeReport.criteria.fluency !== 'number' ||
+                            typeof activeReport.criteria.lexical !== 'number' ||
+                            typeof activeReport.criteria.grammar !== 'number' ||
+                            typeof overallBand !== 'number'
+                          ) {
+                            return (
+                              <div className="reportV2">
+                                <p className="error" style={{ margin: '1.5rem 0' }}>
+                                  รายงานนี้เปิดดูไม่ได้ เพราะข้อมูลคะแนนไม่ครบ (อาจถูกบันทึกตอนระบบตรวจไม่สำเร็จ)
+                                  กรุณาลองทำแบบทดสอบใหม่อีกครั้ง หรือแจ้งแอดมินเพื่อประเมินให้ใหม่
+                                </p>
+                              </div>
+                            )
+                          }
                           const isMockFullReport = Boolean(activeReport.mockFullReport)
                           const criteriaItems = [
                             { label: 'Fluency', value: activeReport.criteria.fluency },
