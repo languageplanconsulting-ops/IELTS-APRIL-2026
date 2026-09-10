@@ -14010,7 +14010,13 @@ app.get('/api/health', (_, res) => {
 // Public, unauthenticated: lets the trial landing page hide the sign-up form
 // instead of letting people fill it in and hit a 403 on submit.
 app.get('/api/public/config', (_, res) => {
-  res.json({ trialSignupEnabled: TRIAL_SIGNUP_ENABLED })
+  res.json({
+    trialSignupEnabled: TRIAL_SIGNUP_ENABLED,
+    // Booleans only — never the key values. Lets us confirm from outside that
+    // the speaking scoring providers are configured on this deployment.
+    geminiScoringEnabled: Boolean(String(process.env.GEMINI_API_KEY || '').trim()),
+    openaiScoringEnabled: hasOpenAIScoring
+  })
 })
 
 app.get('/api/speaking-sample-videos', requireAuth, async (_req, res) => {
