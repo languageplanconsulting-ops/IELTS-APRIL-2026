@@ -11423,8 +11423,15 @@ const callGemini = async (prompt, usageTracker) => {
   if (!apiKey) throw new Error('Missing GEMINI_API_KEY')
   const candidates = GEMINI_ASSESSMENT_MODELS
   const tried = []
-  for (const model of [...new Set(candidates)]) {
-    const maxAttempts = hasOpenAIScoring ? 2 : 4
+  // When the OpenAI backup is available we keep Gemini on a short leash: one shot
+  // per model with a ~20s timeout, so a slow or quota-limited Gemini fails over to
+  // the fast backup in seconds instead of making the student wait 60-100s+.
+  const geminiTimeoutMs = hasOpenAIScoring ? 20000 : 65000
+  // With a backup available, don't walk the whole Gemini model list (they share one
+  // quota/key and similar latency) — try the primary model, then fail over.
+  const modelList = hasOpenAIScoring ? [...new Set(candidates)].slice(0, 1) : [...new Set(candidates)]
+  for (const model of modelList) {
+    const maxAttempts = hasOpenAIScoring ? 1 : 4
     for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
       const response = await safeFetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
@@ -11436,7 +11443,7 @@ const callGemini = async (prompt, usageTracker) => {
             generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
           })
         },
-        { timeoutMs: 65000, retries: 1, retryDelayMs: 1500 }
+        { timeoutMs: geminiTimeoutMs, retries: hasOpenAIScoring ? 0 : 1, retryDelayMs: 1500 }
       )
       if (response.ok) {
         const data = await response.json()
@@ -11467,6 +11474,12 @@ const callGemini = async (prompt, usageTracker) => {
       }
       const body = await response.text().catch(() => '')
       tried.push(`${model}#${attempt}: ${response.status} ${body.slice(0, 120)}`)
+      // A 429 is a project-wide quota cap on this API key, so every other Gemini
+      // model will 429 too. When the OpenAI backup exists, stop hammering Gemini
+      // and fail over immediately instead of walking the whole model list.
+      if (hasOpenAIScoring && response.status === 429) {
+        throw new Error(`Gemini quota exceeded (429); failing over to backup. ${tried.join(' | ')}`)
+      }
       if (isRetryableGeminiHttpStatus(response.status) && attempt < maxAttempts) {
         await sleep(1800 * attempt * attempt)
         continue
