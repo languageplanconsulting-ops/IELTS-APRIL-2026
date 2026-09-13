@@ -1,0 +1,173 @@
+/* Idea Garden — pastel mindmap + Notion notes. All rules are scoped under
+   .ideaGarden so nothing leaks into the rest of the IELTS admin. */
+.ideaGarden {
+  --ig-bg: #fff6fb;
+  --ig-ink: #5b4a57;
+  --ig-ink-soft: #9a8793;
+  --ig-panel: #fffdfe;
+  --ig-panel-edge: #ffe1ef;
+  --ig-accent: #ff9ec4;
+  --ig-accent-deep: #ff6fa5;
+  position: relative;
+  width: 100%;
+  height: min(78vh, 820px);
+  min-height: 520px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid var(--ig-panel-edge);
+  background: var(--ig-bg);
+  font-family: 'Quicksand', 'Baloo 2', system-ui, sans-serif;
+  color: var(--ig-ink);
+}
+.ideaGarden * { box-sizing: border-box; }
+.ideaGarden button { font-family: inherit; cursor: pointer; }
+
+.ideaGarden .ig-topbar {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 20; display: flex; align-items: center; gap: 12px;
+  background: rgba(255, 253, 254, 0.9); backdrop-filter: blur(10px);
+  border: 2px solid var(--ig-panel-edge); border-radius: 999px;
+  padding: 7px 8px 7px 18px; box-shadow: 0 10px 30px rgba(255, 158, 196, 0.2);
+}
+.ideaGarden .ig-brand {
+  font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 18px;
+  color: var(--ig-accent-deep); display: flex; gap: 7px; align-items: center;
+}
+.ideaGarden .ig-hint { color: var(--ig-ink-soft); font-size: 12px; font-weight: 600; }
+.ideaGarden .ig-save { color: var(--ig-ink-soft); font-size: 12px; font-weight: 700; }
+.ideaGarden .ig-save.saving { color: var(--ig-accent-deep); }
+
+.ideaGarden .ig-pill {
+  border: 2px solid var(--ig-panel-edge); background: #fff; color: var(--ig-accent-deep);
+  font-weight: 700; font-size: 13px; padding: 8px 14px; border-radius: 999px;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.ideaGarden .ig-pill:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(255, 158, 196, .28); }
+.ideaGarden .ig-pill.primary { background: var(--ig-accent); color: #fff; border-color: var(--ig-accent); }
+.ideaGarden .ig-pill.ghost { color: var(--ig-ink-soft); }
+
+/* React Flow (scoped) */
+.ideaGarden .react-flow__attribution { display: none; }
+.ideaGarden .react-flow__handle { width: 10px; height: 10px; background: var(--ig-accent); border: 2px solid #fff; }
+.ideaGarden .react-flow__controls {
+  border-radius: 14px; overflow: hidden; border: 2px solid var(--ig-panel-edge);
+  box-shadow: 0 10px 24px rgba(255, 158, 196, .2);
+}
+.ideaGarden .react-flow__controls-button { background: #fff; border: none; color: var(--ig-accent-deep); }
+.ideaGarden .react-flow__controls-button:hover { background: #ffeef6; }
+
+/* Bubble node */
+.ideaGarden .bubble {
+  position: relative; min-width: 150px; max-width: 240px;
+  border-radius: 26px; padding: 15px 17px; border: 3px solid var(--b-border);
+  background: radial-gradient(120% 120% at 30% 20%, #ffffffcc, transparent 60%), var(--b-fill);
+  box-shadow: 0 14px 30px -12px var(--b-glow), inset 0 2px 0 #ffffffaa;
+  transition: transform .14s ease, box-shadow .14s ease; cursor: grab;
+}
+.ideaGarden .bubble:hover { transform: translateY(-2px); box-shadow: 0 20px 38px -14px var(--b-glow); }
+.ideaGarden .bubble.central { min-width: 185px; border-width: 4px; }
+.ideaGarden .bubble.selected { outline: 3px dashed var(--b-border); outline-offset: 4px; }
+.ideaGarden .bubble .kicker {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--b-ink); opacity: .7; margin-bottom: 4px;
+}
+.ideaGarden .bubble .title {
+  font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 18px; color: var(--b-ink);
+  line-height: 1.2; outline: none; word-break: break-word;
+}
+.ideaGarden .bubble.central .title { font-size: 21px; }
+.ideaGarden .bubble .dates {
+  margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--b-ink); opacity: .85;
+  display: inline-flex; align-items: center; gap: 6px; background: #ffffff88; padding: 3px 10px; border-radius: 999px;
+}
+.ideaGarden .bubble .dates input {
+  border: none; background: transparent; font: inherit; color: inherit; width: 92px; outline: none; cursor: pointer;
+}
+.ideaGarden .bubble .toolbar {
+  position: absolute; top: -14px; right: -10px; display: flex; gap: 6px; opacity: 0;
+  transition: opacity .12s ease; pointer-events: none;
+}
+.ideaGarden .bubble:hover .toolbar, .ideaGarden .bubble.selected .toolbar { opacity: 1; pointer-events: auto; }
+.ideaGarden .mini {
+  width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; display: grid; place-items: center;
+  font-size: 15px; color: #fff; box-shadow: 0 6px 14px rgba(0, 0, 0, .14);
+}
+.ideaGarden .mini.open { background: #7cc6a0; }
+.ideaGarden .mini.del { background: #ff8f9c; font-size: 17px; }
+.ideaGarden .bubble .add-child {
+  position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); background: #fff;
+  color: var(--ig-accent-deep); border: 2px dashed var(--b-border); border-radius: 999px;
+  font-weight: 800; font-size: 12px; padding: 4px 12px; opacity: 0; transition: opacity .12s ease, transform .12s ease;
+}
+.ideaGarden .bubble:hover .add-child { opacity: 1; }
+.ideaGarden .bubble .add-child:hover { transform: translateX(-50%) translateY(2px); }
+
+.ideaGarden .ig-help {
+  position: absolute; bottom: 18px; left: 18px; z-index: 15; background: rgba(255, 253, 254, .9);
+  border: 2px solid var(--ig-panel-edge); border-radius: 16px; padding: 11px 15px; max-width: 230px;
+  font-size: 12.5px; font-weight: 600; color: var(--ig-ink-soft); box-shadow: 0 10px 24px rgba(255, 158, 196, .16);
+}
+.ideaGarden .ig-help b { color: var(--ig-accent-deep); }
+
+/* Editor drawer */
+.ideaGarden .ig-scrim {
+  position: absolute; inset: 0; z-index: 40; background: rgba(120, 80, 105, 0.28); backdrop-filter: blur(2px);
+}
+.ideaGarden .ig-drawer {
+  position: absolute; top: 0; right: 0; z-index: 41; height: 100%; width: min(620px, 92%);
+  background: var(--ig-panel); border-left: 3px solid var(--ig-panel-edge);
+  box-shadow: -30px 0 60px rgba(255, 158, 196, .2); display: flex; flex-direction: column;
+}
+.ideaGarden .doc-head { padding: 22px 34px 12px; border-bottom: 2px dashed var(--ig-panel-edge); display: flex; flex-direction: column; gap: 10px; }
+.ideaGarden .doc-head .row { display: flex; align-items: center; gap: 12px; }
+.ideaGarden .chip { font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
+.ideaGarden .doc-title {
+  font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 27px; border: none; outline: none;
+  width: 100%; color: var(--ig-ink); background: transparent;
+}
+.ideaGarden .doc-dates { display: flex; align-items: center; gap: 8px; color: var(--ig-ink-soft); font-weight: 700; font-size: 13px; flex-wrap: wrap; }
+.ideaGarden .doc-dates input { border: 2px solid var(--ig-panel-edge); border-radius: 10px; padding: 5px 8px; font: inherit; color: var(--ig-ink); }
+.ideaGarden .close-x {
+  margin-left: auto; width: 36px; height: 36px; border-radius: 12px; border: 2px solid var(--ig-panel-edge);
+  background: #fff; color: var(--ig-ink-soft); font-size: 18px;
+}
+.ideaGarden .doc-body { flex: 1; overflow-y: auto; padding: 16px 34px 120px; }
+
+/* Blocks */
+.ideaGarden .block { position: relative; display: flex; gap: 8px; padding: 3px 0; }
+.ideaGarden .block .grip { opacity: 0; width: 18px; text-align: center; color: var(--ig-ink-soft); cursor: grab; user-select: none; font-size: 13px; padding-top: 4px; }
+.ideaGarden .block:hover .grip { opacity: 1; }
+.ideaGarden .block .content { flex: 1; min-width: 0; }
+.ideaGarden .editable { outline: none; font-size: 16px; line-height: 1.6; color: var(--ig-ink); min-height: 1.6em; caret-color: var(--ig-accent-deep); }
+.ideaGarden .editable:empty::before { content: attr(data-placeholder); color: #cbb9c4; }
+.ideaGarden .block.h1 .editable { font-family: 'Baloo 2', sans-serif; font-size: 25px; font-weight: 800; }
+.ideaGarden .block.h2 .editable { font-family: 'Baloo 2', sans-serif; font-size: 20px; font-weight: 800; }
+.ideaGarden .block.todo .content { display: flex; align-items: flex-start; gap: 10px; }
+.ideaGarden .todo-box { width: 22px; height: 22px; border-radius: 8px; border: 2.5px solid var(--ig-accent); flex: none; margin-top: 3px; display: grid; place-items: center; color: #fff; background: #fff; transition: background .12s ease; }
+.ideaGarden .todo-box.on { background: var(--ig-accent); }
+.ideaGarden .block.todo.done .editable { text-decoration: line-through; color: var(--ig-ink-soft); }
+.ideaGarden .callout { display: flex; gap: 12px; background: #fff5cf; border: 2px solid #ffe488; border-radius: 16px; padding: 12px 14px; width: 100%; }
+.ideaGarden .callout .emoji { font-size: 20px; }
+.ideaGarden .divider-line { height: 0; border-top: 3px dotted var(--ig-panel-edge); margin: 14px 0; width: 100%; }
+.ideaGarden .embed { width: 100%; border: 2px solid var(--ig-panel-edge); border-radius: 18px; overflow: hidden; background: #fff; }
+.ideaGarden .embed iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; display: block; }
+.ideaGarden .filecard { display: flex; align-items: center; gap: 14px; width: 100%; border: 2px solid var(--ig-panel-edge); border-radius: 16px; padding: 12px 16px; background: #fff; text-decoration: none; color: var(--ig-ink); }
+.ideaGarden .filecard .ico { font-size: 26px; }
+.ideaGarden .filecard .meta b { font-family: 'Baloo 2', sans-serif; font-size: 15px; display: block; }
+.ideaGarden .filecard .meta span { font-size: 12px; color: var(--ig-ink-soft); font-weight: 600; }
+.ideaGarden .filecard img.thumb { max-height: 220px; border-radius: 10px; }
+.ideaGarden .pagelink { display: inline-flex; align-items: center; gap: 8px; width: 100%; border: 2px dashed var(--ig-panel-edge); border-radius: 14px; padding: 10px 14px; background: #fff; color: var(--ig-accent-deep); font-weight: 700; text-align: left; }
+
+/* Slash menu */
+.ideaGarden .slash {
+  position: fixed; z-index: 60; width: 264px; max-height: 320px; overflow-y: auto; background: #fff;
+  border: 2px solid var(--ig-panel-edge); border-radius: 16px; box-shadow: 0 18px 40px rgba(255, 158, 196, .28); padding: 8px;
+}
+.ideaGarden .slash .grp { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--ig-ink-soft); padding: 8px 10px 4px; }
+.ideaGarden .slash .item { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 12px; cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; }
+.ideaGarden .slash .item.active { background: #ffeef6; }
+.ideaGarden .slash .item .ico { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 18px; background: #fff3f8; }
+.ideaGarden .slash .item .txt b { display: block; font-weight: 700; font-size: 14px; color: var(--ig-ink); }
+.ideaGarden .slash .item .txt span { font-size: 12px; color: var(--ig-ink-soft); }
+
+.ideaGarden .ig-loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ig-ink-soft); font-weight: 700; z-index: 5; }

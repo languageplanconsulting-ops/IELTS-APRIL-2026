@@ -52,6 +52,7 @@
   "dependencies": {
     "@breezystack/lamejs": "^1.2.7",
     "@xenova/transformers": "^2.17.2",
+    "@xyflow/react": "^12.11.6",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",

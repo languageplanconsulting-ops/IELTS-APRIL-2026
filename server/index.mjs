@@ -1367,6 +1367,14 @@ const SUPABASE_READING_ATTEMPTS_BUCKET = String(process.env.SUPABASE_READING_ATT
 let readingAttemptsBucketReady = false
 const SUPABASE_LISTENING_ATTEMPTS_BUCKET = String(process.env.SUPABASE_LISTENING_ATTEMPTS_BUCKET || 'listening-attempt-history').trim()
 let listeningAttemptsBucketReady = false
+// Idea Garden (admin-only mindmap workspace) — one private JSON doc + file blobs.
+const SUPABASE_IDEA_GARDEN_BUCKET = String(process.env.SUPABASE_IDEA_GARDEN_BUCKET || 'idea-garden').trim()
+const IDEA_GARDEN_DOC_PATH = 'admin/garden.json'
+const IDEA_GARDEN_FILE_SIGNED_URL_SECONDS = Math.max(
+  60,
+  Number(process.env.IDEA_GARDEN_FILE_SIGNED_URL_SECONDS || 60 * 60 * 12)
+)
+let ideaGardenBucketReady = false
 
 const ensureSupabaseConfigured = () => {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -12190,6 +12198,162 @@ app.patch('/api/me/profile', requireAuth, async (req, res) => {
         message: error instanceof Error ? error.message : 'Could not update profile.'
       }
     })
+  }
+})
+
+// ---------------------------------------------------------------------------
+// Idea Garden — admin-only pastel mindmap + Notion-style notes workspace.
+// The whole board (bubbles, edges, per-bubble note blocks) is stored as one
+// private JSON document in a Supabase Storage bucket; uploaded PDFs/images are
+// stored as separate objects in the same bucket and served via signed URLs.
+// ---------------------------------------------------------------------------
+const ensureIdeaGardenBucket = async () => {
+  if (ideaGardenBucketReady) return
+  ensureSupabaseConfigured()
+  try {
+    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_IDEA_GARDEN_BUCKET)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+  } catch (error) {
+    if (error?.status !== 404) throw error
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ id: SUPABASE_IDEA_GARDEN_BUCKET, name: SUPABASE_IDEA_GARDEN_BUCKET, public: false })
+    })
+  }
+  ideaGardenBucketReady = true
+}
+
+const loadIdeaGardenDoc = async () => {
+  await ensureIdeaGardenBucket()
+  try {
+    const response = await supabaseRequest(
+      `/storage/v1/object/${encodeURIComponent(SUPABASE_IDEA_GARDEN_BUCKET)}/${encodeStorageObjectPath(IDEA_GARDEN_DOC_PATH)}`,
+      { headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false }) }
+    )
+    const payload = await parseJsonSafe(response)
+    return payload && typeof payload === 'object' ? payload : null
+  } catch (error) {
+    if (error?.status === 400 || error?.status === 404) return null
+    throw error
+  }
+}
+
+const saveIdeaGardenDoc = async (doc) => {
+  await ensureIdeaGardenBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_IDEA_GARDEN_BUCKET)}/${encodeStorageObjectPath(IDEA_GARDEN_DOC_PATH)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': '60'
+      },
+      body: JSON.stringify(doc)
+    }
+  )
+}
+
+const uploadIdeaGardenFile = async ({ objectPath, buffer, mimeType }) => {
+  await ensureIdeaGardenBucket()
+  await supabaseRequest(
+    `/storage/v1/object/${encodeURIComponent(SUPABASE_IDEA_GARDEN_BUCKET)}/${encodeStorageObjectPath(objectPath)}`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+        'Content-Type': mimeType || 'application/octet-stream',
+        'x-upsert': 'true',
+        'cache-control': '31536000'
+      },
+      body: buffer
+    }
+  )
+}
+
+const signIdeaGardenFile = async (objectPath) => {
+  const normalized = String(objectPath || '').trim()
+  if (!normalized) return ''
+  await ensureIdeaGardenBucket()
+  const payload = await fetchSupabaseJson(
+    `/storage/v1/object/sign/${encodeURIComponent(SUPABASE_IDEA_GARDEN_BUCKET)}/${encodeStorageObjectPath(normalized)}`,
+    {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ expiresIn: IDEA_GARDEN_FILE_SIGNED_URL_SECONDS })
+    }
+  )
+  return normalizeSignedStorageUrl(payload?.signedURL || payload?.signedUrl || payload?.url)
+}
+
+const ideaGardenError = (res, error, type) =>
+  res.status(error?.status || 500).json({
+    error: {
+      status: error?.status || 500,
+      type,
+      message: error instanceof Error ? error.message : 'Idea Garden request failed.'
+    }
+  })
+
+app.get('/api/admin/idea-garden', requireAdmin, async (_req, res) => {
+  try {
+    const doc = await loadIdeaGardenDoc()
+    return res.json({ garden: doc })
+  } catch (error) {
+    return ideaGardenError(res, error, 'idea_garden_load_error')
+  }
+})
+
+app.put('/api/admin/idea-garden', requireAdmin, async (req, res) => {
+  try {
+    const garden = req.body?.garden
+    if (!garden || typeof garden !== 'object' || Array.isArray(garden)) {
+      return res.status(400).json({
+        error: { status: 400, type: 'idea_garden_invalid', message: 'A garden object is required.' }
+      })
+    }
+    const doc = { ...garden, updatedAt: new Date().toISOString() }
+    await saveIdeaGardenDoc(doc)
+    return res.json({ garden: doc })
+  } catch (error) {
+    return ideaGardenError(res, error, 'idea_garden_save_error')
+  }
+})
+
+app.post('/api/admin/idea-garden/file', requireAdmin, upload.single('file'), async (req, res) => {
+  try {
+    const file = req.file
+    if (!file) {
+      return res.status(400).json({
+        error: { status: 400, type: 'idea_garden_file_missing', message: 'No file was uploaded.' }
+      })
+    }
+    const safeName = slugifyAudioSegment(String(file.originalname || 'file').replace(/\.[^.]+$/, ''), 'file')
+    const ext = String(file.originalname || '').match(/\.[a-z0-9]+$/i)?.[0] || ''
+    const objectPath = `admin/files/${Date.now()}-${randomUUID()}-${safeName}${ext}`
+    await uploadIdeaGardenFile({ objectPath, buffer: file.buffer, mimeType: file.mimetype })
+    const url = await signIdeaGardenFile(objectPath)
+    return res.json({ path: objectPath, name: file.originalname, type: file.mimetype, size: file.size, url })
+  } catch (error) {
+    return ideaGardenError(res, error, 'idea_garden_file_upload_error')
+  }
+})
+
+app.get('/api/admin/idea-garden/file', requireAdmin, async (req, res) => {
+  try {
+    const path = String(req.query?.path || '').trim()
+    if (!path || !path.startsWith('admin/files/')) {
+      return res.status(400).json({
+        error: { status: 400, type: 'idea_garden_file_invalid', message: 'A valid file path is required.' }
+      })
+    }
+    const url = await signIdeaGardenFile(path)
+    return res.json({ url })
+  } catch (error) {
+    return ideaGardenError(res, error, 'idea_garden_file_sign_error')
   }
 })
 

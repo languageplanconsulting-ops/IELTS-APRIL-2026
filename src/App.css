@@ -25472,6 +25472,7 @@ textarea {
   .adminOnly-video-studio,
   .adminOnly-task1-qa,
   .adminOnly-placement,
+  .adminOnly-ideas,
   .adminOnly-settings
 ) {
   display: none !important;
@@ -25490,6 +25491,14 @@ textarea {
 .workspace .adminPanelPage[data-admin-section='placement'] .adminOnly-placement,
 .workspace .adminPanelPage[data-admin-section='settings'] .adminOnly-settings {
   display: grid !important;
+}
+
+.workspace .adminPanelPage[data-admin-section='ideas'] .adminOnly-ideas {
+  display: block !important;
+}
+.ideaGardenPanel { width: 100%; }
+.ideaGardenLoading {
+  padding: 40px; text-align: center; color: #9a8793; font-weight: 700;
 }
 
 .workspace .adminPanelPage .adminSectionCard {

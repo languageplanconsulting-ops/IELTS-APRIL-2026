@@ -1,5 +1,6 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type PointerEvent, type ReactNode } from 'react'
+import { Fragment, lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type PointerEvent, type ReactNode } from 'react'
 import './App.css'
+const IdeaGarden = lazy(() => import('./ideaGarden/IdeaGarden'))
 import './ExpectedScoreModal.css'
 import './SpeakingConsole.css'
 import { WritingGuidePage } from './WritingGuidePage'
@@ -290,6 +291,7 @@ type AdminWorkspaceSection =
   | 'video-studio'
   | 'task1-qa'
   | 'placement'
+  | 'ideas'
   | 'settings'
 type NotebookSection = 'speaking' | 'writing' | 'writing essay' | 'listening' | 'reading' | 'custom'
 type LearnerStatus = 'active' | 'inactive'
@@ -3146,6 +3148,7 @@ const ADMIN_WORKSPACE_SECTIONS: Array<{
   { id: 'video-studio', label: 'Video Studio', shortLabel: 'VS', description: 'Prepare AI-render video decks', group: 'Content Studio' },
   { id: 'task1-qa', label: 'Task 1 QA Review', shortLabel: 'T1', description: 'Review essays against real charts', group: 'Content Studio' },
   { id: 'placement', label: 'Placement Results', shortLabel: 'PL', description: 'Free test submissions to follow up', group: 'People & Insights' },
+  { id: 'ideas', label: 'Idea Garden', shortLabel: 'IG', description: 'Your pastel mindmap workspace', group: 'System' },
   { id: 'landing', label: 'Landing Preview', shortLabel: 'LP', description: 'Preview the public landing page', group: 'System' },
   { id: 'settings', label: 'Settings', shortLabel: 'ST', description: 'Topics and quality tools', group: 'System' }
 ]
@@ -26084,6 +26087,13 @@ function App() {
                     </div>
                   </div>
                   <Task1QaReview accessToken={authSession?.accessToken} />
+                </div>
+                <div className="adminOnly-ideas ideaGardenPanel">
+                  <Suspense fallback={<div className="ideaGardenLoading">Loading your Idea Garden… 🌱</div>}>
+                    {activeAdminWorkspaceSection.id === 'ideas' && (
+                      <IdeaGarden accessToken={authSession?.accessToken} />
+                    )}
+                  </Suspense>
                 </div>
                 <div className="panel adminSectionCard adminOnly-learners">
                   <div className="adminSectionHeader">
