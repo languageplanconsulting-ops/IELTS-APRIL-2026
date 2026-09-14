@@ -566,33 +566,61 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
   const [docs, setDocs] = useState<Record<string, Block[]>>({})
   const colorIndexRef = useRef(1)
   const [openId, setOpenId] = useState<string | null>(null)
-  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'offline'>('idle')
   const hydratedRef = useRef(false)
+  // Saving to the server is gated until we have CONFIRMED the server's contents
+  // at least once this session. This is the key data-safety rule: if the very
+  // first load fails, we never push a blank/seed board on top of real data.
+  const serverReadyRef = useRef(false)
+  const latestDocRef = useRef<GardenDoc | null>(null)
 
-  // --- initial load ---
+  const readCache = (): GardenDoc | null => {
+    try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null') } catch { return null }
+  }
+  const hydrate = (doc: GardenDoc) => {
+    setNodes(doc.nodes)
+    setEdges(doc.edges || [])
+    setDocs(doc.docs || {})
+    colorIndexRef.current = doc.colorIndex || 1
+    hydratedRef.current = true
+    setLoading(false)
+  }
+
+  // --- initial load, with retries; never clobber real data on a failed load ---
   useEffect(() => {
-    let ok = true
-    async function boot() {
-      let doc: GardenDoc | null = null
+    let cancelled = false
+    const cache = readCache()
+
+    // No token (e.g. local preview): browser-only mode.
+    if (!token) {
+      hydrate(cache && cache.nodes?.length ? cache : seedDoc())
+      setSaveState('offline')
+      return
+    }
+
+    async function boot(attempt = 0): Promise<void> {
       try {
-        if (token) doc = await loadGarden(token)
+        const serverDoc = await loadGarden(token) // resolves = server reachable
+        if (cancelled) return
+        serverReadyRef.current = true
+        if (!hydratedRef.current) {
+          // Server is source of truth. If it has a board, use it. If it's genuinely
+          // empty (first run), fall back to any local cache, else a fresh seed.
+          if (serverDoc && serverDoc.nodes?.length) hydrate(serverDoc)
+          else hydrate(cache && cache.nodes?.length ? cache : seedDoc())
+        }
+        setSaveState('saved')
       } catch {
-        doc = null
+        if (cancelled) return
+        // Server unreachable: show last-known data read-only-safe, keep saving
+        // DISABLED so we can't overwrite the server, and keep retrying.
+        if (!hydratedRef.current) hydrate(cache && cache.nodes?.length ? cache : seedDoc())
+        setSaveState('offline')
+        if (attempt < 6) setTimeout(() => { if (!cancelled) boot(attempt + 1) }, 2500)
       }
-      if (!doc) {
-        try { doc = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null') } catch { doc = null }
-      }
-      if (!doc || !Array.isArray(doc.nodes) || doc.nodes.length === 0) doc = seedDoc()
-      if (!ok) return
-      setNodes(doc.nodes)
-      setEdges(doc.edges || [])
-      setDocs(doc.docs || {})
-      colorIndexRef.current = doc.colorIndex || 1
-      setLoading(false)
-      hydratedRef.current = true
     }
     boot()
-    return () => { ok = false }
+    return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
@@ -601,15 +629,52 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
   useEffect(() => {
     if (!hydratedRef.current) return
     const doc: GardenDoc = { version: 1, nodes, edges, docs, colorIndex: colorIndexRef.current }
+    latestDocRef.current = doc
+    // Always keep a local backup so nothing is lost even while offline.
     try { localStorage.setItem(LOCAL_KEY, JSON.stringify(doc)) } catch { /* ignore */ }
     if (!token) return
+    if (!serverReadyRef.current) { setSaveState('offline'); return }
     if (saveTimer.current) clearTimeout(saveTimer.current)
     setSaveState('saving')
     saveTimer.current = setTimeout(async () => {
-      try { await saveGarden(token, doc); setSaveState('saved') } catch { setSaveState('idle') }
+      try {
+        await saveGarden(token, doc)
+        setSaveState('saved')
+      } catch {
+        // Lost the connection mid-session: stop pushing until it's back, then
+        // the reconnect effect flushes the latest state up.
+        serverReadyRef.current = false
+        setSaveState('offline')
+      }
     }, 800)
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current) }
   }, [nodes, edges, docs, token])
+
+  // --- reconnect: when we drop offline mid-session, keep trying and push the
+  // latest state back up once the server answers again ---
+  useEffect(() => {
+    if (saveState !== 'offline' || !token) return
+    const timer = setInterval(async () => {
+      try {
+        await loadGarden(token) // just a reachability probe
+        serverReadyRef.current = true
+        if (latestDocRef.current) await saveGarden(token, latestDocRef.current)
+        setSaveState('saved')
+      } catch { /* still offline, keep trying */ }
+    }, 4000)
+    return () => clearInterval(timer)
+  }, [saveState, token])
+
+  // --- final flush: if the tab closes with an unsaved change, push it out ---
+  useEffect(() => {
+    const onLeave = () => {
+      if (token && serverReadyRef.current && latestDocRef.current) {
+        try { void saveGarden(token, latestDocRef.current, true) } catch { /* best effort */ }
+      }
+    }
+    window.addEventListener('beforeunload', onLeave)
+    return () => window.removeEventListener('beforeunload', onLeave)
+  }, [token])
 
   // --- React Flow plumbing ---
   const onNodesChange = useCallback((changes: NodeChange[]) => {
@@ -689,8 +754,14 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
         <span className="ig-brand">🌷 Idea Garden</span>
         <span className="ig-hint">scroll to zoom · double-click a bubble</span>
         <button className="ig-pill primary" onClick={addFloating}>+ new bubble</button>
-        <span className={`ig-save ${saveState === 'saving' ? 'saving' : ''}`}>
-          {saveState === 'saving' ? 'saving…' : saveState === 'saved' ? 'saved ✓' : token ? '' : 'local only'}
+        <span className={`ig-save ${saveState === 'saving' ? 'saving' : ''} ${saveState === 'offline' ? 'offline' : ''}`}>
+          {saveState === 'saving'
+            ? 'saving…'
+            : saveState === 'saved'
+              ? 'saved ✓'
+              : saveState === 'offline'
+                ? (token ? '⚠ reconnecting…' : 'local only')
+                : ''}
         </span>
       </div>
 

@@ -13,11 +13,12 @@ export async function loadGarden(token: string): Promise<GardenDoc | null> {
   return (data?.garden as GardenDoc) || null
 }
 
-export async function saveGarden(token: string, garden: GardenDoc): Promise<GardenDoc> {
+export async function saveGarden(token: string, garden: GardenDoc, keepalive = false): Promise<GardenDoc> {
   const res = await fetch('/api/admin/idea-garden', {
     method: 'PUT',
     headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ garden })
+    body: JSON.stringify({ garden }),
+    keepalive // lets a final save complete even if the tab is closing
   })
   if (!res.ok) throw new Error(`Could not save garden (${res.status})`)
   const data = await res.json()

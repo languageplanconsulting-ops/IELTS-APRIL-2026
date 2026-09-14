@@ -35,6 +35,7 @@
 .ideaGarden .ig-hint { color: var(--ig-ink-soft); font-size: 12px; font-weight: 600; }
 .ideaGarden .ig-save { color: var(--ig-ink-soft); font-size: 12px; font-weight: 700; min-width: 46px; }
 .ideaGarden .ig-save.saving { color: var(--ig-accent-deep); }
+.ideaGarden .ig-save.offline { color: #c98a2b; }
 
 .ideaGarden .ig-pill {
   border: 1px solid var(--ig-line); background: #fff; color: var(--ig-ink);
