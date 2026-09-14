@@ -18448,6 +18448,92 @@ body,
   box-shadow: 2px 2px 0 var(--bc-black);
 }
 
+/* Primary "try again" CTA: a gentle, looping attention pulse so the eye lands
+   on it and the student feels invited to have another go. The bob comes from a
+   transform (animations override normal rules) while the "halo" lives on an
+   ::after pseudo-element so it survives the speaking theme's !important
+   box-shadow on .nextStepCard. */
+.nextStepCard-primary {
+  position: relative;
+  background: var(--bc-yellow);
+  animation: nextStepBob 2s ease-in-out infinite;
+}
+
+.nextStepCard-primary::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border: 3px solid var(--bc-blue);
+  pointer-events: none;
+  opacity: 0;
+  animation: nextStepHalo 2s ease-in-out infinite;
+}
+
+.nextStepCard-primary .nextStepDesc {
+  color: #3f3200;
+}
+
+.nextStepCard-primary .nextStepIcon {
+  display: inline-block;
+  animation: nextStepIconNudge 2s ease-in-out infinite;
+}
+
+/* Pause the loop on interaction so hover/active feedback stays crisp. */
+.nextStepCard-primary:hover,
+.nextStepCard-primary:active {
+  animation-play-state: paused;
+}
+
+.nextStepCard-primary:hover::after,
+.nextStepCard-primary:active::after {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+@keyframes nextStepBob {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-2px, -2px);
+  }
+}
+
+@keyframes nextStepHalo {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0;
+  }
+}
+
+@keyframes nextStepIconNudge {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(-12deg);
+  }
+  90% {
+    transform: rotate(12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nextStepCard-primary,
+  .nextStepCard-primary::after,
+  .nextStepCard-primary .nextStepIcon {
+    animation: none;
+  }
+}
+
 .nextStepIcon {
   font-size: 1.8rem;
 }

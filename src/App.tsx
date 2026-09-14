@@ -3760,11 +3760,25 @@ Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
 const formatAccessDate = (value: string | null) =>
   value ? new Date(value).toLocaleDateString() : 'Not set'
 
-const formatUsdCost = (value: number | undefined) => {
-  const amount = Number(value || 0)
+// Rough USD→THB rate for the admin cost estimate. This is a manual approximation
+// for display only (not a live FX conversion) — update it when the rate drifts.
+const USD_TO_THB = 33
+
+const formatUsdAmount = (amount: number) => {
   if (amount >= 0.01) return `$${amount.toFixed(2)}`
   if (amount >= 0.001) return `$${amount.toFixed(4)}`
   return `$${amount.toFixed(6)}`
+}
+
+const formatThbAmount = (amount: number) => {
+  if (amount >= 0.01) return `฿${amount.toFixed(2)}`
+  if (amount >= 0.001) return `฿${amount.toFixed(4)}`
+  return `฿${amount.toFixed(6)}`
+}
+
+const formatUsdCost = (value: number | undefined) => {
+  const amount = Number(value || 0)
+  return `${formatUsdAmount(amount)} (${formatThbAmount(amount * USD_TO_THB)})`
 }
 
 const buildAdminCostSeries = (
@@ -31812,7 +31826,7 @@ function App() {
                     <div className="nextStepsGrid">
                       <button
                         type="button"
-                        className="nextStepCard"
+                        className="nextStepCard nextStepCard-primary"
                         onClick={() => {
                           if (isTrialUser) {
                             window.location.href = 'https://www.language-plan.com/courses/0-day-speaking-challenge-for-ielts'
