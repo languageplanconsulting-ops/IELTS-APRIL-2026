@@ -7676,6 +7676,14 @@ function App() {
     const path = window.location.pathname.replace(/\/+$/, '').toLowerCase()
     return trialParam === '1' || trialParam === 'speaking' || path.endsWith('/trial')
   }, [])
+  // Direct link: /idea (or /idea-garden) drops an admin straight into the
+  // full-screen Idea Garden after they enter the admin code.
+  const isIdeaRouteRequested = useMemo(() => {
+    if (typeof window === 'undefined') return false
+    const path = window.location.pathname.replace(/\/+$/, '').toLowerCase()
+    return path.endsWith('/idea') || path.endsWith('/idea-garden')
+  }, [])
+  const ideaRouteHandledRef = useRef(false)
   useEffect(() => {
     if (!isTrialRouteRequested) return
     let cancelled = false
@@ -7692,6 +7700,15 @@ function App() {
       cancelled = true
     }
   }, [isTrialRouteRequested])
+  useEffect(() => {
+    if (!isIdeaRouteRequested || ideaRouteHandledRef.current) return
+    if (authSession?.role === 'admin') {
+      setActivePage('admin')
+      setAdminWorkspaceSection('ideas')
+      ideaRouteHandledRef.current = true
+    }
+  }, [isIdeaRouteRequested, authSession])
+
   const isTrialUser = authSession?.role === 'trial'
   const hasModuleAccess = (moduleKey: SkillModule) => resolveModuleAccess(authSession, moduleKey)
   const canAccessSpeaking = hasModuleAccess('speaking')
