@@ -26105,7 +26105,10 @@ function App() {
                 <div className="adminOnly-ideas ideaGardenPanel">
                   <Suspense fallback={<div className="ideaGardenLoading">Loading your Idea Garden… 🌱</div>}>
                     {activeAdminWorkspaceSection.id === 'ideas' && (
-                      <IdeaGarden accessToken={authSession?.accessToken} />
+                      <IdeaGarden
+                        accessToken={authSession?.accessToken}
+                        onExit={() => switchAdminWorkspaceSection('learners')}
+                      />
                     )}
                   </Suspense>
                 </div>

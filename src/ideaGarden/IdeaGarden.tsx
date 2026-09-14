@@ -19,9 +19,13 @@ import {
   getBezierPath,
   applyNodeChanges,
   applyEdgeChanges,
-  addEdge
+  addEdge,
+  reconnectEdge,
+  useInternalNode,
+  ConnectionMode,
+  MarkerType
 } from '@xyflow/react'
-import type { NodeProps, EdgeProps, Connection, NodeChange, EdgeChange } from '@xyflow/react'
+import type { NodeProps, EdgeProps, Connection, NodeChange, EdgeChange, Edge, InternalNode } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import './IdeaGarden.css'
 import { paletteFor, nextColor } from './palette'
@@ -64,8 +68,12 @@ function BubbleNode({ id, data, selected }: NodeProps) {
 
   return (
     <div className={`bubble ${central ? 'central' : ''} ${selected ? 'selected' : ''}`} style={style}>
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+      {/* Handles on every side — with loose connection mode, edges float to the
+          nearest one and can be dragged out or reconnected from any side. */}
+      <Handle className="ig-handle" type="source" position={Position.Top} id="t" />
+      <Handle className="ig-handle" type="source" position={Position.Right} id="r" />
+      <Handle className="ig-handle" type="source" position={Position.Bottom} id="b" />
+      <Handle className="ig-handle" type="source" position={Position.Left} id="l" />
 
       <div className="toolbar nodrag">
         <button className="mini open" title="Open page" onClick={() => openNode(id)}>⤢</button>
@@ -103,19 +111,60 @@ function BubbleNode({ id, data, selected }: NodeProps) {
   )
 }
 
-function SquiggleEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition }: EdgeProps) {
-  const [path] = getBezierPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, curvature: 0.4 })
+// --- Floating edge geometry: connect the nearest points of two node rects so
+// the connector re-anchors itself as bubbles are dragged around. ---
+function getNodeIntersection(intersectionNode: InternalNode, targetNode: InternalNode) {
+  const w = (intersectionNode.measured.width ?? 0) / 2
+  const h = (intersectionNode.measured.height ?? 0) / 2
+  const ip = intersectionNode.internals.positionAbsolute
+  const tp = targetNode.internals.positionAbsolute
+  const x2 = ip.x + w
+  const y2 = ip.y + h
+  const x1 = tp.x + (targetNode.measured.width ?? 0) / 2
+  const y1 = tp.y + (targetNode.measured.height ?? 0) / 2
+  const xx1 = (x1 - x2) / (2 * w) - (y1 - y2) / (2 * h)
+  const yy1 = (x1 - x2) / (2 * w) + (y1 - y2) / (2 * h)
+  const a = 1 / (Math.abs(xx1) + Math.abs(yy1) || 1)
+  const xx3 = a * xx1
+  const yy3 = a * yy1
+  return { x: w * (xx3 + yy3) + x2, y: h * (-xx3 + yy3) + y2 }
+}
+
+function getEdgePosition(node: InternalNode, point: { x: number; y: number }) {
+  const nx = Math.round(node.internals.positionAbsolute.x)
+  const ny = Math.round(node.internals.positionAbsolute.y)
+  const px = Math.round(point.x)
+  const py = Math.round(point.y)
+  if (px <= nx + 1) return Position.Left
+  if (px >= nx + (node.measured.width ?? 0) - 1) return Position.Right
+  if (py <= ny + 1) return Position.Top
+  return Position.Bottom
+}
+
+function getEdgeParams(source: InternalNode, target: InternalNode) {
+  const sp = getNodeIntersection(source, target)
+  const tp = getNodeIntersection(target, source)
+  return { sx: sp.x, sy: sp.y, tx: tp.x, ty: tp.y, sourcePos: getEdgePosition(source, sp), targetPos: getEdgePosition(target, tp) }
+}
+
+function FloatingEdge({ id, source, target, markerEnd, style, selected }: EdgeProps) {
+  const sourceNode = useInternalNode(source)
+  const targetNode = useInternalNode(target)
+  if (!sourceNode || !targetNode) return null
+  const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(sourceNode, targetNode)
+  const [path] = getBezierPath({ sourceX: sx, sourceY: sy, sourcePosition: sourcePos, targetPosition: targetPos, targetX: tx, targetY: ty, curvature: 0.28 })
   return (
     <BaseEdge
       id={id}
       path={path}
-      style={{ stroke: '#ffb3d4', strokeWidth: 3.5, strokeLinecap: 'round', strokeDasharray: '1 10' }}
+      markerEnd={markerEnd}
+      style={{ stroke: selected ? '#f4a0c4' : '#d9c7d0', strokeWidth: selected ? 2.6 : 2, ...style }}
     />
   )
 }
 
 const nodeTypes = { bubble: BubbleNode }
-const edgeTypes = { squiggle: SquiggleEdge }
+const edgeTypes = { squiggle: FloatingEdge }
 
 /* ------------------------------------------------------------------ */
 /*  Notion-style block editor                                          */
@@ -509,7 +558,7 @@ function seedDoc(): GardenDoc {
   }
 }
 
-export default function IdeaGarden({ accessToken }: { accessToken?: string }) {
+export default function IdeaGarden({ accessToken, onExit }: { accessToken?: string; onExit?: () => void }) {
   const token = accessToken || ''
   const [loading, setLoading] = useState(true)
   const [nodes, setNodes] = useState<BubbleNodeModel[]>([])
@@ -570,7 +619,20 @@ export default function IdeaGarden({ accessToken }: { accessToken?: string }) {
     setEdges((es) => applyEdgeChanges(changes, es as never) as unknown as EdgeModel[])
   }, [])
   const onConnect = useCallback((c: Connection) => {
-    setEdges((es) => addEdge({ ...c, type: 'squiggle' }, es as never) as unknown as EdgeModel[])
+    setEdges((es) => addEdge({ ...c, type: 'squiggle', id: uid() }, es as never) as unknown as EdgeModel[])
+  }, [])
+
+  // Drag an edge endpoint onto another bubble to re-anchor it; drop it on empty
+  // canvas to remove the connection.
+  const reconnectOk = useRef(true)
+  const onReconnectStart = useCallback(() => { reconnectOk.current = false }, [])
+  const onReconnect = useCallback((oldEdge: Edge, conn: Connection) => {
+    reconnectOk.current = true
+    setEdges((es) => reconnectEdge(oldEdge as never, conn, es as never) as unknown as EdgeModel[])
+  }, [])
+  const onReconnectEnd = useCallback((_: unknown, edge: Edge) => {
+    if (!reconnectOk.current) setEdges((es) => es.filter((e) => e.id !== edge.id))
+    reconnectOk.current = true
   }, [])
 
   const ctx = useMemo<GardenCtx>(() => ({
@@ -623,6 +685,7 @@ export default function IdeaGarden({ accessToken }: { accessToken?: string }) {
   return (
     <div className="ideaGarden">
       <div className="ig-topbar">
+        {onExit && <button className="ig-pill ghost" onClick={onExit} title="Back to admin">← Back</button>}
         <span className="ig-brand">🌷 Idea Garden</span>
         <span className="ig-hint">scroll to zoom · double-click a bubble</span>
         <button className="ig-pill primary" onClick={addFloating}>+ new bubble</button>
@@ -642,6 +705,12 @@ export default function IdeaGarden({ accessToken }: { accessToken?: string }) {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onReconnect={onReconnect}
+          onReconnectStart={onReconnectStart}
+          onReconnectEnd={onReconnectEnd}
+          connectionMode={ConnectionMode.Loose}
+          connectionLineStyle={{ stroke: '#c9b6c1', strokeWidth: 2 }}
+          defaultEdgeOptions={{ type: 'squiggle', markerEnd: { type: MarkerType.ArrowClosed, color: '#c9b6c1', width: 16, height: 16 } }}
           onNodeDoubleClick={(_, n) => setOpenId(n.id)}
           zoomOnDoubleClick={false}
           fitView
@@ -650,9 +719,9 @@ export default function IdeaGarden({ accessToken }: { accessToken?: string }) {
           maxZoom={2}
           proOptions={{ hideAttribution: true }}
         >
-          <Background variant={BackgroundVariant.Dots} gap={26} size={2.4} color="#ffcfe6" />
+          <Background variant={BackgroundVariant.Dots} gap={28} size={1.6} color="#dcd7d0" />
           <Controls showInteractive={false} />
-          <MiniMap pannable zoomable nodeColor={miniColor as never} maskColor="rgba(255,214,234,0.35)" style={{ borderRadius: 14, border: '2px solid #ffe1ef' }} />
+          <MiniMap pannable zoomable nodeColor={miniColor as never} maskColor="rgba(120,110,105,0.12)" style={{ borderRadius: 12, border: '1px solid #e7e2db' }} />
         </ReactFlow>
       </Ctx.Provider>
 

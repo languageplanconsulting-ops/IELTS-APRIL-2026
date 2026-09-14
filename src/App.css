@@ -25579,12 +25579,18 @@ textarea {
   display: grid !important;
 }
 
+/* Idea Garden takes over the whole screen — its own page, no admin chrome. */
 .workspace .adminPanelPage[data-admin-section='ideas'] .adminOnly-ideas {
   display: block !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 4000 !important;
+  background: #f6f5f2 !important;
 }
 .ideaGardenPanel { width: 100%; }
 .ideaGardenLoading {
-  padding: 40px; text-align: center; color: #9a8793; font-weight: 700;
+  display: grid; place-items: center; height: 100vh;
+  color: #8a8178; font-weight: 700;
 }
 
 .workspace .adminPanelPage .adminSectionCard {
