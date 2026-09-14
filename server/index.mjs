@@ -11561,6 +11561,71 @@ const callOpenAI = async (prompt, usageTracker) => {
   throw new Error(`OpenAI failed on all models. ${tried.join(' | ')}`)
 }
 
+/**
+ * Raw OpenAI JSON call for the report's *personalization* passes (unlock
+ * rewrites, grammar mistakes, vocab lift, per-question annotations) and the
+ * placement JSON prompts. Unlike callOpenAI, it does NOT run the result through
+ * normalizeAssessment — those helpers expect their own schema back, not a scored
+ * rubric — so it returns the model's JSON text verbatim for the caller to parse.
+ * This is the OpenAI backup that lets the coaching stay personalized when Gemini
+ * is the thing that's failing (the same reason scoring itself failed over).
+ */
+const callOpenAIText = async (prompt, usageTracker, operation = 'cleanup') => {
+  if (!OPENAI_API_KEY) throw new Error('Missing OPENAI_API_KEY')
+  const tried = []
+  for (const model of [...new Set(OPENAI_ASSESSMENT_MODELS)]) {
+    const maxAttempts = 2
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      const response = await safeFetch(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model,
+            temperature: 0.2,
+            response_format: { type: 'json_object' },
+            max_tokens: 12000,
+            messages: [
+              {
+                role: 'system',
+                content:
+                  'You are an IELTS Speaking coaching assistant. Return only valid JSON matching the requested schema. Do not wrap the JSON in markdown.'
+              },
+              { role: 'user', content: String(prompt || '') }
+            ]
+          })
+        },
+        { timeoutMs: 65000, retries: 1, retryDelayMs: 1500 }
+      )
+      if (response.ok) {
+        const data = await response.json()
+        const text = data?.choices?.[0]?.message?.content
+        if (!text) {
+          tried.push(`${model}#${attempt}: empty text`)
+          continue
+        }
+        usageTracker?.record({
+          ...calculateOpenAIApiCost({ model, usage: data?.usage }),
+          operation
+        })
+        return normalizeTextOutput(text)
+      }
+      const body = await response.text().catch(() => '')
+      tried.push(`${model}#${attempt}: ${response.status} ${sanitizeErrorMessage(body).slice(0, 120)}`)
+      if (isRetryableOpenAIHttpStatus(response.status) && attempt < maxAttempts) {
+        await sleep(1800 * attempt)
+        continue
+      }
+      break
+    }
+  }
+  throw new Error(`OpenAI cleanup failed on all models. ${tried.join(' | ')}`)
+}
+
 const scoringProviderKey = (provider) => {
   const lower = String(provider || '').toLowerCase()
   if (lower.includes('gpt') || lower.includes('openai')) return 'openai'
@@ -11731,10 +11796,28 @@ const callGeminiCleanupText = async (prompt, usageTracker) => {
   throw new Error(`Gemini cleanup text failed on all models. ${tried.join(' | ')}`)
 }
 
-const callGeminiJson = async (prompt, usageTracker, operation = 'json') =>
-  parseModelJson(await callGeminiText(prompt, usageTracker, operation))
-const callGeminiCleanupJson = async (prompt, usageTracker) =>
-  parseModelJson(await callGeminiCleanupText(prompt, usageTracker))
+// JSON helpers fail over Gemini -> OpenAI. The personalized report passes
+// (unlock rewrites, grammar mistakes, vocab lift, annotations) and placement
+// JSON prompts all run through these, so when Gemini is slow/quota-limited the
+// coaching stays personalized instead of collapsing to the generic per-band
+// boilerplate. The plain-text punctuation path deliberately stays Gemini-only:
+// OpenAI here is pinned to JSON output and would not return a clean transcript.
+const callGeminiJson = async (prompt, usageTracker, operation = 'json') => {
+  try {
+    return parseModelJson(await callGeminiText(prompt, usageTracker, operation))
+  } catch (geminiError) {
+    if (!hasOpenAIScoring) throw geminiError
+    return parseModelJson(await callOpenAIText(prompt, usageTracker, operation))
+  }
+}
+const callGeminiCleanupJson = async (prompt, usageTracker) => {
+  try {
+    return parseModelJson(await callGeminiCleanupText(prompt, usageTracker))
+  } catch (geminiError) {
+    if (!hasOpenAIScoring) throw geminiError
+    return parseModelJson(await callOpenAIText(prompt, usageTracker, 'cleanup'))
+  }
+}
 
 const buildFullMockAssessmentReport = async ({
   topic,
