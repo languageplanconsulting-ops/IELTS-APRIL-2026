@@ -113,7 +113,7 @@ function BubbleNode({ id, data, selected }: NodeProps) {
         </div>
       )}
 
-      <button className="add-child nodrag" onClick={() => addChild(id)}>+ sub-bubble</button>
+      <button className="add-child nodrag" title="Add sub-bubble" onClick={() => addChild(id)}>+</button>
     </div>
   )
 }
@@ -254,9 +254,10 @@ type BlockProps = {
   onBackspaceEmpty: (id: string) => void
   onSlash: (id: string, query: string | null, pos?: { x: number; y: number }) => void
   onToggle: (id: string) => void
+  onIndent: (id: string, delta: number) => void
 }
 
-function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle }: BlockProps) {
+function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent }: BlockProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -317,6 +318,12 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
     if (e.ctrlKey && !e.metaKey && (e.key === 'h' || e.key === 'H')) {
       e.preventDefault()
       toggleHighlight()
+      return
+    }
+    // Tab nests deeper; Shift+Tab pulls back out (Notion-style).
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      onIndent(block.id, e.shiftKey ? -1 : 1)
       return
     }
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -413,20 +420,30 @@ function Editor({
     setFocusId(block.id)
   }
 
+  const onIndent = (id: string, delta: number) =>
+    setBlocks((bs) => bs.map((b) => (b.id === id ? { ...b, indent: Math.max(0, Math.min(5, (b.indent || 0) + delta)) } : b)))
+
   const onEnter = (id: string, isEmpty: boolean) => {
     const b = blocks.find((x) => x.id === id)
+    const indent = b?.indent || 0
+    if (isEmpty && indent > 0) {
+      // Enter on an empty nested line pulls it back out one level (Notion-style).
+      patchBlock(id, { indent: indent - 1 })
+      setFocusId(id)
+      return
+    }
     if (b?.type === 'todo') {
       if (isEmpty) {
         // Second Enter on an empty to-do ends the list → back to normal text.
         patchBlock(id, { type: 'text', checked: false, text: '' })
         setFocusId(id)
       } else {
-        // Enter with content → start the next to-do.
-        addAfter(id, newBlock('todo'))
+        // Enter with content → start the next to-do at the same depth.
+        addAfter(id, newBlock('todo', { indent }))
       }
       return
     }
-    addAfter(id, newBlock('text'))
+    addAfter(id, newBlock('text', { indent }))
   }
   function onBackspaceEmpty(id: string) {
     setBlocks((bs) => {
@@ -560,28 +577,30 @@ function Editor({
         </div>
 
         <div className="doc-body" style={{ ['--ig-font' as string]: fontStack(node.data.font), fontFamily: fontStack(node.data.font) } as React.CSSProperties}>
-          {blocks.map((b) =>
-            b.type === 'pagelink' ? (
-              <div className="block" key={b.id}>
-                <span className="grip">⠿</span>
-                <div className="content">
-                  <button className="pagelink" onClick={() => b.targetId && openNode(b.targetId)}>🫧 Open linked bubble →</button>
+          {blocks.map((b) => (
+            <div key={b.id} className="block-row" style={{ marginLeft: (b.indent || 0) * 24 }}>
+              {b.type === 'pagelink' ? (
+                <div className="block">
+                  <span className="grip">⠿</span>
+                  <div className="content">
+                    <button className="pagelink" onClick={() => b.targetId && openNode(b.targetId)}>🫧 Open linked bubble →</button>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <BlockView
-                key={b.id}
-                token={token}
-                block={b}
-                autoFocus={focusId === b.id}
-                onChange={patchBlock}
-                onEnter={onEnter}
-                onBackspaceEmpty={onBackspaceEmpty}
-                onSlash={onSlash}
-                onToggle={(id) => patchBlock(id, { checked: !b.checked })}
-              />
-            )
-          )}
+              ) : (
+                <BlockView
+                  token={token}
+                  block={b}
+                  autoFocus={focusId === b.id}
+                  onChange={patchBlock}
+                  onEnter={onEnter}
+                  onBackspaceEmpty={onBackspaceEmpty}
+                  onSlash={onSlash}
+                  onToggle={(id) => patchBlock(id, { checked: !b.checked })}
+                  onIndent={onIndent}
+                />
+              )}
+            </div>
+          ))}
         </div>
 
         <input ref={fileInputRef} type="file" hidden onChange={onFileChosen} />

@@ -50,6 +50,7 @@ export type Block = {
   fileType?: string
   fileSize?: number
   targetId?: string
+  indent?: number
 }
 
 export type GardenDoc = {

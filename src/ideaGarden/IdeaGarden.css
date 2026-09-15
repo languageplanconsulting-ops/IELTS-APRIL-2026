@@ -76,7 +76,7 @@
   border: 1px solid var(--b-border);
   background: var(--b-fill);
   box-shadow: 0 2px 4px rgba(60, 50, 55, .05), 0 10px 24px -14px rgba(60, 50, 55, .5);
-  transition: box-shadow .4s var(--in-ease); cursor: grab;
+  transition: box-shadow .4s var(--in-ease); cursor: grab; text-align: center;
   animation: igBubbleIn var(--in-dur) var(--in-ease) both,
              igFloat var(--float-dur, 6s) ease-in-out var(--in-dur) infinite;
 }
@@ -115,7 +115,7 @@
   border: none; background: transparent; font: inherit; color: inherit; width: 90px; outline: none; cursor: pointer;
 }
 .ideaGarden .bubble .toolbar {
-  position: absolute; top: -12px; right: -8px; display: flex; gap: 6px; opacity: 0;
+  position: absolute; top: -12px; left: -8px; display: flex; gap: 6px; opacity: 0;
   transition: opacity .12s ease; pointer-events: none;
 }
 .ideaGarden .bubble:hover .toolbar, .ideaGarden .bubble.selected .toolbar { opacity: 1; pointer-events: auto; }
@@ -125,14 +125,16 @@
 }
 .ideaGarden .mini.open { background: #6db28c; border-color: #6db28c; }
 .ideaGarden .mini.del { background: #ef8a99; border-color: #ef8a99; font-size: 16px; }
+/* + button: round, just above the bubble's top-right corner, outside but close */
 .ideaGarden .bubble .add-child {
-  position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); background: #fff;
-  color: var(--ig-ink); border: 1px solid var(--b-border); border-radius: 8px;
-  font-weight: 700; font-size: 11.5px; padding: 3px 10px; opacity: 0; transition: opacity .12s ease, transform .12s ease;
-  box-shadow: 0 3px 8px rgba(60, 50, 55, .12);
+  position: absolute; top: -14px; right: -14px; width: 26px; height: 26px; line-height: 1;
+  display: grid; place-items: center; background: var(--ig-accent); color: #fff;
+  border: 2px solid #fff; border-radius: 50%; font-weight: 800; font-size: 17px; padding: 0;
+  opacity: 0; transition: opacity .18s var(--in-ease), transform .18s var(--in-ease);
+  box-shadow: 0 4px 10px rgba(232, 95, 149, .4);
 }
-.ideaGarden .bubble:hover .add-child { opacity: 1; }
-.ideaGarden .bubble .add-child:hover { transform: translateX(-50%) translateY(1px); }
+.ideaGarden .bubble:hover .add-child, .ideaGarden .react-flow__node.selected .add-child { opacity: 1; }
+.ideaGarden .bubble .add-child:hover { transform: scale(1.14); }
 
 .ideaGarden .ig-help {
   position: absolute; bottom: 18px; left: 18px; z-index: 15; background: rgba(255, 255, 255, .9);
@@ -285,3 +287,5 @@
 .ideaGarden .slash .item { border-radius: 9px !important; }
 .ideaGarden .slash .item .ico { border-radius: 8px !important; }
 .ideaGarden .doc-body span[style*="background"] { border-radius: 4px !important; }
+
+.ideaGarden .block-row { transition: margin-left .18s var(--in-ease); }
