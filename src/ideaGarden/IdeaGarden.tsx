@@ -625,6 +625,15 @@ function SlashMenu({ pos, query, index, onPick }: { pos: { x: number; y: number 
 /* ------------------------------------------------------------------ */
 const LOCAL_KEY = 'ideaGarden.fallback'
 
+// How much real content a board holds: bubbles + note blocks. A fresh seed
+// scores 1; anything the user has built scores higher. Used to make sure the
+// richer version always wins over a blank one.
+function docScore(d: GardenDoc | null | undefined): number {
+  if (!d || !Array.isArray(d.nodes)) return -1
+  const notes = Object.values(d.docs || {}).reduce((a, b) => a + (Array.isArray(b) ? b.length : 0), 0)
+  return d.nodes.length + notes
+}
+
 function seedDoc(): GardenDoc {
   const centerId = uid()
   return {
@@ -685,10 +694,18 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
         if (cancelled) return
         serverReadyRef.current = true
         if (!hydratedRef.current) {
-          // Server is source of truth. If it has a board, use it. If it's genuinely
-          // empty (first run), fall back to any local cache, else a fresh seed.
-          if (serverDoc && serverDoc.nodes?.length) hydrate(serverDoc)
-          else hydrate(cache && cache.nodes?.length ? cache : seedDoc())
+          // Richer version wins, so a blank/seed board can never bury real notes:
+          // score = bubbles + note-blocks. Cloud and this device's local backup
+          // are compared; the fuller one is shown (and if local wins it gets
+          // pushed up to the cloud by the save effect). A tie prefers the cloud.
+          const sv = docScore(serverDoc)
+          const cv = docScore(cache)
+          let chosen: GardenDoc | null
+          if (cv > sv) chosen = cache
+          else if (sv >= 1 && serverDoc) chosen = serverDoc
+          else if (cv >= 1) chosen = cache
+          else chosen = seedDoc()
+          hydrate(chosen && chosen.nodes?.length ? chosen : seedDoc())
         }
         setSaveState('saved')
       } catch {
