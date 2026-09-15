@@ -8,6 +8,8 @@ export type BubbleData = {
   color: PaletteKey
   start: string
   end: string
+  font?: string
+  shape?: string
 }
 
 export type BubbleNodeModel = {

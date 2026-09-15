@@ -12293,17 +12293,20 @@ app.patch('/api/me/profile', requireAuth, async (req, res) => {
 const ensureIdeaGardenBucket = async () => {
   if (ideaGardenBucketReady) return
   ensureSupabaseConfigured()
+  // Idempotent create: just try to create the bucket and treat an
+  // "already exists" response as success. (A missing bucket is reported as a
+  // 400 "Bucket not found" by Supabase Storage, not a 404, so probing first
+  // and only creating on 404 would never create it.)
   try {
-    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_IDEA_GARDEN_BUCKET)}`, {
-      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
-    })
-  } catch (error) {
-    if (error?.status !== 404) throw error
     await supabaseRequest('/storage/v1/bucket', {
       method: 'POST',
       headers: buildSupabaseHeaders({ serviceRole: true }),
       body: JSON.stringify({ id: SUPABASE_IDEA_GARDEN_BUCKET, name: SUPABASE_IDEA_GARDEN_BUCKET, public: false })
     })
+  } catch (error) {
+    const msg = String(error?.message || '').toLowerCase()
+    const alreadyExists = error?.status === 409 || /exist|duplicate|already/.test(msg)
+    if (!alreadyExists) throw error
   }
   ideaGardenBucketReady = true
 }

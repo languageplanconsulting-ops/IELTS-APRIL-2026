@@ -9,6 +9,9 @@
   --ig-line: #e7e3dc;
   --ig-accent: #ff8fb8;
   --ig-accent-deep: #e85f95;
+  /* Floaty & dreamy motion */
+  --in-dur: 780ms;
+  --in-ease: cubic-bezier(.25, .8, .25, 1);
   position: relative;
   width: 100%;
   height: 100%;
@@ -65,28 +68,42 @@
 .ideaGarden .bubble:hover .ig-handle,
 .ideaGarden .react-flow__node.selected .ig-handle { opacity: 1; }
 
-/* Bubble node — clean, flat card */
+/* Bubble node — clean, flat card. Airy scale/fade entrance, then a gentle
+   ambient float (each bubble drifts at its own pace via --float-dur). */
 .ideaGarden .bubble {
   position: relative; min-width: 156px; max-width: 244px;
   border-radius: 16px; padding: 13px 15px;
   border: 1px solid var(--b-border);
   background: var(--b-fill);
   box-shadow: 0 2px 4px rgba(60, 50, 55, .05), 0 10px 24px -14px rgba(60, 50, 55, .5);
-  transition: transform .12s ease, box-shadow .12s ease; cursor: grab;
+  transition: box-shadow .4s var(--in-ease); cursor: grab;
+  animation: igBubbleIn var(--in-dur) var(--in-ease) both,
+             igFloat var(--float-dur, 6s) ease-in-out var(--in-dur) infinite;
 }
-.ideaGarden .bubble:hover { box-shadow: 0 3px 6px rgba(60, 50, 55, .08), 0 16px 30px -16px rgba(60, 50, 55, .55); }
+.ideaGarden .bubble:hover { box-shadow: 0 6px 12px rgba(60, 50, 55, .1), 0 22px 40px -16px rgba(60, 50, 55, .6); }
+@keyframes igBubbleIn { from { opacity: 0; transform: translateY(10px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes igFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 .ideaGarden .bubble.central { min-width: 190px; border-width: 1px; box-shadow: 0 2px 6px rgba(60,50,55,.08), 0 16px 34px -16px rgba(60,50,55,.6); }
 .ideaGarden .bubble.central::before {
-  content: ''; position: absolute; inset: 0; border-radius: 16px;
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
   border: 2px solid var(--b-border); opacity: .5; pointer-events: none;
 }
 .ideaGarden .bubble.selected { outline: 2px solid var(--b-border); outline-offset: 3px; }
+
+/* Bubble shapes (5) */
+.ideaGarden .bubble.shape-rounded { border-radius: 16px; }
+.ideaGarden .bubble.shape-pill { border-radius: 999px; padding-left: 22px; padding-right: 22px; }
+.ideaGarden .bubble.shape-blob { border-radius: 46% 54% 55% 45% / 55% 46% 54% 45%; }
+.ideaGarden .bubble.shape-note { border-radius: 3px; }
+.ideaGarden .bubble.shape-petal { border-radius: 26px 6px 26px 6px; }
 .ideaGarden .bubble .kicker {
   font-size: 9.5px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
   color: var(--b-ink); opacity: .65; margin-bottom: 3px;
 }
+.ideaGarden .bubble .title,
+.ideaGarden .bubble .kicker { font-family: var(--b-font, inherit) !important; }
 .ideaGarden .bubble .title {
-  font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 16px; color: var(--b-ink);
+  font-weight: 700; font-size: 16px; color: var(--b-ink);
   line-height: 1.25; outline: none; word-break: break-word;
 }
 .ideaGarden .bubble.central .title { font-size: 19px; }
@@ -127,12 +144,17 @@
 /* Editor drawer */
 .ideaGarden .ig-scrim {
   position: absolute; inset: 0; z-index: 40; background: rgba(60, 50, 55, 0.22); backdrop-filter: blur(2px);
+  animation: igFade var(--in-dur) var(--in-ease) both;
 }
 .ideaGarden .ig-drawer {
   position: absolute; top: 0; right: 0; z-index: 41; height: 100%; width: min(640px, 94%);
   background: var(--ig-panel); border-left: 1px solid var(--ig-line);
   box-shadow: -20px 0 50px rgba(60, 50, 55, .16); display: flex; flex-direction: column;
+  animation: igDrawerIn calc(var(--in-dur) + 60ms) var(--in-ease) both;
 }
+@keyframes igFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes igDrawerIn { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes igRise { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
 .ideaGarden .doc-head { padding: 22px 34px 12px; border-bottom: 1px solid var(--ig-line); display: flex; flex-direction: column; gap: 10px; }
 .ideaGarden .doc-head .row { display: flex; align-items: center; gap: 12px; }
 .ideaGarden .chip { font-size: 10.5px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; padding: 5px 11px; border-radius: 8px; }
@@ -153,10 +175,13 @@
 .ideaGarden .block .grip { opacity: 0; width: 18px; text-align: center; color: var(--ig-ink-soft); cursor: grab; user-select: none; font-size: 13px; padding-top: 4px; }
 .ideaGarden .block:hover .grip { opacity: 1; }
 .ideaGarden .block .content { flex: 1; min-width: 0; }
+/* Beat the app-wide `.workspace * { font-family: var(--font-ui) !important }`
+   by applying the chosen font (passed as --ig-font) with higher specificity. */
+.ideaGarden .doc-body .editable { font-family: var(--ig-font, inherit) !important; }
 .ideaGarden .editable { outline: none; font-size: 16px; line-height: 1.6; color: var(--ig-ink); min-height: 1.6em; caret-color: var(--ig-accent-deep); }
 .ideaGarden .editable:empty::before { content: attr(data-placeholder); color: #c3bcb2; }
-.ideaGarden .block.h1 .editable { font-family: 'Baloo 2', sans-serif; font-size: 25px; font-weight: 800; }
-.ideaGarden .block.h2 .editable { font-family: 'Baloo 2', sans-serif; font-size: 20px; font-weight: 800; }
+.ideaGarden .block.h1 .editable { font-family: inherit; font-size: 25px; font-weight: 800; }
+.ideaGarden .block.h2 .editable { font-family: inherit; font-size: 20px; font-weight: 800; }
 .ideaGarden .block.todo .content { display: flex; align-items: flex-start; gap: 10px; }
 .ideaGarden .todo-box { width: 21px; height: 21px; border-radius: 6px; border: 2px solid var(--ig-accent); flex: none; margin-top: 3px; display: grid; place-items: center; color: #fff; background: #fff; transition: background .12s ease; }
 .ideaGarden .todo-box.on { background: var(--ig-accent); }
@@ -177,6 +202,7 @@
 .ideaGarden .slash {
   position: fixed; z-index: 60; width: 268px; max-height: 320px; overflow-y: auto; background: #fff;
   border: 1px solid var(--ig-line); border-radius: 12px; box-shadow: 0 16px 40px rgba(60, 50, 55, .18); padding: 8px;
+  transform-origin: top left; animation: igRise 360ms var(--in-ease) both;
 }
 .ideaGarden .slash .grp { font-size: 10px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--ig-ink-soft); padding: 8px 10px 4px; }
 .ideaGarden .slash .item { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 9px; cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; }
@@ -186,3 +212,76 @@
 .ideaGarden .slash .item .txt span { font-size: 12px; color: var(--ig-ink-soft); }
 
 .ideaGarden .ig-loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ig-ink-soft); font-weight: 700; z-index: 5; }
+
+/* Note toolbar: font picker + shape picker + highlight hint */
+.ideaGarden .doc-tools { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 2px; }
+.ideaGarden .doc-font { display: flex; align-items: center; gap: 6px; }
+.ideaGarden .doc-font .aa { font-family: 'Baloo 2', sans-serif; font-weight: 800; color: var(--ig-ink-soft); font-size: 14px; }
+.ideaGarden .doc-font select { border: 1px solid var(--ig-line); border-radius: 8px; padding: 5px 8px; font: inherit; font-size: 13px; color: var(--ig-ink); background: #fff; cursor: pointer; }
+.ideaGarden .doc-shapes { display: flex; gap: 5px; }
+.ideaGarden .shape-btn { width: 30px; height: 30px; border: 1px solid var(--ig-line); border-radius: 8px; background: #fff; display: grid; place-items: center; padding: 0; }
+.ideaGarden .shape-btn.active { border-color: var(--ig-accent); box-shadow: 0 0 0 2px rgba(255, 143, 184, .25); }
+.ideaGarden .shape-swatch { width: 16px; height: 12px; background: var(--ig-accent); display: block; }
+.ideaGarden .shape-swatch.shape-rounded { border-radius: 4px; }
+.ideaGarden .shape-swatch.shape-pill { border-radius: 999px; }
+.ideaGarden .shape-swatch.shape-blob { border-radius: 46% 54% 55% 45% / 55% 46% 54% 45%; }
+.ideaGarden .shape-swatch.shape-note { border-radius: 1px; }
+.ideaGarden .shape-swatch.shape-petal { border-radius: 8px 2px 8px 2px; }
+.ideaGarden .doc-hint { font-size: 11.5px; color: var(--ig-ink-soft); font-weight: 600; }
+.ideaGarden .doc-hint b { color: var(--ig-accent-deep); }
+/* pastel highlight from Ctrl+H keeps soft rounded edges */
+.ideaGarden .doc-body span[style*="background"] { border-radius: 4px; padding: 0 1px; }
+
+/* Floaty & dreamy — airier interactive transitions + reduced-motion guard */
+.ideaGarden .ig-handle { transition: opacity .3s var(--in-ease); }
+.ideaGarden .bubble .toolbar { transition: opacity .3s var(--in-ease); }
+.ideaGarden .bubble .add-child { transition: opacity .3s var(--in-ease), transform .3s var(--in-ease); }
+.ideaGarden .todo-box { transition: background .25s var(--in-ease), transform .25s var(--in-ease); }
+.ideaGarden .todo-box.on { animation: igPop .34s var(--in-ease); }
+@keyframes igPop { 0% { transform: scale(.6); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+.ideaGarden .ig-pill, .ideaGarden .mini, .ideaGarden .close-x { transition: transform .25s var(--in-ease), box-shadow .25s var(--in-ease), background .2s ease; }
+.ideaGarden .ig-pill:hover { transform: translateY(-1px); }
+.ideaGarden .mini:hover { transform: scale(1.08); }
+.ideaGarden .slash .item { transition: background .2s var(--in-ease); }
+@media (prefers-reduced-motion: reduce) {
+  .ideaGarden .bubble { animation: igFade .2s ease both; }
+  .ideaGarden .ig-drawer, .ideaGarden .ig-scrim, .ideaGarden .slash { animation: igFade .15s ease both; }
+  .ideaGarden .todo-box.on { animation: none; }
+}
+
+/* The IELTS app applies a global `* { border-radius: 0 !important }` reset, so
+   the Idea Garden must re-assert every rounded corner with !important. */
+.ideaGarden .ig-topbar { border-radius: 14px !important; }
+.ideaGarden .ig-pill { border-radius: 10px !important; }
+.ideaGarden .ig-handle { border-radius: 50% !important; }
+.ideaGarden .react-flow__controls { border-radius: 12px !important; }
+.ideaGarden .bubble { border-radius: 16px !important; }
+.ideaGarden .bubble.shape-rounded { border-radius: 16px !important; }
+.ideaGarden .bubble.shape-pill { border-radius: 999px !important; }
+.ideaGarden .bubble.shape-blob { border-radius: 46% 54% 55% 45% / 55% 46% 54% 45% !important; }
+.ideaGarden .bubble.shape-note { border-radius: 3px !important; }
+.ideaGarden .bubble.shape-petal { border-radius: 26px 6px 26px 6px !important; }
+.ideaGarden .bubble .dates { border-radius: 8px !important; }
+.ideaGarden .mini { border-radius: 8px !important; }
+.ideaGarden .bubble .add-child { border-radius: 8px !important; }
+.ideaGarden .ig-help { border-radius: 12px !important; }
+.ideaGarden .chip { border-radius: 8px !important; }
+.ideaGarden .doc-dates input { border-radius: 8px !important; }
+.ideaGarden .close-x { border-radius: 9px !important; }
+.ideaGarden .doc-font select { border-radius: 8px !important; }
+.ideaGarden .shape-btn { border-radius: 8px !important; }
+.ideaGarden .shape-swatch.shape-rounded { border-radius: 4px !important; }
+.ideaGarden .shape-swatch.shape-pill { border-radius: 999px !important; }
+.ideaGarden .shape-swatch.shape-blob { border-radius: 46% 54% 55% 45% / 55% 46% 54% 45% !important; }
+.ideaGarden .shape-swatch.shape-note { border-radius: 1px !important; }
+.ideaGarden .shape-swatch.shape-petal { border-radius: 8px 2px 8px 2px !important; }
+.ideaGarden .todo-box { border-radius: 6px !important; }
+.ideaGarden .callout { border-radius: 12px !important; }
+.ideaGarden .embed { border-radius: 14px !important; }
+.ideaGarden .filecard { border-radius: 12px !important; }
+.ideaGarden .filecard img.thumb { border-radius: 8px !important; }
+.ideaGarden .pagelink { border-radius: 10px !important; }
+.ideaGarden .slash { border-radius: 12px !important; }
+.ideaGarden .slash .item { border-radius: 9px !important; }
+.ideaGarden .slash .item .ico { border-radius: 8px !important; }
+.ideaGarden .doc-body span[style*="background"] { border-radius: 4px !important; }

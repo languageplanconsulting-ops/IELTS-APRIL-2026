@@ -29,6 +29,7 @@ import type { NodeProps, EdgeProps, Connection, NodeChange, EdgeChange, Edge, In
 import '@xyflow/react/dist/style.css'
 import './IdeaGarden.css'
 import { paletteFor, nextColor } from './palette'
+import { FONTS, SHAPES, fontStack, DEFAULT_FONT, DEFAULT_SHAPE } from './fonts'
 import type { BubbleData, BubbleNodeModel, EdgeModel, Block, BlockType, GardenDoc } from './types'
 import { loadGarden, saveGarden, uploadFile, signFile } from './api'
 
@@ -59,15 +60,21 @@ function BubbleNode({ id, data, selected }: NodeProps) {
   const { updateNodeData, addChild, deleteNode, openNode } = useCtx()
   const central = d.kind === 'central'
 
+  // Stable per-bubble float pace (5.4s–7.3s) so bubbles don't drift in unison.
+  const floatDur = 5.4 + (Array.from(id).reduce((a, c) => a + c.charCodeAt(0), 0) % 20) / 10
   const style = {
     ['--b-fill' as string]: pal.fill,
     ['--b-border' as string]: pal.border,
     ['--b-ink' as string]: pal.ink,
-    ['--b-glow' as string]: pal.glow
+    ['--b-glow' as string]: pal.glow,
+    ['--b-font' as string]: fontStack(d.font),
+    ['--float-dur' as string]: `${floatDur}s`,
+    fontFamily: fontStack(d.font)
   } as React.CSSProperties
+  const shape = d.shape || DEFAULT_SHAPE
 
   return (
-    <div className={`bubble ${central ? 'central' : ''} ${selected ? 'selected' : ''}`} style={style}>
+    <div className={`bubble shape-${shape} ${central ? 'central' : ''} ${selected ? 'selected' : ''}`} style={style}>
       {/* Handles on every side — with loose connection mode, edges float to the
           nearest one and can be dragged out or reconnected from any side. */}
       <Handle className="ig-handle" type="source" position={Position.Top} id="t" />
@@ -243,7 +250,7 @@ type BlockProps = {
   block: Block
   autoFocus: boolean
   onChange: (id: string, patch: Partial<Block>) => void
-  onEnter: (id: string) => void
+  onEnter: (id: string, isEmpty: boolean) => void
   onBackspaceEmpty: (id: string) => void
   onSlash: (id: string, query: string | null, pos?: { x: number; y: number }) => void
   onToggle: (id: string) => void
@@ -253,9 +260,31 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (ref.current && isTextual(block.type)) ref.current.innerText = block.text || ''
+    // Seed as HTML so pastel highlights (and any inline formatting) survive.
+    if (ref.current && isTextual(block.type)) ref.current.innerHTML = block.text || ''
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [block.type])
+
+  // Ctrl+H — toggle a soft pastel highlight over the selected words.
+  function toggleHighlight() {
+    const el = ref.current
+    const sel = window.getSelection()
+    if (!el || !sel || sel.isCollapsed) return
+    // Is the selection start already sitting on a highlighted span?
+    let walk: HTMLElement | null =
+      (sel.anchorNode && sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentElement : (sel.anchorNode as HTMLElement | null))
+    let already = false
+    while (walk && walk !== el) {
+      const bg = walk.style?.backgroundColor
+      if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') { already = true; break }
+      walk = walk.parentElement
+    }
+    try {
+      document.execCommand('styleWithCSS', false, 'true')
+      document.execCommand('hiliteColor', false, already ? 'transparent' : '#ffe9a3')
+    } catch { /* execCommand unsupported */ }
+    onChange(block.id, { text: el.innerHTML })
+  }
 
   useEffect(() => {
     if (autoFocus && ref.current) {
@@ -271,19 +300,30 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
   }, [autoFocus])
 
   function handleInput(e: React.FormEvent<HTMLDivElement>) {
-    const text = e.currentTarget.innerText
-    if (text.startsWith('/')) {
-      const rect = e.currentTarget.getBoundingClientRect()
-      onSlash(block.id, text.slice(1), { x: rect.left, y: rect.bottom + 6 })
+    const el = e.currentTarget
+    const plain = el.innerText
+    if (plain.startsWith('/')) {
+      const rect = el.getBoundingClientRect()
+      onSlash(block.id, plain.slice(1), { x: rect.left, y: rect.bottom + 6 })
     } else {
       onSlash(block.id, null)
-      onChange(block.id, { text })
+      onChange(block.id, { text: el.innerHTML }) // store HTML so highlights persist
     }
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     const el = ref.current
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onEnter(block.id) }
+    // Ctrl+H — pastel highlighter (Ctrl only, so Mac's Cmd+H still hides the app).
+    if (e.ctrlKey && !e.metaKey && (e.key === 'h' || e.key === 'H')) {
+      e.preventDefault()
+      toggleHighlight()
+      return
+    }
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      onEnter(block.id, !el || el.innerText.trim() === '')
+      return
+    }
     if (e.key === 'Backspace' && el && el.innerText === '') { e.preventDefault(); onBackspaceEmpty(block.id) }
   }
 
@@ -373,7 +413,21 @@ function Editor({
     setFocusId(block.id)
   }
 
-  const onEnter = (id: string) => addAfter(id, newBlock('text'))
+  const onEnter = (id: string, isEmpty: boolean) => {
+    const b = blocks.find((x) => x.id === id)
+    if (b?.type === 'todo') {
+      if (isEmpty) {
+        // Second Enter on an empty to-do ends the list → back to normal text.
+        patchBlock(id, { type: 'text', checked: false, text: '' })
+        setFocusId(id)
+      } else {
+        // Enter with content → start the next to-do.
+        addAfter(id, newBlock('todo'))
+      }
+      return
+    }
+    addAfter(id, newBlock('text'))
+  }
   function onBackspaceEmpty(id: string) {
     setBlocks((bs) => {
       if (bs.length === 1) return bs
@@ -476,9 +530,36 @@ function Editor({
             to
             <input type="date" value={node.data.end || ''} onChange={(e) => updateNodeData(node.id, { end: e.target.value })} />
           </div>
+          <div className="doc-tools">
+            <label className="doc-font" title="Font">
+              <span className="aa">Aa</span>
+              <select value={node.data.font || DEFAULT_FONT} onChange={(e) => updateNodeData(node.id, { font: e.target.value })}>
+                {['Cute & handwritten', 'Formal'].map((g) => (
+                  <optgroup key={g} label={g}>
+                    {FONTS.filter((f) => f.group === g).map((f) => (
+                      <option key={f.key} value={f.key}>{f.label}</option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+            </label>
+            <div className="doc-shapes" title="Bubble shape">
+              {SHAPES.map((s) => (
+                <button
+                  key={s.key}
+                  className={`shape-btn ${(node.data.shape || DEFAULT_SHAPE) === s.key ? 'active' : ''}`}
+                  title={s.label}
+                  onClick={() => updateNodeData(node.id, { shape: s.key })}
+                >
+                  <span className={`shape-swatch shape-${s.key}`} />
+                </button>
+              ))}
+            </div>
+            <span className="doc-hint">select text · <b>Ctrl+H</b> to highlight</span>
+          </div>
         </div>
 
-        <div className="doc-body">
+        <div className="doc-body" style={{ ['--ig-font' as string]: fontStack(node.data.font), fontFamily: fontStack(node.data.font) } as React.CSSProperties}>
           {blocks.map((b) =>
             b.type === 'pagelink' ? (
               <div className="block" key={b.id}>
