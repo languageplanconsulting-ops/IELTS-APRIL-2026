@@ -901,6 +901,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
           defaultEdgeOptions={{ type: 'squiggle', markerEnd: { type: MarkerType.ArrowClosed, color: '#c9b6c1', width: 16, height: 16 } }}
           onNodeDoubleClick={(_, n) => setOpenId(n.id)}
           zoomOnDoubleClick={false}
+          deleteKeyCode={null}
           fitView
           fitViewOptions={{ padding: 0.6, maxZoom: 1 }}
           minZoom={0.2}
