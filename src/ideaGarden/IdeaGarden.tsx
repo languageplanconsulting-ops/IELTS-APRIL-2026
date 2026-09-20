@@ -338,6 +338,83 @@ function StatusBlock({ block, onChange }: { block: Block; onChange: (id: string,
   )
 }
 
+// --- Post Kit: gather everything on a page into a ready-to-publish bundle ---
+function PostKitPanel({ token, pageId, title, blocks, onClose }: { token: string; pageId: string; title: string; blocks: Block[]; onClose: () => void }) {
+  const strip = (s?: string) => String(s || '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').trim()
+  const urls = (t?: string) => String(t || '').match(/https?:\/\/[^\s"'<>]+/g) || []
+  const captionParts: string[] = []
+  const todos: { text: string; done: boolean }[] = []
+  const links = new Set<string>()
+  const fileBlocks: Block[] = []
+  let status: string | null = null
+  for (const b of blocks) {
+    if (['text', 'h1', 'h2', 'callout'].includes(b.type)) { const t = strip(b.text); if (t) { captionParts.push(t); urls(t).forEach((u) => links.add(u)) } }
+    else if (b.type === 'todo') { const t = strip(b.text); if (t) { todos.push({ text: t, done: !!b.checked }); urls(t).forEach((u) => links.add(u)) } }
+    else if (b.type === 'youtube') { if (b.url) links.add(b.url) }
+    else if (b.type === 'image' || b.type === 'file') { if (b.filePath) fileBlocks.push(b) }
+    else if (b.type === 'status') { if (b.status) status = b.status }
+  }
+  const caption = captionParts.join('\n\n')
+  const [mediaUrls, setMediaUrls] = useState<Record<string, string>>({})
+  useEffect(() => {
+    let ok = true
+    ;(async () => {
+      const m: Record<string, string> = {}
+      for (const b of fileBlocks) { try { m[b.id] = await signFile(token, b.filePath!) } catch { /* ignore */ } }
+      if (ok) setMediaUrls(m)
+    })()
+    return () => { ok = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const apiUrl = `${location.origin}/api/admin/idea-garden/postkit?page=${pageId}`
+  const [copied, setCopied] = useState('')
+  const doCopy = (txt: string, label: string) => { try { navigator.clipboard?.writeText(txt) } catch { /* ignore */ } setCopied(label); setTimeout(() => setCopied(''), 1200) }
+  return (
+    <div className="ig-kit-scrim" onClick={onClose}>
+      <div className="ig-kit-panel" onClick={(e) => e.stopPropagation()}>
+        <div className="ig-kit-head"><b>📤 Post Kit — {title}</b><button className="close-x" onClick={onClose}>×</button></div>
+        <div className="ig-kit-body">
+          {status && <div className="ig-kit-section"><span className="ig-kit-label">Status</span> <span className="ig-kit-status">{status}</span></div>}
+          <div className="ig-kit-section">
+            <div className="ig-kit-label">Caption <button className="ig-kit-copy" onClick={() => doCopy(caption, 'caption')}>{copied === 'caption' ? 'copied ✓' : 'copy'}</button></div>
+            <textarea className="ig-kit-caption" readOnly value={caption || '(no text yet)'} />
+          </div>
+          <div className="ig-kit-section">
+            <div className="ig-kit-label">Media ({fileBlocks.length})</div>
+            {fileBlocks.length === 0 && <div className="ig-kit-empty">No photos or videos uploaded on this page yet.</div>}
+            {fileBlocks.map((b) => (
+              <div className="ig-kit-media" key={b.id}>
+                {b.type === 'image' && mediaUrls[b.id] && <img src={mediaUrls[b.id]} alt="" />}
+                <span className="nm">{b.fileName || 'file'}</span>
+                {mediaUrls[b.id]
+                  ? <button className="ig-kit-copy" onClick={() => doCopy(mediaUrls[b.id], 'm' + b.id)}>{copied === 'm' + b.id ? 'copied ✓' : 'copy link'}</button>
+                  : <span className="ig-kit-empty">…</span>}
+              </div>
+            ))}
+          </div>
+          {links.size > 0 && (
+            <div className="ig-kit-section">
+              <div className="ig-kit-label">Links</div>
+              {[...links].map((u, i) => (<div className="ig-kit-link" key={i}><a href={u} target="_blank" rel="noreferrer">{u}</a></div>))}
+            </div>
+          )}
+          {todos.length > 0 && (
+            <div className="ig-kit-section">
+              <div className="ig-kit-label">Checklist</div>
+              {todos.map((t, i) => (<div className="ig-kit-todo" key={i}>{t.done ? '✅' : '⬜'} {t.text}</div>))}
+            </div>
+          )}
+          <div className="ig-kit-section ig-kit-auto">
+            <div className="ig-kit-label">Automation URL <button className="ig-kit-copy" onClick={() => doCopy(apiUrl, 'api')}>{copied === 'api' ? 'copied ✓' : 'copy'}</button></div>
+            <code className="ig-kit-url">{apiUrl}</code>
+            <p className="ig-kit-note">Point Make / Zapier / Buffer at this URL (with header <b>Authorization: Bearer &lt;your admin code&gt;</b>) to auto-publish. It returns the caption, media links and everything above as JSON.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 type BlockProps = {
   token: string
   block: Block
@@ -520,6 +597,7 @@ function Editor({
 }) {
   const [focusId, setFocusId] = useState<string | null>(null)
   const [slash, setSlash] = useState<SlashState | null>(null)
+  const [showKit, setShowKit] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const pendingFileType = useRef<BlockType>('file')
   const pal = paletteFor(page.color)
@@ -660,6 +738,7 @@ function Editor({
             <span className="chip" style={{ background: pal.fill, color: pal.ink }}>
               {page.isNode ? (page.kind === 'central' ? '🌸 central idea' : '💭 thought bubble') : '📄 page'}
             </span>
+            <button className="ig-kit-btn" onClick={() => setShowKit(true)} title="Package this page for posting">📤 Post Kit</button>
             <button className="close-x" onClick={onClose}>×</button>
           </div>
           <input
@@ -750,6 +829,10 @@ function Editor({
 
       {slash && (
         <SlashMenu pos={slash.pos} query={slash.query} index={slash.index} onPick={pickSlash} />
+      )}
+
+      {showKit && (
+        <PostKitPanel token={token} pageId={page.id} title={page.title} blocks={blocks} onClose={() => setShowKit(false)} />
       )}
     </>
   )

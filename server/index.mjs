@@ -12443,6 +12443,75 @@ app.get('/api/admin/idea-garden/file', requireAdmin, async (req, res) => {
   }
 })
 
+// --- Post Kit: package a page's content for social scheduling/automation ---
+// Reads a page's blocks and returns a clean, machine-readable bundle: the
+// caption, media (photos/videos as ready URLs), links, to-dos, status and any
+// scheduled date. An automation (Make/Zapier/Buffer/etc.) can poll this and
+// publish. Actual posting to a platform still needs that platform's API token.
+const stripHtml = (s) =>
+  String(s || '').replace(/<br\s*\/?>(?=)/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').trim()
+const extractUrls = (text) => String(text || '').match(/https?:\/\/[^\s"'<>]+/g) || []
+
+const buildPostKit = async (doc, pageId) => {
+  const blocks = (doc.docs || {})[pageId] || []
+  const pages = doc.pages || {}
+  const node = (doc.nodes || []).find((n) => n.id === pageId)
+  const title = node ? node.data?.label || 'Untitled' : pages[pageId]?.title || 'Untitled page'
+  const captionParts = []
+  const todos = []
+  const media = []
+  const links = new Set()
+  let status = null
+  for (const b of blocks) {
+    if (['text', 'h1', 'h2', 'callout'].includes(b.type)) {
+      const t = stripHtml(b.text)
+      if (t) { captionParts.push(t); extractUrls(t).forEach((u) => links.add(u)) }
+    } else if (b.type === 'todo') {
+      const t = stripHtml(b.text)
+      if (t) { todos.push({ text: t, done: !!b.checked }); extractUrls(t).forEach((u) => links.add(u)) }
+    } else if (b.type === 'youtube') {
+      if (b.url) { links.add(b.url); media.push({ kind: 'video', source: 'youtube', url: b.url }) }
+    } else if (b.type === 'image' || b.type === 'file') {
+      if (b.filePath) {
+        const url = await signIdeaGardenFile(b.filePath).catch(() => '')
+        media.push({ kind: b.type === 'image' ? 'image' : 'file', name: b.fileName || '', mime: b.fileType || '', url })
+      }
+    } else if (b.type === 'status') {
+      if (b.status) status = b.status
+    }
+  }
+  return {
+    id: pageId,
+    title,
+    kind: node ? 'bubble' : 'page',
+    status,
+    scheduledFor: node ? node.data?.start || null : null,
+    caption: captionParts.join('\n\n'),
+    hashtags: (captionParts.join(' ').match(/#[\p{L}0-9_]+/gu) || []),
+    todos,
+    links: [...links],
+    media
+  }
+}
+
+app.get('/api/admin/idea-garden/postkit', requireAdmin, async (req, res) => {
+  try {
+    const doc = (await loadIdeaGardenDoc()) || { nodes: [], edges: [], docs: {}, pages: {} }
+    const pageId = String(req.query?.page || '').trim()
+    if (pageId) return res.json({ post: await buildPostKit(doc, pageId) })
+    // No page given → every bubble/page that has content, so an automation can
+    // enumerate the whole queue in one request.
+    const ids = [...new Set([...(doc.nodes || []).map((n) => n.id), ...Object.keys(doc.pages || {})])]
+    const posts = []
+    for (const id of ids) {
+      if (((doc.docs || {})[id] || []).length) posts.push(await buildPostKit(doc, id))
+    }
+    return res.json({ posts })
+  } catch (error) {
+    return ideaGardenError(res, error, 'idea_garden_postkit_error')
+  }
+})
+
 app.get('/api/admin/learners', requireAdmin, async (_req, res) => {
   try {
     const buildLearnerQuery = (accessColumns) =>
