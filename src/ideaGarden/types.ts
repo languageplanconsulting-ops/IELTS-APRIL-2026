@@ -37,6 +37,11 @@ export type BlockType =
   | 'file'
   | 'image'
   | 'pagelink'
+  | 'subpage'
+  | 'table'
+  | 'status'
+
+export type StatusOption = { label: string; color: string }
 
 export type Block = {
   id: string
@@ -51,6 +56,10 @@ export type Block = {
   fileSize?: number
   targetId?: string
   indent?: number
+  pageId?: string // subpage: id of the child page (docs[pageId] holds its blocks)
+  rows?: string[][] // table
+  status?: string // status pill: selected label
+  statusOptions?: StatusOption[] // status pill: available options
 }
 
 export type GardenDoc = {
@@ -58,6 +67,7 @@ export type GardenDoc = {
   nodes: BubbleNodeModel[]
   edges: EdgeModel[]
   docs: Record<string, Block[]>
+  pages?: Record<string, { title: string }> // titles of inline sub-pages
   colorIndex: number
   updatedAt?: string
 }

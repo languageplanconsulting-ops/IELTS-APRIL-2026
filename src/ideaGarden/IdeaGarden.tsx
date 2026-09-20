@@ -29,6 +29,7 @@ import type { NodeProps, EdgeProps, Connection, NodeChange, EdgeChange, Edge, In
 import '@xyflow/react/dist/style.css'
 import './IdeaGarden.css'
 import { paletteFor, nextColor } from './palette'
+import type { PaletteKey } from './palette'
 import { FONTS, SHAPES, fontStack, DEFAULT_FONT, DEFAULT_SHAPE } from './fonts'
 import type { BubbleData, BubbleNodeModel, EdgeModel, Block, BlockType, GardenDoc } from './types'
 import { loadGarden, saveGarden, uploadFile, signFile } from './api'
@@ -183,10 +184,20 @@ const SLASH_ITEMS: Array<{ key: BlockType | 'page'; group: string; ico: string; 
   { key: 'todo', group: 'Basics', ico: '✅', label: 'To-do', hint: 'Track a task' },
   { key: 'callout', group: 'Basics', ico: '💡', label: 'Callout', hint: 'Make it pop' },
   { key: 'divider', group: 'Basics', ico: '➖', label: 'Divider', hint: 'Split things up' },
-  { key: 'page', group: 'Connect', ico: '🫧', label: 'New page', hint: 'Spawn a sub-bubble' },
+  { key: 'table', group: 'Basics', ico: '▦', label: 'Table', hint: 'A little grid' },
+  { key: 'status', group: 'Basics', ico: '🏷️', label: 'Status', hint: 'Done · In progress · …' },
+  { key: 'page', group: 'Connect', ico: '📄', label: 'Page', hint: 'A separate page you click into' },
   { key: 'youtube', group: 'Embed', ico: '▶️', label: 'YouTube', hint: 'Paste a video link' },
   { key: 'file', group: 'Embed', ico: '📎', label: 'PDF / file', hint: 'Upload from device' },
   { key: 'image', group: 'Embed', ico: '🖼️', label: 'Image', hint: 'Upload a picture' }
+]
+
+// Default cute pastel statuses (fully editable/customizable per pill).
+const DEFAULT_STATUS_OPTIONS: { label: string; color: string }[] = [
+  { label: 'To do', color: '#e7e3dc' },
+  { label: 'In progress', color: '#d8ecff' },
+  { label: 'Done', color: '#d9f5e3' },
+  { label: 'On hold', color: '#ffe8d6' }
 ]
 
 const isTextual = (t: BlockType) => ['text', 'h1', 'h2', 'todo', 'callout'].includes(t)
@@ -242,6 +253,88 @@ function FilePreview({ token, block }: { token: string; block: Block }) {
         <span>{isPdf ? 'PDF · ' : ''}{prettySize(block.fileSize)} · click to open</span>
       </div>
     </a>
+  )
+}
+
+// --- Table block: a small editable grid with add/remove row & column ---
+function TableCell({ value, header, onCommit }: { value: string; header: boolean; onCommit: (v: string) => void }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => { if (ref.current) ref.current.innerText = value || '' }, []) // seed once
+  return (
+    <div
+      ref={ref}
+      className={`ig-td ${header ? 'h' : ''}`}
+      contentEditable
+      suppressContentEditableWarning
+      onBlur={(e) => onCommit(e.currentTarget.innerText)}
+    />
+  )
+}
+
+function TableBlock({ block, onChange }: { block: Block; onChange: (id: string, patch: Partial<Block>) => void }) {
+  const rows = block.rows && block.rows.length ? block.rows : [['', '', ''], ['', '', '']]
+  const setRows = (r: string[][]) => onChange(block.id, { rows: r })
+  const setCell = (ri: number, ci: number, val: string) => {
+    const r = rows.map((row) => row.slice())
+    r[ri][ci] = val
+    setRows(r)
+  }
+  const addRow = () => setRows([...rows.map((x) => x.slice()), rows[0].map(() => '')])
+  const addCol = () => setRows(rows.map((row) => [...row, '']))
+  const delRow = () => rows.length > 1 && setRows(rows.slice(0, -1))
+  const delCol = () => rows[0].length > 1 && setRows(rows.map((row) => row.slice(0, -1)))
+  return (
+    <div className="ig-table-wrap">
+      <table className="ig-table"><tbody>
+        {rows.map((row, ri) => (
+          <tr key={ri}>
+            {row.map((cell, ci) => (
+              <td key={`${ri}-${ci}`}><TableCell value={cell} header={ri === 0} onCommit={(v) => setCell(ri, ci, v)} /></td>
+            ))}
+          </tr>
+        ))}
+      </tbody></table>
+      <div className="ig-table-actions">
+        <button onClick={addRow} title="Add row">＋ row</button>
+        <button onClick={addCol} title="Add column">＋ column</button>
+        <button onClick={delRow} title="Remove last row">－ row</button>
+        <button onClick={delCol} title="Remove last column">－ column</button>
+      </div>
+    </div>
+  )
+}
+
+// --- Status pill: a cute pastel dropdown, customizable options ---
+function StatusBlock({ block, onChange }: { block: Block; onChange: (id: string, patch: Partial<Block>) => void }) {
+  const options = block.statusOptions && block.statusOptions.length ? block.statusOptions : DEFAULT_STATUS_OPTIONS
+  const [open, setOpen] = useState(false)
+  const current = options.find((o) => o.label === block.status) || null
+  const pick = (label: string) => { onChange(block.id, { status: label, statusOptions: options }); setOpen(false) }
+  const addCustom = () => {
+    const label = (window.prompt('Name your new status') || '').trim()
+    if (!label) return
+    const swatches = ['#ffe0ef', '#fff6cf', '#e9dcff', '#d5f6f2', '#ffd6e8', '#d8ecff', '#ffe8d6']
+    const next = [...options, { label, color: swatches[options.length % swatches.length] }]
+    onChange(block.id, { statusOptions: next, status: label })
+    setOpen(false)
+  }
+  return (
+    <div className="ig-status">
+      <button className="ig-status-pill" style={{ background: current ? current.color : '#efece7' }} onClick={() => setOpen((v) => !v)}>
+        <span className="dot" style={{ background: current ? current.color : '#cfc8c0', border: '1px solid rgba(60,50,55,.25)' }} />
+        {current ? current.label : 'Set status'} <span className="caret">▾</span>
+      </button>
+      {open && (
+        <div className="ig-status-menu">
+          {options.map((o) => (
+            <button key={o.label} className="ig-status-opt" onClick={() => pick(o.label)}>
+              <span className="dot" style={{ background: o.color, border: '1px solid rgba(60,50,55,.15)' }} />{o.label}
+            </button>
+          ))}
+          <button className="ig-status-add" onClick={addCustom}>＋ new status</button>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -366,6 +459,12 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
   if (block.type === 'file' || block.type === 'image')
     return <div className="block"><span className="grip">⠿</span><div className="content"><FilePreview token={token} block={block} /></div></div>
 
+  if (block.type === 'table')
+    return <div className="block"><span className="grip">⠿</span><div className="content"><TableBlock block={block} onChange={onChange} /></div></div>
+
+  if (block.type === 'status')
+    return <div className="block"><span className="grip">⠿</span><div className="content"><StatusBlock block={block} onChange={onChange} /></div></div>
+
   if (block.type === 'callout')
     return (
       <div className="block"><span className="grip">⠿</span>
@@ -390,23 +489,40 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
 
 type SlashState = { blockId: string; pos: { x: number; y: number }; query: string; index: number }
 
+type PageRef = {
+  id: string
+  title: string
+  isNode: boolean
+  kind?: 'central' | 'sub'
+  color: PaletteKey
+  font?: string
+  shape?: string
+  start?: string
+  end?: string
+}
+
 function Editor({
-  token, node, blocks, setBlocks, onClose, updateNodeData, addChild, openNode
+  token, page, blocks, setBlocks, pages, onClose, onBack, canBack,
+  setTitle, updateNode, registerSubpage, openPage
 }: {
   token: string
-  node: BubbleNodeModel
+  page: PageRef
   blocks: Block[]
   setBlocks: (updater: (bs: Block[]) => Block[]) => void
+  pages: Record<string, { title: string }>
   onClose: () => void
-  updateNodeData: (id: string, patch: Partial<BubbleData>) => void
-  addChild: (parentId: string) => string
-  openNode: (id: string) => void
+  onBack: () => void
+  canBack: boolean
+  setTitle: (title: string) => void
+  updateNode: (patch: Partial<BubbleData>) => void
+  registerSubpage: () => string
+  openPage: (id: string) => void
 }) {
   const [focusId, setFocusId] = useState<string | null>(null)
   const [slash, setSlash] = useState<SlashState | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const pendingFileType = useRef<BlockType>('file')
-  const pal = paletteFor(node.data.color)
+  const pal = paletteFor(page.color)
 
   const patchBlock = (id: string, patch: Partial<Block>) => setBlocks((bs) => bs.map((b) => (b.id === id ? { ...b, ...patch } : b)))
 
@@ -496,8 +612,18 @@ function Editor({
       return
     }
     if (kind === 'page') {
-      const childId = addChild(node.id)
-      patchBlock(id, { type: 'pagelink', targetId: childId, text: '' })
+      const pid = registerSubpage()
+      patchBlock(id, { type: 'subpage', pageId: pid, text: '' })
+      addAfter(id, newBlock())
+      return
+    }
+    if (kind === 'table') {
+      patchBlock(id, { type: 'table', rows: [['', '', ''], ['', '', '']], text: '' })
+      addAfter(id, newBlock())
+      return
+    }
+    if (kind === 'status') {
+      patchBlock(id, { type: 'status', statusOptions: DEFAULT_STATUS_OPTIONS, status: '', text: '' })
       addAfter(id, newBlock())
       return
     }
@@ -530,60 +656,76 @@ function Editor({
       <aside className="ig-drawer">
         <div className="doc-head">
           <div className="row">
+            {canBack && <button className="ig-back" onClick={onBack}>‹ Back</button>}
             <span className="chip" style={{ background: pal.fill, color: pal.ink }}>
-              {node.data.kind === 'central' ? '🌸 central idea' : '💭 thought bubble'}
+              {page.isNode ? (page.kind === 'central' ? '🌸 central idea' : '💭 thought bubble') : '📄 page'}
             </span>
             <button className="close-x" onClick={onClose}>×</button>
           </div>
           <input
             className="doc-title"
-            value={node.data.label}
-            placeholder="Untitled thought"
-            onChange={(e) => updateNodeData(node.id, { label: e.target.value })}
+            value={page.title}
+            placeholder={page.isNode ? 'Untitled thought' : 'Untitled page'}
+            onChange={(e) => setTitle(e.target.value)}
           />
-          <div className="doc-dates">
-            🗓️ from
-            <input type="date" value={node.data.start || ''} onChange={(e) => updateNodeData(node.id, { start: e.target.value })} />
-            to
-            <input type="date" value={node.data.end || ''} onChange={(e) => updateNodeData(node.id, { end: e.target.value })} />
-          </div>
-          <div className="doc-tools">
-            <label className="doc-font" title="Font">
-              <span className="aa">Aa</span>
-              <select value={node.data.font || DEFAULT_FONT} onChange={(e) => updateNodeData(node.id, { font: e.target.value })}>
-                {['Cute & handwritten', 'Formal'].map((g) => (
-                  <optgroup key={g} label={g}>
-                    {FONTS.filter((f) => f.group === g).map((f) => (
-                      <option key={f.key} value={f.key}>{f.label}</option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
-            </label>
-            <div className="doc-shapes" title="Bubble shape">
-              {SHAPES.map((s) => (
-                <button
-                  key={s.key}
-                  className={`shape-btn ${(node.data.shape || DEFAULT_SHAPE) === s.key ? 'active' : ''}`}
-                  title={s.label}
-                  onClick={() => updateNodeData(node.id, { shape: s.key })}
-                >
-                  <span className={`shape-swatch shape-${s.key}`} />
-                </button>
-              ))}
+          {page.isNode && (
+            <div className="doc-dates">
+              🗓️ from
+              <input type="date" value={page.start || ''} onChange={(e) => updateNode({ start: e.target.value })} />
+              to
+              <input type="date" value={page.end || ''} onChange={(e) => updateNode({ end: e.target.value })} />
             </div>
+          )}
+          <div className="doc-tools">
+            {page.isNode && (
+              <>
+                <label className="doc-font" title="Font">
+                  <span className="aa">Aa</span>
+                  <select value={page.font || DEFAULT_FONT} onChange={(e) => updateNode({ font: e.target.value })}>
+                    {['Cute & handwritten', 'Formal'].map((g) => (
+                      <optgroup key={g} label={g}>
+                        {FONTS.filter((f) => f.group === g).map((f) => (
+                          <option key={f.key} value={f.key}>{f.label}</option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
+                </label>
+                <div className="doc-shapes" title="Bubble shape">
+                  {SHAPES.map((s) => (
+                    <button
+                      key={s.key}
+                      className={`shape-btn ${(page.shape || DEFAULT_SHAPE) === s.key ? 'active' : ''}`}
+                      title={s.label}
+                      onClick={() => updateNode({ shape: s.key })}
+                    >
+                      <span className={`shape-swatch shape-${s.key}`} />
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
             <span className="doc-hint">select text · <b>Ctrl+H</b> to highlight</span>
           </div>
         </div>
 
-        <div className="doc-body" style={{ ['--ig-font' as string]: fontStack(node.data.font), fontFamily: fontStack(node.data.font) } as React.CSSProperties}>
+        <div className="doc-body" style={{ ['--ig-font' as string]: fontStack(page.font), fontFamily: fontStack(page.font) } as React.CSSProperties}>
           {blocks.map((b) => (
             <div key={b.id} className="block-row" style={{ marginLeft: (b.indent || 0) * 24 }}>
-              {b.type === 'pagelink' ? (
+              {b.type === 'subpage' ? (
                 <div className="block">
                   <span className="grip">⠿</span>
                   <div className="content">
-                    <button className="pagelink" onClick={() => b.targetId && openNode(b.targetId)}>🫧 Open linked bubble →</button>
+                    <button className="pagelink" onClick={() => b.pageId && openPage(b.pageId)}>
+                      📄 {(b.pageId && pages[b.pageId]?.title) || 'Untitled page'} →
+                    </button>
+                  </div>
+                </div>
+              ) : b.type === 'pagelink' ? (
+                <div className="block">
+                  <span className="grip">⠿</span>
+                  <div className="content">
+                    <button className="pagelink" onClick={() => b.targetId && openPage(b.targetId)}>🫧 Open linked bubble →</button>
                   </div>
                 </div>
               ) : (
@@ -673,8 +815,10 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
   const [nodes, setNodes] = useState<BubbleNodeModel[]>([])
   const [edges, setEdges] = useState<EdgeModel[]>([])
   const [docs, setDocs] = useState<Record<string, Block[]>>({})
+  const [pages, setPages] = useState<Record<string, { title: string }>>({})
   const colorIndexRef = useRef(1)
-  const [openId, setOpenId] = useState<string | null>(null)
+  // Navigation stack of open page ids (first is a bubble/node id, rest are sub-pages).
+  const [openStack, setOpenStack] = useState<string[]>([])
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'offline'>('idle')
   const hydratedRef = useRef(false)
   // Saving to the server is gated until we have CONFIRMED the server's contents
@@ -690,6 +834,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
     setNodes(doc.nodes)
     setEdges(doc.edges || [])
     setDocs(doc.docs || {})
+    setPages(doc.pages || {})
     colorIndexRef.current = doc.colorIndex || 1
     hydratedRef.current = true
     setLoading(false)
@@ -745,7 +890,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   useEffect(() => {
     if (!hydratedRef.current) return
-    const doc: GardenDoc = { version: 1, nodes, edges, docs, colorIndex: colorIndexRef.current }
+    const doc: GardenDoc = { version: 1, nodes, edges, docs, pages, colorIndex: colorIndexRef.current }
     latestDocRef.current = doc
     // Always keep a local backup so nothing is lost even while offline.
     try { localStorage.setItem(LOCAL_KEY, JSON.stringify(doc)) } catch { /* ignore */ }
@@ -765,7 +910,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
       }
     }, 800)
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current) }
-  }, [nodes, edges, docs, token])
+  }, [nodes, edges, docs, pages, token])
 
   // --- reconnect: when we drop offline mid-session, keep trying and push the
   // latest state back up once the server answers again ---
@@ -842,7 +987,10 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
       setNodes((ns) => ns.filter((n) => n.id !== id))
       setEdges((es) => es.filter((e) => e.source !== id && e.target !== id))
     },
-    openNode: (id) => setOpenId(id)
+    openNode: (id) => {
+      setDocs((d) => (d[id] && d[id].length ? d : { ...d, [id]: [newBlock()] }))
+      setOpenStack([id])
+    }
   }), [])
 
   const addFloating = () => {
@@ -858,10 +1006,42 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
     })
   }
 
-  const setBlocksFor = (nodeId: string) => (updater: (bs: Block[]) => Block[]) =>
-    setDocs((d) => ({ ...d, [nodeId]: updater(d[nodeId] && d[nodeId].length ? d[nodeId] : [newBlock()]) }))
+  const setBlocksFor = (pageId: string) => (updater: (bs: Block[]) => Block[]) =>
+    setDocs((d) => ({ ...d, [pageId]: updater(d[pageId] && d[pageId].length ? d[pageId] : [newBlock()]) }))
 
-  const openNodeModel = openId ? nodes.find((n) => n.id === openId) || null : null
+  // Give a page a persistent first block the moment it opens, so its id is
+  // stable and the very first edit (or a /table, /status insert) actually sticks.
+  const ensureDoc = (id: string) =>
+    setDocs((d) => (d[id] && d[id].length ? d : { ...d, [id]: [newBlock()] }))
+
+  // Register a brand-new inline sub-page and seed it with an empty line.
+  const registerSubpage = () => {
+    const pid = uid()
+    setPages((p) => ({ ...p, [pid]: { title: 'Untitled page' } }))
+    setDocs((d) => ({ ...d, [pid]: [newBlock()] }))
+    return pid
+  }
+
+  // Build the descriptor for whichever page is currently on top of the stack.
+  const currentId = openStack.length ? openStack[openStack.length - 1] : null
+  const currentNode = currentId ? nodes.find((n) => n.id === currentId) || null : null
+  const rootNode = openStack.length ? nodes.find((n) => n.id === openStack[0]) || null : null
+  let currentPage: PageRef | null = null
+  if (currentId) {
+    if (currentNode) {
+      currentPage = {
+        id: currentId, title: currentNode.data.label, isNode: true, kind: currentNode.data.kind,
+        color: currentNode.data.color, font: currentNode.data.font, shape: currentNode.data.shape,
+        start: currentNode.data.start, end: currentNode.data.end
+      }
+    } else if (pages[currentId]) {
+      // A sub-page inherits the look of its root bubble.
+      currentPage = {
+        id: currentId, title: pages[currentId].title, isNode: false,
+        color: rootNode?.data.color || 'bubblegum', font: rootNode?.data.font
+      }
+    }
+  }
   const miniColor = useMemo(() => (n: { data?: { color?: string } }) => paletteFor(n.data?.color).border, [])
 
   return (
@@ -899,7 +1079,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
           connectionMode={ConnectionMode.Loose}
           connectionLineStyle={{ stroke: '#c9b6c1', strokeWidth: 2 }}
           defaultEdgeOptions={{ type: 'squiggle', markerEnd: { type: MarkerType.ArrowClosed, color: '#c9b6c1', width: 16, height: 16 } }}
-          onNodeDoubleClick={(_, n) => setOpenId(n.id)}
+          onNodeDoubleClick={(_, n) => { ensureDoc(n.id); setOpenStack([n.id]) }}
           zoomOnDoubleClick={false}
           deleteKeyCode={null}
           fitView
@@ -918,16 +1098,23 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
         Double-click a bubble to open its <b>page</b>. Hover for <b>+ sub-bubble</b>. Inside a page, type <b>/</b> for to-dos, files, YouTube & more.
       </div>
 
-      {openNodeModel && (
+      {currentPage && (
         <Editor
           token={token}
-          node={openNodeModel}
-          blocks={docs[openNodeModel.id] && docs[openNodeModel.id].length ? docs[openNodeModel.id] : [newBlock()]}
-          setBlocks={setBlocksFor(openNodeModel.id)}
-          onClose={() => setOpenId(null)}
-          updateNodeData={ctx.updateNodeData}
-          addChild={ctx.addChild}
-          openNode={(id) => setOpenId(id)}
+          page={currentPage}
+          blocks={docs[currentPage.id] && docs[currentPage.id].length ? docs[currentPage.id] : [newBlock()]}
+          setBlocks={setBlocksFor(currentPage.id)}
+          pages={pages}
+          onClose={() => setOpenStack([])}
+          onBack={() => setOpenStack((s) => s.slice(0, -1))}
+          canBack={openStack.length > 1}
+          setTitle={(title) => {
+            if (currentPage!.isNode) ctx.updateNodeData(currentPage!.id, { label: title })
+            else setPages((p) => ({ ...p, [currentPage!.id]: { title } }))
+          }}
+          updateNode={(patch) => ctx.updateNodeData(currentPage!.id, patch)}
+          registerSubpage={registerSubpage}
+          openPage={(id) => { ensureDoc(id); setOpenStack((s) => [...s, id]) }}
         />
       )}
     </div>
