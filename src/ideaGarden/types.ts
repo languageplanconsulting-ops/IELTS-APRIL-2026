@@ -40,6 +40,7 @@ export type BlockType =
   | 'subpage'
   | 'table'
   | 'status'
+  | 'bullet'
 
 export type StatusOption = { label: string; color: string }
 
@@ -59,6 +60,7 @@ export type Block = {
   pageId?: string // subpage: id of the child page (docs[pageId] holds its blocks)
   rows?: string[][] // table (legacy: plain-text cells)
   cells?: Block[][][] // table grid[row][col] = a cell's own list of blocks
+  bullet?: string // bullet list item: style key (dot, flower, heart, star, arrow)
   status?: string // status pill: selected label
   statusOptions?: StatusOption[] // status pill: available options
 }

@@ -12470,6 +12470,10 @@ const buildPostKit = async (doc, pageId) => {
       } else if (b.type === 'todo') {
         const t = stripHtml(b.text)
         if (t) { todos.push({ text: t, done: !!b.checked }); extractUrls(t).forEach((u) => links.add(u)) }
+      } else if (b.type === 'bullet') {
+        const t = stripHtml(b.text)
+        const glyph = { flower: '✿', heart: '♥', star: '✦', arrow: '➛' }[b.bullet] || '•'
+        if (t) { captionParts.push(`${glyph} ${t}`); extractUrls(t).forEach((u) => links.add(u)) }
       } else if (b.type === 'youtube') {
         if (b.url) { links.add(b.url); media.push({ kind: 'video', source: 'youtube', url: b.url }) }
       } else if (b.type === 'image' || b.type === 'file') {

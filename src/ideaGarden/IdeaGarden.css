@@ -388,3 +388,49 @@
 .ideaGarden .block-row.drop-before::before { top: -2px; }
 .ideaGarden .block-row.drop-after::after { bottom: -2px; }
 .ideaGarden .doc-body.file-over { outline: 2px dashed var(--ig-accent); outline-offset: -6px; border-radius: 12px; }
+
+/* Cute bullet list */
+.ideaGarden .block.bullet .content { display: flex; align-items: flex-start; gap: 8px; }
+.ideaGarden .ig-bullet-wrap { position: relative; flex: none; }
+.ideaGarden .ig-bullet {
+  width: 22px; height: 26px; border: none; background: transparent; padding: 0;
+  font-size: 17px; line-height: 26px; color: var(--ig-accent-deep); border-radius: 6px;
+  transition: transform .2s var(--in-ease), background .2s ease;
+}
+.ideaGarden .ig-bullet:hover { background: #fff2f7; transform: scale(1.15); }
+.ideaGarden .ig-bullet.b-dot { font-size: 22px; }
+.ideaGarden .ig-bullet.b-flower { color: #e85f95; }
+.ideaGarden .ig-bullet.b-heart { color: #ff7aa8; }
+.ideaGarden .ig-bullet.b-star { color: #b38cf0; }
+.ideaGarden .ig-bullet.b-arrow { color: #5fb88e; }
+.ideaGarden .ig-bullet-menu {
+  position: absolute; z-index: 35; top: 28px; left: -4px; display: flex; gap: 4px; padding: 5px;
+  background: #fff; border: 1px solid var(--ig-line); border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(60, 50, 55, .18); animation: igRise 200ms var(--in-ease) both;
+}
+.ideaGarden .ig-bullet-opt {
+  width: 30px; height: 30px; border: 1px solid transparent; background: transparent; border-radius: 8px;
+  font-size: 17px; line-height: 1; display: grid; place-items: center; color: var(--ig-accent-deep);
+}
+.ideaGarden .ig-bullet-opt:hover { background: var(--ig-canvas); }
+.ideaGarden .ig-bullet-opt.on { border-color: var(--ig-accent); background: #fff2f7; }
+.ideaGarden .ig-bullet-opt.b-heart { color: #ff7aa8; }
+.ideaGarden .ig-bullet-opt.b-star { color: #b38cf0; }
+.ideaGarden .ig-bullet-opt.b-arrow { color: #5fb88e; }
+
+/* Resizable page drawer */
+.ideaGarden .ig-drawer { max-width: calc(100% - 24px); }
+.ideaGarden .ig-resize {
+  position: absolute; left: -6px; top: 0; bottom: 0; width: 12px; z-index: 5; cursor: ew-resize;
+}
+.ideaGarden .ig-resize::after {
+  content: ''; position: absolute; left: 4px; top: 50%; width: 4px; height: 56px; margin-top: -28px;
+  border-radius: 4px; background: var(--ig-line); transition: background .2s ease, height .2s ease;
+}
+.ideaGarden .ig-resize:hover::after { background: var(--ig-accent); height: 84px; margin-top: -42px; }
+.ideaGarden .ig-expand {
+  position: absolute; left: -15px; top: 22px; z-index: 6; width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--ig-line); background: #fff; color: var(--ig-ink-soft); font-size: 14px;
+  display: grid; place-items: center; box-shadow: 0 4px 12px rgba(60, 50, 55, .14);
+}
+.ideaGarden .ig-expand:hover { color: var(--ig-accent-deep); border-color: var(--ig-accent); }

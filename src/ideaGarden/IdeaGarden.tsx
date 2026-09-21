@@ -182,6 +182,7 @@ const SLASH_ITEMS: Array<{ key: BlockType | 'page'; group: string; ico: string; 
   { key: 'h1', group: 'Basics', ico: '🅷', label: 'Heading', hint: 'Big section title' },
   { key: 'h2', group: 'Basics', ico: '🇭', label: 'Subheading', hint: 'Smaller title' },
   { key: 'todo', group: 'Basics', ico: '✅', label: 'To-do', hint: 'Track a task' },
+  { key: 'bullet', group: 'Basics', ico: '✿', label: 'Bullet list', hint: 'Or just type "- "' },
   { key: 'callout', group: 'Basics', ico: '💡', label: 'Callout', hint: 'Make it pop' },
   { key: 'divider', group: 'Basics', ico: '➖', label: 'Divider', hint: 'Split things up' },
   { key: 'table', group: 'Basics', ico: '▦', label: 'Table', hint: 'A little grid' },
@@ -200,7 +201,40 @@ const DEFAULT_STATUS_OPTIONS: { label: string; color: string }[] = [
   { label: 'On hold', color: '#ffe8d6' }
 ]
 
-const isTextual = (t: BlockType) => ['text', 'h1', 'h2', 'todo', 'callout'].includes(t)
+const isTextual = (t: BlockType) => ['text', 'h1', 'h2', 'todo', 'callout', 'bullet'].includes(t)
+
+// Five cute bullet styles; click a bullet to switch its style.
+const BULLETS: { key: string; glyph: string; label: string }[] = [
+  { key: 'dot', glyph: '•', label: 'Dot' },
+  { key: 'flower', glyph: '✿', label: 'Flower' },
+  { key: 'heart', glyph: '♥', label: 'Heart' },
+  { key: 'star', glyph: '✦', label: 'Sparkle' },
+  { key: 'arrow', glyph: '➛', label: 'Arrow' }
+]
+const bulletGlyph = (k?: string) => (BULLETS.find((b) => b.key === k) || BULLETS[0]).glyph
+
+function BulletMarker({ value, onPick }: { value?: string; onPick: (k: string) => void }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <span className="ig-bullet-wrap">
+      <button className={`ig-bullet b-${value || 'dot'}`} title="Change bullet style" onMouseDown={(e) => { e.preventDefault(); setOpen((v) => !v) }}>
+        {bulletGlyph(value)}
+      </button>
+      {open && (
+        <span className="ig-bullet-menu" onMouseLeave={() => setOpen(false)}>
+          {BULLETS.map((b) => (
+            <button
+              key={b.key}
+              className={`ig-bullet-opt b-${b.key} ${(value || 'dot') === b.key ? 'on' : ''}`}
+              title={b.label}
+              onMouseDown={(e) => { e.preventDefault(); onPick(b.key); setOpen(false) }}
+            >{b.glyph}</button>
+          ))}
+        </span>
+      )}
+    </span>
+  )
+}
 const filterItems = (q: string) => {
   const s = q.toLowerCase()
   return SLASH_ITEMS.filter((i) => i.label.toLowerCase().includes(s) || String(i.key).includes(s))
@@ -273,8 +307,19 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
   const addAfter = (id: string, block: Block) => { setBlocks((bs) => { const i = bs.findIndex((b) => b.id === id); const c = [...bs]; c.splice(i + 1, 0, block); return c }); setFocusId(block.id) }
   const onEnter = (id: string, isEmpty: boolean) => {
     const b = blocks.find((x) => x.id === id)
-    if (b?.type === 'todo') { if (isEmpty) { patchBlock(id, { type: 'text', checked: false, text: '' }); setFocusId(id) } else addAfter(id, newBlock('todo')); return }
+    if (b?.type === 'todo' || b?.type === 'bullet') {
+      if (isEmpty) { patchBlock(id, { type: 'text', checked: false, text: '' }); setFocusId(id) }
+      else addAfter(id, newBlock(b.type, { bullet: b.bullet }))
+      return
+    }
     addAfter(id, newBlock('text'))
+  }
+  const onAutoBullet = (id: string, rest: string) => {
+    const i = blocks.findIndex((x) => x.id === id)
+    const prev = blocks.slice(0, i).reverse().find((x) => x.type === 'bullet')
+    patchBlock(id, { type: 'bullet', text: rest, bullet: prev?.bullet || 'dot' })
+    setFocusId(null)
+    setTimeout(() => setFocusId(id), 0)
   }
   const onBackspaceEmpty = (id: string) => setBlocks((bs) => { if (bs.length === 1) return bs; const i = bs.findIndex((b) => b.id === id); if (bs[i - 1]) setFocusId(bs[i - 1].id); return bs.filter((b) => b.id !== id) })
   function onSlash(blockId: string, query: string | null, pos?: { x: number; y: number }) {
@@ -343,7 +388,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
         ) : (
           <BlockView key={b.id} token={token} block={b} autoFocus={focusId === b.id} pages={pages} registerSubpage={registerSubpage} openPage={openPage}
             onChange={patchBlock} onEnter={onEnter} onBackspaceEmpty={onBackspaceEmpty} onSlash={onSlash}
-            onToggle={(id) => patchBlock(id, { checked: !b.checked })} onIndent={() => {}} />
+            onToggle={(id) => patchBlock(id, { checked: !b.checked })} onIndent={() => {}} onAutoBullet={onAutoBullet} />
         )
       ))}
       <input ref={fileInputRef} type="file" hidden onChange={onFileChosen} />
@@ -446,6 +491,7 @@ function PostKitPanel({ token, pageId, title, blocks, onClose }: { token: string
     for (const b of list) {
       if (['text', 'h1', 'h2', 'callout'].includes(b.type)) { const t = strip(b.text); if (t) { captionParts.push(t); urls(t).forEach((u) => links.add(u)) } }
       else if (b.type === 'todo') { const t = strip(b.text); if (t) { todos.push({ text: t, done: !!b.checked }); urls(t).forEach((u) => links.add(u)) } }
+      else if (b.type === 'bullet') { const t = strip(b.text); if (t) { captionParts.push(`${bulletGlyph(b.bullet)} ${t}`); urls(t).forEach((u) => links.add(u)) } }
       else if (b.type === 'youtube') { if (b.url) links.add(b.url) }
       else if (b.type === 'image' || b.type === 'file') { if (b.filePath) fileBlocks.push(b) }
       else if (b.type === 'status') { if (b.status) status = b.status }
@@ -530,9 +576,10 @@ type BlockProps = CellCtx & {
   onSlash: (id: string, query: string | null, pos?: { x: number; y: number }) => void
   onToggle: (id: string) => void
   onIndent: (id: string, delta: number) => void
+  onAutoBullet?: (id: string, rest: string) => void
 }
 
-function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, pages, registerSubpage, openPage }: BlockProps) {
+function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, onAutoBullet, pages, registerSubpage, openPage }: BlockProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -578,6 +625,15 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
   function handleInput(e: React.FormEvent<HTMLDivElement>) {
     const el = e.currentTarget
     const plain = el.innerText
+    // Markdown-style shortcut: "- " or "* " at the start of a plain line → bullet.
+    // Read raw textContent: innerText collapses the trailing space right after "-".
+    const raw = (el.textContent || '').replace(/ /g, ' ')
+    const bulletMatch = block.type === 'text' && onAutoBullet ? raw.match(/^[-*] ([\s\S]*)$/) : null
+    if (bulletMatch) {
+      onSlash(block.id, null)
+      onAutoBullet!(block.id, bulletMatch[1])
+      return
+    }
     if (plain.startsWith('/')) {
       const rect = el.getBoundingClientRect()
       onSlash(block.id, plain.slice(1), { x: rect.left, y: rect.bottom + 6 })
@@ -654,6 +710,16 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       </div>
     )
 
+  if (block.type === 'bullet')
+    return (
+      <div className="block bullet"><span className="grip">⠿</span>
+        <div className="content">
+          <BulletMarker value={block.bullet} onPick={(k) => onChange(block.id, { bullet: k })} />
+          {editable('List item…')}
+        </div>
+      </div>
+    )
+
   if (block.type === 'todo')
     return (
       <div className={`block todo ${block.checked ? 'done' : ''}`}><span className="grip">⠿</span>
@@ -703,6 +769,39 @@ function Editor({
   const [focusId, setFocusId] = useState<string | null>(null)
   const [slash, setSlash] = useState<SlashState | null>(null)
   const [showKit, setShowKit] = useState(false)
+
+  // --- resizable page: drag the left edge; the width is remembered ---
+  const DEFAULT_W = 640
+  const [drawerW, setDrawerW] = useState<number>(() => {
+    try { return Number(localStorage.getItem('ideaGarden.drawerWidth')) || DEFAULT_W } catch { return DEFAULT_W }
+  })
+  const asideRef = useRef<HTMLElement>(null)
+  useEffect(() => {
+    try { localStorage.setItem('ideaGarden.drawerWidth', String(Math.round(drawerW))) } catch { /* ignore */ }
+  }, [drawerW])
+  const maxDrawerW = () => {
+    const parent = asideRef.current?.parentElement
+    return (parent ? parent.getBoundingClientRect().width : window.innerWidth) - 32
+  }
+  function startResize(e: React.PointerEvent) {
+    e.preventDefault()
+    const parent = asideRef.current?.parentElement
+    const right = parent ? parent.getBoundingClientRect().right : window.innerWidth
+    const maxW = maxDrawerW()
+    const onMove = (ev: PointerEvent) => setDrawerW(Math.max(380, Math.min(maxW, right - ev.clientX)))
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+    document.body.style.cursor = 'ew-resize'
+    document.body.style.userSelect = 'none'
+  }
+  // Double-click the edge to jump between normal and nearly full width.
+  const toggleWide = () => setDrawerW((w) => (w > DEFAULT_W + 40 ? DEFAULT_W : maxDrawerW()))
   const fileInputRef = useRef<HTMLInputElement>(null)
   const pendingFileType = useRef<BlockType>('file')
   const pal = paletteFor(page.color)
@@ -731,18 +830,28 @@ function Editor({
       setFocusId(id)
       return
     }
-    if (b?.type === 'todo') {
+    if (b?.type === 'todo' || b?.type === 'bullet') {
       if (isEmpty) {
-        // Second Enter on an empty to-do ends the list → back to normal text.
+        // Second Enter on an empty to-do/bullet ends the list → back to normal text.
         patchBlock(id, { type: 'text', checked: false, text: '' })
         setFocusId(id)
       } else {
-        // Enter with content → start the next to-do at the same depth.
-        addAfter(id, newBlock('todo', { indent }))
+        // Enter with content → next item at the same depth (bullets keep their style).
+        addAfter(id, newBlock(b.type, { indent, bullet: b.bullet }))
       }
       return
     }
     addAfter(id, newBlock('text', { indent }))
+  }
+
+  // "- " typed at the start of a line → turn it into a bullet. New bullets reuse
+  // the style of the nearest bullet above, so a list stays consistent.
+  const onAutoBullet = (id: string, rest: string) => {
+    const i = blocks.findIndex((x) => x.id === id)
+    const prev = blocks.slice(0, i).reverse().find((x) => x.type === 'bullet')
+    patchBlock(id, { type: 'bullet', text: rest, bullet: prev?.bullet || 'dot' })
+    setFocusId(null)
+    setTimeout(() => setFocusId(id), 0)
   }
   function onBackspaceEmpty(id: string) {
     setBlocks((bs) => {
@@ -885,7 +994,16 @@ function Editor({
   return (
     <>
       <div className="ig-scrim" onClick={onClose} />
-      <aside className="ig-drawer">
+      <aside ref={asideRef} className="ig-drawer" style={{ width: drawerW }}>
+        <div
+          className="ig-resize"
+          onPointerDown={startResize}
+          onDoubleClick={toggleWide}
+          title="Drag to resize · double-click to expand"
+        />
+        <button className="ig-expand" onClick={toggleWide} title={drawerW > DEFAULT_W + 40 ? 'Shrink page' : 'Expand page'}>
+          {drawerW > DEFAULT_W + 40 ? '⇥' : '⇤'}
+        </button>
         <div className="doc-head">
           <div className="row">
             {canBack && <button className="ig-back" onClick={onBack}>‹ Back</button>}
@@ -997,6 +1115,7 @@ function Editor({
                   onSlash={onSlash}
                   onToggle={(id) => patchBlock(id, { checked: !b.checked })}
                   onIndent={onIndent}
+                  onAutoBullet={onAutoBullet}
                 />
               )}
             </div>
