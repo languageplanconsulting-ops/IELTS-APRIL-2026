@@ -57,7 +57,8 @@ export type Block = {
   targetId?: string
   indent?: number
   pageId?: string // subpage: id of the child page (docs[pageId] holds its blocks)
-  rows?: string[][] // table
+  rows?: string[][] // table (legacy: plain-text cells)
+  cells?: Block[][][] // table grid[row][col] = a cell's own list of blocks
   status?: string // status pill: selected label
   statusOptions?: StatusOption[] // status pill: available options
 }

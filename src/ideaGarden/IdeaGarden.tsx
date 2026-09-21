@@ -256,40 +256,135 @@ function FilePreview({ token, block }: { token: string; block: Block }) {
   )
 }
 
-// --- Table block: a small editable grid with add/remove row & column ---
-function TableCell({ value, header, onCommit }: { value: string; header: boolean; onCommit: (v: string) => void }) {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => { if (ref.current) ref.current.innerText = value || '' }, []) // seed once
+// --- CellEditor: a compact block editor used inside each table cell. Supports
+// the same "/" menu (text, to-do, image, PDF/file, video, link, page) and
+// drag-and-drop file upload as the page. ---
+function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage }: {
+  token: string
+  blocks: Block[]
+  setBlocks: (u: (bs: Block[]) => Block[]) => void
+} & CellCtx) {
+  const [focusId, setFocusId] = useState<string | null>(null)
+  const [slash, setSlash] = useState<SlashState | null>(null)
+  const [fileOver, setFileOver] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const pendingFileType = useRef<BlockType>('file')
+  const patchBlock = (id: string, patch: Partial<Block>) => setBlocks((bs) => bs.map((b) => (b.id === id ? { ...b, ...patch } : b)))
+  const addAfter = (id: string, block: Block) => { setBlocks((bs) => { const i = bs.findIndex((b) => b.id === id); const c = [...bs]; c.splice(i + 1, 0, block); return c }); setFocusId(block.id) }
+  const onEnter = (id: string, isEmpty: boolean) => {
+    const b = blocks.find((x) => x.id === id)
+    if (b?.type === 'todo') { if (isEmpty) { patchBlock(id, { type: 'text', checked: false, text: '' }); setFocusId(id) } else addAfter(id, newBlock('todo')); return }
+    addAfter(id, newBlock('text'))
+  }
+  const onBackspaceEmpty = (id: string) => setBlocks((bs) => { if (bs.length === 1) return bs; const i = bs.findIndex((b) => b.id === id); if (bs[i - 1]) setFocusId(bs[i - 1].id); return bs.filter((b) => b.id !== id) })
+  function onSlash(blockId: string, query: string | null, pos?: { x: number; y: number }) {
+    if (query === null) { setSlash((s) => (s && s.blockId === blockId ? null : s)); return }
+    setSlash((s) => (s && s.blockId === blockId ? { ...s, query, pos: pos || s.pos } : { blockId, query, pos: pos!, index: 0 }))
+  }
+  useEffect(() => {
+    if (!slash) return
+    function onKey(e: KeyboardEvent) {
+      const items = filterItems(slash!.query)
+      if (e.key === 'Escape') { e.preventDefault(); setSlash(null) }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); e.stopPropagation(); setSlash((s) => (s ? { ...s, index: Math.min(s.index + 1, items.length - 1) } : s)) }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); e.stopPropagation(); setSlash((s) => (s ? { ...s, index: Math.max(s.index - 1, 0) } : s)) }
+      else if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); if (items[slash!.index]) pickSlash(items[slash!.index].key) }
+    }
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slash])
+  async function uploadInto(id: string, file: File) {
+    const type: BlockType = file.type.startsWith('image/') ? 'image' : 'file'
+    patchBlock(id, { type, fileName: file.name, fileType: file.type, fileSize: file.size })
+    try { const up = await uploadFile(token, file); patchBlock(id, { type, filePath: up.path, fileName: up.name, fileType: up.type, fileSize: up.size, text: '' }); addAfter(id, newBlock()) }
+    catch { patchBlock(id, { type: 'text', text: `⚠️ Upload failed: ${file.name}` }) }
+  }
+  function pickSlash(kind: BlockType | 'page') {
+    const id = slash?.blockId
+    const active = document.activeElement as HTMLElement | null
+    if (active && active.isContentEditable) active.innerText = ''
+    setSlash(null)
+    if (!id) return
+    if (kind === 'youtube') { const url = window.prompt('Paste a YouTube link 💛') || ''; patchBlock(id, url ? { type: 'youtube', url, text: '' } : { type: 'text', text: '' }); if (url) addAfter(id, newBlock()); return }
+    if (kind === 'file' || kind === 'image') { pendingFileType.current = kind; if (fileInputRef.current) { fileInputRef.current.accept = kind === 'image' ? 'image/*' : '*/*'; fileInputRef.current.dataset.target = id; fileInputRef.current.click() } return }
+    if (kind === 'page') { if (registerSubpage) { const pid = registerSubpage(); patchBlock(id, { type: 'subpage', pageId: pid, text: '' }); addAfter(id, newBlock()) } return }
+    if (kind === 'status') { patchBlock(id, { type: 'status', statusOptions: DEFAULT_STATUS_OPTIONS, status: '', text: '' }); addAfter(id, newBlock()); return }
+    if (kind === 'divider') { patchBlock(id, { type: 'divider', text: '' }); addAfter(id, newBlock()); return }
+    if (kind === 'table') { patchBlock(id, { type: 'text', text: '' }); return } // no nested tables
+    patchBlock(id, { type: kind, text: '' }); setFocusId(id)
+  }
+  async function onFileChosen(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]; const targetId = e.target.dataset.target || ''; e.target.value = ''
+    if (!file || !targetId) return
+    await uploadInto(targetId, file)
+  }
+  async function onDrop(e: React.DragEvent) {
+    if (!e.dataTransfer.files?.length) return
+    e.preventDefault(); e.stopPropagation(); setFileOver(false)
+    let anchor = blocks[blocks.length - 1]?.id
+    for (const f of [...e.dataTransfer.files]) {
+      const nb = newBlock()
+      setBlocks((bs) => { const i = anchor ? bs.findIndex((b) => b.id === anchor) : bs.length - 1; const c = [...bs]; c.splice(i + 1, 0, nb); return c })
+      anchor = nb.id
+      await uploadInto(nb.id, f)
+    }
+  }
   return (
     <div
-      ref={ref}
-      className={`ig-td ${header ? 'h' : ''}`}
-      contentEditable
-      suppressContentEditableWarning
-      onBlur={(e) => onCommit(e.currentTarget.innerText)}
-    />
+      className={`ig-cell ${fileOver ? 'file-over' : ''}`}
+      onDragOver={(e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); e.stopPropagation(); setFileOver(true) } }}
+      onDragLeave={(e) => { if (e.currentTarget === e.target) setFileOver(false) }}
+      onDrop={onDrop}
+    >
+      {blocks.map((b) => (
+        b.type === 'subpage' ? (
+          <div className="block" key={b.id}><div className="content"><button className="pagelink" onClick={() => b.pageId && openPage && openPage(b.pageId)}>📄 {(b.pageId && pages?.[b.pageId]?.title) || 'Untitled page'} →</button></div></div>
+        ) : (
+          <BlockView key={b.id} token={token} block={b} autoFocus={focusId === b.id} pages={pages} registerSubpage={registerSubpage} openPage={openPage}
+            onChange={patchBlock} onEnter={onEnter} onBackspaceEmpty={onBackspaceEmpty} onSlash={onSlash}
+            onToggle={(id) => patchBlock(id, { checked: !b.checked })} onIndent={() => {}} />
+        )
+      ))}
+      <input ref={fileInputRef} type="file" hidden onChange={onFileChosen} />
+      {slash && <SlashMenu pos={slash.pos} query={slash.query} index={slash.index} onPick={pickSlash} />}
+    </div>
   )
 }
 
-function TableBlock({ block, onChange }: { block: Block; onChange: (id: string, patch: Partial<Block>) => void }) {
-  const rows = block.rows && block.rows.length ? block.rows : [['', '', ''], ['', '', '']]
-  const setRows = (r: string[][]) => onChange(block.id, { rows: r })
-  const setCell = (ri: number, ci: number, val: string) => {
-    const r = rows.map((row) => row.slice())
-    r[ri][ci] = val
-    setRows(r)
+// --- Table block: a grid whose cells are each a mini block-editor ---
+function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }: { block: Block; onChange: (id: string, patch: Partial<Block>) => void; token: string } & CellCtx) {
+  const cells = block.cells && block.cells.length ? block.cells : null
+  const mkCell = (): Block[] => [newBlock()]
+  useEffect(() => {
+    if (cells) return
+    const init: Block[][][] = block.rows && block.rows.length
+      ? block.rows.map((row) => row.map((s) => [newBlock('text', { text: s || '' })]))
+      : [[mkCell(), mkCell(), mkCell()], [mkCell(), mkCell(), mkCell()]]
+    onChange(block.id, { cells: init })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  if (!cells) return <div className="ig-table-wrap"><div className="ig-td-loading">…</div></div>
+  const setCells = (c: Block[][][]) => onChange(block.id, { cells: c })
+  const setCell = (ri: number, ci: number, updater: (bs: Block[]) => Block[]) => {
+    const c = cells.map((r) => r.slice())
+    c[ri] = c[ri].slice()
+    c[ri][ci] = updater(c[ri][ci] && c[ri][ci].length ? c[ri][ci] : [newBlock()])
+    setCells(c)
   }
-  const addRow = () => setRows([...rows.map((x) => x.slice()), rows[0].map(() => '')])
-  const addCol = () => setRows(rows.map((row) => [...row, '']))
-  const delRow = () => rows.length > 1 && setRows(rows.slice(0, -1))
-  const delCol = () => rows[0].length > 1 && setRows(rows.map((row) => row.slice(0, -1)))
+  const addRow = () => setCells([...cells.map((r) => r.slice()), cells[0].map(() => mkCell())])
+  const addCol = () => setCells(cells.map((r) => [...r, mkCell()]))
+  const delRow = () => cells.length > 1 && setCells(cells.slice(0, -1))
+  const delCol = () => cells[0].length > 1 && setCells(cells.map((r) => r.slice(0, -1)))
   return (
     <div className="ig-table-wrap">
       <table className="ig-table"><tbody>
-        {rows.map((row, ri) => (
+        {cells.map((row, ri) => (
           <tr key={ri}>
             {row.map((cell, ci) => (
-              <td key={`${ri}-${ci}`}><TableCell value={cell} header={ri === 0} onCommit={(v) => setCell(ri, ci, v)} /></td>
+              <td key={ci} className={ri === 0 ? 'h' : ''}>
+                <CellEditor token={token} blocks={cell && cell.length ? cell : [newBlock()]} setBlocks={(u) => setCell(ri, ci, u)} pages={pages} registerSubpage={registerSubpage} openPage={openPage} />
+              </td>
             ))}
           </tr>
         ))}
@@ -347,13 +442,17 @@ function PostKitPanel({ token, pageId, title, blocks, onClose }: { token: string
   const links = new Set<string>()
   const fileBlocks: Block[] = []
   let status: string | null = null
-  for (const b of blocks) {
-    if (['text', 'h1', 'h2', 'callout'].includes(b.type)) { const t = strip(b.text); if (t) { captionParts.push(t); urls(t).forEach((u) => links.add(u)) } }
-    else if (b.type === 'todo') { const t = strip(b.text); if (t) { todos.push({ text: t, done: !!b.checked }); urls(t).forEach((u) => links.add(u)) } }
-    else if (b.type === 'youtube') { if (b.url) links.add(b.url) }
-    else if (b.type === 'image' || b.type === 'file') { if (b.filePath) fileBlocks.push(b) }
-    else if (b.type === 'status') { if (b.status) status = b.status }
+  const collect = (list: Block[]) => {
+    for (const b of list) {
+      if (['text', 'h1', 'h2', 'callout'].includes(b.type)) { const t = strip(b.text); if (t) { captionParts.push(t); urls(t).forEach((u) => links.add(u)) } }
+      else if (b.type === 'todo') { const t = strip(b.text); if (t) { todos.push({ text: t, done: !!b.checked }); urls(t).forEach((u) => links.add(u)) } }
+      else if (b.type === 'youtube') { if (b.url) links.add(b.url) }
+      else if (b.type === 'image' || b.type === 'file') { if (b.filePath) fileBlocks.push(b) }
+      else if (b.type === 'status') { if (b.status) status = b.status }
+      else if (b.type === 'table' && Array.isArray(b.cells)) { for (const row of b.cells) for (const cell of row) collect(cell) }
+    }
   }
+  collect(blocks)
   const caption = captionParts.join('\n\n')
   const [mediaUrls, setMediaUrls] = useState<Record<string, string>>({})
   useEffect(() => {
@@ -415,7 +514,13 @@ function PostKitPanel({ token, pageId, title, blocks, onClose }: { token: string
   )
 }
 
-type BlockProps = {
+type CellCtx = {
+  pages?: Record<string, { title: string }>
+  registerSubpage?: () => string
+  openPage?: (id: string) => void
+}
+
+type BlockProps = CellCtx & {
   token: string
   block: Block
   autoFocus: boolean
@@ -427,7 +532,7 @@ type BlockProps = {
   onIndent: (id: string, delta: number) => void
 }
 
-function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent }: BlockProps) {
+function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, pages, registerSubpage, openPage }: BlockProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -537,7 +642,7 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
     return <div className="block"><span className="grip">⠿</span><div className="content"><FilePreview token={token} block={block} /></div></div>
 
   if (block.type === 'table')
-    return <div className="block"><span className="grip">⠿</span><div className="content"><TableBlock block={block} onChange={onChange} /></div></div>
+    return <div className="block"><span className="grip">⠿</span><div className="content"><TableBlock block={block} onChange={onChange} token={token} pages={pages} registerSubpage={registerSubpage} openPage={openPage} /></div></div>
 
   if (block.type === 'status')
     return <div className="block"><span className="grip">⠿</span><div className="content"><StatusBlock block={block} onChange={onChange} /></div></div>
@@ -648,6 +753,55 @@ function Editor({
     })
   }
 
+  // --- drag a line to reorder it anywhere ---
+  const [dragId, setDragId] = useState<string | null>(null)
+  const [dropHint, setDropHint] = useState<{ id: string; pos: 'before' | 'after' } | null>(null)
+  const [fileOver, setFileOver] = useState(false)
+  function moveBlock(fromId: string, toId: string, pos: 'before' | 'after') {
+    if (fromId === toId) return
+    setBlocks((bs) => {
+      const item = bs.find((b) => b.id === fromId)
+      if (!item) return bs
+      const rest = bs.filter((b) => b.id !== fromId)
+      let to = rest.findIndex((b) => b.id === toId)
+      if (to < 0) return bs
+      if (pos === 'after') to += 1
+      rest.splice(to, 0, item)
+      return rest
+    })
+  }
+
+  // --- drop local files anywhere in the page → upload as image/file blocks ---
+  async function uploadFilesAfter(afterId: string | null, files: File[]) {
+    let anchor = afterId
+    for (const file of files) {
+      const type: BlockType = file.type.startsWith('image/') ? 'image' : 'file'
+      const nb = newBlock(type, { fileName: file.name, fileType: file.type, fileSize: file.size })
+      setBlocks((bs) => {
+        const i = anchor ? bs.findIndex((b) => b.id === anchor) : bs.length - 1
+        const copy = [...bs]
+        copy.splice(i + 1, 0, nb)
+        return copy
+      })
+      anchor = nb.id
+      try {
+        const up = await uploadFile(token, file)
+        patchBlock(nb.id, { type, filePath: up.path, fileName: up.name, fileType: up.type, fileSize: up.size })
+      } catch {
+        patchBlock(nb.id, { type: 'text', text: `⚠️ Upload failed: ${file.name}` })
+      }
+    }
+  }
+  function handleDrop(e: React.DragEvent, targetId: string | null, pos: 'before' | 'after') {
+    if (e.dataTransfer.files && e.dataTransfer.files.length) {
+      e.preventDefault(); e.stopPropagation(); setFileOver(false); setDropHint(null)
+      uploadFilesAfter(targetId, [...e.dataTransfer.files])
+      return
+    }
+    const from = e.dataTransfer.getData('text/ig-block')
+    if (from && targetId) { e.preventDefault(); e.stopPropagation(); moveBlock(from, targetId, pos); setDropHint(null) }
+  }
+
   function onSlash(blockId: string, query: string | null, pos?: { x: number; y: number }) {
     if (query === null) { setSlash((s) => (s && s.blockId === blockId ? null : s)); return }
     setSlash((s) => (s && s.blockId === blockId ? { ...s, query, pos: pos || s.pos } : { blockId, query, pos: pos!, index: 0 }))
@@ -696,7 +850,7 @@ function Editor({
       return
     }
     if (kind === 'table') {
-      patchBlock(id, { type: 'table', rows: [['', '', ''], ['', '', '']], text: '' })
+      patchBlock(id, { type: 'table', cells: [[[newBlock()], [newBlock()], [newBlock()]], [[newBlock()], [newBlock()], [newBlock()]]], text: '' })
       addAfter(id, newBlock())
       return
     }
@@ -788,12 +942,34 @@ function Editor({
           </div>
         </div>
 
-        <div className="doc-body" style={{ ['--ig-font' as string]: fontStack(page.font), fontFamily: fontStack(page.font) } as React.CSSProperties}>
+        <div
+          className={`doc-body ${fileOver ? 'file-over' : ''}`}
+          style={{ ['--ig-font' as string]: fontStack(page.font), fontFamily: fontStack(page.font) } as React.CSSProperties}
+          onDragOver={(e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); setFileOver(true) } }}
+          onDragLeave={(e) => { if (e.currentTarget === e.target) setFileOver(false) }}
+          onDrop={(e) => handleDrop(e, blocks.length ? blocks[blocks.length - 1].id : null, 'after')}
+        >
           {blocks.map((b) => (
-            <div key={b.id} className="block-row" style={{ marginLeft: (b.indent || 0) * 24 }}>
+            <div
+              key={b.id}
+              className={`block-row ${dropHint?.id === b.id ? 'drop-' + dropHint.pos : ''}`}
+              style={{ marginLeft: (b.indent || 0) * 24 }}
+              draggable={dragId === b.id}
+              onMouseDown={(e) => { if ((e.target as HTMLElement).closest('.grip')) setDragId(b.id) }}
+              onDragStart={(e) => { e.dataTransfer.setData('text/ig-block', b.id); e.dataTransfer.effectAllowed = 'move' }}
+              onDragEnd={() => { setDragId(null); setDropHint(null) }}
+              onDragOver={(e) => {
+                if (e.dataTransfer.types.includes('Files')) return // let body handle file drops
+                if (!dragId || dragId === b.id) return
+                e.preventDefault()
+                const r = e.currentTarget.getBoundingClientRect()
+                setDropHint({ id: b.id, pos: e.clientY < r.top + r.height / 2 ? 'before' : 'after' })
+              }}
+              onDrop={(e) => { if (!e.dataTransfer.files?.length) handleDrop(e, b.id, dropHint?.pos || 'after') }}
+            >
               {b.type === 'subpage' ? (
                 <div className="block">
-                  <span className="grip">⠿</span>
+                  <span className="grip" title="Drag to move">⠿</span>
                   <div className="content">
                     <button className="pagelink" onClick={() => b.pageId && openPage(b.pageId)}>
                       📄 {(b.pageId && pages[b.pageId]?.title) || 'Untitled page'} →
@@ -802,7 +978,7 @@ function Editor({
                 </div>
               ) : b.type === 'pagelink' ? (
                 <div className="block">
-                  <span className="grip">⠿</span>
+                  <span className="grip" title="Drag to move">⠿</span>
                   <div className="content">
                     <button className="pagelink" onClick={() => b.targetId && openPage(b.targetId)}>🫧 Open linked bubble →</button>
                   </div>
@@ -812,6 +988,9 @@ function Editor({
                   token={token}
                   block={b}
                   autoFocus={focusId === b.id}
+                  pages={pages}
+                  registerSubpage={registerSubpage}
+                  openPage={openPage}
                   onChange={patchBlock}
                   onEnter={onEnter}
                   onBackspaceEmpty={onBackspaceEmpty}

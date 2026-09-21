@@ -12462,24 +12462,29 @@ const buildPostKit = async (doc, pageId) => {
   const media = []
   const links = new Set()
   let status = null
-  for (const b of blocks) {
-    if (['text', 'h1', 'h2', 'callout'].includes(b.type)) {
-      const t = stripHtml(b.text)
-      if (t) { captionParts.push(t); extractUrls(t).forEach((u) => links.add(u)) }
-    } else if (b.type === 'todo') {
-      const t = stripHtml(b.text)
-      if (t) { todos.push({ text: t, done: !!b.checked }); extractUrls(t).forEach((u) => links.add(u)) }
-    } else if (b.type === 'youtube') {
-      if (b.url) { links.add(b.url); media.push({ kind: 'video', source: 'youtube', url: b.url }) }
-    } else if (b.type === 'image' || b.type === 'file') {
-      if (b.filePath) {
-        const url = await signIdeaGardenFile(b.filePath).catch(() => '')
-        media.push({ kind: b.type === 'image' ? 'image' : 'file', name: b.fileName || '', mime: b.fileType || '', url })
+  const collect = async (list) => {
+    for (const b of list || []) {
+      if (['text', 'h1', 'h2', 'callout'].includes(b.type)) {
+        const t = stripHtml(b.text)
+        if (t) { captionParts.push(t); extractUrls(t).forEach((u) => links.add(u)) }
+      } else if (b.type === 'todo') {
+        const t = stripHtml(b.text)
+        if (t) { todos.push({ text: t, done: !!b.checked }); extractUrls(t).forEach((u) => links.add(u)) }
+      } else if (b.type === 'youtube') {
+        if (b.url) { links.add(b.url); media.push({ kind: 'video', source: 'youtube', url: b.url }) }
+      } else if (b.type === 'image' || b.type === 'file') {
+        if (b.filePath) {
+          const url = await signIdeaGardenFile(b.filePath).catch(() => '')
+          media.push({ kind: b.type === 'image' ? 'image' : 'file', name: b.fileName || '', mime: b.fileType || '', url })
+        }
+      } else if (b.type === 'status') {
+        if (b.status) status = b.status
+      } else if (b.type === 'table' && Array.isArray(b.cells)) {
+        for (const row of b.cells) for (const cell of row) await collect(cell)
       }
-    } else if (b.type === 'status') {
-      if (b.status) status = b.status
     }
   }
+  await collect(blocks)
   return {
     id: pageId,
     title,
