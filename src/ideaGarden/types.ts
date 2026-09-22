@@ -88,12 +88,17 @@ export type Block = {
   statusOptions?: StatusOption[] // status pill: available options
 }
 
+// A task on a page's to-do list. `blockId` links it to a line on that page
+// (added via right-click → "Add to to-do list"); its text then follows the line.
+export type TodoTask = { id: string; text: string; done: boolean; blockId?: string }
+
 export type GardenDoc = {
   version: number
   nodes: BubbleNodeModel[]
   edges: EdgeModel[]
   docs: Record<string, Block[]>
   pages?: Record<string, { title: string }> // titles of inline sub-pages
+  tasks?: Record<string, TodoTask[]> // per-page to-do lists (page id = bubble id or sub-page id)
   colorIndex: number
   updatedAt?: string
 }

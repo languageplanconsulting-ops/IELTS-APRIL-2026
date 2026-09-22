@@ -31,7 +31,9 @@ import './IdeaGarden.css'
 import { paletteFor, nextColor } from './palette'
 import type { PaletteKey } from './palette'
 import { FONTS, SHAPES, fontStack, DEFAULT_FONT, DEFAULT_SHAPE } from './fonts'
-import type { BubbleData, BubbleNodeModel, EdgeModel, Block, BlockType, GardenDoc } from './types'
+import type { BubbleData, BubbleNodeModel, EdgeModel, Block, BlockType, GardenDoc, TodoTask } from './types'
+import { todosFor, progressOf, patchDeep, plainText, TodoDock, TodoRecap } from './todos'
+import type { TodoItem } from './todos'
 import { loadGarden, saveGarden, uploadFile, signFile } from './api'
 import { DiagramBlock, diagramFromLines } from './diagram'
 import { exportPagePdf } from './exportPdf'
@@ -48,6 +50,8 @@ type GardenCtx = {
   openNode: (id: string) => void
 }
 const Ctx = createContext<GardenCtx | null>(null)
+// Per-bubble to-do progress (bubble id → done/total), for the bar on each bubble.
+const ProgressCtx = createContext<Record<string, { done: number; total: number }>>({})
 const useCtx = () => {
   const c = useContext(Ctx)
   if (!c) throw new Error('Idea Garden context missing')
@@ -61,6 +65,8 @@ function BubbleNode({ id, data, selected }: NodeProps) {
   const d = data as unknown as BubbleData
   const pal = paletteFor(d.color)
   const { updateNodeData, addChild, deleteNode, openNode } = useCtx()
+  const prog = useContext(ProgressCtx)[id]
+  const pct = prog && prog.total ? Math.round((prog.done / prog.total) * 100) : 0
   const central = d.kind === 'central'
 
   // Stable per-bubble float pace (5.4s–7.3s) so bubbles don't drift in unison.
@@ -131,6 +137,13 @@ function BubbleNode({ id, data, selected }: NodeProps) {
           <input type="date" value={d.start || ''} onChange={(e) => updateNodeData(id, { start: e.target.value })} />
           →
           <input type="date" value={d.end || ''} onChange={(e) => updateNodeData(id, { end: e.target.value })} />
+        </div>
+      )}
+
+      {prog && prog.total > 0 && (
+        <div className={`bubble-progress ${pct === 100 ? 'full' : ''}`} title={`${prog.done} of ${prog.total} to-dos done · right-click for recap`}>
+          <div className="track"><span style={{ width: `${pct}%` }} /></div>
+          <b>{pct === 100 ? '🎉' : `${prog.done}/${prog.total}`}</b>
         </div>
       )}
 
@@ -230,6 +243,16 @@ type BlockPatch = Partial<Block> | ((b: Block) => Partial<Block>)
 const applyPatch = (b: Block, patch: BlockPatch) => ({ ...b, ...(typeof patch === 'function' ? patch(b) : patch) })
 
 const isTextual = (t: BlockType) => ['text', 'h1', 'h2', 'todo', 'callout', 'bullet', 'toggle'].includes(t)
+
+// Line types offered in the right-click "Turn into" menu (text carries over).
+const TURN_KINDS: { key: BlockType; ico: string; label: string }[] = [
+  { key: 'text', ico: 'Aa', label: 'Text' },
+  { key: 'h1', ico: 'H1', label: 'Heading' },
+  { key: 'h2', ico: 'H2', label: 'Subheading' },
+  { key: 'bullet', ico: '•', label: 'Bullet' },
+  { key: 'todo', ico: '☐', label: 'To-do' },
+  { key: 'callout', ico: '💡', label: 'Callout' }
+]
 
 // Five cute bullet styles; click a bullet to switch its style.
 const BULLETS: { key: string; glyph: string; label: string }[] = [
@@ -994,7 +1017,8 @@ type PageRef = {
 
 function Editor({
   token, page, blocks, setBlocks, pages, onClose, onBack, canBack,
-  setTitle, updateNode, registerSubpage, openPage, createPageFrom, getPageBlocks
+  setTitle, updateNode, registerSubpage, openPage, createPageFrom, getPageBlocks,
+  tasks, onAddTask, onToggleTask, onRemoveTask
 }: {
   token: string
   page: PageRef
@@ -1010,6 +1034,10 @@ function Editor({
   openPage: (id: string) => void
   createPageFrom: (title: string, blocks: Block[]) => string
   getPageBlocks: (id: string) => Block[]
+  tasks: TodoTask[]
+  onAddTask: (text: string, blockId?: string) => void
+  onToggleTask: (taskId: string) => void
+  onRemoveTask: (taskId: string) => void
 }) {
   const [focusId, setFocusId] = useState<string | null>(null)
   const [slash, setSlash] = useState<SlashState | null>(null)
@@ -1169,7 +1197,8 @@ function Editor({
     }
   }
   // --- right-click a selection → turn those lines into a dropdown or a page ---
-  const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; ids: string[]; text: string } | null>(null)
+  // `single`: right-click on one plain line → also offer "Turn into" + the to-do list.
+  const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; ids: string[]; text: string; single?: boolean } | null>(null)
   const [naming, setNaming] = useState<{ kind: 'toggle' | 'page'; ids: string[]; name: string } | null>(null)
   // --- select across lines: drag from one line into others → the whole lines
   // highlight (each line is its own text box, so the browser can't do it). ---
@@ -1264,15 +1293,57 @@ function Editor({
       return
     }
     const sel = window.getSelection()
-    if (!sel || sel.isCollapsed || !sel.rangeCount) return // no selection → normal browser menu
+    const x = Math.min(e.clientX, window.innerWidth - 250)
+    const lineMenu = (id: string | null) => {
+      const b = id ? blocks.find((bl) => bl.id === id) : null
+      if (!b || !TURN_KINDS.some((k) => k.key === b.type)) return false
+      e.preventDefault()
+      setCtxMenu({ x, y: Math.min(e.clientY, window.innerHeight - 470), ids: [b.id], text: plainText(b.text), single: true })
+      return true
+    }
+    // No selection → a menu for the line under the pointer (or the browser's own).
+    if (!sel || sel.isCollapsed || !sel.rangeCount) { lineMenu(rowIdAt(e.clientX, e.clientY)); return }
     const range = sel.getRangeAt(0)
     const rows = [...(e.currentTarget as HTMLElement).querySelectorAll(':scope > .block-row')] as HTMLElement[]
     const hit = new Set(rows.filter((r) => range.intersectsNode(r)).map((r) => r.dataset.blockId || ''))
     const ids = blocks.map((b) => b.id).filter((id) => hit.has(id))
     if (!ids.length) return
+    // A selection inside one line (e.g. macOS selects the word you right-click) → that line's menu.
+    if (ids.length === 1 && lineMenu(ids[0])) return
     e.preventDefault()
-    setCtxMenu({ x: Math.min(e.clientX, window.innerWidth - 230), y: Math.min(e.clientY, window.innerHeight - 170), ids, text: sel.toString() })
+    setCtxMenu({ x, y: Math.min(e.clientY, window.innerHeight - 170), ids, text: sel.toString() })
   }
+  // --- this page's to-do list: tasks + To-do blocks ---
+  const taskByBlock = new Map(tasks.filter((t) => t.blockId).map((t) => [t.blockId as string, t]))
+  const todoItems = todosFor(blocks, tasks)
+  const toggleTodoItem = (t: TodoItem) =>
+    t.kind === 'task' ? onToggleTask(t.id) : setBlocks((bs) => patchDeep(bs, t.id, (b) => ({ ...b, checked: !b.checked })))
+
+  function turnInto(kind: BlockType) {
+    const id = ctxMenu?.ids[0]
+    setCtxMenu(null)
+    window.getSelection()?.removeAllRanges()
+    if (!id) return
+    const linked = taskByBlock.get(id)
+    // Becoming a To-do block already puts it on the list → drop the duplicate task.
+    if (kind === 'todo' && linked) onRemoveTask(linked.id)
+    patchBlock(id, (b) => ({
+      type: kind,
+      checked: kind === 'todo' ? (linked ? linked.done : !!b.checked) : false,
+      bullet: kind === 'bullet' ? b.bullet || 'dot' : b.bullet
+    }))
+    setFocusId(null)
+    setTimeout(() => setFocusId(id), 0)
+  }
+  function toggleLineTask() {
+    const id = ctxMenu?.ids[0]
+    setCtxMenu(null)
+    if (!id) return
+    const linked = taskByBlock.get(id)
+    if (linked) onRemoveTask(linked.id)
+    else onAddTask(plainText(blocks.find((b) => b.id === id)?.text), id)
+  }
+
   function beginNaming(kind: 'toggle' | 'page', idsIn?: string[]) {
     const ids = idsIn || ctxMenu?.ids
     if (!ids || !ids.length) return
@@ -1581,7 +1652,7 @@ function Editor({
             <div
               key={b.id}
               data-block-id={b.id}
-              className={`block-row ${dropHint?.id === b.id ? 'drop-' + dropHint.pos : ''} ${picked.includes(b.id) ? 'blk-picked' : ''}`}
+              className={`block-row ${dropHint?.id === b.id ? 'drop-' + dropHint.pos : ''} ${picked.includes(b.id) ? 'blk-picked' : ''} ${taskByBlock.has(b.id) ? 'has-task' : ''}`}
               style={{ marginLeft: (b.indent || 0) * 24 }}
               draggable={dragId === b.id}
               onMouseDown={(e) => { if ((e.target as HTMLElement).closest('.grip')) setDragId(b.id) }}
@@ -1617,6 +1688,8 @@ function Editor({
                 </div>
               ) : (
                 <BlockView
+                  // type in the key → a fresh DOM node per type, so no stale text is left behind
+                  key={`${b.id}:${b.type}`}
                   token={token}
                   block={b}
                   autoFocus={focusId === b.id}
@@ -1634,6 +1707,18 @@ function Editor({
                   onPasteFiles={(id, files) => uploadFilesAfter(id, files)}
                 />
               )}
+              {taskByBlock.has(b.id) && (() => {
+                const t = taskByBlock.get(b.id)!
+                return (
+                  <button
+                    className={`td-tag ${t.done ? 'on' : ''}`}
+                    title={t.done ? 'Done! (click to undo)' : 'On the to-do list (click to tick)'}
+                    onClick={() => onToggleTask(t.id)}
+                  >
+                    {t.done ? '✓ done' : '📝 to-do'}
+                  </button>
+                )
+              })()}
             </div>
           ))}
         </div>
@@ -1652,6 +1737,13 @@ function Editor({
         )}
 
         <input ref={fileInputRef} type="file" hidden onChange={onFileChosen} />
+
+        <TodoDock
+          items={todoItems}
+          onToggle={toggleTodoItem}
+          onRemove={(t) => onRemoveTask(t.id)}
+          onAdd={(text) => onAddTask(text)}
+        />
       </aside>
 
       {slash && (
@@ -1661,7 +1753,33 @@ function Editor({
       {ctxMenu && (
         <div className="ig-ctx-veil" onMouseDown={() => setCtxMenu(null)} onContextMenu={(e) => { e.preventDefault(); setCtxMenu(null) }}>
           <div className="ig-ctx" style={{ left: ctxMenu.x, top: ctxMenu.y }} onMouseDown={(e) => e.stopPropagation()}>
-            <div className="ig-ctx-label">{ctxMenu.ids.length} line{ctxMenu.ids.length > 1 ? 's' : ''} selected</div>
+            {ctxMenu.single ? (() => {
+              const cur = blocks.find((b) => b.id === ctxMenu.ids[0])
+              const onList = taskByBlock.has(ctxMenu.ids[0])
+              return (
+                <>
+                  <div className="ig-ctx-label">Turn into</div>
+                  <div className="ig-ctx-turn">
+                    {TURN_KINDS.map((k) => (
+                      <button key={k.key} className={cur?.type === k.key ? 'on' : ''} onClick={() => turnInto(k.key)} title={k.label}>
+                        <span className="ico">{k.ico}</span>{k.label}
+                      </button>
+                    ))}
+                  </div>
+                  {cur?.type !== 'todo' && (onList || plainText(cur?.text)) && (
+                    <>
+                      <div className="ig-ctx-sep" />
+                      <button className="ig-ctx-item" onClick={toggleLineTask}>
+                        <span className="ico">{onList ? '🧹' : '📝'}</span>{onList ? 'Remove from to-do list' : 'Add to to-do list'}
+                      </button>
+                    </>
+                  )}
+                  <div className="ig-ctx-sep" />
+                </>
+              )
+            })() : (
+              <div className="ig-ctx-label">{ctxMenu.ids.length} line{ctxMenu.ids.length > 1 ? 's' : ''} selected</div>
+            )}
             <button className="ig-ctx-item" onClick={() => beginNaming('toggle')}><span className="ico">▸</span>Turn into dropdown</button>
             <button className="ig-ctx-item" onClick={() => beginNaming('page')}><span className="ico">📄</span>Turn into page</button>
             <button className="ig-ctx-item" onClick={() => moveSelectionToSide()}><span className="ico">▥</span>Move to the side</button>
@@ -1763,6 +1881,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
   const [edges, setEdges] = useState<EdgeModel[]>([])
   const [docs, setDocs] = useState<Record<string, Block[]>>({})
   const [pages, setPages] = useState<Record<string, { title: string }>>({})
+  const [tasks, setTasks] = useState<Record<string, TodoTask[]>>({})
   const colorIndexRef = useRef(1)
   // Navigation stack of open page ids (first is a bubble/node id, rest are sub-pages).
   const [openStack, setOpenStack] = useState<string[]>([])
@@ -1782,6 +1901,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
     setEdges(doc.edges || [])
     setDocs(doc.docs || {})
     setPages(doc.pages || {})
+    setTasks(doc.tasks || {})
     colorIndexRef.current = doc.colorIndex || 1
     hydratedRef.current = true
     setLoading(false)
@@ -1837,7 +1957,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   useEffect(() => {
     if (!hydratedRef.current) return
-    const doc: GardenDoc = { version: 1, nodes, edges, docs, pages, colorIndex: colorIndexRef.current }
+    const doc: GardenDoc = { version: 1, nodes, edges, docs, pages, tasks, colorIndex: colorIndexRef.current }
     latestDocRef.current = doc
     // Always keep a local backup so nothing is lost even while offline.
     try { localStorage.setItem(LOCAL_KEY, JSON.stringify(doc)) } catch { /* ignore */ }
@@ -1857,7 +1977,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
       }
     }, 800)
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current) }
-  }, [nodes, edges, docs, pages, token])
+  }, [nodes, edges, docs, pages, tasks, token])
 
   // --- reconnect: when we drop offline mid-session, keep trying and push the
   // latest state back up once the server answers again ---
@@ -1933,6 +2053,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
     deleteNode: (id) => {
       setNodes((ns) => ns.filter((n) => n.id !== id))
       setEdges((es) => es.filter((e) => e.source !== id && e.target !== id))
+      setTasks((t) => { if (!t[id]) return t; const { [id]: _gone, ...rest } = t; return rest })
     },
     openNode: (id) => {
       setDocs((d) => (d[id] && d[id].length ? d : { ...d, [id]: [newBlock()] }))
@@ -1989,6 +2110,30 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
       }
     }
   }
+  // --- to-do lists (per page) ---
+  const addTask = (pageId: string, text: string, blockId?: string) =>
+    setTasks((t) => ({ ...t, [pageId]: [...(t[pageId] || []), { id: uid(), text, done: false, ...(blockId ? { blockId } : {}) }] }))
+  const toggleTask = (pageId: string, taskId: string) =>
+    setTasks((t) => ({ ...t, [pageId]: (t[pageId] || []).map((x) => (x.id === taskId ? { ...x, done: !x.done } : x)) }))
+  const removeTask = (pageId: string, taskId: string) =>
+    setTasks((t) => ({ ...t, [pageId]: (t[pageId] || []).filter((x) => x.id !== taskId) }))
+  const toggleBlockTodo = (pageId: string, blockId: string) =>
+    setDocs((d) => ({ ...d, [pageId]: patchDeep(d[pageId] || [], blockId, (b) => ({ ...b, checked: !b.checked })) }))
+
+  const progress = useMemo(() => {
+    const out: Record<string, { done: number; total: number }> = {}
+    for (const n of nodes) {
+      const p = progressOf(todosFor(docs[n.id], tasks[n.id]))
+      if (p.total) out[n.id] = { done: p.done, total: p.total }
+    }
+    return out
+  }, [nodes, docs, tasks])
+
+  // Right-click a bubble → cute to-do recap card.
+  const [recap, setRecap] = useState<{ nodeId: string; pos: { x: number; y: number } } | null>(null)
+  const closeRecap = useCallback(() => setRecap(null), [])
+  const recapNode = recap ? nodes.find((n) => n.id === recap.nodeId) : null
+
   const miniColor = useMemo(() => (n: { data?: { color?: string } }) => paletteFor(n.data?.color).border, [])
 
   return (
@@ -2012,6 +2157,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
       {loading && <div className="ig-loading">loading your garden… 🌱</div>}
 
       <Ctx.Provider value={ctx}>
+        <ProgressCtx.Provider value={progress}>
         <ReactFlow
           nodes={nodes as never}
           edges={edges as never}
@@ -2027,6 +2173,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
           connectionLineStyle={{ stroke: '#c9b6c1', strokeWidth: 2 }}
           defaultEdgeOptions={{ type: 'squiggle', markerEnd: { type: MarkerType.ArrowClosed, color: '#c9b6c1', width: 16, height: 16 } }}
           onNodeDoubleClick={(_, n) => { ensureDoc(n.id); setOpenStack([n.id]) }}
+          onNodeContextMenu={(e, n) => { e.preventDefault(); setRecap({ nodeId: n.id, pos: { x: e.clientX + 8, y: e.clientY + 8 } }) }}
           zoomOnDoubleClick={false}
           deleteKeyCode={null}
           fitView
@@ -2039,10 +2186,11 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
           <Controls showInteractive={false} />
           <MiniMap pannable zoomable nodeColor={miniColor as never} maskColor="rgba(120,110,105,0.12)" style={{ borderRadius: 12, border: '1px solid #e7e2db' }} />
         </ReactFlow>
+        </ProgressCtx.Provider>
       </Ctx.Provider>
 
       <div className="ig-help">
-        Double-click a bubble to open its <b>page</b>. Hover for <b>+ sub-bubble</b>. Inside a page, type <b>/</b> for to-dos, files, YouTube & more.
+        Double-click a bubble to open its <b>page</b>. Hover for <b>+ sub-bubble</b>. <b>Right-click</b> a bubble for its to-do recap. Inside a page, type <b>/</b> for to-dos, files, YouTube & more.
       </div>
 
       {currentPage && (
@@ -2063,12 +2211,28 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
           registerSubpage={registerSubpage}
           openPage={(id) => { ensureDoc(id); setOpenStack((s) => [...s, id]) }}
           getPageBlocks={(id) => docs[id] || []}
+          tasks={tasks[currentPage.id] || []}
+          onAddTask={(text, blockId) => addTask(currentPage!.id, text, blockId)}
+          onToggleTask={(taskId) => toggleTask(currentPage!.id, taskId)}
+          onRemoveTask={(taskId) => removeTask(currentPage!.id, taskId)}
           createPageFrom={(title, blocks) => {
             const pid = uid()
             setPages((p) => ({ ...p, [pid]: { title } }))
             setDocs((d) => ({ ...d, [pid]: blocks.length ? blocks : [newBlock()] }))
             return pid
           }}
+        />
+      )}
+
+      {recap && recapNode && (
+        <TodoRecap
+          title={recapNode.data.label}
+          colors={paletteFor(recapNode.data.color)}
+          items={todosFor(docs[recapNode.id], tasks[recapNode.id])}
+          pos={recap.pos}
+          onToggle={(t) => (t.kind === 'task' ? toggleTask(recapNode.id, t.id) : toggleBlockTodo(recapNode.id, t.id))}
+          onOpen={() => { ensureDoc(recapNode.id); setOpenStack([recapNode.id]) }}
+          onClose={closeRecap}
         />
       )}
     </div>

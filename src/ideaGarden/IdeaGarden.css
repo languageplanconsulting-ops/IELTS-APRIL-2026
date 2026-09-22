@@ -701,3 +701,111 @@
 
 .ideaGarden .dg-bar .dg-remove { margin-left: auto; color: #c0587a; }
 .ideaGarden .dg-bar .dg-remove:hover { background: #ffe3ec; }
+
+/* ---------- Right-click a line: "Turn into" chips ---------- */
+.ideaGarden .ig-ctx:has(.ig-ctx-turn) { width: 244px; }
+.ideaGarden .ig-ctx-turn { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 2px 4px 4px; }
+.ideaGarden .ig-ctx-turn button {
+  display: flex; align-items: center; gap: 7px; border: 1px solid var(--ig-line); background: #fff;
+  border-radius: 9px; padding: 6px 8px; font-size: 12.5px; font-weight: 700; color: var(--ig-ink); text-align: left;
+}
+.ideaGarden .ig-ctx-turn button .ico { width: 18px; text-align: center; font-size: 11px; font-weight: 800; color: var(--ig-accent-deep); }
+.ideaGarden .ig-ctx-turn button:hover { background: #fff2f7; border-color: #ffd2e3; }
+.ideaGarden .ig-ctx-turn button.on { background: #fff2f7; border-color: var(--ig-accent); color: var(--ig-accent-deep); }
+.ideaGarden .ig-ctx-sep { height: 0; border-top: 1px dashed var(--ig-line); margin: 5px 6px; }
+
+/* ---------- To-do: progress bar on a bubble ---------- */
+.ideaGarden .bubble-progress { display: flex; align-items: center; gap: 7px; margin-top: 9px; }
+.ideaGarden .bubble-progress .track {
+  flex: 1; height: 7px; border-radius: 999px; background: rgba(255, 255, 255, .75);
+  border: 1px solid var(--b-border); overflow: hidden;
+}
+.ideaGarden .bubble-progress .track span { display: block; height: 100%; border-radius: 999px; background: var(--b-border); transition: width .5s var(--in-ease); }
+.ideaGarden .bubble-progress b { font-size: 10.5px; font-weight: 800; color: var(--b-ink); min-width: 24px; text-align: right; }
+
+/* ---------- To-do: shared list + striped bar ---------- */
+.ideaGarden .td-prog { display: flex; align-items: center; gap: 9px; margin: 4px 0 8px; }
+.ideaGarden .td-prog-track { flex: 1; height: 9px; border-radius: 999px; background: #fff3f8; border: 1px solid #ffd9e7; overflow: hidden; }
+.ideaGarden .td-prog-fill {
+  display: block; height: 100%; border-radius: 999px; transition: width .5s var(--in-ease);
+  background: repeating-linear-gradient(135deg, var(--ig-accent) 0 7px, #ffb9d3 7px 14px);
+}
+.ideaGarden .td-prog-fill.full { background: repeating-linear-gradient(135deg, #7cc6a0 0 7px, #a9e0c2 7px 14px); }
+.ideaGarden .td-prog b { font-size: 11.5px; font-weight: 800; color: var(--ig-ink-soft); }
+.ideaGarden .td-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.ideaGarden .td-list li { display: flex; align-items: flex-start; gap: 9px; padding: 5px 4px; border-radius: 9px; font-size: 13.5px; font-weight: 600; }
+.ideaGarden .td-list li:hover { background: #fff6fa; }
+.ideaGarden .td-text { flex: 1; line-height: 1.4; word-break: break-word; padding-top: 1px; }
+.ideaGarden .td-list li.done .td-text { text-decoration: line-through; color: var(--ig-ink-soft); }
+.ideaGarden .td-check {
+  width: 19px; height: 19px; flex: none; border-radius: 50%; border: 2px solid var(--ig-accent); background: #fff;
+  color: #fff; font-size: 10.5px; font-weight: 800; display: grid; place-items: center; padding: 0;
+  transition: background .2s var(--in-ease), transform .2s var(--in-ease);
+}
+.ideaGarden .td-check:hover { transform: scale(1.1); }
+.ideaGarden .td-check.on { background: var(--ig-accent); animation: igPop .34s var(--in-ease); }
+.ideaGarden .td-remove { border: none; background: none; color: var(--ig-ink-soft); font-size: 15px; opacity: 0; padding: 0 2px; }
+.ideaGarden .td-list li:hover .td-remove { opacity: 1; }
+.ideaGarden .td-empty { margin: 4px 0 8px; font-size: 12.5px; font-weight: 600; color: var(--ig-ink-soft); line-height: 1.5; }
+.ideaGarden .td-empty b { color: var(--ig-accent-deep); }
+
+/* ---------- To-do: floating dock inside a page ---------- */
+.ideaGarden .td-dock {
+  position: absolute; right: 18px; bottom: 18px; z-index: 6; width: 268px; max-height: 55%;
+  display: flex; flex-direction: column; background: #fff; border: 1px solid var(--ig-line); border-radius: 16px;
+  padding: 11px 13px; box-shadow: 0 16px 40px rgba(60, 50, 55, .18); animation: igRise 260ms var(--in-ease) both;
+}
+.ideaGarden .td-dock .td-list { overflow-y: auto; min-height: 0; }
+.ideaGarden .td-dock-head { display: flex; align-items: center; margin-bottom: 4px; font-weight: 800; font-size: 14.5px; }
+.ideaGarden .td-min {
+  margin-left: auto; width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--ig-line);
+  background: #fff; color: var(--ig-ink-soft); font-size: 15px; font-weight: 800; line-height: 1;
+}
+.ideaGarden .td-min:hover { color: var(--ig-accent-deep); border-color: #ffd2e3; }
+.ideaGarden .td-add input {
+  width: 100%; margin-top: 7px; border: 1px dashed #e3d9d2; border-radius: 10px; padding: 7px 10px;
+  font: inherit; font-size: 12.5px; font-weight: 600; color: var(--ig-ink); outline: none; background: #fff;
+}
+.ideaGarden .td-add input:focus { border: 1px solid var(--ig-accent); }
+.ideaGarden .td-pill {
+  position: absolute; right: 18px; bottom: 18px; z-index: 6; display: flex; align-items: center; gap: 8px;
+  padding: 4px 13px 4px 4px; background: #fff; border: 1px solid var(--ig-line); border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(60, 50, 55, .18); animation: igRise 260ms var(--in-ease) both;
+  transition: transform .25s var(--in-ease);
+}
+.ideaGarden .td-pill:hover { transform: translateY(-2px) rotate(-2deg); }
+.ideaGarden .td-pill b { font-size: 12.5px; font-weight: 800; color: var(--ig-accent-deep); }
+.ideaGarden .td-pill .ring {
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  background: conic-gradient(var(--ig-accent) calc(var(--pct) * 1%), #ffe9f2 0);
+}
+.ideaGarden .td-pill .ring span { width: 25px; height: 25px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 12px; }
+
+/* ---------- To-do: tag on lines that are on the list ---------- */
+.ideaGarden .block-row.has-task { padding-right: 76px; }
+.ideaGarden .td-tag {
+  position: absolute; right: 0; top: 5px; border: 1px solid #ffd2e3; background: #fff6fa; color: var(--ig-accent-deep);
+  border-radius: 999px; font-size: 10.5px; font-weight: 800; padding: 2px 8px; white-space: nowrap;
+}
+.ideaGarden .td-tag.on { background: #e8f7ef; border-color: #b5e3c9; color: #2f8a5c; }
+
+/* ---------- To-do: recap card on the canvas ---------- */
+.ideaGarden .td-recap {
+  position: fixed; z-index: 95; width: 282px; max-height: 70vh; overflow-y: auto; background: #fff;
+  border: 1px solid var(--b-border); border-radius: 18px; padding: 13px 15px 11px;
+  box-shadow: 0 22px 50px rgba(60, 50, 55, .24); animation: igRise 260ms var(--in-ease) both;
+}
+.ideaGarden .td-recap-head {
+  margin: -13px -15px 10px; padding: 11px 15px 9px; background: var(--b-fill);
+  border-bottom: 1px dashed var(--b-border); display: flex; flex-direction: column;
+}
+.ideaGarden .td-recap-head .kicker { font-size: 9.5px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--b-ink); opacity: .65; }
+.ideaGarden .td-recap-head .title { font-weight: 800; font-size: 17px; color: var(--b-ink); line-height: 1.25; }
+.ideaGarden .td-recap-big { display: flex; align-items: baseline; gap: 9px; }
+.ideaGarden .td-recap-big b { font-size: 30px; font-weight: 800; color: var(--ig-accent-deep); line-height: 1.1; }
+.ideaGarden .td-recap-big span { font-size: 12.5px; font-weight: 700; color: var(--ig-ink-soft); }
+.ideaGarden .td-recap-open {
+  margin-top: 9px; width: 100%; border: 1px dashed var(--b-border); background: #fff; color: var(--b-ink);
+  font-weight: 800; font-size: 12.5px; padding: 7px; border-radius: 10px;
+}
+.ideaGarden .td-recap-open:hover { background: var(--b-fill); }
