@@ -619,3 +619,31 @@
   display: flex; flex-direction: column; gap: 8px; padding: 10px 2px 2px;
   animation: igRise 260ms var(--in-ease) both;
 }
+
+/* Easier bubble dragging: grab anywhere; the title is only a text box while renaming */
+.ideaGarden .react-flow__node { cursor: grab; }
+.ideaGarden .react-flow__node.dragging { cursor: grabbing; }
+.ideaGarden .react-flow__node.dragging .bubble { animation-play-state: paused; }
+.ideaGarden .bubble .title { cursor: inherit; user-select: none; }
+.ideaGarden .react-flow__node.selected .bubble .title:not(.editing) { cursor: text; }
+.ideaGarden .bubble .title.editing {
+  user-select: text; cursor: text; background: rgba(255, 255, 255, .75); border-radius: 6px;
+  box-shadow: 0 0 0 2px var(--b-border); padding: 0 4px;
+}
+
+/* Multi-line (block) selection */
+.ideaGarden .block-row.blk-picked > .block { background: #ffe3ef; border-radius: 8px; box-shadow: 0 0 0 3px #ffe3ef; }
+.ideaGarden .block-row.blk-picked .editable::selection { background: transparent; }
+.ideaGarden .ig-pick-bar {
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 20;
+  display: flex; align-items: center; gap: 4px; padding: 6px; background: #fff; border: 1px solid var(--ig-line);
+  border-radius: 14px; box-shadow: 0 16px 40px rgba(60, 50, 55, .22); animation: igRise 240ms var(--in-ease) both;
+  white-space: nowrap; max-width: calc(100% - 24px); overflow-x: auto;
+}
+.ideaGarden .ig-pick-bar .n { font-size: 12px; font-weight: 800; color: var(--ig-accent-deep); padding: 0 8px 0 6px; }
+.ideaGarden .ig-pick-bar button {
+  border: none; background: transparent; padding: 7px 10px; border-radius: 9px; font-weight: 700; font-size: 12.5px; color: var(--ig-ink);
+}
+.ideaGarden .ig-pick-bar button:hover { background: #fff2f7; color: var(--ig-accent-deep); }
+.ideaGarden .ig-pick-bar button.danger:hover { background: #ffeef0; color: #d9485c; }
+.ideaGarden .ig-pick-bar button.x { color: var(--ig-ink-soft); }

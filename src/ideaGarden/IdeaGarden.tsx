@@ -73,6 +73,9 @@ function BubbleNode({ id, data, selected }: NodeProps) {
     fontFamily: fontStack(d.font)
   } as React.CSSProperties
   const shape = d.shape || DEFAULT_SHAPE
+  const [editing, setEditing] = useState(false)
+  const titleRef = useRef<HTMLDivElement>(null)
+  useEffect(() => { if (!selected) setEditing(false) }, [selected])
 
   return (
     <div className={`bubble shape-${shape} ${central ? 'central' : ''} ${selected ? 'selected' : ''}`} style={style}>
@@ -92,14 +95,29 @@ function BubbleNode({ id, data, selected }: NodeProps) {
 
       <div className="kicker">{central ? '🌸 central idea' : '💭 thought'}</div>
 
+      {/* The whole bubble is grabbable. Click the title of an already-selected
+          bubble to rename it (like renaming a file); Enter / click away to finish. */}
       <div
-        className="title nodrag"
-        contentEditable
+        ref={titleRef}
+        className={`title ${editing ? 'nodrag editing' : ''}`}
+        contentEditable={editing}
         suppressContentEditableWarning
         spellCheck={false}
-        onBlur={(e) => updateNodeData(id, { label: e.currentTarget.textContent?.trim() || '' })}
+        title={editing ? undefined : selected ? 'Click to rename' : undefined}
+        onClick={() => {
+          if (!selected || editing) return
+          setEditing(true)
+          requestAnimationFrame(() => {
+            const el = titleRef.current
+            if (!el) return
+            el.focus()
+            const r = document.createRange(); r.selectNodeContents(el); r.collapse(false)
+            const sel = window.getSelection(); sel?.removeAllRanges(); sel?.addRange(r)
+          })
+        }}
+        onBlur={(e) => { updateNodeData(id, { label: e.currentTarget.textContent?.trim() || '' }); setEditing(false) }}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') { e.preventDefault(); (e.currentTarget as HTMLElement).blur() }
+          if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); (e.currentTarget as HTMLElement).blur() }
         }}
       >
         {d.label}
@@ -1145,7 +1163,98 @@ function Editor({
   // --- right-click a selection → turn those lines into a dropdown or a page ---
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; ids: string[]; text: string } | null>(null)
   const [naming, setNaming] = useState<{ kind: 'toggle' | 'page'; ids: string[]; name: string } | null>(null)
+  // --- select across lines: drag from one line into others → the whole lines
+  // highlight (each line is its own text box, so the browser can't do it). ---
+  const [picked, setPicked] = useState<string[]>([])
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const anchorRef = useRef<string | null>(null)
+  const rowIdAt = (x: number, y: number) => {
+    const el = document.elementFromPoint(x, y) as HTMLElement | null
+    let r = el?.closest('.block-row') as HTMLElement | null
+    while (r && r.parentElement !== bodyRef.current) r = r.parentElement?.closest('.block-row') as HTMLElement | null
+    return r?.dataset.blockId || null
+  }
+  const rangeIds = (a: string, b: string) => {
+    const ids = blocks.map((x) => x.id)
+    const i = ids.indexOf(a), j = ids.indexOf(b)
+    return i < 0 || j < 0 ? [] : ids.slice(Math.min(i, j), Math.max(i, j) + 1)
+  }
+  const plainOf = (b: Block): string => {
+    const t = (b.text || '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').trim()
+    const kids = [...(b.children || []), ...(b.cols || []).flat(), ...(b.cells || []).flat(2)].map(plainOf).filter(Boolean)
+    const lead = b.type === 'bullet' ? `${bulletGlyph(b.bullet)} ` : b.type === 'todo' ? (b.checked ? '☑ ' : '☐ ') : ''
+    return [t ? lead + t : '', ...kids].filter(Boolean).join('\n')
+  }
+  const pickedText = (ids: string[]) => blocks.filter((b) => ids.includes(b.id)).map(plainOf).filter(Boolean).join('\n')
+  function onBodyMouseDown(e: React.MouseEvent) {
+    if (e.button !== 0) return
+    const t = e.target as HTMLElement
+    if (t.closest('.grip, button, input, select, a, .ig-col-resize, .ig-row-resize, .ig-img-handle, .ig-pick-bar')) return
+    const startId = rowIdAt(e.clientX, e.clientY)
+    if (e.shiftKey && startId && (anchorRef.current || picked.length)) {
+      e.preventDefault()
+      setPicked(rangeIds(anchorRef.current || picked[0], startId))
+      window.getSelection()?.removeAllRanges()
+      return
+    }
+    if (picked.length) setPicked([])
+    if (!startId) return
+    anchorRef.current = startId
+    let multi = false
+    const onMove = (ev: MouseEvent) => {
+      const cur = rowIdAt(ev.clientX, ev.clientY)
+      if (!cur) return
+      if (!multi && cur !== startId) {
+        multi = true
+        ;(document.activeElement as HTMLElement | null)?.blur?.()
+        document.body.style.userSelect = 'none'
+      }
+      if (multi) { window.getSelection()?.removeAllRanges(); setPicked(rangeIds(startId, cur)) }
+    }
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp)
+      document.body.style.userSelect = ''
+    }
+    window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp)
+  }
+  function deletePicked(ids = picked) {
+    const idSet = new Set(ids)
+    setBlocks((bs) => { const rest = bs.filter((b) => !idSet.has(b.id)); return rest.length ? rest : [newBlock()] })
+    setPicked([])
+  }
+  // Keys while lines are highlighted: Backspace/Delete, Copy/Cut, Tab/Shift+Tab, Esc.
+  useEffect(() => {
+    if (!picked.length) return
+    function onKey(e: KeyboardEvent) {
+      const a = document.activeElement as HTMLElement | null
+      if (a && (a.isContentEditable || a.tagName === 'INPUT' || a.tagName === 'TEXTAREA')) return
+      const mod = e.metaKey || e.ctrlKey
+      if (e.key === 'Escape') { setPicked([]); return }
+      if (e.key === 'Backspace' || e.key === 'Delete') { e.preventDefault(); deletePicked(); return }
+      if (mod && (e.key === 'c' || e.key === 'x')) {
+        e.preventDefault()
+        try { navigator.clipboard?.writeText(pickedText(picked)) } catch { /* ignore */ }
+        if (e.key === 'x') deletePicked()
+        return
+      }
+      if (e.key === 'Tab') {
+        e.preventDefault()
+        const d = e.shiftKey ? -1 : 1
+        const idSet = new Set(picked)
+        setBlocks((bs) => bs.map((b) => (idSet.has(b.id) ? { ...b, indent: Math.max(0, Math.min(5, (b.indent || 0) + d)) } : b)))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [picked, blocks])
+
   function onBodyContextMenu(e: React.MouseEvent) {
+    if (picked.length) {
+      e.preventDefault()
+      setCtxMenu({ x: Math.min(e.clientX, window.innerWidth - 230), y: Math.min(e.clientY, window.innerHeight - 170), ids: picked, text: pickedText(picked) })
+      return
+    }
     const sel = window.getSelection()
     if (!sel || sel.isCollapsed || !sel.rangeCount) return // no selection → normal browser menu
     const range = sel.getRangeAt(0)
@@ -1156,17 +1265,19 @@ function Editor({
     e.preventDefault()
     setCtxMenu({ x: Math.min(e.clientX, window.innerWidth - 230), y: Math.min(e.clientY, window.innerHeight - 170), ids, text: sel.toString() })
   }
-  function beginNaming(kind: 'toggle' | 'page') {
-    if (!ctxMenu) return
-    const first = blocks.find((b) => b.id === ctxMenu.ids[0])
+  function beginNaming(kind: 'toggle' | 'page', idsIn?: string[]) {
+    const ids = idsIn || ctxMenu?.ids
+    if (!ids || !ids.length) return
+    const first = blocks.find((b) => b.id === ids[0])
     const guess = (first?.text || '').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim().slice(0, 60)
-    setNaming({ kind, ids: ctxMenu.ids, name: guess })
+    setNaming({ kind, ids, name: guess })
     setCtxMenu(null)
   }
   // Selected lines become the left column; an empty column opens on the right.
-  function moveSelectionToSide() {
-    if (!ctxMenu) return
-    const idSet = new Set(ctxMenu.ids)
+  function moveSelectionToSide(idsIn?: string[]) {
+    const ids = idsIn || ctxMenu?.ids
+    if (!ids || !ids.length) return
+    const idSet = new Set(ids)
     const picked = blocks.filter((b) => idSet.has(b.id)).map((b) => ({ ...b, indent: 0 }))
     const colsBlock = newBlock('columns', { cols: [picked.length ? picked : [newBlock()], [newBlock()]] })
     setBlocks((bs) => {
@@ -1177,6 +1288,7 @@ function Editor({
     })
     window.getSelection()?.removeAllRanges()
     setCtxMenu(null)
+    setPicked([])
   }
   function convertSelection() {
     if (!naming) return
@@ -1195,6 +1307,7 @@ function Editor({
     })
     window.getSelection()?.removeAllRanges()
     setNaming(null)
+    setPicked([])
   }
 
   // Drop a line on the left/right edge of another → they sit side by side.
@@ -1405,12 +1518,14 @@ function Editor({
           onDragLeave={(e) => { if (e.currentTarget === e.target) setFileOver(false) }}
           onDrop={(e) => handleDrop(e, blocks.length ? blocks[blocks.length - 1].id : null, 'after')}
           onContextMenu={onBodyContextMenu}
+          onMouseDown={onBodyMouseDown}
+          ref={bodyRef}
         >
           {blocks.map((b) => (
             <div
               key={b.id}
               data-block-id={b.id}
-              className={`block-row ${dropHint?.id === b.id ? 'drop-' + dropHint.pos : ''}`}
+              className={`block-row ${dropHint?.id === b.id ? 'drop-' + dropHint.pos : ''} ${picked.includes(b.id) ? 'blk-picked' : ''}`}
               style={{ marginLeft: (b.indent || 0) * 24 }}
               draggable={dragId === b.id}
               onMouseDown={(e) => { if ((e.target as HTMLElement).closest('.grip')) setDragId(b.id) }}
@@ -1466,6 +1581,18 @@ function Editor({
             </div>
           ))}
         </div>
+
+        {picked.length > 0 && (
+          <div className="ig-pick-bar" onMouseDown={(e) => e.preventDefault()}>
+            <span className="n">{picked.length} line{picked.length > 1 ? 's' : ''}</span>
+            <button onClick={() => beginNaming('toggle', picked)}>▸ Dropdown</button>
+            <button onClick={() => beginNaming('page', picked)}>📄 Page</button>
+            <button onClick={() => moveSelectionToSide(picked)}>▥ Side</button>
+            <button onClick={() => { try { navigator.clipboard?.writeText(pickedText(picked)) } catch { /* ignore */ } }}>⧉ Copy</button>
+            <button className="danger" onClick={() => deletePicked()}>🗑 Delete</button>
+            <button className="x" title="Clear selection (Esc)" onClick={() => setPicked([])}>✕</button>
+          </div>
+        )}
 
         <input ref={fileInputRef} type="file" hidden onChange={onFileChosen} />
       </aside>
