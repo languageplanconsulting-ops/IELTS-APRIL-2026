@@ -333,7 +333,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
     setFocusId(null)
     setTimeout(() => setFocusId(id), 0)
   }
-  const onBackspaceEmpty = (id: string) => setBlocks((bs) => { if (bs.length === 1) return bs; const i = bs.findIndex((b) => b.id === id); if (bs[i - 1]) setFocusId(bs[i - 1].id); return bs.filter((b) => b.id !== id) })
+  const onBackspaceEmpty = (id: string) => setBlocks((bs) => { if (bs.length === 1) return bs; const i = bs.findIndex((b) => b.id === id); const prevId = bs[i - 1]?.id; if (prevId) { setFocusId(null); setTimeout(() => setFocusId(prevId), 0) } return bs.filter((b) => b.id !== id) })
   function onSlash(blockId: string, query: string | null, pos?: { x: number; y: number }) {
     if (query === null) { setSlash((s) => (s && s.blockId === blockId ? null : s)); return }
     setSlash((s) => (s && s.blockId === blockId ? { ...s, query, pos: pos || s.pos } : { blockId, query, pos: pos!, index: 0 }))
@@ -704,6 +704,7 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       onSlash(block.id, plain.slice(1), { x: rect.left, y: rect.bottom + 6 })
     } else {
       onSlash(block.id, null)
+      if (el.innerText.replace(/[\n\u00a0]/g, '').trim() === '' && el.innerHTML !== '') el.innerHTML = ''
       onChange(block.id, { text: el.innerHTML }) // store HTML so highlights persist
     }
   }
@@ -744,7 +745,10 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
         }
       }
     }
-    if (e.key === 'Backspace' && el && el.innerText === '') { e.preventDefault(); onBackspaceEmpty(block.id) }
+    // A line that only holds a leftover <br> / whitespace counts as empty.
+    if (e.key === 'Backspace' && el && el.innerText.replace(/[\n\u00a0]/g, '').trim() === '' && !el.querySelector('img')) {
+      e.preventDefault(); onBackspaceEmpty(block.id)
+    }
   }
 
   const editable = (placeholder = "Type '/' for blocks…") => (
@@ -983,7 +987,8 @@ function Editor({
     setBlocks((bs) => {
       if (bs.length === 1) return bs
       const i = bs.findIndex((b) => b.id === id)
-      if (bs[i - 1]) setFocusId(bs[i - 1].id)
+      const prevId = bs[i - 1]?.id
+      if (prevId) { setFocusId(null); setTimeout(() => setFocusId(prevId), 0) }
       return bs.filter((b) => b.id !== id)
     })
   }
