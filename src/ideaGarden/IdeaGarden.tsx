@@ -379,6 +379,15 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
     if (!file || !targetId) return
     await uploadInto(targetId, file)
   }
+  async function pasteFiles(afterId: string, files: File[]) {
+    let anchor = afterId
+    for (const f of files) {
+      const nb = newBlock()
+      setBlocks((bs) => { const i = bs.findIndex((b) => b.id === anchor); const c = [...bs]; c.splice(i < 0 ? c.length : i + 1, 0, nb); return c })
+      anchor = nb.id
+      await uploadInto(nb.id, f)
+    }
+  }
   async function onDrop(e: React.DragEvent) {
     if (!e.dataTransfer.files?.length) return
     e.preventDefault(); e.stopPropagation(); setFileOver(false)
@@ -403,7 +412,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
         ) : (
           <BlockView key={b.id} token={token} block={b} autoFocus={focusId === b.id} pages={pages} registerSubpage={registerSubpage} openPage={openPage}
             onChange={patchBlock} onEnter={onEnter} onBackspaceEmpty={onBackspaceEmpty} onSlash={onSlash}
-            onToggle={(id) => patchBlock(id, { checked: !b.checked })} onIndent={() => {}} onAutoBullet={onAutoBullet} onUnformat={onUnformat} />
+            onToggle={(id) => patchBlock(id, { checked: !b.checked })} onIndent={() => {}} onAutoBullet={onAutoBullet} onUnformat={onUnformat} onPasteFiles={pasteFiles} />
         )
       ))}
       <input ref={fileInputRef} type="file" hidden onChange={onFileChosen} />
@@ -627,6 +636,50 @@ function PostKitPanel({ token, pageId, title, blocks, onClose }: { token: string
   )
 }
 
+// --- Image that you can resize freely by dragging either side edge ---
+function ResizableImage({ token, block, onChange }: { token: string; block: Block; onChange: (id: string, patch: BlockPatch) => void }) {
+  const [url, setUrl] = useState('')
+  useEffect(() => {
+    let ok = true
+    if (block.filePath) signFile(token, block.filePath).then((u) => ok && setUrl(u)).catch(() => {})
+    return () => { ok = false }
+  }, [token, block.filePath])
+  const boxRef = useRef<HTMLDivElement>(null)
+  const [liveW, setLiveW] = useState<number | null>(null)
+  const w = liveW ?? block.width ?? null
+  function startResize(e: React.PointerEvent, dir: 1 | -1) {
+    e.preventDefault(); e.stopPropagation()
+    const box = boxRef.current
+    if (!box) return
+    const startX = e.clientX
+    const startW = box.getBoundingClientRect().width
+    const maxW = box.parentElement ? box.parentElement.getBoundingClientRect().width : 2000
+    let latest = startW
+    const onMove = (ev: PointerEvent) => {
+      latest = Math.round(Math.max(60, Math.min(maxW, startW + dir * (ev.clientX - startX))))
+      setLiveW(latest)
+    }
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp)
+      document.body.style.cursor = ''; document.body.style.userSelect = ''
+      onChange(block.id, { width: latest })
+      setLiveW(null)
+    }
+    window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp)
+    document.body.style.cursor = 'ew-resize'; document.body.style.userSelect = 'none'
+  }
+  return (
+    <div className={`ig-img ${liveW ? 'resizing' : ''}`} ref={boxRef} style={w ? { width: w } : undefined}>
+      {url
+        ? <img src={url} alt={block.fileName || 'image'} draggable={false} onDoubleClick={() => window.open(url, '_blank')} />
+        : <div className="ig-img-loading">loading image…</div>}
+      <span className="ig-img-handle l" title="Drag to resize · double-click to reset" onPointerDown={(e) => startResize(e, -1)} onDoubleClick={() => onChange(block.id, { width: undefined })} />
+      <span className="ig-img-handle r" title="Drag to resize · double-click to reset" onPointerDown={(e) => startResize(e, 1)} onDoubleClick={() => onChange(block.id, { width: undefined })} />
+      {liveW && <span className="ig-img-size">{liveW}px</span>}
+    </div>
+  )
+}
+
 type CellCtx = {
   pages?: Record<string, { title: string }>
   registerSubpage?: () => string
@@ -644,10 +697,11 @@ type BlockProps = CellCtx & {
   onToggle: (id: string) => void
   onIndent: (id: string, delta: number) => void
   onAutoBullet?: (id: string, rest: string) => void
+  onPasteFiles?: (id: string, files: File[]) => void
   onUnformat?: (id: string) => void
 }
 
-function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, onAutoBullet, onUnformat, pages, registerSubpage, openPage }: BlockProps) {
+function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, onAutoBullet, onUnformat, onPasteFiles, pages, registerSubpage, openPage }: BlockProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -764,6 +818,11 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       data-placeholder={placeholder}
       onInput={handleInput}
       onKeyDown={handleKeyDown}
+      onPaste={(e) => {
+        // Pasting a picture → upload it as its own image block (not raw data in the text).
+        const files = [...(e.clipboardData?.files || [])].filter((f) => f.type.startsWith('image/'))
+        if (files.length && onPasteFiles) { e.preventDefault(); onPasteFiles(block.id, files) }
+      }}
     />
   )
 
@@ -782,6 +841,9 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       </div>
     )
   }
+
+  if ((block.type === 'image' || (block.type === 'file' && (block.fileType || '').startsWith('image/'))) && block.filePath)
+    return <div className="block"><span className="grip">⠿</span><div className="content"><ResizableImage token={token} block={block} onChange={onChange} /></div></div>
 
   if (block.type === 'file' || block.type === 'image')
     return <div className="block"><span className="grip">⠿</span><div className="content"><FilePreview token={token} block={block} /></div></div>
@@ -1386,6 +1448,7 @@ function Editor({
                   onIndent={onIndent}
                   onAutoBullet={onAutoBullet}
                   onUnformat={onUnformat}
+                  onPasteFiles={(id, files) => uploadFilesAfter(id, files)}
                 />
               )}
             </div>

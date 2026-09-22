@@ -57,6 +57,7 @@ export type Block = {
   fileName?: string
   fileType?: string
   fileSize?: number
+  width?: number // image: display width in px (user-resizable)
   targetId?: string
   indent?: number
   pageId?: string // subpage: id of the child page (docs[pageId] holds its blocks)

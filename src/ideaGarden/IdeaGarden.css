@@ -568,3 +568,27 @@
 }
 .ideaGarden .block-row.drop-left::before { left: -4px; }
 .ideaGarden .block-row.drop-right::after { right: -4px; }
+
+/* Freely resizable images */
+.ideaGarden .ig-img {
+  position: relative; display: inline-block; max-width: 100%; border-radius: 12px; line-height: 0;
+  transition: box-shadow .2s ease;
+}
+.ideaGarden .ig-img img { display: block; width: 100%; height: auto; max-width: 100%; border-radius: 12px; border: 1px solid var(--ig-line); }
+.ideaGarden .ig-img:not([style]) img { width: auto; max-height: 420px; }
+.ideaGarden .ig-img:hover, .ideaGarden .ig-img.resizing { box-shadow: 0 0 0 2px #ffd6e8; }
+.ideaGarden .ig-img-loading { line-height: 1.4; padding: 18px; color: var(--ig-ink-soft); font-size: 13px; border: 1px dashed var(--ig-line); border-radius: 12px; }
+.ideaGarden .ig-img-handle {
+  position: absolute; top: 50%; width: 8px; height: 46px; margin-top: -23px; border-radius: 6px; cursor: ew-resize;
+  background: #fff; border: 2px solid var(--ig-accent); box-shadow: 0 2px 8px rgba(60, 50, 55, .2);
+  opacity: 0; transition: opacity .2s ease, transform .2s var(--in-ease); z-index: 3;
+}
+.ideaGarden .ig-img-handle.l { left: -5px; }
+.ideaGarden .ig-img-handle.r { right: -5px; }
+.ideaGarden .ig-img:hover .ig-img-handle, .ideaGarden .ig-img.resizing .ig-img-handle { opacity: 1; }
+.ideaGarden .ig-img-handle:hover { transform: scaleY(1.15); }
+.ideaGarden .ig-img-size {
+  position: absolute; bottom: 8px; right: 8px; line-height: 1; background: rgba(60, 50, 55, .75); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 4px 7px; border-radius: 6px;
+}
+.ideaGarden .ig-cell .ig-img:not([style]) img { max-height: 160px; }
