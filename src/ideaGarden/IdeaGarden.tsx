@@ -183,6 +183,7 @@ const SLASH_ITEMS: Array<{ key: BlockType | 'page'; group: string; ico: string; 
   { key: 'h2', group: 'Basics', ico: '🇭', label: 'Subheading', hint: 'Smaller title' },
   { key: 'todo', group: 'Basics', ico: '✅', label: 'To-do', hint: 'Track a task' },
   { key: 'bullet', group: 'Basics', ico: '✿', label: 'Bullet list', hint: 'Or just type "- "' },
+  { key: 'toggle', group: 'Basics', ico: '▸', label: 'Dropdown', hint: 'A title that folds content away' },
   { key: 'callout', group: 'Basics', ico: '💡', label: 'Callout', hint: 'Make it pop' },
   { key: 'divider', group: 'Basics', ico: '➖', label: 'Divider', hint: 'Split things up' },
   { key: 'table', group: 'Basics', ico: '▦', label: 'Table', hint: 'A little grid' },
@@ -201,7 +202,12 @@ const DEFAULT_STATUS_OPTIONS: { label: string; color: string }[] = [
   { label: 'On hold', color: '#ffe8d6' }
 ]
 
-const isTextual = (t: BlockType) => ['text', 'h1', 'h2', 'todo', 'callout', 'bullet'].includes(t)
+// A block update: either a partial object, or a function of the latest block
+// (used for nested content so rapid consecutive edits never overwrite each other).
+type BlockPatch = Partial<Block> | ((b: Block) => Partial<Block>)
+const applyPatch = (b: Block, patch: BlockPatch) => ({ ...b, ...(typeof patch === 'function' ? patch(b) : patch) })
+
+const isTextual = (t: BlockType) => ['text', 'h1', 'h2', 'todo', 'callout', 'bullet', 'toggle'].includes(t)
 
 // Five cute bullet styles; click a bullet to switch its style.
 const BULLETS: { key: string; glyph: string; label: string }[] = [
@@ -303,7 +309,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
   const [fileOver, setFileOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const pendingFileType = useRef<BlockType>('file')
-  const patchBlock = (id: string, patch: Partial<Block>) => setBlocks((bs) => bs.map((b) => (b.id === id ? { ...b, ...patch } : b)))
+  const patchBlock = (id: string, patch: BlockPatch) => setBlocks((bs) => bs.map((b) => (b.id === id ? applyPatch(b, patch) : b)))
   const addAfter = (id: string, block: Block) => { setBlocks((bs) => { const i = bs.findIndex((b) => b.id === id); const c = [...bs]; c.splice(i + 1, 0, block); return c }); setFocusId(block.id) }
   const onEnter = (id: string, isEmpty: boolean) => {
     const b = blocks.find((x) => x.id === id)
@@ -360,6 +366,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
     if (kind === 'youtube') { const url = window.prompt('Paste a YouTube link 💛') || ''; patchBlock(id, url ? { type: 'youtube', url, text: '' } : { type: 'text', text: '' }); if (url) addAfter(id, newBlock()); return }
     if (kind === 'file' || kind === 'image') { pendingFileType.current = kind; if (fileInputRef.current) { fileInputRef.current.accept = kind === 'image' ? 'image/*' : '*/*'; fileInputRef.current.dataset.target = id; fileInputRef.current.click() } return }
     if (kind === 'page') { if (registerSubpage) { const pid = registerSubpage(); patchBlock(id, { type: 'subpage', pageId: pid, text: '' }); addAfter(id, newBlock()) } return }
+    if (kind === 'toggle') { patchBlock(id, { type: 'toggle', text: '', open: true, children: [newBlock()] }); setFocusId(id); return }
     if (kind === 'status') { patchBlock(id, { type: 'status', statusOptions: DEFAULT_STATUS_OPTIONS, status: '', text: '' }); addAfter(id, newBlock()); return }
     if (kind === 'divider') { patchBlock(id, { type: 'divider', text: '' }); addAfter(id, newBlock()); return }
     if (kind === 'table') { patchBlock(id, { type: 'text', text: '' }); return } // no nested tables
@@ -404,9 +411,11 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
 }
 
 // --- Table block: a grid whose cells are each a mini block-editor ---
-function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }: { block: Block; onChange: (id: string, patch: Partial<Block>) => void; token: string } & CellCtx) {
+function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }: { block: Block; onChange: (id: string, patch: BlockPatch) => void; token: string } & CellCtx) {
   const cells = block.cells && block.cells.length ? block.cells : null
   const mkCell = (): Block[] => [newBlock()]
+  // While dragging a border we resize locally (smooth), then save once on release.
+  const [live, setLive] = useState<{ cols?: number[]; rows?: number[] } | null>(null)
   useEffect(() => {
     if (cells) return
     const init: Block[][][] = block.rows && block.rows.length
@@ -416,42 +425,90 @@ function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   if (!cells) return <div className="ig-table-wrap"><div className="ig-td-loading">…</div></div>
-  const setCells = (c: Block[][][]) => onChange(block.id, { cells: c })
-  const setCell = (ri: number, ci: number, updater: (bs: Block[]) => Block[]) => {
-    const c = cells.map((r) => r.slice())
-    c[ri] = c[ri].slice()
-    c[ri][ci] = updater(c[ri][ci] && c[ri][ci].length ? c[ri][ci] : [newBlock()])
-    setCells(c)
+  const setCell = (ri: number, ci: number, updater: (bs: Block[]) => Block[]) =>
+    onChange(block.id, (b) => {
+      const src = b.cells && b.cells.length ? b.cells : cells
+      const c = src.map((r) => r.slice())
+      c[ri] = c[ri].slice()
+      c[ri][ci] = updater(c[ri][ci] && c[ri][ci].length ? c[ri][ci] : [newBlock()])
+      return { cells: c }
+    })
+  const DEFAULT_COL = 200
+  const nCols = cells[0].length
+  const colW = live?.cols || Array.from({ length: nCols }, (_, i) => block.colWidths?.[i] || DEFAULT_COL)
+  const rowH = live?.rows || cells.map((_, i) => block.rowHeights?.[i] || 0)
+  const addRow = () => onChange(block.id, (b) => ({ cells: [...(b.cells || cells), (b.cells || cells)[0].map(() => mkCell())] }))
+  const addCol = () => onChange(block.id, (b) => ({
+    cells: (b.cells || cells).map((r) => [...r, mkCell()]),
+    colWidths: b.colWidths ? [...b.colWidths, DEFAULT_COL] : undefined
+  }))
+  const delRow = () => cells.length > 1 && onChange(block.id, (b) => ({
+    cells: (b.cells || cells).slice(0, -1),
+    rowHeights: b.rowHeights ? b.rowHeights.slice(0, -1) : undefined
+  }))
+  const delCol = () => nCols > 1 && onChange(block.id, (b) => ({
+    cells: (b.cells || cells).map((r) => r.slice(0, -1)),
+    colWidths: b.colWidths ? b.colWidths.slice(0, -1) : undefined
+  }))
+  // Drag a column's right edge → that column's width. Drag a row's bottom edge → its height.
+  function startDrag(kind: 'col' | 'row', idx: number, e: React.PointerEvent) {
+    e.preventDefault(); e.stopPropagation()
+    const startX = e.clientX, startY = e.clientY
+    const cols = colW.slice(), rows = rowH.slice()
+    const td = (e.currentTarget as HTMLElement).closest('td') as HTMLElement
+    const startRowH = rows[idx] || (td?.parentElement?.getBoundingClientRect().height ?? 40)
+    let latest = { cols, rows }
+    const onMove = (ev: PointerEvent) => {
+      if (kind === 'col') { const c = cols.slice(); c[idx] = Math.max(70, Math.round(cols[idx] + ev.clientX - startX)); latest = { cols: c, rows } }
+      else { const r = rows.slice(); r[idx] = Math.max(34, Math.round(startRowH + ev.clientY - startY)); latest = { cols, rows: r } }
+      setLive(latest)
+    }
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp)
+      document.body.style.cursor = ''; document.body.style.userSelect = ''
+      onChange(block.id, { colWidths: latest.cols, rowHeights: latest.rows })
+      setLive(null)
+    }
+    window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp)
+    document.body.style.cursor = kind === 'col' ? 'col-resize' : 'row-resize'; document.body.style.userSelect = 'none'
   }
-  const addRow = () => setCells([...cells.map((r) => r.slice()), cells[0].map(() => mkCell())])
-  const addCol = () => setCells(cells.map((r) => [...r, mkCell()]))
-  const delRow = () => cells.length > 1 && setCells(cells.slice(0, -1))
-  const delCol = () => cells[0].length > 1 && setCells(cells.map((r) => r.slice(0, -1)))
+  const resetCol = (idx: number) => onChange(block.id, (b) => {
+    const c = Array.from({ length: nCols }, (_, i) => b.colWidths?.[i] || DEFAULT_COL); c[idx] = DEFAULT_COL; return { colWidths: c }
+  })
+  const resetRow = (idx: number) => onChange(block.id, (b) => {
+    const r = cells.map((_, i) => b.rowHeights?.[i] || 0); r[idx] = 0; return { rowHeights: r }
+  })
   return (
     <div className="ig-table-wrap">
-      <table className="ig-table"><tbody>
-        {cells.map((row, ri) => (
-          <tr key={ri}>
-            {row.map((cell, ci) => (
-              <td key={ci} className={ri === 0 ? 'h' : ''}>
-                <CellEditor token={token} blocks={cell && cell.length ? cell : [newBlock()]} setBlocks={(u) => setCell(ri, ci, u)} pages={pages} registerSubpage={registerSubpage} openPage={openPage} />
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody></table>
+      <table className={`ig-table fixed ${live ? 'resizing' : ''}`} style={{ width: colW.reduce((a, w) => a + w, 0) }}>
+        <colgroup>{colW.map((w, i) => <col key={i} style={{ width: w }} />)}</colgroup>
+        <tbody>
+          {cells.map((row, ri) => (
+            <tr key={ri} style={rowH[ri] ? { height: rowH[ri] } : undefined}>
+              {row.map((cell, ci) => (
+                <td key={ci} className={ri === 0 ? 'h' : ''}>
+                  <CellEditor token={token} blocks={cell && cell.length ? cell : [newBlock()]} setBlocks={(u) => setCell(ri, ci, u)} pages={pages} registerSubpage={registerSubpage} openPage={openPage} />
+                  <span className="ig-col-resize" title="Drag to resize column · double-click to reset" onPointerDown={(e) => startDrag('col', ci, e)} onDoubleClick={() => resetCol(ci)} />
+                  <span className="ig-row-resize" title="Drag to resize row · double-click to reset" onPointerDown={(e) => startDrag('row', ri, e)} onDoubleClick={() => resetRow(ri)} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="ig-table-actions">
         <button onClick={addRow} title="Add row">＋ row</button>
         <button onClick={addCol} title="Add column">＋ column</button>
         <button onClick={delRow} title="Remove last row">－ row</button>
         <button onClick={delCol} title="Remove last column">－ column</button>
+        <span className="ig-table-hint">drag any cell edge to resize</span>
       </div>
     </div>
   )
 }
 
 // --- Status pill: a cute pastel dropdown, customizable options ---
-function StatusBlock({ block, onChange }: { block: Block; onChange: (id: string, patch: Partial<Block>) => void }) {
+function StatusBlock({ block, onChange }: { block: Block; onChange: (id: string, patch: BlockPatch) => void }) {
   const options = block.statusOptions && block.statusOptions.length ? block.statusOptions : DEFAULT_STATUS_OPTIONS
   const [open, setOpen] = useState(false)
   const current = options.find((o) => o.label === block.status) || null
@@ -501,6 +558,7 @@ function PostKitPanel({ token, pageId, title, blocks, onClose }: { token: string
       else if (b.type === 'youtube') { if (b.url) links.add(b.url) }
       else if (b.type === 'image' || b.type === 'file') { if (b.filePath) fileBlocks.push(b) }
       else if (b.type === 'status') { if (b.status) status = b.status }
+      else if (b.type === 'toggle') { const t = strip(b.text); if (t) captionParts.push(t); collect(b.children || []) }
       else if (b.type === 'table' && Array.isArray(b.cells)) { for (const row of b.cells) for (const cell of row) collect(cell) }
     }
   }
@@ -576,7 +634,7 @@ type BlockProps = CellCtx & {
   token: string
   block: Block
   autoFocus: boolean
-  onChange: (id: string, patch: Partial<Block>) => void
+  onChange: (id: string, patch: BlockPatch) => void
   onEnter: (id: string, isEmpty: boolean) => void
   onBackspaceEmpty: (id: string) => void
   onSlash: (id: string, query: string | null, pos?: { x: number; y: number }) => void
@@ -734,6 +792,33 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       </div>
     )
 
+  if (block.type === 'toggle') {
+    const kids = block.children && block.children.length ? block.children : null
+    const open = block.open !== false
+    return (
+      <div className={`block toggle ${open ? 'open' : ''}`}><span className="grip">⠿</span>
+        <div className="content">
+          <div className="ig-toggle-head">
+            <button className="ig-toggle-caret" title={open ? 'Fold' : 'Unfold'} onMouseDown={(e) => e.preventDefault()} onClick={() => onChange(block.id, { open: !open })}>▸</button>
+            {editable('Dropdown title…')}
+          </div>
+          {open && (
+            <div className="ig-toggle-body">
+              <CellEditor
+                token={token}
+                blocks={kids || [newBlock()]}
+                setBlocks={(u) => onChange(block.id, (b) => ({ children: u(b.children && b.children.length ? b.children : [newBlock()]) }))}
+                pages={pages}
+                registerSubpage={registerSubpage}
+                openPage={openPage}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   if (block.type === 'bullet')
     return (
       <div className="block bullet"><span className="grip">⠿</span>
@@ -775,7 +860,7 @@ type PageRef = {
 
 function Editor({
   token, page, blocks, setBlocks, pages, onClose, onBack, canBack,
-  setTitle, updateNode, registerSubpage, openPage
+  setTitle, updateNode, registerSubpage, openPage, createPageFrom
 }: {
   token: string
   page: PageRef
@@ -789,6 +874,7 @@ function Editor({
   updateNode: (patch: Partial<BubbleData>) => void
   registerSubpage: () => string
   openPage: (id: string) => void
+  createPageFrom: (title: string, blocks: Block[]) => string
 }) {
   const [focusId, setFocusId] = useState<string | null>(null)
   const [slash, setSlash] = useState<SlashState | null>(null)
@@ -807,8 +893,17 @@ function Editor({
     const parent = asideRef.current?.parentElement
     return (parent ? parent.getBoundingClientRect().width : window.innerWidth) - 32
   }
+  // Soft close: play the slide-out, then actually close.
+  const [closing, setClosing] = useState(false)
+  const [resizing, setResizing] = useState(false)
+  const requestClose = () => {
+    if (closing) return
+    setClosing(true)
+    setTimeout(onClose, 460)
+  }
   function startResize(e: React.PointerEvent) {
     e.preventDefault()
+    setResizing(true)
     const parent = asideRef.current?.parentElement
     const right = parent ? parent.getBoundingClientRect().right : window.innerWidth
     const maxW = maxDrawerW()
@@ -818,6 +913,7 @@ function Editor({
       window.removeEventListener('pointerup', onUp)
       document.body.style.cursor = ''
       document.body.style.userSelect = ''
+      setResizing(false)
     }
     window.addEventListener('pointermove', onMove)
     window.addEventListener('pointerup', onUp)
@@ -830,7 +926,7 @@ function Editor({
   const pendingFileType = useRef<BlockType>('file')
   const pal = paletteFor(page.color)
 
-  const patchBlock = (id: string, patch: Partial<Block>) => setBlocks((bs) => bs.map((b) => (b.id === id ? { ...b, ...patch } : b)))
+  const patchBlock = (id: string, patch: BlockPatch) => setBlocks((bs) => bs.map((b) => (b.id === id ? applyPatch(b, patch) : b)))
 
   function addAfter(id: string, block: Block) {
     setBlocks((bs) => {
@@ -931,6 +1027,46 @@ function Editor({
       }
     }
   }
+  // --- right-click a selection → turn those lines into a dropdown or a page ---
+  const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; ids: string[]; text: string } | null>(null)
+  const [naming, setNaming] = useState<{ kind: 'toggle' | 'page'; ids: string[]; name: string } | null>(null)
+  function onBodyContextMenu(e: React.MouseEvent) {
+    const sel = window.getSelection()
+    if (!sel || sel.isCollapsed || !sel.rangeCount) return // no selection → normal browser menu
+    const range = sel.getRangeAt(0)
+    const rows = [...(e.currentTarget as HTMLElement).querySelectorAll(':scope > .block-row')] as HTMLElement[]
+    const hit = new Set(rows.filter((r) => range.intersectsNode(r)).map((r) => r.dataset.blockId || ''))
+    const ids = blocks.map((b) => b.id).filter((id) => hit.has(id))
+    if (!ids.length) return
+    e.preventDefault()
+    setCtxMenu({ x: Math.min(e.clientX, window.innerWidth - 230), y: Math.min(e.clientY, window.innerHeight - 170), ids, text: sel.toString() })
+  }
+  function beginNaming(kind: 'toggle' | 'page') {
+    if (!ctxMenu) return
+    const first = blocks.find((b) => b.id === ctxMenu.ids[0])
+    const guess = (first?.text || '').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim().slice(0, 60)
+    setNaming({ kind, ids: ctxMenu.ids, name: guess })
+    setCtxMenu(null)
+  }
+  function convertSelection() {
+    if (!naming) return
+    const name = naming.name.trim() || (naming.kind === 'toggle' ? 'Dropdown' : 'Untitled page')
+    const idSet = new Set(naming.ids)
+    const picked = blocks.filter((b) => idSet.has(b.id)).map((b) => ({ ...b, indent: 0 }))
+    const replacement: Block = naming.kind === 'toggle'
+      ? newBlock('toggle', { text: name, open: true, children: picked.length ? picked : [newBlock()] })
+      : newBlock('subpage', { pageId: createPageFrom(name, picked) })
+    setBlocks((bs) => {
+      const at = bs.findIndex((b) => idSet.has(b.id))
+      const rest = bs.filter((b) => !idSet.has(b.id))
+      const insertAt = at < 0 ? rest.length : Math.min(at, rest.length)
+      rest.splice(insertAt, 0, replacement)
+      return rest.length ? rest : [newBlock()]
+    })
+    window.getSelection()?.removeAllRanges()
+    setNaming(null)
+  }
+
   function handleDrop(e: React.DragEvent, targetId: string | null, pos: 'before' | 'after') {
     if (e.dataTransfer.files && e.dataTransfer.files.length) {
       e.preventDefault(); e.stopPropagation(); setFileOver(false); setDropHint(null)
@@ -993,6 +1129,11 @@ function Editor({
       addAfter(id, newBlock())
       return
     }
+    if (kind === 'toggle') {
+      patchBlock(id, { type: 'toggle', text: '', open: true, children: [newBlock()] })
+      setFocusId(id)
+      return
+    }
     if (kind === 'status') {
       patchBlock(id, { type: 'status', statusOptions: DEFAULT_STATUS_OPTIONS, status: '', text: '' })
       addAfter(id, newBlock())
@@ -1023,8 +1164,8 @@ function Editor({
 
   return (
     <>
-      <div className="ig-scrim" onClick={onClose} />
-      <aside ref={asideRef} className="ig-drawer" style={{ width: drawerW }}>
+      <div className={`ig-scrim ${closing ? 'closing' : ''}`} onClick={requestClose} />
+      <aside ref={asideRef} className={`ig-drawer ${closing ? 'closing' : ''} ${resizing ? 'resizing' : ''}`} style={{ width: drawerW }}>
         <div
           className="ig-resize"
           onPointerDown={startResize}
@@ -1041,7 +1182,7 @@ function Editor({
               {page.isNode ? (page.kind === 'central' ? '🌸 central idea' : '💭 thought bubble') : '📄 page'}
             </span>
             <button className="ig-kit-btn" onClick={() => setShowKit(true)} title="Package this page for posting">📤 Post Kit</button>
-            <button className="close-x" onClick={onClose}>×</button>
+            <button className="close-x" onClick={requestClose}>×</button>
           </div>
           <input
             className="doc-title"
@@ -1091,15 +1232,18 @@ function Editor({
         </div>
 
         <div
+          key={page.id}
           className={`doc-body ${fileOver ? 'file-over' : ''}`}
           style={{ ['--ig-font' as string]: fontStack(page.font), fontFamily: fontStack(page.font) } as React.CSSProperties}
           onDragOver={(e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); setFileOver(true) } }}
           onDragLeave={(e) => { if (e.currentTarget === e.target) setFileOver(false) }}
           onDrop={(e) => handleDrop(e, blocks.length ? blocks[blocks.length - 1].id : null, 'after')}
+          onContextMenu={onBodyContextMenu}
         >
           {blocks.map((b) => (
             <div
               key={b.id}
+              data-block-id={b.id}
               className={`block-row ${dropHint?.id === b.id ? 'drop-' + dropHint.pos : ''}`}
               style={{ marginLeft: (b.indent || 0) * 24 }}
               draggable={dragId === b.id}
@@ -1158,6 +1302,41 @@ function Editor({
 
       {slash && (
         <SlashMenu pos={slash.pos} query={slash.query} index={slash.index} onPick={pickSlash} />
+      )}
+
+      {ctxMenu && (
+        <div className="ig-ctx-veil" onMouseDown={() => setCtxMenu(null)} onContextMenu={(e) => { e.preventDefault(); setCtxMenu(null) }}>
+          <div className="ig-ctx" style={{ left: ctxMenu.x, top: ctxMenu.y }} onMouseDown={(e) => e.stopPropagation()}>
+            <div className="ig-ctx-label">{ctxMenu.ids.length} line{ctxMenu.ids.length > 1 ? 's' : ''} selected</div>
+            <button className="ig-ctx-item" onClick={() => beginNaming('toggle')}><span className="ico">▸</span>Turn into dropdown</button>
+            <button className="ig-ctx-item" onClick={() => beginNaming('page')}><span className="ico">📄</span>Turn into page</button>
+            <button className="ig-ctx-item" onClick={() => { try { navigator.clipboard?.writeText(ctxMenu.text) } catch { /* ignore */ } setCtxMenu(null) }}><span className="ico">⧉</span>Copy text</button>
+          </div>
+        </div>
+      )}
+
+      {naming && (
+        <div className="ig-ctx-veil dim" onMouseDown={() => setNaming(null)}>
+          <form
+            className="ig-name-pop"
+            onMouseDown={(e) => e.stopPropagation()}
+            onSubmit={(e) => { e.preventDefault(); convertSelection() }}
+          >
+            <div className="ig-name-title">{naming.kind === 'toggle' ? '▸ Name your dropdown' : '📄 Name your page'}</div>
+            <input
+              autoFocus
+              className="ig-name-input"
+              value={naming.name}
+              onChange={(e) => setNaming((n) => (n ? { ...n, name: e.target.value } : n))}
+              onKeyDown={(e) => { if (e.key === 'Escape') setNaming(null) }}
+              placeholder={naming.kind === 'toggle' ? 'e.g. Reading questions' : 'e.g. Practice set 1'}
+            />
+            <div className="ig-name-actions">
+              <button type="button" className="ig-name-cancel" onClick={() => setNaming(null)}>Cancel</button>
+              <button type="submit" className="ig-name-ok">{naming.kind === 'toggle' ? 'Create dropdown' : 'Create page'}</button>
+            </div>
+          </form>
+        </div>
       )}
 
       {showKit && (
@@ -1527,6 +1706,12 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
           updateNode={(patch) => ctx.updateNodeData(currentPage!.id, patch)}
           registerSubpage={registerSubpage}
           openPage={(id) => { ensureDoc(id); setOpenStack((s) => [...s, id]) }}
+          createPageFrom={(title, blocks) => {
+            const pid = uid()
+            setPages((p) => ({ ...p, [pid]: { title } }))
+            setDocs((d) => ({ ...d, [pid]: blocks.length ? blocks : [newBlock()] }))
+            return pid
+          }}
         />
       )}
     </div>

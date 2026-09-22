@@ -41,6 +41,7 @@ export type BlockType =
   | 'table'
   | 'status'
   | 'bullet'
+  | 'toggle'
 
 export type StatusOption = { label: string; color: string }
 
@@ -60,6 +61,10 @@ export type Block = {
   pageId?: string // subpage: id of the child page (docs[pageId] holds its blocks)
   rows?: string[][] // table (legacy: plain-text cells)
   cells?: Block[][][] // table grid[row][col] = a cell's own list of blocks
+  colWidths?: number[] // table: column widths in px (resizable)
+  rowHeights?: number[] // table: minimum row heights in px (resizable)
+  children?: Block[] // toggle (dropdown): the folded content
+  open?: boolean // toggle: expanded?
   bullet?: string // bullet list item: style key (dot, flower, heart, star, arrow)
   status?: string // status pill: selected label
   statusOptions?: StatusOption[] // status pill: available options
