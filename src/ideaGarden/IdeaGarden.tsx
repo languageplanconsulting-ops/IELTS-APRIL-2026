@@ -298,6 +298,8 @@ const filterItems = (q: string) => {
   return SLASH_ITEMS.filter((i) => i.label.toLowerCase().includes(s) || String(i.key).includes(s))
 }
 const newBlock = (type: BlockType = 'text', extra: Partial<Block> = {}): Block => ({ id: uid(), type, text: '', ...extra })
+// Lines created by splitting (Enter mid-text) get the cursor at their start, not the end.
+const caretAtStart = new Set<string>()
 
 function ytEmbed(url: string): string | null {
   try {
@@ -363,8 +365,12 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
   const pendingFileType = useRef<BlockType>('file')
   const patchBlock = (id: string, patch: BlockPatch) => setBlocks((bs) => bs.map((b) => (b.id === id ? applyPatch(b, patch) : b)))
   const addAfter = (id: string, block: Block) => { setBlocks((bs) => { const i = bs.findIndex((b) => b.id === id); const c = [...bs]; c.splice(i + 1, 0, block); return c }); setFocusId(block.id) }
-  const onEnter = (id: string, isEmpty: boolean) => {
+  const onEnter = (id: string, isEmpty: boolean, tail?: string) => {
     const b = blocks.find((x) => x.id === id)
+    if (tail !== undefined) {
+      const nb = newBlock(b?.type === 'todo' || b?.type === 'bullet' ? b.type : 'text', { bullet: b?.bullet, text: tail })
+      caretAtStart.add(nb.id); addAfter(id, nb); return
+    }
     if (b?.type === 'todo' || b?.type === 'bullet') {
       if (isEmpty) { patchBlock(id, { type: 'text', checked: false, text: '' }); setFocusId(id) }
       else addAfter(id, newBlock(b.type, { bullet: b.bullet }))
@@ -743,7 +749,7 @@ type BlockProps = CellCtx & {
   block: Block
   autoFocus: boolean
   onChange: (id: string, patch: BlockPatch) => void
-  onEnter: (id: string, isEmpty: boolean) => void
+  onEnter: (id: string, isEmpty: boolean, tail?: string) => void
   onBackspaceEmpty: (id: string) => void
   onSlash: (id: string, query: string | null, pos?: { x: number; y: number }) => void
   onToggle: (id: string) => void
@@ -788,7 +794,9 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       ref.current.focus()
       const r = document.createRange()
       r.selectNodeContents(ref.current)
-      r.collapse(false)
+      r.collapse(caretAtStart.has(block.id))
+      const id = block.id
+      setTimeout(() => caretAtStart.delete(id), 300) // (dev mode runs this effect twice)
       const sel = window.getSelection()
       sel?.removeAllRanges()
       sel?.addRange(r)
@@ -834,7 +842,25 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
     }
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      onEnter(block.id, !el || el.innerText.trim() === '')
+      // Cursor in the middle of the text → split: everything after the cursor
+      // moves to a new line right below (instead of jumping past the whole block).
+      let tail: string | undefined
+      const sel = window.getSelection()
+      if (el && sel && sel.rangeCount && el.contains(sel.anchorNode)) {
+        const r = sel.getRangeAt(0)
+        r.deleteContents()
+        const after = document.createRange()
+        after.selectNodeContents(el)
+        after.setStart(r.endContainer, r.endOffset)
+        const frag = after.cloneContents()
+        const box = document.createElement('div'); box.appendChild(frag)
+        if ((box.textContent || '').replace(/\u00a0/g, ' ').trim() !== '' || box.querySelector('img')) {
+          after.deleteContents()
+          tail = box.innerHTML.replace(/^(<br\s*\/?>)+/i, '')
+          onChange(block.id, { text: el.innerHTML })
+        }
+      }
+      onEnter(block.id, !el || el.innerText.trim() === '', tail)
       return
     }
     // Backspace with the cursor at the very start of a bullet / to-do / heading /
@@ -1116,9 +1142,15 @@ function Editor({
   const onIndent = (id: string, delta: number) =>
     setBlocks((bs) => bs.map((b) => (b.id === id ? { ...b, indent: Math.max(0, Math.min(5, (b.indent || 0) + delta)) } : b)))
 
-  const onEnter = (id: string, isEmpty: boolean) => {
+  const onEnter = (id: string, isEmpty: boolean, tail?: string) => {
     const b = blocks.find((x) => x.id === id)
     const indent = b?.indent || 0
+    if (tail !== undefined) {
+      // Split mid-text: the rest of the line becomes the next line (same kind of line).
+      const keep = b?.type === 'todo' || b?.type === 'bullet' ? b.type : 'text'
+      const nb = newBlock(keep, { indent, bullet: b?.bullet, text: tail })
+      caretAtStart.add(nb.id); addAfter(id, nb); return
+    }
     if (isEmpty && indent > 0) {
       // Enter on an empty nested line pulls it back out one level (Notion-style).
       patchBlock(id, { indent: indent - 1 })
