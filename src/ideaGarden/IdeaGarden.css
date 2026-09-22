@@ -698,3 +698,6 @@
 .ideaGarden .dg-h { width: 8px; height: 8px; background: #fff; border: 2px solid var(--ig-accent); opacity: 0; transition: opacity .15s ease; }
 .ideaGarden .dg-bub:hover .dg-h, .ideaGarden .dg-bub.sel .dg-h { opacity: 1; }
 .ideaGarden .dg-wrap .react-flow__controls { box-shadow: 0 4px 12px rgba(60, 50, 55, .12); }
+
+.ideaGarden .dg-bar .dg-remove { margin-left: auto; color: #c0587a; }
+.ideaGarden .dg-bar .dg-remove:hover { background: #ffe3ec; }

@@ -115,7 +115,7 @@ const toNodes = (d: DiagramData | undefined): Node[] =>
 const toEdges = (d: DiagramData | undefined): Edge[] =>
   (d?.edges || []).map((e) => ({ id: e.id, source: e.source, target: e.target, type: 'dgedge', markerEnd: ARROW }))
 
-function Board({ block, onChange }: { block: Block; onChange: (id: string, patch: Partial<Block>) => void }) {
+function Board({ block, onChange, onRemove }: { block: Block; onChange: (id: string, patch: Partial<Block>) => void; onRemove?: () => void }) {
   const [nodes, setNodes] = useState<Node[]>(() => toNodes(block.diagram))
   const [edges, setEdges] = useState<Edge[]>(() => toEdges(block.diagram))
   const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(block.diagram?.orientation || 'portrait')
@@ -214,6 +214,9 @@ function Board({ block, onChange }: { block: Block; onChange: (id: string, patch
           <button onClick={() => setOrientation((o) => (o === 'portrait' ? 'landscape' : 'portrait'))} title="Switch A4 portrait / landscape">
             {orientation === 'portrait' ? '▯ A4' : '▭ A4'}
           </button>
+          {onRemove && (
+            <button className="dg-remove" onClick={() => { if (window.confirm('Delete this whole diagram?')) onRemove() }} title="Delete the whole diagram">✕ Delete diagram</button>
+          )}
         </div>
         <ReactFlow
           nodes={nodes}
@@ -246,7 +249,7 @@ function Board({ block, onChange }: { block: Block; onChange: (id: string, patch
   )
 }
 
-export function DiagramBlock(props: { block: Block; onChange: (id: string, patch: Partial<Block>) => void }) {
+export function DiagramBlock(props: { block: Block; onChange: (id: string, patch: Partial<Block>) => void; onRemove?: () => void }) {
   return (
     <ReactFlowProvider>
       <Board {...props} />

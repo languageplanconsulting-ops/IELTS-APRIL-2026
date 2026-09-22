@@ -884,7 +884,7 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
     )
 
   if (block.type === 'diagram')
-    return <div className="block"><span className="grip">⠿</span><div className="content"><DiagramBlock block={block} onChange={onChange} /></div></div>
+    return <div className="block"><span className="grip">⠿</span><div className="content"><DiagramBlock block={block} onChange={onChange} onRemove={() => { onChange(block.id, { type: 'text', text: '', diagram: undefined }); onBackspaceEmpty(block.id) }} /></div></div>
 
   if (block.type === 'columns') {
     const cols = block.cols && block.cols.length ? block.cols : [[newBlock()], [newBlock()]]
