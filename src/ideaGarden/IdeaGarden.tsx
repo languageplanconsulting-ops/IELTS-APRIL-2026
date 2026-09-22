@@ -988,6 +988,11 @@ function Editor({
   const [focusId, setFocusId] = useState<string | null>(null)
   const [slash, setSlash] = useState<SlashState | null>(null)
   const [showKit, setShowKit] = useState(false)
+  // Header details (dates, font, shape) stay folded so the page gets the room.
+  const [showDetails, setShowDetails] = useState<boolean>(() => {
+    try { return localStorage.getItem('ideaGarden.showDetails') === '1' } catch { return false }
+  })
+  useEffect(() => { try { localStorage.setItem('ideaGarden.showDetails', showDetails ? '1' : '0') } catch { /* ignore */ } }, [showDetails])
 
   // --- resizable page: drag the left edge; the width is remembered ---
   const DEFAULT_W = 640
@@ -1329,60 +1334,67 @@ function Editor({
         <button className="ig-expand" onClick={toggleWide} title={drawerW > DEFAULT_W + 40 ? 'Shrink page' : 'Expand page'}>
           {drawerW > DEFAULT_W + 40 ? '⇥' : '⇤'}
         </button>
-        <div className="doc-head">
+        <div className={`doc-head compact ${showDetails ? 'open' : ''}`}>
           <div className="row">
             {canBack && <button className="ig-back" onClick={onBack}>‹ Back</button>}
-            <span className="chip" style={{ background: pal.fill, color: pal.ink }}>
-              {page.isNode ? (page.kind === 'central' ? '🌸 central idea' : '💭 thought bubble') : '📄 page'}
+            <span className="chip" style={{ background: pal.fill, color: pal.ink }} title={page.isNode ? (page.kind === 'central' ? 'Central idea' : 'Thought bubble') : 'Page'}>
+              {page.isNode ? (page.kind === 'central' ? '🌸' : '💭') : '📄'}
             </span>
+            <input
+              className="doc-title"
+              value={page.title}
+              placeholder={page.isNode ? 'Untitled thought' : 'Untitled page'}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <button className={`ig-details-btn ${showDetails ? 'on' : ''}`} onClick={() => setShowDetails((v) => !v)} title="Dates, font, bubble shape">
+              <span className="caret">▾</span> details
+            </button>
             <button className="ig-kit-btn" onClick={() => setShowKit(true)} title="Package this page for posting">📤 Post Kit</button>
             <button className="close-x" onClick={requestClose}>×</button>
           </div>
-          <input
-            className="doc-title"
-            value={page.title}
-            placeholder={page.isNode ? 'Untitled thought' : 'Untitled page'}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          {page.isNode && (
-            <div className="doc-dates">
-              🗓️ from
-              <input type="date" value={page.start || ''} onChange={(e) => updateNode({ start: e.target.value })} />
-              to
-              <input type="date" value={page.end || ''} onChange={(e) => updateNode({ end: e.target.value })} />
+          {showDetails && (
+            <div className="doc-details">
+            {page.isNode && (
+              <div className="doc-dates">
+                🗓️ from
+                <input type="date" value={page.start || ''} onChange={(e) => updateNode({ start: e.target.value })} />
+                to
+                <input type="date" value={page.end || ''} onChange={(e) => updateNode({ end: e.target.value })} />
+              </div>
+            )}
+            <div className="doc-tools">
+              {page.isNode && (
+                <>
+                  <label className="doc-font" title="Font">
+                    <span className="aa">Aa</span>
+                    <select value={page.font || DEFAULT_FONT} onChange={(e) => updateNode({ font: e.target.value })}>
+                      {['Cute & handwritten', 'Formal'].map((g) => (
+                        <optgroup key={g} label={g}>
+                          {FONTS.filter((f) => f.group === g).map((f) => (
+                            <option key={f.key} value={f.key}>{f.label}</option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </select>
+                  </label>
+                  <div className="doc-shapes" title="Bubble shape">
+                    {SHAPES.map((s) => (
+                      <button
+                        key={s.key}
+                        className={`shape-btn ${(page.shape || DEFAULT_SHAPE) === s.key ? 'active' : ''}`}
+                        title={s.label}
+                        onClick={() => updateNode({ shape: s.key })}
+                      >
+                        <span className={`shape-swatch shape-${s.key}`} />
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+              <span className="doc-hint">select text · <b>Ctrl+H</b> to highlight</span>
+            </div>
             </div>
           )}
-          <div className="doc-tools">
-            {page.isNode && (
-              <>
-                <label className="doc-font" title="Font">
-                  <span className="aa">Aa</span>
-                  <select value={page.font || DEFAULT_FONT} onChange={(e) => updateNode({ font: e.target.value })}>
-                    {['Cute & handwritten', 'Formal'].map((g) => (
-                      <optgroup key={g} label={g}>
-                        {FONTS.filter((f) => f.group === g).map((f) => (
-                          <option key={f.key} value={f.key}>{f.label}</option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
-                </label>
-                <div className="doc-shapes" title="Bubble shape">
-                  {SHAPES.map((s) => (
-                    <button
-                      key={s.key}
-                      className={`shape-btn ${(page.shape || DEFAULT_SHAPE) === s.key ? 'active' : ''}`}
-                      title={s.label}
-                      onClick={() => updateNode({ shape: s.key })}
-                    >
-                      <span className={`shape-swatch shape-${s.key}`} />
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-            <span className="doc-hint">select text · <b>Ctrl+H</b> to highlight</span>
-          </div>
         </div>
 
         <div

@@ -592,3 +592,30 @@
   font-size: 11px; font-weight: 700; padding: 4px 7px; border-radius: 6px;
 }
 .ideaGarden .ig-cell .ig-img:not([style]) img { max-height: 160px; }
+
+/* Compact one-line page header; details fold away */
+.ideaGarden .doc-head.compact { padding: 10px 22px 9px 26px; gap: 0; }
+.ideaGarden .doc-head.compact .row { gap: 8px; min-height: 36px; }
+.ideaGarden .doc-head.compact .chip { padding: 4px 8px; font-size: 15px; letter-spacing: 0; line-height: 1; flex: none; }
+.ideaGarden .doc-head.compact .doc-title {
+  flex: 1; min-width: 60px; font-size: 19px; line-height: 1.3; padding: 4px 8px; margin: 0;
+  border: 1px solid transparent; border-radius: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: border-color .2s ease, background .2s ease;
+}
+.ideaGarden .doc-head.compact .doc-title:hover { background: var(--ig-canvas); }
+.ideaGarden .doc-head.compact .doc-title:focus { border-color: var(--ig-line); background: #fff; }
+.ideaGarden .doc-head.compact .ig-kit-btn { margin-left: 0; padding: 5px 10px; font-size: 12px; flex: none; }
+.ideaGarden .doc-head.compact .close-x { margin-left: 0; width: 30px; height: 30px; font-size: 16px; flex: none; }
+.ideaGarden .doc-head.compact .ig-back { padding: 4px 9px; font-size: 12px; flex: none; }
+.ideaGarden .ig-details-btn {
+  flex: none; display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--ig-line); background: #fff;
+  color: var(--ig-ink-soft); font-weight: 700; font-size: 12px; padding: 5px 10px; border-radius: 999px;
+  transition: background .2s ease, color .2s ease;
+}
+.ideaGarden .ig-details-btn:hover, .ideaGarden .ig-details-btn.on { color: var(--ig-accent-deep); background: #fff2f7; }
+.ideaGarden .ig-details-btn .caret { display: inline-block; transition: transform .3s var(--in-ease); }
+.ideaGarden .ig-details-btn.on .caret { transform: rotate(180deg); }
+.ideaGarden .doc-details {
+  display: flex; flex-direction: column; gap: 8px; padding: 10px 2px 2px;
+  animation: igRise 260ms var(--in-ease) both;
+}
