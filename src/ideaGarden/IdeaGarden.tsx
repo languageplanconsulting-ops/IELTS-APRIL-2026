@@ -321,6 +321,12 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
     setFocusId(null)
     setTimeout(() => setFocusId(id), 0)
   }
+  // Backspace at the start of a formatted line → plain text, cursor stays put.
+  const onUnformat = (id: string) => {
+    patchBlock(id, { type: 'text', checked: false })
+    setFocusId(null)
+    setTimeout(() => setFocusId(id), 0)
+  }
   const onBackspaceEmpty = (id: string) => setBlocks((bs) => { if (bs.length === 1) return bs; const i = bs.findIndex((b) => b.id === id); if (bs[i - 1]) setFocusId(bs[i - 1].id); return bs.filter((b) => b.id !== id) })
   function onSlash(blockId: string, query: string | null, pos?: { x: number; y: number }) {
     if (query === null) { setSlash((s) => (s && s.blockId === blockId ? null : s)); return }
@@ -388,7 +394,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
         ) : (
           <BlockView key={b.id} token={token} block={b} autoFocus={focusId === b.id} pages={pages} registerSubpage={registerSubpage} openPage={openPage}
             onChange={patchBlock} onEnter={onEnter} onBackspaceEmpty={onBackspaceEmpty} onSlash={onSlash}
-            onToggle={(id) => patchBlock(id, { checked: !b.checked })} onIndent={() => {}} onAutoBullet={onAutoBullet} />
+            onToggle={(id) => patchBlock(id, { checked: !b.checked })} onIndent={() => {}} onAutoBullet={onAutoBullet} onUnformat={onUnformat} />
         )
       ))}
       <input ref={fileInputRef} type="file" hidden onChange={onFileChosen} />
@@ -577,9 +583,10 @@ type BlockProps = CellCtx & {
   onToggle: (id: string) => void
   onIndent: (id: string, delta: number) => void
   onAutoBullet?: (id: string, rest: string) => void
+  onUnformat?: (id: string) => void
 }
 
-function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, onAutoBullet, pages, registerSubpage, openPage }: BlockProps) {
+function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, onAutoBullet, onUnformat, pages, registerSubpage, openPage }: BlockProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -661,6 +668,23 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       e.preventDefault()
       onEnter(block.id, !el || el.innerText.trim() === '')
       return
+    }
+    // Backspace with the cursor at the very start of a bullet / to-do / heading /
+    // callout removes that formatting (keeps the text) — Notion-style.
+    if (e.key === 'Backspace' && el && onUnformat && ['bullet', 'todo', 'h1', 'h2', 'callout'].includes(block.type)) {
+      const sel = window.getSelection()
+      if (sel && sel.rangeCount && sel.isCollapsed) {
+        const r = sel.getRangeAt(0)
+        const pre = r.cloneRange()
+        pre.selectNodeContents(el)
+        pre.setEnd(r.startContainer, r.startOffset)
+        if (pre.toString().length === 0) {
+          e.preventDefault()
+          onChange(block.id, { text: el.innerHTML })
+          onUnformat(block.id)
+          return
+        }
+      }
     }
     if (e.key === 'Backspace' && el && el.innerText === '') { e.preventDefault(); onBackspaceEmpty(block.id) }
   }
@@ -850,6 +874,12 @@ function Editor({
     const i = blocks.findIndex((x) => x.id === id)
     const prev = blocks.slice(0, i).reverse().find((x) => x.type === 'bullet')
     patchBlock(id, { type: 'bullet', text: rest, bullet: prev?.bullet || 'dot' })
+    setFocusId(null)
+    setTimeout(() => setFocusId(id), 0)
+  }
+  // Backspace at the start of a formatted line → plain text, cursor stays put.
+  const onUnformat = (id: string) => {
+    patchBlock(id, { type: 'text', checked: false })
     setFocusId(null)
     setTimeout(() => setFocusId(id), 0)
   }
@@ -1116,6 +1146,7 @@ function Editor({
                   onToggle={(id) => patchBlock(id, { checked: !b.checked })}
                   onIndent={onIndent}
                   onAutoBullet={onAutoBullet}
+                  onUnformat={onUnformat}
                 />
               )}
             </div>
