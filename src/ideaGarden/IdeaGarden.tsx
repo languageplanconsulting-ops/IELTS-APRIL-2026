@@ -184,6 +184,7 @@ const SLASH_ITEMS: Array<{ key: BlockType | 'page'; group: string; ico: string; 
   { key: 'todo', group: 'Basics', ico: '✅', label: 'To-do', hint: 'Track a task' },
   { key: 'bullet', group: 'Basics', ico: '✿', label: 'Bullet list', hint: 'Or just type "- "' },
   { key: 'toggle', group: 'Basics', ico: '▸', label: 'Dropdown', hint: 'A title that folds content away' },
+  { key: 'columns', group: 'Basics', ico: '▥', label: 'Columns', hint: 'Put things side by side' },
   { key: 'callout', group: 'Basics', ico: '💡', label: 'Callout', hint: 'Make it pop' },
   { key: 'divider', group: 'Basics', ico: '➖', label: 'Divider', hint: 'Split things up' },
   { key: 'table', group: 'Basics', ico: '▦', label: 'Table', hint: 'A little grid' },
@@ -367,6 +368,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
     if (kind === 'file' || kind === 'image') { pendingFileType.current = kind; if (fileInputRef.current) { fileInputRef.current.accept = kind === 'image' ? 'image/*' : '*/*'; fileInputRef.current.dataset.target = id; fileInputRef.current.click() } return }
     if (kind === 'page') { if (registerSubpage) { const pid = registerSubpage(); patchBlock(id, { type: 'subpage', pageId: pid, text: '' }); addAfter(id, newBlock()) } return }
     if (kind === 'toggle') { patchBlock(id, { type: 'toggle', text: '', open: true, children: [newBlock()] }); setFocusId(id); return }
+    if (kind === 'columns') { patchBlock(id, { type: 'columns', text: '', cols: [[newBlock()], [newBlock()]] }); addAfter(id, newBlock()); return }
     if (kind === 'status') { patchBlock(id, { type: 'status', statusOptions: DEFAULT_STATUS_OPTIONS, status: '', text: '' }); addAfter(id, newBlock()); return }
     if (kind === 'divider') { patchBlock(id, { type: 'divider', text: '' }); addAfter(id, newBlock()); return }
     if (kind === 'table') { patchBlock(id, { type: 'text', text: '' }); return } // no nested tables
@@ -560,6 +562,7 @@ function PostKitPanel({ token, pageId, title, blocks, onClose }: { token: string
       else if (b.type === 'status') { if (b.status) status = b.status }
       else if (b.type === 'toggle') { const t = strip(b.text); if (t) captionParts.push(t); collect(b.children || []) }
       else if (b.type === 'table' && Array.isArray(b.cells)) { for (const row of b.cells) for (const cell of row) collect(cell) }
+      else if (b.type === 'columns' && Array.isArray(b.cols)) { for (const col of b.cols) collect(col) }
     }
   }
   collect(blocks)
@@ -796,6 +799,46 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       </div>
     )
 
+  if (block.type === 'columns') {
+    const cols = block.cols && block.cols.length ? block.cols : [[newBlock()], [newBlock()]]
+    const setCol = (ci: number, u: (bs: Block[]) => Block[]) =>
+      onChange(block.id, (b) => {
+        const c = (b.cols && b.cols.length ? b.cols : cols).slice()
+        c[ci] = u(c[ci] && c[ci].length ? c[ci] : [newBlock()])
+        return { cols: c }
+      })
+    const isBlank = (x: Block) => x.type === 'text' && !(x.text || '').replace(/<[^>]+>|&nbsp;/g, '').trim()
+    // Removing a column keeps its content: it slides into the column on its left.
+    const removeCol = (ci: number) =>
+      onChange(block.id, (b) => {
+        const c = (b.cols && b.cols.length ? b.cols : cols).slice()
+        const [gone] = c.splice(ci, 1)
+        const into = Math.max(0, ci - 1)
+        const keep = (gone || []).filter((x) => !isBlank(x))
+        if (keep.length) c[into] = [...c[into].filter((x) => !isBlank(x)), ...keep]
+        return { cols: c }
+      })
+    return (
+      <div className="block columns"><span className="grip">⠿</span>
+        <div className="content">
+          <div className="ig-cols" style={{ ['--ig-ncols' as string]: cols.length } as React.CSSProperties}>
+            {cols.map((col, ci) => (
+              <div className="ig-col" key={ci}>
+                <CellEditor token={token} blocks={col && col.length ? col : [newBlock()]} setBlocks={(u) => setCol(ci, u)} pages={pages} registerSubpage={registerSubpage} openPage={openPage} />
+                {cols.length > 1 && (
+                  <button className="ig-col-x" title="Remove this column (its content moves next door)" onMouseDown={(e) => e.preventDefault()} onClick={() => removeCol(ci)}>×</button>
+                )}
+              </div>
+            ))}
+          </div>
+          {cols.length < 4 && (
+            <button className="ig-col-add" onMouseDown={(e) => e.preventDefault()} onClick={() => onChange(block.id, (b) => ({ cols: [...(b.cols && b.cols.length ? b.cols : cols), [newBlock()]] }))}>＋ column</button>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   if (block.type === 'toggle') {
     const kids = block.children && block.children.length ? block.children : null
     const open = block.open !== false
@@ -995,7 +1038,7 @@ function Editor({
 
   // --- drag a line to reorder it anywhere ---
   const [dragId, setDragId] = useState<string | null>(null)
-  const [dropHint, setDropHint] = useState<{ id: string; pos: 'before' | 'after' } | null>(null)
+  const [dropHint, setDropHint] = useState<{ id: string; pos: 'before' | 'after' | 'left' | 'right' } | null>(null)
   const [fileOver, setFileOver] = useState(false)
   function moveBlock(fromId: string, toId: string, pos: 'before' | 'after') {
     if (fromId === toId) return
@@ -1053,6 +1096,21 @@ function Editor({
     setNaming({ kind, ids: ctxMenu.ids, name: guess })
     setCtxMenu(null)
   }
+  // Selected lines become the left column; an empty column opens on the right.
+  function moveSelectionToSide() {
+    if (!ctxMenu) return
+    const idSet = new Set(ctxMenu.ids)
+    const picked = blocks.filter((b) => idSet.has(b.id)).map((b) => ({ ...b, indent: 0 }))
+    const colsBlock = newBlock('columns', { cols: [picked.length ? picked : [newBlock()], [newBlock()]] })
+    setBlocks((bs) => {
+      const at = bs.findIndex((b) => idSet.has(b.id))
+      const rest = bs.filter((b) => !idSet.has(b.id))
+      rest.splice(at < 0 ? rest.length : Math.min(at, rest.length), 0, colsBlock)
+      return rest
+    })
+    window.getSelection()?.removeAllRanges()
+    setCtxMenu(null)
+  }
   function convertSelection() {
     if (!naming) return
     const name = naming.name.trim() || (naming.kind === 'toggle' ? 'Dropdown' : 'Untitled page')
@@ -1072,14 +1130,38 @@ function Editor({
     setNaming(null)
   }
 
-  function handleDrop(e: React.DragEvent, targetId: string | null, pos: 'before' | 'after') {
+  // Drop a line on the left/right edge of another → they sit side by side.
+  function placeBeside(fromId: string, toId: string, side: 'left' | 'right') {
+    if (fromId === toId) return
+    setBlocks((bs) => {
+      const item = bs.find((b) => b.id === fromId)
+      const target = bs.find((b) => b.id === toId)
+      if (!item || !target) return bs
+      const moved = { ...item, indent: 0 }
+      let replacement: Block
+      if (target.type === 'columns' && (target.cols?.length || 0) < 4) {
+        const cols = target.cols || []
+        replacement = { ...target, cols: side === 'left' ? [[moved], ...cols] : [...cols, [moved]] }
+      } else {
+        const t = { ...target, indent: 0 }
+        replacement = { id: `cols-${fromId}-${toId}`, type: 'columns', text: '', cols: side === 'left' ? [[moved], [t]] : [[t], [moved]] }
+      }
+      return bs.filter((b) => b.id !== fromId).map((b) => (b.id === toId ? replacement : b))
+    })
+  }
+  function handleDrop(e: React.DragEvent, targetId: string | null, pos: 'before' | 'after' | 'left' | 'right') {
     if (e.dataTransfer.files && e.dataTransfer.files.length) {
       e.preventDefault(); e.stopPropagation(); setFileOver(false); setDropHint(null)
       uploadFilesAfter(targetId, [...e.dataTransfer.files])
       return
     }
     const from = e.dataTransfer.getData('text/ig-block')
-    if (from && targetId) { e.preventDefault(); e.stopPropagation(); moveBlock(from, targetId, pos); setDropHint(null) }
+    if (from && targetId) {
+      e.preventDefault(); e.stopPropagation()
+      if (pos === 'left' || pos === 'right') placeBeside(from, targetId, pos)
+      else moveBlock(from, targetId, pos)
+      setDropHint(null)
+    }
   }
 
   function onSlash(blockId: string, query: string | null, pos?: { x: number; y: number }) {
@@ -1137,6 +1219,11 @@ function Editor({
     if (kind === 'toggle') {
       patchBlock(id, { type: 'toggle', text: '', open: true, children: [newBlock()] })
       setFocusId(id)
+      return
+    }
+    if (kind === 'columns') {
+      patchBlock(id, { type: 'columns', text: '', cols: [[newBlock()], [newBlock()]] })
+      addAfter(id, newBlock())
       return
     }
     if (kind === 'status') {
@@ -1260,7 +1347,10 @@ function Editor({
                 if (!dragId || dragId === b.id) return
                 e.preventDefault()
                 const r = e.currentTarget.getBoundingClientRect()
-                setDropHint({ id: b.id, pos: e.clientY < r.top + r.height / 2 ? 'before' : 'after' })
+                // Near the left/right edge → side by side; otherwise above/below.
+                const edge = Math.min(90, r.width * 0.18)
+                const pos = e.clientX < r.left + edge ? 'left' : e.clientX > r.right - edge ? 'right' : e.clientY < r.top + r.height / 2 ? 'before' : 'after'
+                setDropHint({ id: b.id, pos })
               }}
               onDrop={(e) => { if (!e.dataTransfer.files?.length) handleDrop(e, b.id, dropHint?.pos || 'after') }}
             >
@@ -1315,6 +1405,7 @@ function Editor({
             <div className="ig-ctx-label">{ctxMenu.ids.length} line{ctxMenu.ids.length > 1 ? 's' : ''} selected</div>
             <button className="ig-ctx-item" onClick={() => beginNaming('toggle')}><span className="ico">▸</span>Turn into dropdown</button>
             <button className="ig-ctx-item" onClick={() => beginNaming('page')}><span className="ico">📄</span>Turn into page</button>
+            <button className="ig-ctx-item" onClick={() => moveSelectionToSide()}><span className="ico">▥</span>Move to the side</button>
             <button className="ig-ctx-item" onClick={() => { try { navigator.clipboard?.writeText(ctxMenu.text) } catch { /* ignore */ } setCtxMenu(null) }}><span className="ico">⧉</span>Copy text</button>
           </div>
         </div>

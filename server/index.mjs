@@ -12483,6 +12483,8 @@ const buildPostKit = async (doc, pageId) => {
         }
       } else if (b.type === 'status') {
         if (b.status) status = b.status
+      } else if (b.type === 'columns' && Array.isArray(b.cols)) {
+        for (const col of b.cols) await collect(col)
       } else if (b.type === 'toggle') {
         const t = stripHtml(b.text)
         if (t) captionParts.push(t)

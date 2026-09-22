@@ -528,3 +528,43 @@
 .ideaGarden .ig-col-resize:hover::after, .ideaGarden .ig-row-resize:hover::after,
 .ideaGarden .ig-table.resizing .ig-col-resize:active::after, .ideaGarden .ig-table.resizing .ig-row-resize:active::after { opacity: 1; }
 .ideaGarden .ig-table-hint { align-self: center; font-size: 11.5px; color: var(--ig-ink-soft); font-weight: 600; margin-left: 4px; }
+
+/* Side-by-side columns — stack automatically when the page is narrow */
+.ideaGarden .doc-body { container-type: inline-size; container-name: igpage; }
+.ideaGarden .ig-cols {
+  display: grid; grid-template-columns: repeat(var(--ig-ncols, 2), minmax(0, 1fr)); gap: 18px; width: 100%;
+}
+.ideaGarden .ig-col {
+  position: relative; min-width: 0; border-radius: 12px; padding: 4px 6px;
+  outline: 1px dashed transparent; transition: outline-color .2s ease, background .2s ease;
+}
+.ideaGarden .block.columns:hover .ig-col { outline-color: var(--ig-line); }
+.ideaGarden .ig-col > .ig-cell { padding: 0; min-width: 0; }
+.ideaGarden .ig-col .ig-cell .editable { font-size: 15px; line-height: 1.6; }
+.ideaGarden .ig-col .callout, .ideaGarden .ig-col .embed, .ideaGarden .ig-col .filecard,
+.ideaGarden .ig-col .ig-table-wrap { max-width: 100%; }
+.ideaGarden .ig-col .ig-table-wrap { overflow-x: auto; }
+.ideaGarden .ig-col-x {
+  position: absolute; top: -9px; right: -9px; width: 20px; height: 20px; border-radius: 50%;
+  border: 1px solid var(--ig-line); background: #fff; color: var(--ig-ink-soft); font-size: 13px; line-height: 1;
+  display: grid; place-items: center; opacity: 0; transition: opacity .2s ease; z-index: 4;
+}
+.ideaGarden .ig-col:hover .ig-col-x { opacity: 1; }
+.ideaGarden .ig-col-x:hover { color: #e25c6e; border-color: #f2b3bd; }
+.ideaGarden .ig-col-add {
+  margin-top: 4px; border: 1px dashed var(--ig-line); background: transparent; color: var(--ig-ink-soft);
+  font-weight: 700; font-size: 12px; padding: 3px 10px; border-radius: 8px; opacity: 0; transition: opacity .2s ease;
+}
+.ideaGarden .block.columns:hover .ig-col-add { opacity: 1; }
+.ideaGarden .ig-col-add:hover { color: var(--ig-accent-deep); border-color: var(--ig-accent); }
+@container igpage (max-width: 440px) {
+  .ideaGarden .ig-cols { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}
+
+/* Drop indicators for "put beside" */
+.ideaGarden .block-row.drop-left::before,
+.ideaGarden .block-row.drop-right::after {
+  content: ''; position: absolute; top: 2px; bottom: 2px; width: 3px; background: var(--ig-accent); border-radius: 3px; z-index: 2;
+}
+.ideaGarden .block-row.drop-left::before { left: -4px; }
+.ideaGarden .block-row.drop-right::after { right: -4px; }
