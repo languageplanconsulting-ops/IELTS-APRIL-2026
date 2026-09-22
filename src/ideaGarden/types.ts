@@ -43,8 +43,22 @@ export type BlockType =
   | 'bullet'
   | 'toggle'
   | 'columns'
+  | 'diagram'
 
 export type StatusOption = { label: string; color: string }
+
+export type DiagramNode = {
+  id: string
+  position: { x: number; y: number }
+  label: string
+  shape?: string
+  color?: string
+}
+export type DiagramData = {
+  orientation?: 'portrait' | 'landscape'
+  nodes: DiagramNode[]
+  edges: { id: string; source: string; target: string }[]
+}
 
 export type Block = {
   id: string
@@ -65,6 +79,7 @@ export type Block = {
   cells?: Block[][][] // table grid[row][col] = a cell's own list of blocks
   colWidths?: number[] // table: column widths in px (resizable)
   rowHeights?: number[] // table: minimum row heights in px (resizable)
+  diagram?: DiagramData // diagram: an A4 board of bubbles + arrows
   cols?: Block[][] // columns: each column is its own list of blocks, side by side
   children?: Block[] // toggle (dropdown): the folded content
   open?: boolean // toggle: expanded?

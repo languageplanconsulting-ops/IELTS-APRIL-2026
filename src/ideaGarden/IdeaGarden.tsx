@@ -33,6 +33,8 @@ import type { PaletteKey } from './palette'
 import { FONTS, SHAPES, fontStack, DEFAULT_FONT, DEFAULT_SHAPE } from './fonts'
 import type { BubbleData, BubbleNodeModel, EdgeModel, Block, BlockType, GardenDoc } from './types'
 import { loadGarden, saveGarden, uploadFile, signFile } from './api'
+import { DiagramBlock, diagramFromLines } from './diagram'
+import { exportPagePdf } from './exportPdf'
 
 const uid = () => crypto.randomUUID()
 
@@ -203,6 +205,7 @@ const SLASH_ITEMS: Array<{ key: BlockType | 'page'; group: string; ico: string; 
   { key: 'bullet', group: 'Basics', ico: '✿', label: 'Bullet list', hint: 'Or just type "- "' },
   { key: 'toggle', group: 'Basics', ico: '▸', label: 'Dropdown', hint: 'A title that folds content away' },
   { key: 'columns', group: 'Basics', ico: '▥', label: 'Columns', hint: 'Put things side by side' },
+  { key: 'diagram', group: 'Basics', ico: '◎', label: 'Diagram', hint: 'Bubbles + arrows on an A4 board' },
   { key: 'callout', group: 'Basics', ico: '💡', label: 'Callout', hint: 'Make it pop' },
   { key: 'divider', group: 'Basics', ico: '➖', label: 'Divider', hint: 'Split things up' },
   { key: 'table', group: 'Basics', ico: '▦', label: 'Table', hint: 'A little grid' },
@@ -387,6 +390,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
     if (kind === 'page') { if (registerSubpage) { const pid = registerSubpage(); patchBlock(id, { type: 'subpage', pageId: pid, text: '' }); addAfter(id, newBlock()) } return }
     if (kind === 'toggle') { patchBlock(id, { type: 'toggle', text: '', open: true, children: [newBlock()] }); setFocusId(id); return }
     if (kind === 'columns') { patchBlock(id, { type: 'columns', text: '', cols: [[newBlock()], [newBlock()]] }); addAfter(id, newBlock()); return }
+    if (kind === 'diagram') { patchBlock(id, { type: 'diagram', text: '', diagram: diagramFromLines([{ text: 'Main idea', indent: 0 }]) }); addAfter(id, newBlock()); return }
     if (kind === 'status') { patchBlock(id, { type: 'status', statusOptions: DEFAULT_STATUS_OPTIONS, status: '', text: '' }); addAfter(id, newBlock()); return }
     if (kind === 'divider') { patchBlock(id, { type: 'divider', text: '' }); addAfter(id, newBlock()); return }
     if (kind === 'table') { patchBlock(id, { type: 'text', text: '' }); return } // no nested tables
@@ -879,6 +883,9 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       </div>
     )
 
+  if (block.type === 'diagram')
+    return <div className="block"><span className="grip">⠿</span><div className="content"><DiagramBlock block={block} onChange={onChange} /></div></div>
+
   if (block.type === 'columns') {
     const cols = block.cols && block.cols.length ? block.cols : [[newBlock()], [newBlock()]]
     const setCol = (ci: number, u: (bs: Block[]) => Block[]) =>
@@ -987,7 +994,7 @@ type PageRef = {
 
 function Editor({
   token, page, blocks, setBlocks, pages, onClose, onBack, canBack,
-  setTitle, updateNode, registerSubpage, openPage, createPageFrom
+  setTitle, updateNode, registerSubpage, openPage, createPageFrom, getPageBlocks
 }: {
   token: string
   page: PageRef
@@ -1002,6 +1009,7 @@ function Editor({
   registerSubpage: () => string
   openPage: (id: string) => void
   createPageFrom: (title: string, blocks: Block[]) => string
+  getPageBlocks: (id: string) => Block[]
 }) {
   const [focusId, setFocusId] = useState<string | null>(null)
   const [slash, setSlash] = useState<SlashState | null>(null)
@@ -1189,7 +1197,7 @@ function Editor({
   function onBodyMouseDown(e: React.MouseEvent) {
     if (e.button !== 0) return
     const t = e.target as HTMLElement
-    if (t.closest('.grip, button, input, select, a, .ig-col-resize, .ig-row-resize, .ig-img-handle, .ig-pick-bar')) return
+    if (t.closest('.grip, button, input, select, a, .ig-col-resize, .ig-row-resize, .ig-img-handle, .ig-pick-bar, .dg-wrap')) return
     const startId = rowIdAt(e.clientX, e.clientY)
     if (e.shiftKey && startId && (anchorRef.current || picked.length)) {
       e.preventDefault()
@@ -1285,6 +1293,37 @@ function Editor({
       const rest = bs.filter((b) => !idSet.has(b.id))
       rest.splice(at < 0 ? rest.length : Math.min(at, rest.length), 0, colsBlock)
       return rest
+    })
+    window.getSelection()?.removeAllRanges()
+    setCtxMenu(null)
+    setPicked([])
+  }
+  // Selected lines → an A4 diagram: each line a bubble, indented lines linked
+  // to their parent with arrows.
+  function makeDiagram(idsIn?: string[]) {
+    const ids = idsIn || ctxMenu?.ids
+    if (!ids || !ids.length) return
+    // Only text-like lines become bubbles; diagrams, tables, images etc. that
+    // happen to be in the selection stay where they are (never deleted).
+    const convertible = (b: Block) => isTextual(b.type) || b.type === 'toggle' || b.type === 'columns'
+    const idSet = new Set(ids.filter((id) => { const b = blocks.find((x) => x.id === id); return !!b && convertible(b) }))
+    if (!idSet.size) { setCtxMenu(null); setPicked([]); return }
+    const chosen = blocks.filter((b) => idSet.has(b.id))
+    const lines: { text: string; indent: number }[] = []
+    const add = (b: Block, extra: number) => {
+      const t = (b.text || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').trim()
+      if (t) lines.push({ text: t, indent: (b.indent || 0) + extra })
+      for (const k of b.children || []) add(k, (b.indent || 0) + extra + 1)
+      for (const col of b.cols || []) for (const k of col) add(k, (b.indent || 0) + extra)
+    }
+    chosen.forEach((b) => add(b, 0))
+    const diagram = diagramFromLines(lines.length ? lines : [{ text: 'Main idea', indent: 0 }])
+    const repl = newBlock('diagram', { diagram })
+    setBlocks((bs) => {
+      const at = bs.findIndex((b) => idSet.has(b.id))
+      const rest = bs.filter((b) => !idSet.has(b.id))
+      rest.splice(at < 0 ? rest.length : Math.min(at, rest.length), 0, repl)
+      return rest.length ? rest : [newBlock()]
     })
     window.getSelection()?.removeAllRanges()
     setCtxMenu(null)
@@ -1406,6 +1445,11 @@ function Editor({
       addAfter(id, newBlock())
       return
     }
+    if (kind === 'diagram') {
+      patchBlock(id, { type: 'diagram', text: '', diagram: diagramFromLines([{ text: 'Main idea', indent: 0 }]) })
+      addAfter(id, newBlock())
+      return
+    }
     if (kind === 'status') {
       patchBlock(id, { type: 'status', statusOptions: DEFAULT_STATUS_OPTIONS, status: '', text: '' })
       addAfter(id, newBlock())
@@ -1462,6 +1506,18 @@ function Editor({
             <button className={`ig-details-btn ${showDetails ? 'on' : ''}`} onClick={() => setShowDetails((v) => !v)} title="Dates, font, bubble shape">
               <span className="caret">▾</span> details
             </button>
+            <button
+              className="ig-pdf-btn"
+              title="Export this page as a clean A4 PDF"
+              onClick={() => exportPagePdf({
+                title: page.title,
+                blocks,
+                fontFamily: fontStack(page.font),
+                token,
+                getPageBlocks,
+                pageTitle: (id) => pages[id]?.title || 'Untitled page'
+              })}
+            >⤓ PDF</button>
             <button className="ig-kit-btn" onClick={() => setShowKit(true)} title="Package this page for posting">📤 Post Kit</button>
             <button className="close-x" onClick={requestClose}>×</button>
           </div>
@@ -1588,6 +1644,7 @@ function Editor({
             <button onClick={() => beginNaming('toggle', picked)}>▸ Dropdown</button>
             <button onClick={() => beginNaming('page', picked)}>📄 Page</button>
             <button onClick={() => moveSelectionToSide(picked)}>▥ Side</button>
+            <button onClick={() => makeDiagram(picked)}>◎ Diagram</button>
             <button onClick={() => { try { navigator.clipboard?.writeText(pickedText(picked)) } catch { /* ignore */ } }}>⧉ Copy</button>
             <button className="danger" onClick={() => deletePicked()}>🗑 Delete</button>
             <button className="x" title="Clear selection (Esc)" onClick={() => setPicked([])}>✕</button>
@@ -1608,6 +1665,7 @@ function Editor({
             <button className="ig-ctx-item" onClick={() => beginNaming('toggle')}><span className="ico">▸</span>Turn into dropdown</button>
             <button className="ig-ctx-item" onClick={() => beginNaming('page')}><span className="ico">📄</span>Turn into page</button>
             <button className="ig-ctx-item" onClick={() => moveSelectionToSide()}><span className="ico">▥</span>Move to the side</button>
+            <button className="ig-ctx-item" onClick={() => makeDiagram()}><span className="ico">◎</span>Turn into diagram</button>
             <button className="ig-ctx-item" onClick={() => { try { navigator.clipboard?.writeText(ctxMenu.text) } catch { /* ignore */ } setCtxMenu(null) }}><span className="ico">⧉</span>Copy text</button>
           </div>
         </div>
@@ -2004,6 +2062,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
           updateNode={(patch) => ctx.updateNodeData(currentPage!.id, patch)}
           registerSubpage={registerSubpage}
           openPage={(id) => { ensureDoc(id); setOpenStack((s) => [...s, id]) }}
+          getPageBlocks={(id) => docs[id] || []}
           createPageFrom={(title, blocks) => {
             const pid = uid()
             setPages((p) => ({ ...p, [pid]: { title } }))
