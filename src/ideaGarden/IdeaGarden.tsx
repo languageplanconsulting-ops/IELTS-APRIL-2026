@@ -22,6 +22,7 @@ import {
   addEdge,
   reconnectEdge,
   useInternalNode,
+  NodeResizer,
   ConnectionMode,
   MarkerType
 } from '@xyflow/react'
@@ -62,6 +63,8 @@ const useCtx = () => {
 /*  Bubble node                                                        */
 /* ------------------------------------------------------------------ */
 function BubbleNode({ id, data, selected }: NodeProps) {
+  // Only a hand-set width counts (NodeProps.width is the measured size).
+  const width = useInternalNode(id)?.width
   const d = data as unknown as BubbleData
   const pal = paletteFor(d.color)
   const { updateNodeData, addChild, deleteNode, openNode } = useCtx()
@@ -78,6 +81,8 @@ function BubbleNode({ id, data, selected }: NodeProps) {
     ['--b-glow' as string]: pal.glow,
     ['--b-font' as string]: fontStack(d.font),
     ['--float-dur' as string]: `${floatDur}s`,
+    // Hand-resized bubbles scale their text with their width.
+    ['--b-scale' as string]: width ? Math.max(0.75, Math.min(3, width / (d.kind === 'central' ? 230 : 180))) : 1,
     fontFamily: fontStack(d.font)
   } as React.CSSProperties
   const shape = d.shape || DEFAULT_SHAPE
@@ -86,7 +91,9 @@ function BubbleNode({ id, data, selected }: NodeProps) {
   useEffect(() => { if (!selected) setEditing(false) }, [selected])
 
   return (
-    <div className={`bubble shape-${shape} ${central ? 'central' : ''} ${selected ? 'selected' : ''}`} style={style}>
+    <div className={`bubble shape-${shape} ${central ? 'central' : ''} ${selected ? 'selected' : ''} ${width ? 'sized' : ''}`} style={style}>
+      {/* Select a bubble, then drag any edge or corner to resize it freely. */}
+      <NodeResizer isVisible={!!selected} minWidth={110} minHeight={56} lineClassName="ig-resize-line" handleClassName="ig-resize-handle" />
       {/* Handles on every side — with loose connection mode, edges float to the
           nearest one and can be dragged out or reconnected from any side. */}
       <Handle className="ig-handle" type="source" position={Position.Top} id="t" />

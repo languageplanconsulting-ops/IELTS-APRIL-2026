@@ -17,6 +17,8 @@ export type BubbleNodeModel = {
   type: 'bubble'
   position: { x: number; y: number }
   data: BubbleData
+  width?: number // set once the bubble is resized by hand (drag its edges/corners)
+  height?: number
 }
 
 export type EdgeModel = {
