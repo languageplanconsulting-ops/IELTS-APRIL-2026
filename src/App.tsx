@@ -7307,6 +7307,11 @@ function App() {
   const [isAuthLoading, setIsAuthLoading] = useState(true)
   const [userEmailInput, setUserEmailInput] = useState('')
   const [userPasswordInput, setUserPasswordInput] = useState('')
+  const [forgotPasswordMode, setForgotPasswordMode] = useState(false)
+  const [forgotEmailInput, setForgotEmailInput] = useState('')
+  const [resetTokenFromUrl, setResetTokenFromUrl] = useState('')
+  const [resetPasswordInput, setResetPasswordInput] = useState('')
+  const [resetPasswordConfirmInput, setResetPasswordConfirmInput] = useState('')
   const [trialEmailInput, setTrialEmailInput] = useState('')
   const [trialPasswordInput, setTrialPasswordInput] = useState('')
   const [trialAuthMode, setTrialAuthMode] = useState<'signup' | 'signin'>('signin')
@@ -18344,6 +18349,62 @@ function App() {
     attemptStageRef.current = attemptStage
   }, [attemptStage])
 
+  // A reset link lands as /?reset=<token>. Pull it off the URL once, then clean
+  // the address bar so the token is not left sitting in history.
+  useEffect(() => {
+    const token = new URLSearchParams(window.location.search).get('reset')
+    if (!token) return
+    setResetTokenFromUrl(token)
+    const url = new URL(window.location.href)
+    url.searchParams.delete('reset')
+    window.history.replaceState({}, '', url.toString())
+  }, [])
+
+  const handleForgotPasswordSubmit = async () => {
+    const email = normalizeEmail(forgotEmailInput)
+    if (!email) {
+      setAuthError('กรุณากรอกอีเมลครับ')
+      return
+    }
+    try {
+      const payload = await fetchJson<{ message: string }>('/api/auth/request-password-reset', {
+        method: 'POST',
+        body: JSON.stringify({ email })
+      })
+      setAuthError('')
+      setAuthNotice(payload.message)
+      setForgotEmailInput('')
+      setForgotPasswordMode(false)
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'ส่งลิงก์ไม่สำเร็จครับ')
+    }
+  }
+
+  const handleResetPasswordSubmit = async () => {
+    const password = resetPasswordInput.trim()
+    if (password.length < 6) {
+      setAuthError('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษรครับ')
+      return
+    }
+    if (password !== resetPasswordConfirmInput.trim()) {
+      setAuthError('รหัสผ่านทั้งสองช่องไม่ตรงกันครับ')
+      return
+    }
+    try {
+      const payload = await fetchJson<{ message: string }>('/api/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({ token: resetTokenFromUrl, password })
+      })
+      setAuthError('')
+      setAuthNotice(payload.message)
+      setResetTokenFromUrl('')
+      setResetPasswordInput('')
+      setResetPasswordConfirmInput('')
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'ตั้งรหัสผ่านใหม่ไม่สำเร็จครับ')
+    }
+  }
+
   const handleUserAuthSubmit = async () => {
     const email = normalizeEmail(userEmailInput)
     const password = userPasswordInput.trim()
@@ -22487,27 +22548,89 @@ function App() {
                     <div className="authPanelHeader">
                       <p className="sectionLabel">Learner Access</p>
                     </div>
-                    <div className="authForm">
-                      <label>
-                        Email
-                        <input
-                          type="email"
-                          value={userEmailInput}
-                          onChange={(event) => setUserEmailInput(event.target.value)}
-                        />
-                      </label>
-                      <label>
-                        Password
-                        <input
-                          type="password"
-                          value={userPasswordInput}
-                          onChange={(event) => setUserPasswordInput(event.target.value)}
-                        />
-                      </label>
-                      <button type="button" onClick={() => void handleUserAuthSubmit()} disabled={isAuthLoading}>
-                        Sign In
-                      </button>
-                    </div>
+                    {resetTokenFromUrl ? (
+                      <div className="authForm">
+                        <p className="meta">ตั้งรหัสผ่านใหม่สำหรับบัญชีของคุณครับ</p>
+                        <label>
+                          รหัสผ่านใหม่
+                          <input
+                            type="password"
+                            value={resetPasswordInput}
+                            onChange={(event) => setResetPasswordInput(event.target.value)}
+                          />
+                        </label>
+                        <label>
+                          ยืนยันรหัสผ่านใหม่
+                          <input
+                            type="password"
+                            value={resetPasswordConfirmInput}
+                            onChange={(event) => setResetPasswordConfirmInput(event.target.value)}
+                          />
+                        </label>
+                        <button type="button" onClick={() => void handleResetPasswordSubmit()} disabled={isAuthLoading}>
+                          บันทึกรหัสผ่านใหม่
+                        </button>
+                      </div>
+                    ) : forgotPasswordMode ? (
+                      <div className="authForm">
+                        <p className="meta">กรอกอีเมลที่ใช้สมัคร เราจะส่งลิงก์ตั้งรหัสผ่านใหม่ไปให้ครับ</p>
+                        <label>
+                          Email
+                          <input
+                            type="email"
+                            value={forgotEmailInput}
+                            onChange={(event) => setForgotEmailInput(event.target.value)}
+                          />
+                        </label>
+                        <button type="button" onClick={() => void handleForgotPasswordSubmit()} disabled={isAuthLoading}>
+                          ส่งลิงก์ตั้งรหัสผ่านใหม่
+                        </button>
+                        <button
+                          type="button"
+                          className="linkButton"
+                          onClick={() => {
+                            setForgotPasswordMode(false)
+                            setAuthError('')
+                          }}
+                        >
+                          กลับไปหน้าเข้าสู่ระบบ
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="authForm">
+                        <label>
+                          Email
+                          <input
+                            type="email"
+                            value={userEmailInput}
+                            onChange={(event) => setUserEmailInput(event.target.value)}
+                          />
+                        </label>
+                        <label>
+                          Password
+                          <input
+                            type="password"
+                            value={userPasswordInput}
+                            onChange={(event) => setUserPasswordInput(event.target.value)}
+                          />
+                        </label>
+                        <button type="button" onClick={() => void handleUserAuthSubmit()} disabled={isAuthLoading}>
+                          Sign In
+                        </button>
+                        <button
+                          type="button"
+                          className="linkButton"
+                          onClick={() => {
+                            setForgotPasswordMode(true)
+                            setForgotEmailInput(userEmailInput)
+                            setAuthError('')
+                            setAuthNotice('')
+                          }}
+                        >
+                          ลืมรหัสผ่าน?
+                        </button>
+                      </div>
+                    )}
                   </section>
                   <section className="authPanel authPanelAdmin">
                     <div className="authPanelHeader">

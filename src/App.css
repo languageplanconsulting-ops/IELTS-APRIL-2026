@@ -840,6 +840,24 @@ body,
   background: var(--bc-yellow);
 }
 
+.authForm button.linkButton {
+  padding: 4px 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  color: inherit;
+  cursor: pointer;
+}
+
+.authForm button.linkButton:hover,
+.authForm button.linkButton:active {
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
 .authModeTabs button:hover,
 .authForm button:hover {
   transform: translate(-1px, -1px) scale(1.01);

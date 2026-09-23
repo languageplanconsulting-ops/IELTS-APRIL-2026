@@ -12163,6 +12163,127 @@ app.post('/api/auth/trial-signup', async (req, res) => {
   }
 })
 
+const PASSWORD_RESET_TOKEN_TTL_MS = 1000 * 60 * 60
+
+const signPasswordResetPayload = (payload) =>
+  createHmac('sha256', ACCESS_APPROVAL_SECRET).update(payload).digest('hex')
+
+// The stamp is the auth user's updated_at at the time the link was issued.
+// Changing the password moves updated_at, so a used link stops verifying.
+const createPasswordResetToken = ({ userId, stamp }) => {
+  const payload = JSON.stringify({
+    purpose: 'reset-password',
+    userId: String(userId || '').trim(),
+    stamp: String(stamp || ''),
+    exp: Date.now() + PASSWORD_RESET_TOKEN_TTL_MS
+  })
+  return `${base64UrlEncode(payload)}.${signPasswordResetPayload(payload)}`
+}
+
+const verifyPasswordResetToken = (token) => {
+  const [encodedPayload, signature] = String(token || '').trim().split('.')
+  if (!encodedPayload || !signature) return null
+  let payloadText = ''
+  try {
+    payloadText = base64UrlDecode(encodedPayload)
+  } catch {
+    return null
+  }
+  if (!timingSafeStringEqual(signature, signPasswordResetPayload(payloadText))) return null
+  let payload = null
+  try {
+    payload = JSON.parse(payloadText)
+  } catch {
+    return null
+  }
+  if (payload?.purpose !== 'reset-password') return null
+  if (!payload?.userId || Number(payload?.exp || 0) < Date.now()) return null
+  return { userId: String(payload.userId).trim(), stamp: String(payload.stamp || '') }
+}
+
+const loadAuthUser = async (userId) =>
+  fetchSupabaseJson(`/auth/v1/admin/users/${encodeURIComponent(userId)}`, {
+    headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+  })
+
+const sendPasswordResetEmail = async ({ req, learner, token }) => {
+  const baseUrl = resolveAppBaseUrl(req)
+  const link = `${baseUrl}/?reset=${encodeURIComponent(token)}`
+  const name = String(learner?.full_name || '').trim()
+  const greeting = name ? `สวัสดีครับคุณ${escapeHtml(name)}` : 'สวัสดีครับ'
+  return sendEmailWithResend({
+    to: learner.email,
+    subject: 'ตั้งรหัสผ่านใหม่ | English Plan',
+    html: `
+      <p>${greeting}</p>
+      <p>กดปุ่มด้านล่างเพื่อตั้งรหัสผ่านใหม่สำหรับบัญชี ${escapeHtml(learner.email)} ครับ</p>
+      <p><a href="${escapeHtml(link)}" style="display:inline-block;padding:12px 20px;border-radius:8px;background:#f5b301;color:#1c1c1c;text-decoration:none;font-weight:600">ตั้งรหัสผ่านใหม่</a></p>
+      <p>ลิงก์นี้ใช้ได้ 1 ชั่วโมง และใช้ได้ครั้งเดียวครับ</p>
+      <p>ถ้าไม่ได้เป็นคนขอ ไม่ต้องทำอะไรครับ รหัสผ่านเดิมยังใช้ได้ตามปกติ</p>
+    `,
+    text: `${name ? `สวัสดีครับคุณ${name}` : 'สวัสดีครับ'}\n\nตั้งรหัสผ่านใหม่สำหรับบัญชี ${learner.email} ได้ที่ลิงก์นี้ครับ:\n${link}\n\nลิงก์ใช้ได้ 1 ชั่วโมง และใช้ได้ครั้งเดียวครับ\nถ้าไม่ได้เป็นคนขอ ไม่ต้องทำอะไรครับ`
+  })
+}
+
+app.post('/api/auth/request-password-reset', async (req, res) => {
+  const email = normalizeEmail(req.body?.email)
+  // Always answer the same way, so this cannot be used to discover which
+  // emails have an account.
+  const genericResponse = {
+    success: true,
+    message: 'ถ้ามีบัญชีอยู่กับอีเมลนี้ เราได้ส่งลิงก์ตั้งรหัสผ่านใหม่ไปให้แล้วครับ'
+  }
+  if (!email) return res.json(genericResponse)
+  try {
+    const learner = await loadUserProfileByEmail(email)
+    if (learner?.id) {
+      const authUser = await loadAuthUser(learner.id)
+      const token = createPasswordResetToken({ userId: learner.id, stamp: authUser?.updated_at || '' })
+      await sendPasswordResetEmail({ req, learner, token })
+    }
+  } catch (error) {
+    console.error('Could not send password reset email:', error)
+  }
+  res.json(genericResponse)
+})
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const token = String(req.body?.token || '').trim()
+    const password = String(req.body?.password || '').trim()
+    if (password.length < 6) {
+      return res.status(400).json({
+        error: { status: 400, type: 'validation_error', message: 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษรครับ' }
+      })
+    }
+    const payload = verifyPasswordResetToken(token)
+    const expiredError = {
+      error: { status: 400, type: 'invalid_token', message: 'ลิงก์นี้หมดอายุหรือถูกใช้ไปแล้วครับ กรุณาขอลิงก์ใหม่' }
+    }
+    if (!payload) return res.status(400).json(expiredError)
+
+    const authUser = await loadAuthUser(payload.userId)
+    if (!authUser?.id) return res.status(400).json(expiredError)
+    if (String(authUser.updated_at || '') !== payload.stamp) return res.status(400).json(expiredError)
+
+    await supabaseRequest(`/auth/v1/admin/users/${encodeURIComponent(payload.userId)}`, {
+      method: 'PUT',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ password })
+    })
+
+    res.json({ success: true, message: 'ตั้งรหัสผ่านใหม่เรียบร้อยแล้วครับ เข้าสู่ระบบได้เลย' })
+  } catch (error) {
+    res.status(500).json({
+      error: {
+        status: 500,
+        type: 'reset_error',
+        message: error instanceof Error ? error.message : 'ตั้งรหัสผ่านใหม่ไม่สำเร็จครับ'
+      }
+    })
+  }
+})
+
 app.post('/api/auth/refresh', async (req, res) => {
   try {
     const refreshToken = String(req.body?.refreshToken || '').trim()
