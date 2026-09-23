@@ -825,3 +825,23 @@
 .ideaGarden .react-flow__resize-control.ig-resize-handle {
   width: 10px; height: 10px; border-radius: 3px; background: #fff; border: 1.5px solid var(--ig-accent);
 }
+
+/* Remove button on pictures and files — appears on hover, always there on touch. */
+.ideaGarden .ig-img, .ideaGarden .ig-has-x { position: relative; }
+.ideaGarden .ig-img-x {
+  position: absolute; top: 6px; right: 6px; z-index: 4;
+  width: 26px; height: 26px; line-height: 1; padding: 0;
+  border: 1px solid #ffc3d6; border-radius: 999px !important;
+  background: rgba(255,255,255,.92); color: #c0587a; font-size: 13px; cursor: pointer;
+  opacity: 0; transition: opacity .15s ease, transform .15s ease;
+}
+.ideaGarden .ig-img:hover .ig-img-x, .ideaGarden .ig-has-x:hover .ig-img-x,
+.ideaGarden .ig-img-x:focus-visible { opacity: 1; }
+.ideaGarden .ig-img-x:hover { background: #ffe3ec; transform: scale(1.08); }
+@media (hover: none) { .ideaGarden .ig-img-x { opacity: .9; } }
+.ideaGarden .filecard.ig-broken { gap: 10px; }
+.ideaGarden .filecard.ig-broken .ig-x {
+  margin-left: auto; border: 1px solid #ffc3d6; border-radius: 999px !important;
+  background: #fff; color: #c0587a; font-size: 12px; font-weight: 700; padding: 6px 12px; cursor: pointer;
+}
+.ideaGarden .filecard.ig-broken .ig-x:hover { background: #ffe3ec; }

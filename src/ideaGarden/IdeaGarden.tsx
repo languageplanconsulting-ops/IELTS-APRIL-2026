@@ -695,11 +695,13 @@ function PostKitPanel({ token, pageId, title, blocks, onClose }: { token: string
 }
 
 // --- Image that you can resize freely by dragging either side edge ---
-function ResizableImage({ token, block, onChange }: { token: string; block: Block; onChange: (id: string, patch: BlockPatch) => void }) {
+function ResizableImage({ token, block, onChange, onRemove }: { token: string; block: Block; onChange: (id: string, patch: BlockPatch) => void; onRemove?: () => void }) {
   const [url, setUrl] = useState('')
+  const [broken, setBroken] = useState(false)
   useEffect(() => {
     let ok = true
-    if (block.filePath) signFile(token, block.filePath).then((u) => ok && setUrl(u)).catch(() => {})
+    setBroken(false)
+    if (block.filePath) signFile(token, block.filePath).then((u) => ok && setUrl(u)).catch(() => ok && setBroken(true))
     return () => { ok = false }
   }, [token, block.filePath])
   const boxRef = useRef<HTMLDivElement>(null)
@@ -726,11 +728,23 @@ function ResizableImage({ token, block, onChange }: { token: string; block: Bloc
     window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp)
     document.body.style.cursor = 'ew-resize'; document.body.style.userSelect = 'none'
   }
+  // A picture that can't load shows a tidy card with a Remove button, instead of
+  // a broken-image icon with the filename spilling over the page.
+  if (broken)
+    return (
+      <div className="filecard ig-broken">
+        <span className="ico">🖼️</span>
+        <div className="meta"><b>This picture can’t be shown</b><span>{block.fileName || 'image'}</span></div>
+        {onRemove && <button className="ig-x" title="Remove this picture" onClick={onRemove}>✕ Remove</button>}
+      </div>
+    )
+
   return (
     <div className={`ig-img ${liveW ? 'resizing' : ''}`} ref={boxRef} style={w ? { width: w } : undefined}>
       {url
-        ? <img src={url} alt={block.fileName || 'image'} draggable={false} onDoubleClick={() => window.open(url, '_blank')} />
+        ? <img src={url} alt={block.fileName || 'image'} draggable={false} onError={() => setBroken(true)} onDoubleClick={() => window.open(url, '_blank')} />
         : <div className="ig-img-loading">loading image…</div>}
+      {onRemove && <button className="ig-img-x" title="Remove this picture" onClick={onRemove}>✕</button>}
       <span className="ig-img-handle l" title="Drag to resize · double-click to reset" onPointerDown={(e) => startResize(e, -1)} onDoubleClick={() => onChange(block.id, { width: undefined })} />
       <span className="ig-img-handle r" title="Drag to resize · double-click to reset" onPointerDown={(e) => startResize(e, 1)} onDoubleClick={() => onChange(block.id, { width: undefined })} />
       {liveW && <span className="ig-img-size">{liveW}px</span>}
@@ -761,6 +775,8 @@ type BlockProps = CellCtx & {
 
 function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, onAutoBullet, onUnformat, onPasteFiles, pages, registerSubpage, openPage }: BlockProps) {
   const ref = useRef<HTMLDivElement>(null)
+  // Drop this block. If it is the only one on the page it turns into an empty line.
+  const removeSelf = () => { onChange(block.id, { type: 'text', text: '', filePath: undefined, diagram: undefined }); onBackspaceEmpty(block.id) }
 
   useEffect(() => {
     // Seed as HTML so pastel highlights (and any inline formatting) survive.
@@ -921,10 +937,17 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
   }
 
   if ((block.type === 'image' || (block.type === 'file' && (block.fileType || '').startsWith('image/'))) && block.filePath)
-    return <div className="block"><span className="grip">⠿</span><div className="content"><ResizableImage token={token} block={block} onChange={onChange} /></div></div>
+    return <div className="block"><span className="grip">⠿</span><div className="content"><ResizableImage token={token} block={block} onChange={onChange} onRemove={removeSelf} /></div></div>
 
   if (block.type === 'file' || block.type === 'image')
-    return <div className="block"><span className="grip">⠿</span><div className="content"><FilePreview token={token} block={block} /></div></div>
+    return (
+      <div className="block"><span className="grip">⠿</span>
+        <div className="content ig-has-x">
+          <FilePreview token={token} block={block} />
+          <button className="ig-img-x" title="Remove this file" onClick={removeSelf}>✕</button>
+        </div>
+      </div>
+    )
 
   if (block.type === 'table')
     return <div className="block"><span className="grip">⠿</span><div className="content"><TableBlock block={block} onChange={onChange} token={token} pages={pages} registerSubpage={registerSubpage} openPage={openPage} /></div></div>
@@ -940,7 +963,7 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
     )
 
   if (block.type === 'diagram')
-    return <div className="block"><span className="grip">⠿</span><div className="content"><DiagramBlock block={block} onChange={onChange} onRemove={() => { onChange(block.id, { type: 'text', text: '', diagram: undefined }); onBackspaceEmpty(block.id) }} /></div></div>
+    return <div className="block"><span className="grip">⠿</span><div className="content"><DiagramBlock block={block} onChange={onChange} onRemove={removeSelf} /></div></div>
 
   if (block.type === 'columns') {
     const cols = block.cols && block.cols.length ? block.cols : [[newBlock()], [newBlock()]]
