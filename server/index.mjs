@@ -1547,7 +1547,13 @@ const normalizeSignedStorageUrl = (signedUrl) => {
   const value = String(signedUrl || '').trim()
   if (!value) return ''
   if (/^https?:\/\//i.test(value)) return value
-  return `${SUPABASE_URL}${value.startsWith('/') ? '' : '/'}${value}`
+  // Supabase returns the signed path WITHOUT the /storage/v1 prefix
+  // ("/object/sign/<bucket>/<file>?token=…"). Pasting it straight onto the
+  // project URL gives a link Supabase answers with "No API key found in
+  // request", so put the prefix back when it is missing.
+  const path = value.replace(/^\/+/, '')
+  const full = path.startsWith('storage/v1/') ? path : `storage/v1/${path}`
+  return `${SUPABASE_URL.replace(/\/+$/, '')}/${full}`
 }
 
 const readVideoFileSignature = (filePath) => {
