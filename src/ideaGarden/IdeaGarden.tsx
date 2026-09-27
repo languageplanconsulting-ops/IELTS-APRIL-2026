@@ -1813,6 +1813,21 @@ function Editor({
               })()}
             </div>
           ))}
+          {/* Room to keep writing: clicking the empty space under the last block
+              (a PDF, a picture, a table…) starts a fresh line there. */}
+          <div
+            className="ig-tail-space"
+            title="Click to add a line"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              const last = blocks[blocks.length - 1]
+              const blank = last && last.type === 'text' && !(last.text || '').replace(/<[^>]+>|&nbsp;/g, '').trim()
+              if (blank) { setFocusId(null); setTimeout(() => setFocusId(last.id), 0); return }
+              const nb = newBlock('text')
+              setBlocks((bs) => [...bs, nb])
+              setFocusId(nb.id)
+            }}
+          />
         </div>
 
         {picked.length > 0 && (

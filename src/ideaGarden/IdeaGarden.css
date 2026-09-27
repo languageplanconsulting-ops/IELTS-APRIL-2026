@@ -868,3 +868,6 @@
 }
 .ideaGarden .ig-mic-status i { color: var(--ig-ink-soft); font-weight: 600; }
 .ideaGarden .ig-mic-status.bad { background: #fff3e6; border-color: #ffd9ad; color: #9a6224; cursor: pointer; }
+
+/* Blank space under the last line — click it to keep writing. */
+.ideaGarden .ig-tail-space { min-height: 160px; cursor: text; }
