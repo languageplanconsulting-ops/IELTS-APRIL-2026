@@ -845,3 +845,26 @@
   background: #fff; color: #c0587a; font-size: 12px; font-weight: 700; padding: 6px 12px; cursor: pointer;
 }
 .ideaGarden .filecard.ig-broken .ig-x:hover { background: #ffe3ec; }
+
+/* Dictation — mic button, language switch and the listening strip. */
+.ideaGarden .ig-mic-wrap { display: inline-flex; align-items: center; gap: 4px; }
+.ideaGarden .ig-mic-btn, .ideaGarden .ig-mic-lang {
+  border: 1px solid var(--ig-line); border-radius: 999px !important;
+  background: #fff; color: var(--ig-ink); font-size: 12px; font-weight: 700;
+  padding: 6px 12px; cursor: pointer; white-space: nowrap;
+}
+.ideaGarden .ig-mic-lang { padding: 6px 9px; color: var(--ig-ink-soft); }
+.ideaGarden .ig-mic-lang.on { background: #eef4ff; border-color: #b9cdf7; color: #395a9a; }
+.ideaGarden .ig-mic-btn:hover, .ideaGarden .ig-mic-lang:hover { background: #f5f0ff; }
+.ideaGarden .ig-mic-wrap.on .ig-mic-btn {
+  background: #ffe3ec; border-color: #ffb3cc; color: #c0587a;
+  animation: ig-mic-pulse 1.6s ease-in-out infinite;
+}
+@keyframes ig-mic-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,158,196,.55) } 50% { box-shadow: 0 0 0 7px rgba(255,158,196,0) } }
+.ideaGarden .ig-mic-status {
+  margin: 6px 18px 0; padding: 7px 14px; border-radius: 999px !important;
+  background: #fff6fa; border: 1px solid #ffd7e6; color: #b0507a;
+  font-size: 12px; font-weight: 700;
+}
+.ideaGarden .ig-mic-status i { color: var(--ig-ink-soft); font-weight: 600; }
+.ideaGarden .ig-mic-status.bad { background: #fff3e6; border-color: #ffd9ad; color: #9a6224; cursor: pointer; }

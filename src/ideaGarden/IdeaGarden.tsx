@@ -38,6 +38,7 @@ import type { TodoItem } from './todos'
 import { loadGarden, saveGarden, uploadFile, signFile } from './api'
 import { DiagramBlock, diagramFromLines } from './diagram'
 import { exportPagePdf } from './exportPdf'
+import { DICTATION_LANGS, dictationSupported, useDictation } from './dictation'
 
 const uid = () => crypto.randomUUID()
 
@@ -1099,6 +1100,9 @@ function Editor({
   const [slash, setSlash] = useState<SlashState | null>(null)
   const [showKit, setShowKit] = useState(false)
   // Header details (dates, font, shape) stay folded so the page gets the room.
+  // Speak instead of type (Thai or English).
+  const dictation = useDictation((blockId, html) => patchBlock(blockId, { text: html }))
+  const canDictate = dictationSupported()
   const [showDetails, setShowDetails] = useState<boolean>(() => {
     try { return localStorage.getItem('ideaGarden.showDetails') === '1' } catch { return false }
   })
@@ -1651,9 +1655,35 @@ function Editor({
                 pageTitle: (id) => pages[id]?.title || 'Untitled page'
               })}
             >⤓ PDF</button>
+            {canDictate && (
+              <span className={`ig-mic-wrap ${dictation.listening ? 'on' : ''}`}>
+                <button
+                  className="ig-mic-btn"
+                  title={dictation.listening ? 'Stop dictation' : 'Dictate — click a line first, then talk'}
+                  onMouseDown={(e) => e.preventDefault()} // keep the cursor in the line
+                  onClick={dictation.toggle}
+                >{dictation.listening ? '⏹ listening' : '🎤 talk'}</button>
+                {DICTATION_LANGS.map((l) => (
+                  <button
+                    key={l.code}
+                    className={`ig-mic-lang ${dictation.lang === l.code ? 'on' : ''}`}
+                    title={`Dictate in ${l.label}`}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => dictation.setLang(l.code)}
+                  >{l.label}</button>
+                ))}
+              </span>
+            )}
             <button className="ig-kit-btn" onClick={() => setShowKit(true)} title="Package this page for posting">📤 Post Kit</button>
             <button className="close-x" onClick={requestClose}>×</button>
           </div>
+          {(dictation.listening || dictation.error) && (
+            <div className={`ig-mic-status ${dictation.error ? 'bad' : ''}`} onClick={dictation.clearError}>
+              {dictation.error
+                ? dictation.error
+                : <>🎙️ listening in {DICTATION_LANGS.find((l) => l.code === dictation.lang)?.label} — speak, then tap ⏹{dictation.interim ? <i> {dictation.interim}</i> : null}</>}
+            </div>
+          )}
           {showDetails && (
             <div className="doc-details">
             {page.isNode && (
