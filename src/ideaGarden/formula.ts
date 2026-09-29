@@ -178,8 +178,20 @@ const prettyNumber = (n: number) => {
 
 // Returns what the cell should show, plus an error message when the sum
 // doesn't make sense (shown as a tooltip, never as a crash).
+// Keyboards (and autocorrect) hand us ×, ÷, − and curly quotes. Treat them as
+// the plain maths signs rather than refusing the sum.
+const normalizeSigns = (s: string) => s
+  .replace(/[\u00d7\u2715\u2716\uff0a]/g, '*')
+  .replace(/[\u00f7\uff0f]/g, '/')
+  .replace(/[\u2212\u2013\u2014\uff0d]/g, '-')
+  .replace(/[\uff0b]/g, '+')
+  .replace(/[\uff08]/g, '(').replace(/[\uff09]/g, ')')
+  .replace(/[\uff0c\u3001]/g, ',')
+  .replace(/[\u201c\u201d\u2018\u2019]/g, '"')
+  .replace(/[\u00a0\u3000]/g, ' ')
+
 export function evaluateFormula(text: string, grid: Grid): { value: string; error?: string } {
-  const src = String(text || '').trim().replace(/^=/, '')
+  const src = normalizeSigns(String(text || '').trim()).replace(/^=/, '')
   if (!src.trim()) return { value: '' }
   try {
     return { value: prettyNumber(new Parser(src, grid).parse()) }

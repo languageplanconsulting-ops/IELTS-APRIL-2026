@@ -4,9 +4,11 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useLayoutEffect,
   useRef,
   useState
 } from 'react'
+import { createPortal } from 'react-dom'
 import {
   ReactFlow,
   Background,
@@ -2138,9 +2140,24 @@ function Editor({
 function SlashMenu({ pos, query, index, onPick }: { pos: { x: number; y: number }; query: string; index: number; onPick: (k: SlashKind) => void }) {
   const filtered = filterItems(query)
   const groups = [...new Set(filtered.map((i) => i.group))]
+  const ref = useRef<HTMLDivElement>(null)
+  const [place, setPlace] = useState(pos)
+  // Keep the menu on screen: flip it above the line when it would hang off the
+  // bottom (deep inside a tall table, say), and never let it slide off the side.
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const { width, height } = el.getBoundingClientRect()
+    const pad = 10
+    const top = pos.y + height > window.innerHeight - pad
+      ? Math.max(pad, pos.y - height - 28)
+      : pos.y
+    const left = Math.max(pad, Math.min(pos.x, window.innerWidth - width - pad))
+    setPlace({ x: left, y: top })
+  }, [pos.x, pos.y, query])
   let flat = -1
-  return (
-    <div className="slash" style={{ left: pos.x, top: pos.y }} onMouseDown={(e) => e.preventDefault()}>
+  return createPortal(
+    <div ref={ref} className="slash" style={{ left: place.x, top: place.y }} onMouseDown={(e) => e.preventDefault()}>
       {filtered.length === 0 && <div className="grp">no matches 🙈</div>}
       {groups.map((g) => (
         <div key={g}>
@@ -2157,7 +2174,10 @@ function SlashMenu({ pos, query, index, onPick }: { pos: { x: number; y: number 
           })}
         </div>
       ))}
-    </div>
+    </div>,
+    // Sit at the top of the Idea Garden (not inside the table's scroll box or
+    // the drawer's animation) so the menu is never clipped or shifted.
+    document.querySelector('.ideaGarden') || document.body
   )
 }
 
