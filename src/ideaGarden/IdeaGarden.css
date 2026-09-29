@@ -907,3 +907,7 @@
 }
 .ideaGarden .ig-fx-help b { font-family: 'Baloo 2', sans-serif; font-size: 13px; }
 .ideaGarden .ig-fx-help i { color: var(--ig-ink-soft); font-size: 11.5px; }
+
+/* While a formula is being typed, cells invite a click. */
+.ideaGarden .ig-table.picking td { cursor: cell; }
+.ideaGarden .ig-table.picking td:hover { outline: 2px dashed #9dc0f7; outline-offset: -2px; background: #f4f8ff; }

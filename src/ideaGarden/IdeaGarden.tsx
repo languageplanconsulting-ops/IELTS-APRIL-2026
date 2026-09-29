@@ -523,22 +523,69 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
 }
 
 // --- A cell that starts with "=" behaves like a spreadsheet sum ---
-function FormulaCell({ raw, grid, onSave }: { raw: string; grid: Grid; onSave: (text: string) => void }) {
-  const [editing, setEditing] = useState(false)
+export type FormulaPicker = { pick: (token: string) => void; end: () => void }
+
+function FormulaCell({ raw, grid, onSave, onPicker }: {
+  raw: string
+  grid: Grid
+  onSave: (text: string) => void
+  onPicker?: (p: FormulaPicker | null) => void
+}) {
+  // Typing "=" in a cell drops straight into formula editing, like Excel.
+  const [editing, setEditing] = useState(() => raw.trim() === '=')
   const [draft, setDraft] = useState(raw)
+  const inputRef = useRef<HTMLInputElement>(null)
+  // While clicking cells to build a reference, we keep replacing the same
+  // chunk of text so a drag across cells turns into A1:B4.
+  const base = useRef<{ text: string; at: number } | null>(null)
   useEffect(() => { setDraft(raw) }, [raw])
+
+  const stopEditing = (text?: string) => {
+    base.current = null
+    onPicker?.(null)
+    setEditing(false)
+    if (text !== undefined) onSave(text)
+  }
+
+  useEffect(() => {
+    if (!editing || !onPicker) return
+    onPicker({
+      pick: (token) => {
+        const el = inputRef.current
+        if (!el) return
+        if (!base.current) {
+          const at = el.selectionStart ?? el.value.length
+          base.current = { text: el.value, at }
+        }
+        const { text, at } = base.current
+        const next = text.slice(0, at) + token + text.slice(at)
+        setDraft(next)
+        requestAnimationFrame(() => {
+          el.focus()
+          const pos = at + token.length
+          el.setSelectionRange(pos, pos)
+        })
+      },
+      end: () => { base.current = null }
+    })
+    return () => onPicker(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editing])
+
   const { value, error } = evaluateFormula(raw, grid)
   if (editing)
     return (
       <input
+        ref={inputRef}
         className="ig-formula-input"
         autoFocus
+        title="Click a cell to add it · drag across cells for a range"
         value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={() => { setEditing(false); onSave(draft) }}
+        onChange={(e) => { base.current = null; setDraft(e.target.value) }}
+        onBlur={() => stopEditing(draft)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') { e.preventDefault(); setEditing(false); onSave(draft) }
-          if (e.key === 'Escape') { e.preventDefault(); setDraft(raw); setEditing(false) }
+          if (e.key === 'Enter') { e.preventDefault(); stopEditing(draft) }
+          if (e.key === 'Escape') { e.preventDefault(); setDraft(raw); stopEditing() }
         }}
       />
     )
@@ -557,6 +604,18 @@ function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }
   const [live, setLive] = useState<{ cols?: number[]; rows?: number[] } | null>(null)
   const [showRefs, setShowRefs] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
+  // Excel-style: while a formula is being typed, clicking a cell drops its
+  // name (B2) into it, and dragging across cells gives a range (B2:B7).
+  const picker = useRef<FormulaPicker | null>(null)
+  const [picking, setPicking] = useState(false)
+  const dragFrom = useRef<{ r: number; c: number } | null>(null)
+  const refName = (r: number, c: number) => `${colLetter(c)}${r + 1}`
+  useEffect(() => {
+    if (!picking) return
+    const done = () => { dragFrom.current = null; picker.current?.end() }
+    window.addEventListener('mouseup', done)
+    return () => window.removeEventListener('mouseup', done)
+  }, [picking])
   useEffect(() => {
     if (cells) return
     const init: Block[][][] = block.rows && block.rows.length
@@ -632,7 +691,7 @@ function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }
   }
   return (
     <div className="ig-table-wrap">
-      <table className={`ig-table fixed ${live ? 'resizing' : ''}`} style={{ width: colW.reduce((a, w) => a + w, 0) }}>
+      <table className={`ig-table fixed ${live ? 'resizing' : ''} ${picking ? 'picking' : ''}`} style={{ width: colW.reduce((a, w) => a + w, 0) }}>
         <colgroup>
           {showRefs && <col style={{ width: 34 }} />}
           {colW.map((w, i) => <col key={i} style={{ width: w }} />)}
@@ -650,13 +709,28 @@ function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }
             <tr key={ri} style={rowH[ri] ? { height: rowH[ri] } : undefined}>
               {showRefs && <th className="ig-refs-n">{ri + 1}</th>}
               {row.map((cell, ci) => (
-                <td key={ci} className={ri === 0 ? 'h' : ''}>
+                <td
+                  key={ci}
+                  className={ri === 0 ? 'h' : ''}
+                  onMouseDown={(e) => {
+                    if (!picker.current || cellFormula(cell)) return
+                    e.preventDefault(); e.stopPropagation()
+                    dragFrom.current = { r: ri, c: ci }
+                    picker.current.pick(refName(ri, ci))
+                  }}
+                  onMouseEnter={() => {
+                    const from = dragFrom.current
+                    if (!picker.current || !from) return
+                    picker.current.pick(from.r === ri && from.c === ci ? refName(ri, ci) : `${refName(from.r, from.c)}:${refName(ri, ci)}`)
+                  }}
+                >
                   {(() => {
                     const f = cellFormula(cell)
                     return f ? (
                       <FormulaCell
                         raw={f.text}
                         grid={grid}
+                        onPicker={(p) => { picker.current = p; setPicking(!!p) }}
                         onSave={(text) => setCell(ri, ci, (bs) => (text.trim() ? bs.map((b) => (b.id === f.id ? { ...b, text } : b)) : [newBlock()]))}
                       />
                     ) : (
