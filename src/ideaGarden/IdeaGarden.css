@@ -911,3 +911,6 @@
 /* While a formula is being typed, cells invite a click. */
 .ideaGarden .ig-table.picking td { cursor: cell; }
 .ideaGarden .ig-table.picking td:hover { outline: 2px dashed #9dc0f7; outline-offset: -2px; background: #f4f8ff; }
+
+/* Table cells stay blank when empty — the repeated hint made tables noisy. */
+.ideaGarden .ig-cell .editable:empty::before { content: ''; }
