@@ -218,7 +218,7 @@ const edgeTypes = { squiggle: FloatingEdge }
 /* ------------------------------------------------------------------ */
 /*  Notion-style block editor                                          */
 /* ------------------------------------------------------------------ */
-const SLASH_ITEMS: Array<{ key: BlockType | 'page'; group: string; ico: string; label: string; hint: string }> = [
+const SLASH_ITEMS: Array<{ key: SlashKind; group: string; ico: string; label: string; hint: string }> = [
   { key: 'text', group: 'Basics', ico: '📝', label: 'Text', hint: 'Just start writing' },
   { key: 'h1', group: 'Basics', ico: '🅷', label: 'Heading', hint: 'Big section title' },
   { key: 'h2', group: 'Basics', ico: '🇭', label: 'Subheading', hint: 'Smaller title' },
@@ -232,6 +232,7 @@ const SLASH_ITEMS: Array<{ key: BlockType | 'page'; group: string; ico: string; 
   { key: 'table', group: 'Basics', ico: '▦', label: 'Table', hint: 'A little grid' },
   { key: 'status', group: 'Basics', ico: '🏷️', label: 'Status', hint: 'Done · In progress · …' },
   { key: 'page', group: 'Connect', ico: '📄', label: 'Page', hint: 'A separate page you click into' },
+  { key: 'link', group: 'Connect', ico: '🔗', label: 'Link', hint: 'Short name here, opens the website' },
   { key: 'youtube', group: 'Embed', ico: '▶️', label: 'YouTube', hint: 'Paste a video link' },
   { key: 'file', group: 'Embed', ico: '📎', label: 'PDF / file', hint: 'Upload from device' },
   { key: 'image', group: 'Embed', ico: '🖼️', label: 'Image', hint: 'Upload a picture' }
@@ -299,6 +300,45 @@ const filterItems = (q: string) => {
   return SLASH_ITEMS.filter((i) => i.label.toLowerCase().includes(s) || String(i.key).includes(s))
 }
 const newBlock = (type: BlockType = 'text', extra: Partial<Block> = {}): Block => ({ id: uid(), type, text: '', ...extra })
+
+// --- Links: shown as a short pill, one click opens the site ---
+export type SlashKind = BlockType | 'page' | 'link'
+const tidyUrl = (raw: string) => {
+  const v = raw.trim()
+  if (!v) return ''
+  return /^(https?:|mailto:)/i.test(v) ? v : `https://${v.replace(/^\/+/, '')}`
+}
+const shortLabelFor = (url: string) => {
+  try {
+    const u = new URL(tidyUrl(url))
+    const host = u.hostname.replace(/^www\./, '')
+    const tail = u.pathname.replace(/\/$/, '').split('/').filter(Boolean).pop()
+    return tail && tail.length < 24 ? `${host}/${decodeURIComponent(tail)}` : host
+  } catch { return url.slice(0, 30) }
+}
+const linkHtml = (url: string, label: string) => {
+  const safeUrl = tidyUrl(url).replace(/"/g, '%22')
+  const safeText = (label || shortLabelFor(url)).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string))
+  return `<a class="ig-link" href="${safeUrl}" target="_blank" rel="noreferrer">${safeText}</a>&nbsp;`
+}
+// Drop a link into the line the cursor is in, then save that line's new HTML.
+function insertLinkAt(el: HTMLElement | null, blockId: string, save: (id: string, html: string) => void) {
+  if (!el) return
+  const raw = window.prompt('Paste the web link 🔗') || ''
+  if (!raw.trim()) return
+  const label = (window.prompt('Show it as… (a short name)', shortLabelFor(raw)) || shortLabelFor(raw)).trim()
+  el.focus()
+  const sel = window.getSelection()
+  const r = sel && sel.rangeCount && el.contains(sel.anchorNode)
+    ? sel.getRangeAt(0)
+    : (() => { const x = document.createRange(); x.selectNodeContents(el); x.collapse(false); return x })()
+  r.deleteContents()
+  const frag = document.createRange().createContextualFragment(linkHtml(raw, label))
+  r.insertNode(frag)
+  r.collapse(false)
+  sel?.removeAllRanges(); sel?.addRange(r)
+  save(blockId, el.innerHTML)
+}
 // Lines created by splitting (Enter mid-text) get the cursor at their start, not the end.
 const caretAtStart = new Set<string>()
 
@@ -416,7 +456,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
     try { const up = await uploadFile(token, file); patchBlock(id, { type, filePath: up.path, fileName: up.name, fileType: up.type, fileSize: up.size, text: '' }); addAfter(id, newBlock()) }
     catch { patchBlock(id, { type: 'text', text: `⚠️ Upload failed: ${file.name}` }) }
   }
-  function pickSlash(kind: BlockType | 'page') {
+  function pickSlash(kind: SlashKind) {
     const id = slash?.blockId
     const active = document.activeElement as HTMLElement | null
     if (active && active.isContentEditable) active.innerText = ''
@@ -424,6 +464,7 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
     if (!id) return
     if (kind === 'youtube') { const url = window.prompt('Paste a YouTube link 💛') || ''; patchBlock(id, url ? { type: 'youtube', url, text: '' } : { type: 'text', text: '' }); if (url) addAfter(id, newBlock()); return }
     if (kind === 'file' || kind === 'image') { pendingFileType.current = kind; if (fileInputRef.current) { fileInputRef.current.accept = kind === 'image' ? 'image/*' : '*/*'; fileInputRef.current.dataset.target = id; fileInputRef.current.click() } return }
+    if (kind === 'link') { insertLinkAt(active && active.isContentEditable ? active : null, id, (bid, html) => patchBlock(bid, { text: html })); return }
     if (kind === 'page') { if (registerSubpage) { const pid = registerSubpage(); patchBlock(id, { type: 'subpage', pageId: pid, text: '' }); addAfter(id, newBlock()) } return }
     if (kind === 'toggle') { patchBlock(id, { type: 'toggle', text: '', open: true, children: [newBlock()] }); setFocusId(id); return }
     if (kind === 'columns') { patchBlock(id, { type: 'columns', text: '', cols: [[newBlock()], [newBlock()]] }); addAfter(id, newBlock()); return }
@@ -916,7 +957,26 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
       onPaste={(e) => {
         // Pasting a picture → upload it as its own image block (not raw data in the text).
         const files = [...(e.clipboardData?.files || [])].filter((f) => f.type.startsWith('image/'))
-        if (files.length && onPasteFiles) { e.preventDefault(); onPasteFiles(block.id, files) }
+        if (files.length && onPasteFiles) { e.preventDefault(); onPasteFiles(block.id, files); return }
+        // Pasting a web address → a short pill that opens the site.
+        const pasted = (e.clipboardData?.getData('text/plain') || '').trim()
+        if (/^(https?:\/\/|www\.)\S+$/i.test(pasted)) {
+          const el = ref.current
+          const sel = window.getSelection()
+          if (!el || !sel || !sel.rangeCount) return
+          e.preventDefault()
+          const r = sel.getRangeAt(0)
+          const chosen = r.toString().trim()
+          r.deleteContents()
+          r.insertNode(document.createRange().createContextualFragment(linkHtml(pasted, chosen || shortLabelFor(pasted))))
+          r.collapse(false)
+          sel.removeAllRanges(); sel.addRange(r)
+          onChange(block.id, { text: el.innerHTML })
+        }
+      }}
+      onClick={(e) => {
+        const a = (e.target as HTMLElement).closest('a[href]') as HTMLAnchorElement | null
+        if (a) { e.preventDefault(); window.open(a.href, '_blank', 'noopener') }
       }}
     />
   )
@@ -1539,7 +1599,7 @@ function Editor({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slash])
 
-  function pickSlash(kind: BlockType | 'page') {
+  function pickSlash(kind: SlashKind) {
     const id = slash?.blockId
     const active = document.activeElement as HTMLElement | null
     if (active && active.isContentEditable) active.innerText = ''
@@ -1561,6 +1621,7 @@ function Editor({
       }
       return
     }
+    if (kind === 'link') { insertLinkAt(active && active.isContentEditable ? active : null, id, (bid, html) => patchBlock(bid, { text: html })); return }
     if (kind === 'page') {
       const pid = registerSubpage()
       patchBlock(id, { type: 'subpage', pageId: pid, text: '' })
@@ -1927,7 +1988,7 @@ function Editor({
   )
 }
 
-function SlashMenu({ pos, query, index, onPick }: { pos: { x: number; y: number }; query: string; index: number; onPick: (k: BlockType | 'page') => void }) {
+function SlashMenu({ pos, query, index, onPick }: { pos: { x: number; y: number }; query: string; index: number; onPick: (k: SlashKind) => void }) {
   const filtered = filterItems(query)
   const groups = [...new Set(filtered.map((i) => i.group))]
   let flat = -1

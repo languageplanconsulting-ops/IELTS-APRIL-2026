@@ -871,3 +871,13 @@
 
 /* Blank space under the last line — click it to keep writing. */
 .ideaGarden .ig-tail-space { min-height: 160px; cursor: text; }
+
+/* Links inside text — a short pill you can click to open the site. */
+.ideaGarden .editable a.ig-link, .ideaGarden .ig-cell a.ig-link {
+  display: inline-flex; align-items: center; max-width: 100%;
+  padding: 1px 9px; border: 1px solid #c8dbfb; border-radius: 999px !important;
+  background: #eef4ff; color: #37589a; text-decoration: none; font-weight: 700; font-size: .92em;
+  cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: baseline;
+}
+.ideaGarden .editable a.ig-link:hover { background: #dfeaff; border-color: #a9c6f7; }
+.ideaGarden .editable a.ig-link::before { content: '🔗'; margin-right: 5px; font-size: .9em; }
