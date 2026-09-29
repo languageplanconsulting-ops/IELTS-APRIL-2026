@@ -39,6 +39,7 @@ import { loadGarden, saveGarden, uploadFile, signFile } from './api'
 import { DiagramBlock, diagramFromLines } from './diagram'
 import { exportPagePdf } from './exportPdf'
 import { DICTATION_LANGS, dictationSupported, useDictation } from './dictation'
+import { FORMULA_HELP, colLetter, evaluateFormula, isFormula, type Grid } from './formula'
 
 const uid = () => crypto.randomUUID()
 
@@ -521,12 +522,41 @@ function CellEditor({ token, blocks, setBlocks, pages, registerSubpage, openPage
   )
 }
 
+// --- A cell that starts with "=" behaves like a spreadsheet sum ---
+function FormulaCell({ raw, grid, onSave }: { raw: string; grid: Grid; onSave: (text: string) => void }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(raw)
+  useEffect(() => { setDraft(raw) }, [raw])
+  const { value, error } = evaluateFormula(raw, grid)
+  if (editing)
+    return (
+      <input
+        className="ig-formula-input"
+        autoFocus
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={() => { setEditing(false); onSave(draft) }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') { e.preventDefault(); setEditing(false); onSave(draft) }
+          if (e.key === 'Escape') { e.preventDefault(); setDraft(raw); setEditing(false) }
+        }}
+      />
+    )
+  return (
+    <button className={`ig-formula ${error ? 'bad' : ''}`} title={error ? `${raw} — ${error}` : `${raw} (click to edit)`} onClick={() => setEditing(true)}>
+      <span className="fx">ƒ</span>{value}
+    </button>
+  )
+}
+
 // --- Table block: a grid whose cells are each a mini block-editor ---
 function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }: { block: Block; onChange: (id: string, patch: BlockPatch) => void; token: string } & CellCtx) {
   const cells = block.cells && block.cells.length ? block.cells : null
   const mkCell = (): Block[] => [newBlock()]
   // While dragging a border we resize locally (smooth), then save once on release.
   const [live, setLive] = useState<{ cols?: number[]; rows?: number[] } | null>(null)
+  const [showRefs, setShowRefs] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
   useEffect(() => {
     if (cells) return
     const init: Block[][][] = block.rows && block.rows.length
@@ -589,16 +619,50 @@ function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }
   const resetRow = (idx: number) => onChange(block.id, (b) => {
     const r = cells.map((_, i) => b.rowHeights?.[i] || 0); r[idx] = 0; return { rowHeights: r }
   })
+  // Plain text of every cell — what the "=" sums read from.
+  const plainCell = (bs: Block[]) => (bs || [])
+    .map((b) => String(b.text || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').trim() || b.status || '')
+    .filter(Boolean).join(' ').trim()
+  const grid: Grid = cells.map((row) => row.map(plainCell))
+  const cellFormula = (bs: Block[]) => {
+    const only = (bs || []).filter((b) => String(b.text || '').trim() || b.type !== 'text')
+    if (only.length !== 1 || only[0].type !== 'text') return null
+    const t = plainCell([only[0]])
+    return isFormula(t) ? { id: only[0].id, text: t } : null
+  }
   return (
     <div className="ig-table-wrap">
       <table className={`ig-table fixed ${live ? 'resizing' : ''}`} style={{ width: colW.reduce((a, w) => a + w, 0) }}>
-        <colgroup>{colW.map((w, i) => <col key={i} style={{ width: w }} />)}</colgroup>
+        <colgroup>
+          {showRefs && <col style={{ width: 34 }} />}
+          {colW.map((w, i) => <col key={i} style={{ width: w }} />)}
+        </colgroup>
+        {showRefs && (
+          <thead>
+            <tr className="ig-refs">
+              <th />
+              {colW.map((_, i) => <th key={i}>{colLetter(i)}</th>)}
+            </tr>
+          </thead>
+        )}
         <tbody>
           {cells.map((row, ri) => (
             <tr key={ri} style={rowH[ri] ? { height: rowH[ri] } : undefined}>
+              {showRefs && <th className="ig-refs-n">{ri + 1}</th>}
               {row.map((cell, ci) => (
                 <td key={ci} className={ri === 0 ? 'h' : ''}>
-                  <CellEditor token={token} blocks={cell && cell.length ? cell : [newBlock()]} setBlocks={(u) => setCell(ri, ci, u)} pages={pages} registerSubpage={registerSubpage} openPage={openPage} />
+                  {(() => {
+                    const f = cellFormula(cell)
+                    return f ? (
+                      <FormulaCell
+                        raw={f.text}
+                        grid={grid}
+                        onSave={(text) => setCell(ri, ci, (bs) => (text.trim() ? bs.map((b) => (b.id === f.id ? { ...b, text } : b)) : [newBlock()]))}
+                      />
+                    ) : (
+                      <CellEditor token={token} blocks={cell && cell.length ? cell : [newBlock()]} setBlocks={(u) => setCell(ri, ci, u)} pages={pages} registerSubpage={registerSubpage} openPage={openPage} />
+                    )
+                  })()}
                   <span className="ig-col-resize" title="Drag to resize column · double-click to reset" onPointerDown={(e) => startDrag('col', ci, e)} onDoubleClick={() => resetCol(ci)} />
                   <span className="ig-row-resize" title="Drag to resize row · double-click to reset" onPointerDown={(e) => startDrag('row', ri, e)} onDoubleClick={() => resetRow(ri)} />
                 </td>
@@ -612,8 +676,17 @@ function TableBlock({ block, onChange, token, pages, registerSubpage, openPage }
         <button onClick={addCol} title="Add column">＋ column</button>
         <button onClick={delRow} title="Remove last row">－ row</button>
         <button onClick={delCol} title="Remove last column">－ column</button>
+        <button className={`ig-ref-btn ${showRefs ? 'on' : ''}`} onClick={() => setShowRefs((v) => !v)} title="Show A, B, C and row numbers for sums">A1</button>
+        <button className="ig-fx-btn" onClick={() => setShowHelp((v) => !v)} title="What can I type after = ?">ƒ sums</button>
         <span className="ig-table-hint">drag any cell edge to resize</span>
       </div>
+      {showHelp && (
+        <div className="ig-fx-help">
+          <b>Type these straight into a cell:</b>
+          {FORMULA_HELP.map((line) => <span key={line}>{line}</span>)}
+          <i>A is the first column, row 1 is the top row — turn on “A1” to see them.</i>
+        </div>
+      )}
     </div>
   )
 }
