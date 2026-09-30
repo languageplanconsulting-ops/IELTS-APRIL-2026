@@ -962,9 +962,10 @@ type BlockProps = CellCtx & {
   onAutoBullet?: (id: string, rest: string) => void
   onPasteFiles?: (id: string, files: File[]) => void
   onUnformat?: (id: string) => void
+  onUnstack?: (id: string, blocks: Block[]) => void
 }
 
-function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, onAutoBullet, onUnformat, onPasteFiles, pages, registerSubpage, openPage }: BlockProps) {
+function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpty, onSlash, onToggle, onIndent, onAutoBullet, onUnformat, onPasteFiles, onUnstack, pages, registerSubpage, openPage }: BlockProps) {
   const ref = useRef<HTMLDivElement>(null)
   // Drop this block. If it is the only one on the page it turns into an empty line.
   const removeSelf = () => { onChange(block.id, { type: 'text', text: '', filePath: undefined, diagram: undefined }); onBackspaceEmpty(block.id) }
@@ -1194,6 +1195,11 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
         if (keep.length) c[into] = [...c[into].filter((x) => !isBlank(x)), ...keep]
         return { cols: c }
       })
+    // "Unstack": go back to plain lines, one under the other.
+    const unstack = () => {
+      const flat = cols.flat().filter((x) => !isBlank(x))
+      onUnstack?.(block.id, flat.length ? flat : [newBlock()])
+    }
     return (
       <div className="block columns"><span className="grip">⠿</span>
         <div className="content">
@@ -1207,9 +1213,14 @@ function BlockView({ token, block, autoFocus, onChange, onEnter, onBackspaceEmpt
               </div>
             ))}
           </div>
-          {cols.length < 4 && (
-            <button className="ig-col-add" onMouseDown={(e) => e.preventDefault()} onClick={() => onChange(block.id, (b) => ({ cols: [...(b.cols && b.cols.length ? b.cols : cols), [newBlock()]] }))}>＋ column</button>
-          )}
+          <div className="ig-col-bar">
+            {cols.length < 4 && (
+              <button className="ig-col-add" onMouseDown={(e) => e.preventDefault()} onClick={() => onChange(block.id, (b) => ({ cols: [...(b.cols && b.cols.length ? b.cols : cols), [newBlock()]] }))}>＋ column</button>
+            )}
+            {onUnstack && (
+              <button className="ig-col-add" title="Put these back as normal lines" onMouseDown={(e) => e.preventDefault()} onClick={unstack}>↕ unstack</button>
+            )}
+          </div>
         </div>
       </div>
     )
@@ -1284,7 +1295,7 @@ type PageRef = {
 function Editor({
   token, page, blocks, setBlocks, pages, onClose, onBack, canBack,
   setTitle, updateNode, registerSubpage, openPage, createPageFrom, getPageBlocks,
-  tasks, onAddTask, onToggleTask, onRemoveTask
+  tasks, onAddTask, onToggleTask, onRemoveTask, refreshKey = 0
 }: {
   token: string
   page: PageRef
@@ -1304,6 +1315,7 @@ function Editor({
   onAddTask: (text: string, blockId?: string) => void
   onToggleTask: (taskId: string) => void
   onRemoveTask: (taskId: string) => void
+  refreshKey?: number
 }) {
   const [focusId, setFocusId] = useState<string | null>(null)
   const [slash, setSlash] = useState<SlashState | null>(null)
@@ -1977,7 +1989,7 @@ function Editor({
         </div>
 
         <div
-          key={page.id}
+          key={`${page.id}:${refreshKey}`}
           className={`doc-body ${fileOver ? 'file-over' : ''}`}
           style={{ ['--ig-font' as string]: fontStack(page.font), fontFamily: fontStack(page.font) } as React.CSSProperties}
           onDragOver={(e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); setFileOver(true) } }}
@@ -2002,9 +2014,14 @@ function Editor({
                 if (!dragId || dragId === b.id) return
                 e.preventDefault()
                 const r = e.currentTarget.getBoundingClientRect()
-                // Near the left/right edge → side by side; otherwise above/below.
-                const edge = Math.min(90, r.width * 0.18)
-                const pos = e.clientX < r.left + edge ? 'left' : e.clientX > r.right - edge ? 'right' : e.clientY < r.top + r.height / 2 ? 'before' : 'after'
+                // Side by side only when the pointer is really out at the edge
+                // AND around the middle of the line — so a normal up/down move
+                // never turns into columns by accident.
+                const edge = Math.min(46, r.width * 0.08)
+                const middle = e.clientY > r.top + r.height * 0.3 && e.clientY < r.bottom - r.height * 0.3
+                const pos = middle && e.clientX < r.left + edge ? 'left'
+                  : middle && e.clientX > r.right - edge ? 'right'
+                  : e.clientY < r.top + r.height / 2 ? 'before' : 'after'
                 setDropHint({ id: b.id, pos })
               }}
               onDrop={(e) => { if (!e.dataTransfer.files?.length) handleDrop(e, b.id, dropHint?.pos || 'after') }}
@@ -2043,6 +2060,13 @@ function Editor({
                   onIndent={onIndent}
                   onAutoBullet={onAutoBullet}
                   onUnformat={onUnformat}
+                  onUnstack={(id, inner) => setBlocks((bs) => {
+                    const i = bs.findIndex((x) => x.id === id)
+                    if (i < 0) return bs
+                    const copy = bs.slice()
+                    copy.splice(i, 1, ...inner)
+                    return copy
+                  })}
                   onPasteFiles={(id, files) => uploadFilesAfter(id, files)}
                 />
               )}
@@ -2269,6 +2293,40 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
   const colorIndexRef = useRef(1)
   // Navigation stack of open page ids (first is a bubble/node id, rest are sub-pages).
   const [openStack, setOpenStack] = useState<string[]>([])
+  // --- Undo / redo (⌘Z, ⇧⌘Z) over the whole garden ---
+  type Snapshot = {
+    nodes: BubbleNodeModel[]
+    edges: EdgeModel[]
+    docs: Record<string, Block[]>
+    pages: Record<string, { title: string }>
+    tasks: Record<string, TodoTask[]>
+  }
+  const past = useRef<Snapshot[]>([])
+  const future = useRef<Snapshot[]>([])
+  const prevSnap = useRef<Snapshot | null>(null)
+  const lastSnapAt = useRef(0)
+  const restoring = useRef(false)
+  // Bumping this re-draws the note boxes so restored text actually shows.
+  const [restoreKey, setRestoreKey] = useState(0)
+  const applySnap = (s: Snapshot) => {
+    restoring.current = true
+    setNodes(s.nodes); setEdges(s.edges); setDocs(s.docs); setPages(s.pages); setTasks(s.tasks)
+    prevSnap.current = s
+    setRestoreKey((k) => k + 1)
+    setTimeout(() => { restoring.current = false }, 0)
+  }
+  const undo = () => {
+    const step = past.current.pop()
+    if (!step) return
+    if (prevSnap.current) future.current.push(prevSnap.current)
+    applySnap(step)
+  }
+  const redo = () => {
+    const step = future.current.pop()
+    if (!step) return
+    if (prevSnap.current) past.current.push(prevSnap.current)
+    applySnap(step)
+  }
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'offline'>('idle')
   const hydratedRef = useRef(false)
   // Saving to the server is gated until we have CONFIRMED the server's contents
@@ -2290,6 +2348,21 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
     hydratedRef.current = true
     setLoading(false)
   }
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (!(e.metaKey || e.ctrlKey)) return
+      const t = e.target as HTMLElement | null
+      // Plain text fields (page title, a formula) keep the browser's own undo.
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return
+      const k = e.key.toLowerCase()
+      if (k === 'z') { e.preventDefault(); if (e.shiftKey) redo(); else undo() }
+      else if (k === 'y') { e.preventDefault(); redo() }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // --- initial load, with retries; never clobber real data on a failed load ---
   useEffect(() => {
@@ -2343,6 +2416,18 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
     if (!hydratedRef.current) return
     const doc: GardenDoc = { version: 1, nodes, edges, docs, pages, tasks, colorIndex: colorIndexRef.current }
     latestDocRef.current = doc
+    // Remember where we were, so ⌘Z can come back. A burst of typing folds into
+    // one step (we only mark a new one when the last was over half a second ago).
+    if (!restoring.current) {
+      const now = Date.now()
+      if (prevSnap.current && now - lastSnapAt.current > 550) {
+        past.current.push(prevSnap.current)
+        if (past.current.length > 80) past.current.shift()
+        future.current = []
+        lastSnapAt.current = now
+      }
+      prevSnap.current = { nodes, edges, docs, pages, tasks }
+    }
     // Always keep a local backup so nothing is lost even while offline.
     try { localStorage.setItem(LOCAL_KEY, JSON.stringify(doc)) } catch { /* ignore */ }
     if (!token) return
@@ -2596,6 +2681,7 @@ export default function IdeaGarden({ accessToken, onExit }: { accessToken?: stri
           openPage={(id) => { ensureDoc(id); setOpenStack((s) => [...s, id]) }}
           getPageBlocks={(id) => docs[id] || []}
           tasks={tasks[currentPage.id] || []}
+          refreshKey={restoreKey}
           onAddTask={(text, blockId) => addTask(currentPage!.id, text, blockId)}
           onToggleTask={(taskId) => toggleTask(currentPage!.id, taskId)}
           onRemoveTask={(taskId) => removeTask(currentPage!.id, taskId)}

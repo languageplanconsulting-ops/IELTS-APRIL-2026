@@ -921,3 +921,5 @@
   border: 1.5px dashed #ffa8c8; border-radius: 12px !important;
   background: rgba(255, 168, 200, .12);
 }
+
+.ideaGarden .ig-col-bar { display: flex; gap: 8px; flex-wrap: wrap; }
