@@ -914,3 +914,10 @@
 
 /* Table cells stay blank when empty — the repeated hint made tables noisy. */
 .ideaGarden .ig-cell .editable:empty::before { content: ''; }
+
+/* Lasso box for selecting whole blocks by dragging over them. */
+.ideaGarden .ig-band {
+  position: fixed; z-index: 55; pointer-events: none;
+  border: 1.5px dashed #ffa8c8; border-radius: 12px !important;
+  background: rgba(255, 168, 200, .12);
+}

@@ -1498,10 +1498,47 @@ function Editor({
     return [t ? lead + t : '', ...kids].filter(Boolean).join('\n')
   }
   const pickedText = (ids: string[]) => blocks.filter((b) => ids.includes(b.id)).map(plainOf).filter(Boolean).join('\n')
+  // Drag across empty space to lasso whole blocks — tables, pictures, files and
+  // all — then turn them into a page or a dropdown.
+  const [band, setBand] = useState<{ x0: number; y0: number; x1: number; y1: number } | null>(null)
+  function startBand(e: React.MouseEvent) {
+    e.preventDefault()
+    const x0 = e.clientX, y0 = e.clientY
+    setPicked([])
+    anchorRef.current = null
+    let moved = false
+    const rowsNow = () => [...(bodyRef.current?.children || [])].filter((el) => (el as HTMLElement).dataset?.blockId) as HTMLElement[]
+    const onMove = (ev: MouseEvent) => {
+      if (!moved && Math.abs(ev.clientX - x0) + Math.abs(ev.clientY - y0) < 6) return
+      moved = true
+      document.body.style.userSelect = 'none'
+      window.getSelection()?.removeAllRanges()
+      const box = { top: Math.min(y0, ev.clientY), bottom: Math.max(y0, ev.clientY), left: Math.min(x0, ev.clientX), right: Math.max(x0, ev.clientX) }
+      setBand({ x0, y0, x1: ev.clientX, y1: ev.clientY })
+      const hit = rowsNow()
+        .filter((el) => {
+          const r = el.getBoundingClientRect()
+          return r.bottom > box.top && r.top < box.bottom && r.right > box.left && r.left < box.right
+        })
+        .map((el) => el.dataset.blockId!)
+      setPicked(hit)
+    }
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp)
+      document.body.style.userSelect = ''
+      setBand(null)
+    }
+    window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onUp)
+  }
+
   function onBodyMouseDown(e: React.MouseEvent) {
     if (e.button !== 0) return
     const t = e.target as HTMLElement
     if (t.closest('.grip, button, input, select, a, .ig-col-resize, .ig-row-resize, .ig-img-handle, .ig-pick-bar, .dg-wrap')) return
+    // Started on blank space (margins, gaps, the room under the last block)?
+    // Then it's a lasso, not a text selection.
+    const onBlank = t === bodyRef.current || t.classList.contains('ig-tail-space') || t.classList.contains('block-row') || t.classList.contains('block')
+    if (onBlank && !e.shiftKey) { startBand(e); return }
     const startId = rowIdAt(e.clientX, e.clientY)
     if (e.shiftKey && startId && (anchorRef.current || picked.length)) {
       e.preventDefault()
@@ -2039,6 +2076,18 @@ function Editor({
             }}
           />
         </div>
+
+        {band && (
+          <div
+            className="ig-band"
+            style={{
+              left: Math.min(band.x0, band.x1),
+              top: Math.min(band.y0, band.y1),
+              width: Math.abs(band.x1 - band.x0),
+              height: Math.abs(band.y1 - band.y0)
+            }}
+          />
+        )}
 
         {picked.length > 0 && (
           <div className="ig-pick-bar" onMouseDown={(e) => e.preventDefault()}>
