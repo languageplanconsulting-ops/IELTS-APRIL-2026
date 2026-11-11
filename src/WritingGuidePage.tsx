@@ -1,5 +1,7 @@
 import { Children, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react'
 import './WritingGuidePage.css'
+import { WritingCoachRules } from './WritingCoachRulesPanel'
+import { getTask1CoachRules, type CoachRuleSelection } from './writingCoachRules'
 import {
   getWritingGuidedBuilder,
   assembleGuidedEssay,
@@ -478,15 +480,30 @@ function buildWgbRecallFeedback(expected: string, given: string): string[] {
 }
 */
 
-function WgbCoachBubble({ coachKey, message, isBlankFocus }: { coachKey: string; message: string; isBlankFocus: boolean }) {
+function WgbCoachBubble({
+  coachKey,
+  message,
+  isBlankFocus,
+  rules
+}: {
+  coachKey: string
+  message: string
+  isBlankFocus: boolean
+  rules: CoachRuleSelection
+}) {
+  // Only the message re-keys (so it fades in again); the rules dropdown below it must keep its
+  // open/closed state while the learner moves between blanks.
   return (
-    <div key={coachKey} className={`wgbCoach ${isBlankFocus ? 'is-blank-focus' : ''}`}>
+    <div className={`wgbCoach ${isBlankFocus ? 'is-blank-focus' : ''}`}>
       <span className="wgbCoachAvatar" aria-hidden="true">
         {isBlankFocus ? '💭' : '🧑‍🏫'}
       </span>
       <div className="wgbCoachBody">
         <p className="wgbCoachLabel">P'Doy แนะนำ</p>
-        <p className="wgbCoachMessage">{message}</p>
+        <p key={coachKey} className="wgbCoachMessage">
+          {message}
+        </p>
+        <WritingCoachRules task={1} selection={rules} />
       </div>
     </div>
   )
@@ -686,6 +703,7 @@ function WritingGuidedBuilder({
   const activeBlank = activeBlankId ? stepBlanks.find((blank) => blank.id === activeBlankId) ?? null : null
   const coachMessage = activeBlank ? BLANK_COACH_TH[activeBlank.focus] : STEP_COACH_TH[step.role]
   const coachKey = activeBlank ? activeBlank.id : `step-${step.id}`
+  const coachRules = getTask1CoachRules(step.role, activeBlank?.focus ?? null)
 
   return (
     <div className="wgbShell">
@@ -722,7 +740,7 @@ function WritingGuidedBuilder({
           })}
         </ol>
 
-        <WgbCoachBubble coachKey={coachKey} message={coachMessage} isBlankFocus={!!activeBlank} />
+        <WgbCoachBubble coachKey={coachKey} message={coachMessage} isBlankFocus={!!activeBlank} rules={coachRules} />
 
         <div key={step.id} className="wgbStepCard">
           <p className="wgbStepEyebrow">{ROLE_LABEL_TH[step.role]}</p>

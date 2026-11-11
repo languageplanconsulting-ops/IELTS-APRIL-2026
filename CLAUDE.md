@@ -63,3 +63,8 @@ extra clause tacked on (no `presenting …`, `allowing … to be identified`,
 - `respectively` always takes a preceding comma.
 - Timeline bodies must state real chart years.
 - Blank counts: every Overview has **at least 5** blanks.
+- P'Doy's click-to-open rule cards (`src/writingCoachRules.ts`) hold example
+  sentences too. Task 1 examples obey every rule above (taught openers, the closed
+  transition list, the Overview opener, comma before `respectively`); Task 2 examples
+  follow the dictated templates. Enforced by `npm run verify:writing-coach`, which
+  runs as part of `npm run build`.

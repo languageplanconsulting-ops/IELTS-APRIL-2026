@@ -106,35 +106,35 @@ const HINT_PARAPHRASE = 'เลือกคำ paraphrase ที่เหมา�
 const HINT_CONJUGATE = 'พิมพ์คำกริยาที่ผันรูปให้ถูกต้อง — คำในวงเล็บคือรูปพื้นฐาน'
 
 // ── coach copy ───────────────────────────────────────────────────────
-// Shown by default for the current step (teaches the technique for that paragraph).
+// P'Doy's one-line message. Kept short and plain on purpose: the full "how to use it" steps and the
+// 3 examples per rule live in src/writingCoachRules.ts and open from the coach's dropdown.
+// Shown by default for the current step.
 export const STEP_COACH_TH: Record<WgbStep['role'], string> = {
   intro:
-    'Introduction ของ Timeline และ No Timeline ต้องมี 1 ประโยคเท่านั้น โดยพาราเฟรสโจทย์ด้วย synonym หรือเปลี่ยนโครงสร้าง ห้ามเขียนประโยคที่ 2',
+    'Introduction = 1 ประโยคเท่านั้น: บอกว่ากราฟนี้เกี่ยวกับอะไร ด้วยคำของเราเอง (ไม่ลอกโจทย์) แล้วหยุด ห้ามมีประโยคที่ 2',
   overview:
-    'Overview ต้องมี 1 ประโยค และเปิดด้วย “Overall, it can be clearly observed that …” เสมอ: Timeline สรุปทิศทางหลัก; No Timeline ที่มี 2 ภาพให้บอกเฉพาะสิ่งที่มากที่สุดของแต่ละภาพ ส่วนภาพเดียวใช้ “… X was the largest, while Y was the smallest in share.” ห้ามใช้ contrasting with หรือ leaving other sources',
+    'Overview = 1 ประโยค เปิดด้วย “Overall, it can be clearly observed that …” แล้วบอกภาพรวมที่ใหญ่ที่สุด — ไม่ใส่ตัวเลข',
   body1:
-    'Timeline Body 1 ต้องระบุปีและใช้ complex sentence ตามแบบเรียน; Pie chart / Map Body 1 ต้องเปิดด้วย “Starting with …” — Map ใช้ northern หรือ western part of the map',
+    'Body 1 = ข้อมูลกลุ่มแรก ประโยคแรกเปิดด้วยคำที่กำหนด (Pie / Map: “Starting with …” · กราฟตามปี: ใส่ปีจริง) ส่วนประโยคถัดไปขึ้นต้นด้วย linking word',
   body2:
-    'Timeline Body 2 ต้องระบุปีจริงจากกราฟ; Pie chart / Map Body 2 ต้องเปิดด้วย “In terms of …” — Map ใช้ eastern side/section หรือ southern section of the map'
+    'Body 2 = ข้อมูลกลุ่มที่เหลือ ประโยคแรกเปิดด้วยคำที่กำหนด (Pie / Map: “In terms of …” · กราฟตามปี: ใส่ปีจริง) ส่วนประโยคถัดไปขึ้นต้นด้วย linking word'
 }
 
 // Shown when a specific blank is focused, replacing the step message while focused.
 export const BLANK_COACH_TH: Record<WgbBlank['focus'], string> = {
-  paraphrase: 'ช่องนี้คือการพาราเฟรส — ใช้ synonym แทนคำในโจทย์ หรือเปลี่ยนโครงสร้างประโยคใหม่',
-  'word-choice': 'เลือกคำที่ความหมายและไวยากรณ์เข้ากับประโยคที่สุด อ่านทั้งประโยคก่อนตัดสินใจ',
+  paraphrase: 'ช่องนี้คือ paraphrase — เปลี่ยนคำโจทย์เป็นคำใหม่ที่ความหมายเท่าเดิม',
+  'word-choice': 'อ่านทั้งประโยคก่อน แล้วเลือกคำที่ความหมายและไวยากรณ์เข้ากันที่สุด',
   transition:
-    'เลือกคำเปิดตามชนิดคำถาม: Pie/Map Body 1 ใช้ Starting with และ Body 2 ใช้ In terms of; Map Body 1 = northern/western part · Body 2 = eastern side/section หรือ southern section; Map body ใช้ while/whereas/although + Interestingly/However/Surprisingly/It is interesting to note that/On the other hand; No Timeline Overview เปิดด้วย Overall, it can be clearly observed that แล้วใช้ while กลางประโยค; Timeline ใช้คำเชื่อมตามความสัมพันธ์ของข้อมูล',
-  referencing: 'ตรงนี้อ้างถึงคำนามที่พูดถึงไปแล้ว — ใช้ "this number" หรือ "that of" แบบไหนถึงจะถูก?',
+    'เลือกคำเปิดให้ตรงหน้าที่: คำแรกของ Body = Starting with / In terms of · ประโยคถัดไป = However, In contrast, Similarly, Interestingly …',
+  referencing: 'ช่องนี้อ้างถึงสิ่งที่เพิ่งพูดไป — ใช้ this figure หรือ that of แบบไหนดี?',
   'trend-phrase':
-    'Timeline Overview: ขาขึ้นต้องเลือก experienced an upward trend (ห้าม showed) · ขาลงใช้ showed a downward trend · หรือ fluctuate / remain unchanged — ห้ามใส่ตัวเลข',
-  'verb-tense': 'ช่องนี้ต้องผันเป็นอดีต (past tense) เสมอ เพราะทั้งเรียงความเล่าข้อมูลที่เกิดขึ้นแล้ว — เช็คแค่ประธานเอกพจน์หรือพหูพจน์',
-  'ving-clause': 'ตรงนี้น่าจะต้องใช้โครงสร้าง V-ing clause (เช่น reaching, climbing, peaking) — ลองนึกกริยาที่เห็นภาพการเปลี่ยนแปลง',
-  'v3-clause': 'ตรงนี้น่าจะต้องใช้ V3 (past participle) เช่น followed by, compared to — ลองดูบริบทว่าเข้ากับโครงสร้างไหน',
-  'degree-adverb': 'ควรใช้ adverb บอกระดับการเปลี่ยนแปลงแบบไหนดี เช่น dramatically, steadily, gradually, sharply?',
-  article:
-    'ช่องนี้ทดสอบ article — เลือก a / an / the ให้ถูกกับคำนาม (นับได้เจาะจง ใช้ the · ทั่วไปครั้งแรกใช้ a/an · an ใช้หน้าเสียงสระ)',
-  'letter-hint':
-    'ช่องคำศัพท์แบบใบ้ตัวอักษร: เห็น 2–3 ตัวแรกแล้วเติมตัวที่เหลือให้ครบ (เช่น mot_ _ _ _ _ _ _ → motivation) — สะกดทั้งคำให้ตรงบริบท'
+    'เส้นขึ้น = experienced an upward trend · เส้นลง = showed a downward trend · ขึ้นๆ ลงๆ = fluctuated (ไม่ใส่ตัวเลข)',
+  'verb-tense': 'ข้อมูลเกิดไปแล้ว = past tense เสมอ — เช็คแค่ว่าประธานเป็นเอกพจน์หรือพหูพจน์',
+  'ving-clause': 'ช่องนี้เติมวลี V-ing ต่อท้ายประโยค เช่น reaching, climbing, peaking — บอกสิ่งที่เกิดต่อ',
+  'v3-clause': 'ช่องนี้ใช้ V3 เช่น followed by, compared with — ดูบริบทว่าเข้ากับโครงสร้างไหน',
+  'degree-adverb': 'เลือก adverb บอกความเร็วของการเปลี่ยน: dramatically, sharply, steadily, gradually',
+  article: 'เลือก a / an / the: เจาะจง = the · ทั่วไปครั้งแรก = a / an · an ใช้หน้าเสียงสระ',
+  'letter-hint': 'ช่องใบ้ตัวอักษร: เห็นตัวแรก ๆ แล้วเติมให้ครบทั้งคำ ให้ตรงกับบริบท'
 }
 
 export const WRITING_GUIDED_BUILDERS: WgbExercise[] = [

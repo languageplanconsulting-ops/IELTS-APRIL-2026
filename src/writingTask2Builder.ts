@@ -167,44 +167,41 @@ export const WGB2_STEP_SHORT: Record<WritingTask2Role, string> = {
 }
 
 // ── coach copy — one message per role / per focus, reused across every essay ──────────
+// Short and plain on purpose: the step-by-step "how to use it" and the 3 examples per rule live
+// in src/writingCoachRules.ts and open from the coach's dropdown.
 export const WGB2_STEP_COACH_TH: Record<WritingTask2Role, string> = {
   intro:
-    'Introduction วางจุดยืน — ช่องว่างหนาแน่น (~ทุก 3–4 คำ) ให้เช็ควน: กริยา/tense · คำนามเอกพจน์-พหูพจน์ · a/the/ไม่ใส่ · adj vs adv · คำเชื่อม · วรรคตอน แล้วอ่านทั้งประโยครอบช่องก่อนตอบ',
+    'Introduction = วางจุดยืน: บอกว่าคนมองเรื่องนี้ยังไง แล้วบอกว่าเรามองยังไง — ก่อนตอบแต่ละช่อง ให้อ่านทั้งประโยครอบช่องก่อน',
   body1:
-    'Body 1 (มักเป็นมุมตรงข้าม/concession) — ไล่ทีละช่อง: transition ให้ตรงความหมาย · verb form · คำนาม/คุณศัพท์/กริยาวิเศษณ์ · article · punctuation อย่าเดาจาก "คำที่ดูถูก" โดยไม่อ่านบริบท',
+    'Body 1 = มุมตรงข้ามกับเรา (ยอมรับว่ามีเหตุผล) — ไล่ทีละช่อง: คำเชื่อม → รูปกริยา → ชนิดคำ → a/the → เครื่องหมาย',
   body2:
-    'Body 2 (มักเป็นความเห็นเรา + เหตุผล) — เน้น parallel forms (-ing ให้ขนานกัน) · passive/active · which-clause กับ comma · การเลือก noun/adj/adv ให้ตรงตำแหน่งไวยากรณ์',
+    'Body 2 = ความเห็นของเรา + เหตุผล — เช็ค: คำเชื่อม · -ing ที่ขนานกัน · passive/active · comma หน้า which',
   body3:
-    'Body 3 (ถ้ามี) ขยายด้วยตัวอย่างเจาะจง — เช็คเหมือนย่อหน้าอื่น และระวัง agreement ของประธานยาว ๆ กับกริยา',
+    'Body 3 = ขยายด้วยตัวอย่างเจาะจง — เช็คเหมือนย่อหน้าอื่น และระวังประธานยาว ๆ กับกริยาให้ตรงกัน',
   conclusion:
-    'Conclusion สรุปจุดยืน — มักมี although/while + ความเห็นหลัก; เช็ค plural · article · transition · comma หน้า as/which แล้วตรวจว่า กริยาหลังสรุปตรง tense กับจุดยืนทั้งเรียงความ'
+    'Conclusion = สรุปจุดยืนใน 1 ประโยค (In conclusion, although … , I am of the opinion that …) — เช็ค plural · a/the · comma'
 }
 
 export const WGB2_BLANK_COACH_TH: Record<Wgb2Focus, string> = {
   'verb-tense':
-    'แยกเคสก่อนผัน: ① passive = be + V3 (has been argued) ② gerund ประธาน/หลัง for,on,by = V-ing ③ หลัง modal/to = base form ④ ประธานพหูพจน์ไม่เติม -s · เอกพจน์เติม -s — ผิดแล้วดูคำอธิบาย “ทำไม V-ing / V-ed”',
+    'ดูโครงสร้างก่อนผัน: passive = be + V3 · หลัง modal/to = base form · หลัง by/for/on = V-ing · ประธานพหูพจน์ไม่เติม -s',
   plural:
-    'ดูตัวชี้นำจำนวน: many/these/several/their → พหูพจน์; a/an/each/every → เอกพจน์; นามนับไม่ได้ (information, evidence, research) ไม่เติม -s; นามพหูพจน์ไม่ปกติ (people, children) ไม่เติม -s ซ้ำ',
-  noun:
-    'ช่องนี้ต้องการ "คำนาม" ไม่ใช่คำคุณศัพท์/กริยา เช่น หลัง article (a/the) หรือหลัง adjective (practical ___) ต้องเป็น noun; ถ้าบริบทเป็นนามนามธรรมมักไม่เติม -s (relevance, society ในความหมายทั่วไป)',
+    'ดูคำบอกจำนวน: many/these/several → พหูพจน์ · a/each/every → เอกพจน์ · information, research ไม่เติม -s',
+  noun: 'ช่องนี้ต้องการ “คำนาม” — มักอยู่หลัง a/the หรือหลัง adjective (practical advice)',
   adjective:
-    'ช่องนี้ต้องการ "คำคุณศัพท์" ขยายคำนามที่ตามมา หรืออยู่หลัง linking verb (is/remains/appear + adj) เช่น cultural identity, modern buildings, remains essential — อย่าเลือก noun (culture) หรือ adverb (culturally) ถ้าโครงสร้างเรียก adjective',
+    'ช่องนี้ต้องการ “คำคุณศัพท์” — ขยายคำนามที่ตามมา หรืออยู่หลัง is/remains (cultural identity, remains essential)',
   adverb:
-    'ช่องนี้ต้องการ "คำกริยาวิเศษณ์" ขยายกริยา/คุณศัพท์/ทั้งประโยค มักลงท้าย -ly เช่น widely argued, personally believe, entirely on — อย่าเลือก adjective (wide/personal) เมื่อตำแหน่งทำหน้าที่ขยายกริยา',
+    'ช่องนี้ต้องการ “กริยาวิเศษณ์” — ขยายกริยา มักลงท้าย -ly (widely argued, personally believe)',
   transition:
-    'อ่านประโยคก่อน–หลัง: ① ขัดแย้ง → However / while / whereas ② ยกตัวอย่าง → For example / For instance ③ ผลลัพธ์ → Therefore / As a result ④ เสริม → Moreover / Furthermore / and — เลือกคำที่ตรงความสัมพันธ์เชิงความหมาย ไม่ใช่แค่คำที่ดูเป็นวิชาการ',
-  article:
-    'กฎนามทั่วไป (ไม่มี the): ① นับได้ + พหูพจน์ → ไม่ใส่ the เช่น cities, students ② นับไม่ได้ → ไม่ใส่ the เช่น education, research — ใส่ the เมื่อเจาะจงสิ่งที่รู้กันแล้วเท่านั้น',
+    'อ่านประโยคก่อนและหลัง แล้วเลือกคำเชื่อมให้ตรงความหมาย: ขัดแย้ง = However · ยกตัวอย่าง = For example · ผลลัพธ์ = Therefore',
+  article: 'ช่องนี้ทดสอบ a / an / the — ดูกฎ The แบบง่ายด้านล่าง',
   comma:
-    'แตะช่องว่างที่ควรมีจุลภาค: ① หลังวลีขึ้นต้นประโยค (However, … / In conclusion, …) ② หน้า which-clause แบบไม่จำกัดความ (… buildings, which …) ③ คั่นรายการหรือเชื่อมอนุประโยคยาว — ห้ามใส่ comma คั่นประธานกับกริยาตรง ๆ',
+    'แตะช่องว่างที่ควรมี comma: หลังคำเปิดประโยค (However, …) · ก่อน which · ห้ามคั่นประธานกับกริยาตรง ๆ',
   participle:
-    'V-ing vs V-ed หน้าคำนาม: V-ing = กำลังเกิด/active (growing population) · V-ed/V3 = ถูกกระทำ/เสร็จแล้ว (preserved buildings) — หลัง be ใน passive ต้องเป็น V3 เสมอ',
-  punct:
-    'เลือกเครื่องหมายให้ตรงจังหวะประโยค: , คั่นวลี/อนุประโยคในประโยคเดียว · . จบความคิดสมบูรณ์ · ; เชื่อมสองประโยคสมบูรณ์ที่เกี่ยวกันแน่น (มักก่อน however/therefore) · ถ้าไม่ต้องใส่ ให้เลือกตัวเลือกว่าง/∅',
-  'word-choice':
-    'อ่านทั้งประโยคแล้วเลือกคำที่ทำให้ทั้งความหมายและชนิดคำถูกต้อง จากนั้นตรวจว่าคำนั้นเชื่อมกับคำก่อนและหลังอย่างเป็นธรรมชาติ',
-  'letter-hint':
-    'ช่องคำศัพท์แบบใบ้ตัวอักษร: เห็น 2–3 ตัวแรกแล้วเติมตัวที่เหลือให้ครบ (เช่น mot_ _ _ _ _ _ _ → motivation) — สะกดให้ครบทั้งคำและตรงบริบท'
+    'V-ing หรือ V3 หน้าคำนาม? V-ing = กำลังเกิด (growing population) · V3 = ถูกทำแล้ว (preserved buildings)',
+  punct: 'เลือกเครื่องหมายให้ตรงจังหวะ: “.” จบความคิด · “,” คั่นส่วนขยาย · “;” เชื่อมสองประโยคที่เกี่ยวกัน',
+  'word-choice': 'อ่านทั้งประโยคก่อน แล้วเลือกคำที่ความหมายและชนิดคำถูก และเข้ากับคำข้างเคียง',
+  'letter-hint': 'ช่องใบ้ตัวอักษร: เห็น 2–3 ตัวแรกแล้วเติมให้ครบทั้งคำ ให้ตรงกับบริบท (เช่น mot_ _ _ _ _ _ _ → motivation)'
 }
 
 /** Beautiful article mini-guide — shown when focusing an article blank. */

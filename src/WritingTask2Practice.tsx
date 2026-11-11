@@ -16,6 +16,8 @@ import {
   type Wgb2Segment
 } from './writingTask2Builder'
 import type { WritingTask2Prompt, WritingTask2VocabItem } from './writingTask2Data'
+import { WritingCoachRules } from './WritingCoachRulesPanel'
+import { getTask2CoachRules, type CoachRuleSelection } from './writingCoachRules'
 import type { WritingTask2ReportParagraph } from './writingReportTypes'
 import { VocabHighlightText } from './VocabHighlightText'
 import { COUNTABILITY_LABEL_TH, getCountability } from './nounCountability'
@@ -36,25 +38,26 @@ function Wgb2CoachBubble({
   coachKey,
   message,
   isBlankFocus,
-  showArticleGuide
+  showArticleGuide,
+  rules
 }: {
   coachKey: string
   message: string
   isBlankFocus: boolean
   showArticleGuide?: boolean
+  rules: CoachRuleSelection
 }) {
+  // Only the message re-keys; the rules dropdown must keep its open/closed state while the
+  // learner moves between blanks.
   return (
-    <div
-      key={coachKey}
-      className={`wgbCoach ${isBlankFocus ? 'is-blank-focus' : ''} ${showArticleGuide ? 'is-article-guide' : ''}`.trim()}
-    >
+    <div className={`wgbCoach ${isBlankFocus ? 'is-blank-focus' : ''} ${showArticleGuide ? 'is-article-guide' : ''}`.trim()}>
       <span className="wgbCoachAvatar" aria-hidden="true">
         {showArticleGuide ? '📖' : isBlankFocus ? '💭' : '🧑‍🏫'}
       </span>
       <div className="wgbCoachBody">
         <p className="wgbCoachLabel">{showArticleGuide ? WGB2_ARTICLE_GUIDE.titleTh : "P'Doy แนะนำ"}</p>
         {showArticleGuide ? (
-          <div className="wgbArticleGuide">
+          <div key={coachKey} className="wgbArticleGuide">
             <p className="wgbArticleGuideSubtitle">{WGB2_ARTICLE_GUIDE.subtitleTh}</p>
             <div className="wgbArticleGuideRows">
               {WGB2_ARTICLE_GUIDE.rows.map((row) => (
@@ -71,8 +74,11 @@ function Wgb2CoachBubble({
             <p className="wgbArticleGuideTip">{WGB2_ARTICLE_GUIDE.tipTh}</p>
           </div>
         ) : (
-          <p className="wgbCoachMessage">{message}</p>
+          <p key={coachKey} className="wgbCoachMessage">
+            {message}
+          </p>
         )}
+        <WritingCoachRules task={2} selection={rules} />
       </div>
     </div>
   )
@@ -369,6 +375,7 @@ export function WritingTask2Practice({
   const activeBlank = activeBlankId ? stepBlanks.find((blank) => blank.id === activeBlankId) ?? null : null
   const coachMessage = activeBlank ? WGB2_BLANK_COACH_TH[activeBlank.focus] : WGB2_STEP_COACH_TH[step.role]
   const coachKey = activeBlank ? activeBlank.id : `step-${step.id}`
+  const coachRules = getTask2CoachRules(step.role, activeBlank?.focus ?? null)
 
   const handleSaveVocab = (item: WritingTask2VocabItem) => {
     if (!onSaveVocab) return
@@ -425,6 +432,7 @@ export function WritingTask2Practice({
           message={coachMessage}
           isBlankFocus={!!activeBlank}
           showArticleGuide={activeBlank?.focus === 'article'}
+          rules={coachRules}
         />
 
         <div key={step.id} className="wgbStepCard">
