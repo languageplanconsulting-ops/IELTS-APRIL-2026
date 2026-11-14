@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import PlacementTestPage from './PlacementTestPage.tsx'
+import InstallAppPrompt from './InstallAppPrompt.tsx'
 
 /**
  * The placement test is mounted here rather than inside App because it shares
@@ -16,8 +17,24 @@ const isPlacementRoute = (() => {
   return new URLSearchParams(window.location.search).get('placement') === '1'
 })()
 
+// Home-screen app support. Production only, so local dev never gets a worker.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Not fatal: the site works the same, it just can't be installed.
+    })
+  })
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {isPlacementRoute ? <PlacementTestPage /> : <App />}
+    {isPlacementRoute ? (
+      <PlacementTestPage />
+    ) : (
+      <>
+        <App />
+        <InstallAppPrompt />
+      </>
+    )}
   </StrictMode>,
 )

@@ -1,0 +1,101 @@
+.install-app-prompt {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 2147483000;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 14px 40px 14px 14px;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #0f2347;
+  box-shadow: 0 12px 32px rgba(0, 38, 92, 0.22), 0 0 0 1px rgba(0, 74, 173, 0.12);
+  font-family: 'Anuphan', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: install-app-prompt-in 0.28s ease-out;
+}
+
+@keyframes install-app-prompt-in {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.install-app-prompt__icon {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.install-app-prompt__body {
+  min-width: 0;
+}
+
+.install-app-prompt__title {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.install-app-prompt__text {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #44557a;
+}
+
+.install-app-prompt__text b {
+  color: #0f2347;
+  font-weight: 700;
+}
+
+.install-app-prompt__share-icon {
+  width: 17px;
+  height: 17px;
+  vertical-align: -3px;
+  color: #007aff;
+}
+
+.install-app-prompt__action {
+  margin-top: 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #004aad;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 9px 18px;
+  cursor: pointer;
+}
+
+.install-app-prompt__close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #6b7a99;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media print {
+  .install-app-prompt {
+    display: none;
+  }
+}
