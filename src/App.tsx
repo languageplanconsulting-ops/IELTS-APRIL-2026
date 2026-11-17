@@ -22,6 +22,7 @@ import {
   type EngagementActorDetail
 } from './admin/UserEngagementAnalytics'
 import { UsageOverview } from './admin/UsageOverview'
+import { SPEAKING_PHRASE_THAI } from './speakingPhraseThai'
 import { LockedModuleNotice } from './LockedModuleNotice'
 import {
   DEFAULT_ENABLED_MODULES,
@@ -2548,7 +2549,7 @@ const renderRecommendationCard = ({
                     <span className="epRecoBand">{RECOMMENDATION_LEVEL_META[item.level]}</span>
                   </div>
                   <p className="epRecoPhrase">{item.phrase}</p>
-                  <p className="epRecoTip">{item.tip}</p>
+                  <p className="epRecoTip">{SPEAKING_PHRASE_THAI[item.phrase] || item.tip}</p>
                 </article>
               ))}
             </div>
