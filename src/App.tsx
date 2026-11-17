@@ -30,6 +30,7 @@ import { buildEnrollmentInbox, daysUntil, hasLiveAccess, type EnrollmentLearner 
 import { AdminToday } from './admin/AdminToday'
 import { AdminSupportInbox } from './admin/AdminSupportInbox'
 import { SPEAKING_PHRASE_THAI } from './speakingPhraseThai'
+import { SPEAKING_CREDIT_LOW_AT, formatStudentCreditChip, getSpeakingCreditState } from './speakingCredits'
 import { LockedModuleNotice } from './LockedModuleNotice'
 import {
   DEFAULT_ENABLED_MODULES,
@@ -18757,8 +18758,27 @@ function App() {
     setSelectedExpectedScore('')
   }
 
+  // Checked on the screen every test passes through, so a student with no credits is told
+  // BEFORE recording instead of after submitting.
+  const speakingCreditState = getSpeakingCreditState({
+    role: authSession?.role,
+    feedbackRemaining: creditProfile.feedbackRemaining,
+    fullMockRemaining: creditProfile.fullMockRemaining,
+    testMode: selectedTestMode
+  })
+
+  const requestMoreSpeakingCredits = () => {
+    closeExpectedScoreModal()
+    openSupportModal()
+    setSupportCategoryInput('billing')
+    setSupportMessageInput(
+      speakingCreditState?.usesFullMock ? 'ขอเติมสิทธิ์ Full Mock ครับ' : 'ขอเติมสิทธิ์ตรวจ Speaking ครับ'
+    )
+  }
+
   const confirmExpectedScoreStart = () => {
     if (!pendingStartTopicId || !selectedExpectedScore) return
+    if (speakingCreditState?.kind === 'out') return
     setSelectedTopicId(pendingStartTopicId)
     setPendingStartTopicId(null)
     startAttempt()
@@ -22261,12 +22281,22 @@ function App() {
               </button>
             )}
           </div>
-          <div className="metaChip">
+          <div
+            className={`metaChip ${
+              authSession?.role === 'student' && creditProfile.feedbackRemaining <= SPEAKING_CREDIT_LOW_AT
+                ? 'metaChip-lowCredits'
+                : ''
+            }`.trim()}
+          >
             {authSession?.role === 'admin'
               ? `Admin Mode | Learners: ${managedLearners.length} | Open Issues: ${openSupportReportCount}`
               : authSession?.role === 'trial'
                 ? `Trial | ${authSession?.email || ''} | Uses left: ${Math.min(creditProfile.feedbackRemaining, creditProfile.fullMockRemaining)}`
-                : `Name: ${creditProfile.name} | Plan: ${creditProfile.plan} | Feedback: ${creditProfile.feedbackRemaining} | Full Mock: ${creditProfile.fullMockRemaining}`}
+                : formatStudentCreditChip({
+                    name: creditProfile.name,
+                    feedbackRemaining: creditProfile.feedbackRemaining,
+                    fullMockRemaining: creditProfile.fullMockRemaining
+                  })}
           </div>
           {authSession?.role === 'student' && (
             <button type="button" className="secondary" onClick={updateCreditProfileName}>
@@ -32261,6 +32291,20 @@ function App() {
               </div>
             </div>
 
+            {speakingCreditState ? (
+              <div
+                className={`expectedScoreCredit is-${speakingCreditState.kind}`}
+                role={speakingCreditState.kind === 'ok' ? undefined : 'alert'}
+              >
+                <p>{speakingCreditState.messageTh}</p>
+                {speakingCreditState.kind !== 'ok' ? (
+                  <button type="button" className="expectedScoreCreditBtn" onClick={requestMoreSpeakingCredits}>
+                    ขอเติมสิทธิ์จากแอดมิน
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+
             <div className="expectedScoreActions">
               <button type="button" className="expectedScoreBackBtn" onClick={closeExpectedScoreModal}>
                 Back
@@ -32269,7 +32313,7 @@ function App() {
                 type="button"
                 className="expectedScoreReadyBtn"
                 onClick={confirmExpectedScoreStart}
-                disabled={!selectedExpectedScore}
+                disabled={!selectedExpectedScore || speakingCreditState?.kind === 'out'}
               >
                 I&apos;m Ready
               </button>

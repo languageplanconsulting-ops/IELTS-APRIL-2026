@@ -556,3 +556,60 @@
     width: 100%;
   }
 }
+
+/* Credit notice above Back / I'm Ready (added Nov 2026). Tells a student how many graded
+   tests they have left BEFORE they record, and stops them at 0. */
+.expectedScoreOverlay .expectedScoreCredit {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #dbe4f0;
+  background: #f6f8fc;
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.expectedScoreOverlay .expectedScoreCredit p {
+  margin: 0;
+  flex: 1 1 260px;
+}
+
+.expectedScoreOverlay .expectedScoreCredit.is-low {
+  border-color: #ecd98f;
+  background: #fff6d6;
+  color: #6b5200;
+}
+
+.expectedScoreOverlay .expectedScoreCredit.is-out {
+  border-color: #f3b4ae;
+  background: #fdecea;
+  color: #8a1f17;
+  font-weight: 700;
+}
+
+.expectedScoreOverlay .expectedScoreCredit .expectedScoreCreditBtn {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: #ffffff;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Top-bar credit chip turns amber when 3 or fewer graded tests are left. */
+.metaChip.metaChip-lowCredits {
+  border-color: #ecd98f !important;
+  background: #fff6d6 !important;
+  color: #6b5200 !important;
+}

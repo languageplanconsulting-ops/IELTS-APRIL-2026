@@ -9,6 +9,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import multer from 'multer'
 import WebSocket from 'ws'
+import { DEFAULT_APP_URL, buildAccessGrantedEmail } from './accessGrantedEmail.mjs'
 import {
   SPEAKING_MISTAKE_TYPES,
   SPEAKING_MISTAKE_TYPE_KEYS,
@@ -3265,18 +3266,12 @@ const sendNewSignupNotificationEmail = async ({ req, learner }) => {
 }
 
 const sendAccessGrantedEmail = async ({ learner }) => {
-  const learnerName = String(learner?.full_name || learner?.email || 'Student').trim()
-  const html = `
-    <div style="font-family:Arial,sans-serif;line-height:1.7;color:#172033">
-      <p>Hi krub,</p>
-      <p>Your access is granted for this app.</p>
-      <p>Have a nice week!</p>
-    </div>
-  `
-  const text = ['Hi krub,', '', 'Your access is granted for this app.', '', 'Have a nice week!'].join('\n')
+  // Thai email with a button to the app, the login email, a no-password fallback and one
+  // first step. The old 3-line English email had no link at all.
+  const { subject, html, text } = buildAccessGrantedEmail({ learner, appUrl: APP_BASE_URL || DEFAULT_APP_URL })
   return sendEmailWithResend({
     to: learner?.email,
-    subject: 'Your app access is granted',
+    subject,
     html,
     text
   })
@@ -7881,10 +7876,10 @@ const decrementLearnerCredits = async ({ userId, assessmentMode }) => {
   }
 
   if (feedbackRemaining <= 0) {
-    throw new Error('Feedback creditsหมดแล้ว')
+    throw new Error('สิทธิ์ตรวจ Speaking ของคุณหมดแล้วครับ ทักแอดมินเพื่อขอเติมสิทธิ์ได้เลย')
   }
   if (assessmentMode === 'fullMock' && fullMockRemaining <= 0) {
-    throw new Error('Full Mock creditsหมดแล้ว')
+    throw new Error('สิทธิ์ Full Mock ของคุณหมดแล้วครับ ทักแอดมินเพื่อขอเติมสิทธิ์ได้เลย')
   }
 
   await supabaseRequest(`/rest/v1/learner_access?user_id=eq.${encodeURIComponent(userId)}`, {
