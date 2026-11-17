@@ -9,6 +9,12 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import multer from 'multer'
 import WebSocket from 'ws'
+import {
+  formatMonthKey,
+  isMissingUsageFunctionError,
+  parseUsageMonths,
+  shapeUsageOverviewRows
+} from './engagementUsageOverview.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_11_EXAMS } from './userProvidedReadingPracticeCambridge11.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS } from './userProvidedReadingPracticeCambridge12.mjs'
 import { USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_13_EXAMS } from './userProvidedReadingPracticeCambridge13.mjs'
@@ -13404,6 +13410,82 @@ app.get('/api/admin/engagement/actors/:actorKey', requireAdmin, async (req, res)
         status: error?.status || 500,
         type: error?.status === 400 ? 'validation_error' : 'admin_engagement_actor_error',
         message: error instanceof Error ? error.message : 'Could not load actor engagement.'
+      }
+    })
+  }
+})
+
+// Month-by-month usage overview (learners per function, daily active learners, adoption).
+// Needs the one-off SQL in supabase/usage-overview.sql; until it has been run we answer
+// 200 with setupNeeded so the admin screen can say so instead of showing a red error.
+app.get('/api/admin/engagement/usage-overview', requireAdmin, async (req, res) => {
+  try {
+    const timezone = 'Asia/Bangkok'
+    const learnersOnly = String(req.query.learnersOnly ?? '1') !== '0'
+    const currentParts = getZonedDateParts(new Date(), timezone)
+    const currentMonthKey = formatMonthKey(currentParts.year, currentParts.month)
+    const months = parseUsageMonths(req.query.months, currentMonthKey)
+
+    let monthReports
+    try {
+      monthReports = await Promise.all(
+        months.map(async (month) => {
+          const range = parseEngagementPeriod({ period: 'month', month, timezone })
+          const rows = await callEngagementRpc('admin_usage_overview', {
+            p_start_at: range.startAt,
+            p_end_at: range.endAt,
+            p_timezone: timezone,
+            p_learners_only: learnersOnly
+          })
+          return {
+            month,
+            startAt: range.startAt,
+            endAt: range.endAt,
+            ...shapeUsageOverviewRows(rows, { timeZone: timezone })
+          }
+        })
+      )
+    } catch (error) {
+      if (isMissingUsageFunctionError(error)) {
+        return res.json({ setupNeeded: true, sqlFile: 'supabase/usage-overview.sql', months: [] })
+      }
+      throw error
+    }
+
+    // How many learners exist, so "12 active" can be read as "12 of 60". Best effort only.
+    let learnerCounts = null
+    try {
+      const profileRows = await fetchSupabaseJson(
+        '/rest/v1/profiles?select=id,learner_access(status)&role=eq.student',
+        { headers: buildSupabaseHeaders({ serviceRole: true }) }
+      )
+      const students = Array.isArray(profileRows) ? profileRows : []
+      const accessStatus = (row) => {
+        const access = Array.isArray(row?.learner_access) ? row.learner_access[0] : row?.learner_access
+        return String(access?.status || '')
+      }
+      learnerCounts = {
+        registered: students.length,
+        withActiveAccess: students.filter((row) => accessStatus(row) === 'active').length
+      }
+    } catch {
+      learnerCounts = null
+    }
+
+    return res.json({
+      setupNeeded: false,
+      timezone,
+      learnersOnly,
+      currentMonth: currentMonthKey,
+      learnerCounts,
+      months: monthReports
+    })
+  } catch (error) {
+    return res.status(error?.status || 500).json({
+      error: {
+        status: error?.status || 500,
+        type: error?.status === 400 ? 'validation_error' : 'admin_usage_overview_error',
+        message: error instanceof Error ? error.message : 'Could not load the usage overview.'
       }
     })
   }

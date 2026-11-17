@@ -30195,3 +30195,242 @@ textarea {
   transform: translateY(2px);
   box-shadow: 0 3px 0 #071b52;
 }
+
+/* ===================== Admin usage overview (month by month) ===================== */
+.adminEngagementSection .adminUsage {
+  display: grid;
+  gap: 16px;
+  padding-bottom: 24px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #dbe4f0;
+}
+
+.adminEngagementSection .adminUsage .adminEngagementTabs button {
+  white-space: nowrap;
+}
+
+.adminEngagementSection .adminUsage .adminUsageMonths {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.adminEngagementSection .adminUsage .adminUsageMonths.is-loading {
+  opacity: 0.65;
+}
+
+.adminEngagementSection .adminUsage button.adminUsageMonthCard {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid #dbe4f0;
+  border-radius: 14px;
+  background: #fff;
+  color: #0f172a;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+}
+
+.adminEngagementSection .adminUsage button.adminUsageMonthCard > span {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.adminEngagementSection .adminUsage button.adminUsageMonthCard > strong {
+  font-size: 1.9rem;
+  line-height: 1.05;
+}
+
+.adminEngagementSection .adminUsage button.adminUsageMonthCard > small {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.adminEngagementSection .adminUsage button.adminUsageMonthCard.is-selected {
+  border-color: #0f172a;
+  background: #0f172a;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+}
+
+.adminEngagementSection .adminUsage button.adminUsageMonthCard.is-selected > span,
+.adminEngagementSection .adminUsage button.adminUsageMonthCard.is-selected > small {
+  color: #cbd5e1;
+}
+
+/* Learners active per day */
+.adminUsageDaily {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 3px;
+  height: 190px;
+}
+
+.adminUsageDailyCol {
+  display: grid;
+  grid-template-rows: 16px minmax(0, 1fr) 16px;
+  justify-items: center;
+  min-width: 0;
+}
+
+.adminUsageDailyCount,
+.adminUsageDailyDay {
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.adminUsageDailyBar {
+  display: block;
+  align-self: end;
+  width: 100%;
+  max-width: 26px;
+  border-radius: 5px 5px 2px 2px;
+  background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+}
+
+/* By function */
+.adminUsageFunctions {
+  display: grid;
+  gap: 6px;
+}
+
+.adminUsageFunctionHead,
+.adminEngagementSection .adminUsage button.adminUsageFunctionRow {
+  display: grid;
+  grid-template-columns: minmax(130px, 1.2fr) 82px 86px minmax(120px, 1.6fr) 90px;
+  align-items: center;
+  gap: 12px;
+}
+
+.adminUsageFunctionHead {
+  padding: 0 12px;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.adminEngagementSection .adminUsage button.adminUsageFunctionRow {
+  width: 100%;
+  min-height: 46px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  color: #0f172a;
+  text-align: left;
+  cursor: pointer;
+}
+
+.adminEngagementSection .adminUsage button.adminUsageFunctionRow[aria-expanded='true'] {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.adminUsageFunctionName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.adminUsageFunctionName i {
+  color: #64748b;
+  font-style: normal;
+  width: 12px;
+}
+
+.adminUsageShare {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adminUsageShareTrack {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.adminUsageShareTrack span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #2563eb;
+}
+
+.adminUsageShare em {
+  min-width: 34px;
+  color: #475569;
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 700;
+  text-align: right;
+}
+
+.adminUsageChange {
+  font-weight: 800;
+  text-align: right;
+}
+
+.adminUsageChange-up { color: #047857; }
+.adminUsageChange-down { color: #b91c1c; }
+.adminUsageChange-flat { color: #94a3b8; }
+
+.adminUsageFeatureList {
+  display: grid;
+  gap: 2px;
+  margin: 4px 0 6px 28px;
+  padding: 8px 12px;
+  border-left: 3px solid #bfdbfe;
+  background: #f8fbff;
+  border-radius: 0 10px 10px 0;
+}
+
+.adminUsageFeatureRow {
+  display: grid;
+  grid-template-columns: minmax(130px, 1.2fr) 82px 86px;
+  gap: 12px;
+  padding: 4px 0;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.adminUsageSetup h4 {
+  margin: 0 0 6px;
+}
+
+@media (max-width: 720px) {
+  .adminUsageFunctionHead {
+    display: none;
+  }
+
+  .adminEngagementSection .adminUsage button.adminUsageFunctionRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 6px;
+  }
+
+  .adminEngagementSection .adminUsage button.adminUsageFunctionRow .adminUsageShare {
+    grid-column: 1 / -1;
+  }
+
+  .adminUsageFeatureRow {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .adminUsageDaily {
+    height: 150px;
+    gap: 1px;
+  }
+}

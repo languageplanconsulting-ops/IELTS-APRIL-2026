@@ -21,6 +21,7 @@ import {
   UserEngagementAnalytics,
   type EngagementActorDetail
 } from './admin/UserEngagementAnalytics'
+import { UsageOverview } from './admin/UsageOverview'
 import { LockedModuleNotice } from './LockedModuleNotice'
 import {
   DEFAULT_ENABLED_MODULES,
@@ -11745,6 +11746,15 @@ function App() {
         }
       }
     }
+    if (activePage === 'notebook') {
+      return {
+        page: 'notebook',
+        feature: 'notebook',
+        activityType: 'view',
+        activityId: selectedNotebookSection,
+        label: `Notebook ${selectedNotebookSection}`
+      }
+    }
     if (activePage === 'admin') {
       return {
         page: 'admin',
@@ -11781,6 +11791,7 @@ function App() {
     selectedListeningBuilderExamTestId,
     selectedListeningFoundationSetId,
     selectedListeningFullTestId,
+    selectedNotebookSection,
     selectedTestMode,
     writingAnalyticsContext
   ])
@@ -26584,6 +26595,7 @@ function App() {
                 </div>
 
                 <div className="panel adminSectionCard adminOnly-analytics adminEngagementSection">
+                  <UsageOverview accessToken={authSession?.accessToken || ''} />
                   <UserEngagementAnalytics accessToken={authSession?.accessToken || ''} />
                 </div>
 
