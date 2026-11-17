@@ -1,0 +1,290 @@
+/* Mistake-habit drills shown first in a speaking report (SpeakingHabitDrills.tsx).
+   Scoped to .habit* class names only. */
+
+.habitGate {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 18px;
+  padding: 18px;
+  border: 3px solid #0f172a;
+  border-radius: 14px;
+  background: #fffdf2;
+  box-shadow: 4px 4px 0 #0f172a;
+  color: #0f172a;
+}
+
+.habitGate.is-complete {
+  background: #f0faf4;
+}
+
+.habitGateHead {
+  display: grid;
+  gap: 6px;
+}
+
+.habitGateEyebrow {
+  width: fit-content;
+  margin: 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #ffcc00;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.habitGateHead h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.habitGateLead,
+.habitGateAdmin,
+.habitGateCount {
+  margin: 0;
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.habitGateAdmin {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.habitGateProgress {
+  height: 10px;
+  overflow: hidden;
+  border: 2px solid #0f172a;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.habitGateProgress span {
+  display: block;
+  height: 100%;
+  background: #004aad;
+  transition: width 240ms ease;
+}
+
+.habitGateList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.habitCard {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 2px solid #0f172a;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.habitCardHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.habitCardNum {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: #004aad;
+  color: #fff;
+  font-weight: 800;
+}
+
+.habitCardLabel {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.habitCardSeen {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.habitCardRule {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #eef4ff;
+  font-size: 0.93rem;
+  line-height: 1.65;
+}
+
+.habitCardExample {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.habitCardExample p,
+.habitDrillLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+}
+
+.habitDrillTag {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.habitDrillTag.is-bad {
+  background: #fdecea;
+  color: #b42318;
+}
+
+.habitDrillTag.is-good {
+  background: #e6f6ee;
+  color: #137a4b;
+}
+
+.habitDrill {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.habitDrill.is-done {
+  background: #f0faf4;
+}
+
+.habitDrill s {
+  color: #b42318;
+}
+
+.habitDrillPrompt {
+  display: grid;
+  gap: 6px;
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.habitDrillInputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.habitDrillInputRow input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.habitDrillInputRow input:focus {
+  outline: 3px solid #ffcc00;
+  outline-offset: 1px;
+}
+
+.habitGate .habitDrillCheck {
+  flex: none;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  background: #004aad;
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.habitGate .habitDrillCheck:disabled {
+  background: #cbd5e1;
+  color: #475569;
+  cursor: default;
+}
+
+.habitDrillWrong {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.habitDrillAnswer {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff6d1;
+}
+
+.habitDrillReason {
+  margin: 0;
+  color: #334155;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.habitGateLocked,
+.habitGateUnlocked {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.habitGateLocked {
+  background: #0f172a;
+  color: #fff;
+}
+
+.habitGateUnlocked {
+  background: #137a4b;
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .habitGate {
+    padding: 14px;
+  }
+
+  .habitGateHead h3 {
+    font-size: 1.08rem;
+  }
+
+  .habitDrillInputRow {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .habitGateProgress span {
+    transition: none;
+  }
+}

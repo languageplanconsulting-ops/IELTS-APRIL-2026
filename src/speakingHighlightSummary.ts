@@ -65,17 +65,25 @@ export const EXPECTED_SCORE_BAND: Record<string, number | null> = {
   band89: 8
 }
 
+// Subject-verb must come before NUMBER: its "agreement" used to be tagged as a plural problem.
+// The last six match the fixed mistake types the grader now returns (missing word, verb pattern, …).
 const GRAMMAR_TAG_RULES: Array<{ test: RegExp; tag: string }> = [
+  { test: /subject-verb|sva|ประธาน.*กริยา/i, tag: 'S-V AGREEMENT' },
   { test: /article|คำนำหน้า/i, tag: 'ARTICLE' },
   { test: /uncountable|นับไม่ได้/i, tag: 'UNCOUNTABLE' },
   { test: /singular|plural|agreement|number|เอกพจน์|พหูพจน์/i, tag: 'NUMBER' },
-  { test: /subject-verb|sva|ประธาน.*กริยา/i, tag: 'S-V AGREEMENT' },
   { test: /tense|past|present|perfect|กาล/i, tag: 'TENSE' },
   { test: /preposition|บุพบท/i, tag: 'PREPOSITION' },
   { test: /parallel/i, tag: 'PARALLELISM' },
   { test: /word order|ลำดับคำ/i, tag: 'WORD ORDER' },
   { test: /passive/i, tag: 'PASSIVE' },
-  { test: /conjunction|คำเชื่อม/i, tag: 'CONJUNCTION' }
+  { test: /conjunction|คำเชื่อม/i, tag: 'CONJUNCTION' },
+  { test: /missing word|missing-word|ขาดคำ/i, tag: 'MISSING WORD' },
+  { test: /verb pattern|verb-pattern/i, tag: 'VERB PATTERN' },
+  { test: /word form|word-form|ชนิดคำ/i, tag: 'WORD FORM' },
+  { test: /sentence structure|sentence-structure|การเชื่อมประโยค/i, tag: 'STRUCTURE' },
+  { test: /pronoun|สรรพนาม/i, tag: 'PRONOUN' },
+  { test: /word choice|word-choice|การเลือกคำ/i, tag: 'WORD CHOICE' }
 ]
 
 const CRITERION_LABEL_TH: Record<HighlightCriterion, string> = {

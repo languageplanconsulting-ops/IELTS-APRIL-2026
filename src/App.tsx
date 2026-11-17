@@ -67,6 +67,8 @@ import {
 } from './generalTrainingReadingUtils'
 import { ListeningSectionExamView, type ListeningNotebookSavePayload } from './ListeningSectionExamView'
 import { NotebookEntriesView } from './NotebookEntriesView'
+import { SpeakingHabitGate } from './SpeakingHabitDrills'
+import { habitStorageKey, type SpeakingHabit } from './speakingHabitTypes'
 import {
   buildListeningSectionExamGroups,
   builderTaskToExamQuestion,
@@ -1170,6 +1172,8 @@ type AssessmentReport = {
 }
 
 type AssessmentResult = AssessmentReport & {
+  /** Mistake types this student keeps repeating; shown first, and the score unlocks after. */
+  habitDrills?: SpeakingHabit[]
   primaryProvider?: string
   comparisons?: Record<string, AssessmentReport>
   comparisonErrors?: string[]
@@ -1231,6 +1235,8 @@ type ComponentReport = {
   grammarMistakes?: Array<{
     originalText: string
     correctedText: string
+    /** Fixed type key (article, plural, preposition, …) — see server/speakingMistakeQuality.mjs. */
+    errorType?: string
     errorTypeThai?: string
     reasonThai?: string
   }>
@@ -13262,7 +13268,9 @@ function App() {
       }
 
       if (finalText) {
-        setTranscript((current) => `${current}${finalText}`.trim())
+        // Keep a space between chunks: Chrome ends each chunk with "." and gluing them made
+        // transcripts like "has.Change", which the grader then marked as the learner's mistake.
+        setTranscript((current) => `${current} ${finalText}`.replace(/\s+/g, ' ').trim())
       }
       setInterimTranscript(interimText)
     }
@@ -31248,7 +31256,15 @@ function App() {
                             ...vocabLevelOrder.filter((k) => vocabByLevel[k]?.length),
                             ...Object.keys(vocabByLevel).filter((k) => !vocabLevelOrder.includes(k))
                           ]
+                          // Repeated mistakes come first; the score and full report open once fixed.
+                          const habitDrills = assessmentResult.habitDrills || []
                           return (
+                            <SpeakingHabitGate
+                              key={habitStorageKey(habitDrills, assessmentResult.punctuatedTranscript || '')}
+                              habits={habitDrills}
+                              storageKey={habitStorageKey(habitDrills, assessmentResult.punctuatedTranscript || '')}
+                              bypass={authSession?.role === 'admin'}
+                            >
                             <>
                               <div className="reportV2">
                               <div className="reportStickyBar">
@@ -31930,6 +31946,7 @@ function App() {
                               )}
                               </div>
                             </>
+                            </SpeakingHabitGate>
                           )
                         })()}
                       </div>

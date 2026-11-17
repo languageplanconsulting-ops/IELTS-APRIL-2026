@@ -10,6 +10,14 @@ import { fileURLToPath } from 'node:url'
 import multer from 'multer'
 import WebSocket from 'ws'
 import {
+  SPEAKING_MISTAKE_TYPES,
+  SPEAKING_MISTAKE_TYPE_KEYS,
+  classifySpeakingMistake,
+  cleanSpeechTranscript,
+  normalizeMistakeType
+} from './speakingMistakeQuality.mjs'
+import { HABIT_HISTORY_REPORTS, buildHabitDrills } from './speakingHabits.mjs'
+import {
   formatMonthKey,
   isMissingUsageFunctionError,
   parseUsageMonths,
@@ -1106,7 +1114,7 @@ Return only valid JSON with this schema:
     {
       "originalText": string,
       "correctedText": string,
-      "errorTypeThai": string,
+      "errorType": ${SPEAKING_MISTAKE_TYPE_KEYS.map((key) => `"${key}"`).join(' | ')},
       "reasonThai": string
     }
   ]
@@ -1117,7 +1125,9 @@ Rules:
 - correctedText is that same phrase with the grammar fixed and nothing else changed.
 - Do not "fix" style, vocabulary or naturalness here — grammar only.
 - Spoken markers are normal: fillers ("um", "you know"), false starts and self-corrections are NOT mistakes.
-- errorTypeThai is a short Thai label such as "subject-verb agreement", "tense", "article", "plural", "preposition", "word order".
+- This transcript was made by speech-to-text from the learner's VOICE. The machine wrote the spelling, punctuation and capital letters, not the learner. NEVER list a spelling, punctuation or capital-letter mistake.
+- If a word looks like the machine misheard a similar-sounding word (e.g. "closes" for "clothes", "prays" for "plays", "dairy" for "daily", "koala" for "polo"), it is NOT the learner's mistake — skip it.
+- errorType MUST be exactly one of: ${SPEAKING_MISTAKE_TYPE_KEYS.join(', ')}. Pick the ONE main problem. "missing-word" = a missing "be", subject or object (e.g. "it"). "verb-pattern" = -ing vs to + verb, modal, passive. "sentence-structure" = joining clauses, lists, "which".
 - reasonThai explains in Thai why the original is wrong and what rule applies, in one or two sentences.
 - Use the polite Thai register with "ครับ" and never "ค่ะ".
 - If the same mistake pattern repeats, list each occurrence separately with its own quote.
@@ -2967,6 +2977,55 @@ const getOrCreateQuestionAudioAsset = async (
   }
 }
 
+// ── mistake habits ──────────────────────────────────────────────────────────────────────
+// Grammar mistakes from the student's most recent saved reports, newest first.
+const loadRecentReportMistakes = async (userId) => {
+  const index = await loadAssessmentReportsIndex()
+  const items = (Array.isArray(index?.items) ? index.items : [])
+    .filter((item) => normalizeOptionalUuid(item?.userId) === userId && item?.objectPath)
+    .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+    .slice(0, HABIT_HISTORY_REPORTS)
+  const reports = await Promise.all(
+    items.map(async (item) => {
+      try {
+        const payload = await loadAssessmentReportJson(String(item.objectPath))
+        const mistakes = payload?.report?.componentReports?.grammar?.grammarMistakes
+        return Array.isArray(mistakes) ? mistakes : []
+      } catch {
+        return null
+      }
+    })
+  )
+  return reports.filter(Array.isArray)
+}
+
+/**
+ * Adds `habitDrills` to a new result: mistake types this student has made in this report AND
+ * in earlier ones. Never blocks or fails grading — no history, a slow storage call or any
+ * error simply means no drills.
+ */
+const attachHabitDrills = async ({ userId, result }) => {
+  const normalizedUserId = normalizeOptionalUuid(userId)
+  const currentMistakes = result?.componentReports?.grammar?.grammarMistakes
+  if (!normalizedUserId || !Array.isArray(currentMistakes) || !currentMistakes.length) return
+  let timer
+  try {
+    const previousReports = await Promise.race([
+      loadRecentReportMistakes(normalizedUserId),
+      new Promise((resolve) => {
+        timer = setTimeout(() => resolve(null), 8000)
+      })
+    ])
+    if (!Array.isArray(previousReports)) return
+    const habitDrills = buildHabitDrills({ currentMistakes, previousReports })
+    if (habitDrills.length) result.habitDrills = habitDrills
+  } catch (error) {
+    console.error('Could not build mistake-habit drills:', error)
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 const persistAssessmentReportForUser = async ({ userId, profile, requestBody, result }) => {
   const normalizedUserId = normalizeOptionalUuid(userId)
   if (!normalizedUserId || !profile || !result || typeof result !== 'object') {
@@ -3006,12 +3065,12 @@ const persistAssessmentReportForUser = async ({ userId, profile, requestBody, re
     topicCategory,
     prompt: String(requestBody?.prompt || ''),
     cues: (Array.isArray(requestBody?.cues) ? requestBody.cues : []).map((item) => String(item || '')).slice(0, 20),
-    transcript: String(requestBody?.transcript || '').slice(0, 40000),
+    transcript: cleanSpeechTranscript(String(requestBody?.transcript || '')).slice(0, 40000),
     questionResponses: Array.isArray(requestBody?.questionResponses)
       ? requestBody.questionResponses
           .map((item) => ({
             question: String(item?.question || '').slice(0, 1000),
-            response: String(item?.response || '').slice(0, 12000)
+            response: cleanSpeechTranscript(String(item?.response || '')).slice(0, 12000)
           }))
           .slice(0, 40)
       : [],
@@ -8005,6 +8064,9 @@ const normalizeComponentReport = (report, fallbackBand) => ({
     ? report.grammarMistakes.slice(0, 20).map((item) => ({
         originalText: String(item?.originalText || ''),
         correctedText: String(item?.correctedText || ''),
+        errorType: SPEAKING_MISTAKE_TYPES[item?.errorType]
+          ? String(item.errorType)
+          : normalizeMistakeType(item?.errorTypeThai || ''),
         errorTypeThai: normalizeThaiRegisterText(item?.errorTypeThai || ''),
         reasonThai: normalizeThaiRegisterText(item?.reasonThai || '')
       }))
@@ -9969,11 +10031,20 @@ const buildGrammarMistakes = async ({ testMode, punctuatedTranscript, questionBr
       // A "correction" identical to the original is not a mistake.
       if (normalizeForQuoteMatch(correctedText) === comparable) continue
       if (seen.has(comparable)) continue
+      // Spelling, punctuation and speech-to-text mishearings are the machine's, not the learner's.
+      const errorType = classifySpeakingMistake({
+        errorType: row?.errorType,
+        errorTypeThai: row?.errorTypeThai,
+        originalText,
+        correctedText
+      })
+      if (!errorType) continue
       seen.add(comparable)
       mistakes.push({
         originalText,
         correctedText,
-        errorTypeThai: normalizeThaiRegisterText(String(row?.errorTypeThai || '').trim()),
+        errorType,
+        errorTypeThai: SPEAKING_MISTAKE_TYPES[errorType],
         reasonThai: normalizeThaiRegisterText(String(row?.reasonThai || '').trim())
       })
       if (mistakes.length >= 20) break
@@ -15624,7 +15695,8 @@ const runAssessment = async (
   onProgress(8, 'กำลังตรวจสอบไวยากรณ์ของคำตอบคุณ')
   const usageTracker = createApiUsageTracker()
 
-  let rawTranscript = String(transcript || '').trim()
+  // The browser glues its speech chunks as "has.Change"; clean that before anything grades it.
+  let rawTranscript = cleanSpeechTranscript(String(transcript || '')).trim()
   let whisperTranscript = ''
   let pronunciationSignalBand = 5.5
   let pronunciationBand = 5.5
@@ -15724,7 +15796,7 @@ const runAssessment = async (
     ? questionResponses
         .map((item) => ({
           question: String(item?.question || '').trim(),
-          response: String(item?.response || '').trim()
+          response: cleanSpeechTranscript(String(item?.response || '')).trim()
         }))
         .filter((item) => item.question || item.response)
     : []
@@ -16307,6 +16379,7 @@ app.post('/api/assess', requireAuth, async (req, res) => {
     if (String(result?.provider || '').toLowerCase().includes('fallback')) {
       throw new Error('Refusing to return a fallback speaking score. A real scoring model is required.')
     }
+    await attachHabitDrills({ userId: req.auth.user.id, result })
     try {
       await persistAssessmentReportForUser({
         userId: req.auth.user.id,
@@ -16372,6 +16445,7 @@ app.post('/api/assess/start', requireAuth, async (req, res) => {
       if (String(result?.provider || '').toLowerCase().includes('fallback')) {
         throw new Error('Refusing to return a fallback speaking score. A real scoring model is required.')
       }
+      await attachHabitDrills({ userId: req.auth.user.id, result })
       try {
         await persistAssessmentReportForUser({
           userId: req.auth.user.id,
