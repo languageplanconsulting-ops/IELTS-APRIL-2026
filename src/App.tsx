@@ -31,6 +31,19 @@ import { AdminToday } from './admin/AdminToday'
 import { AdminSupportInbox } from './admin/AdminSupportInbox'
 import { SPEAKING_PHRASE_THAI } from './speakingPhraseThai'
 import { SPEAKING_CREDIT_LOW_AT, formatStudentCreditChip, getSpeakingCreditState } from './speakingCredits'
+import {
+  alignMistakeCount,
+  buildMishearingReport,
+  cleanTickEvidence,
+  createChecklistDeduper,
+  describeTarget,
+  filterVocabAgainstMistakes,
+  groupMistakes,
+  isErrorAllowanceTick,
+  pickTopFixes,
+  segmentAnswerWithMistakes,
+  type ReportMistake
+} from './speakingReportLayout'
 import { LockedModuleNotice } from './LockedModuleNotice'
 import {
   DEFAULT_ENABLED_MODULES,
@@ -2792,10 +2805,20 @@ const renderBandLadder = (
     fix?: string
     originalText?: string
     improvedText?: string
-  }) => void
+  }) => void,
+  options: {
+    /** The report shows every mistake once, near the top; the ladder only points to it. */
+    hideMistakeList?: boolean
+    /** The student's mistakes: a ✓ tick must never quote one of them as proof. */
+    mistakes?: ReportMistake[]
+    /** Shared across Grammar / Vocabulary / Fluency so a +1 rewrite isn't repeated. */
+    dedupeChecklist?: <T extends { originalText?: string; quote?: string }>(items: T[]) => T[]
+  } = {}
 ) => {
-  const metTicks = (report.requiredTicks || []).filter((tick) => tick.isMet)
-  const checklist =
+  const metTicks = (report.requiredTicks || []).filter(
+    (tick) => tick.isMet && !(options.mistakes && isErrorAllowanceTick(tick.requirement))
+  )
+  const fullChecklist =
     report.plusOneChecklist && report.plusOneChecklist.length
       ? report.plusOneChecklist
       : (report.plusOnePlan || []).map((plan) => ({
@@ -2807,13 +2830,19 @@ const renderBandLadder = (
           reasonThai: '',
           isPersonalized: false
         }))
+  const checklist = options.dedupeChecklist ? options.dedupeChecklist(fullChecklist.slice(0, 5)) : fullChecklist
   return (
     <div className="bandLadder">
       <div className="ladderRung ladderRungCurrent">
         <span className="ladderDot" aria-hidden="true" />
         <div className="ladderRungBody">
           <p className="ladderBand">Band {report.band.toFixed(1)} · ตอนนี้</p>
-          {(report.grammarMistakes || []).length > 0 && (
+          {options.hideMistakeList && (report.grammarMistakes || []).length > 0 && (
+            <p className="ladderMistakeLink">
+              ข้อผิดพลาดทั้งหมด {(report.grammarMistakes || []).length} จุด อยู่ในรายการด้านบนครับ
+            </p>
+          )}
+          {!options.hideMistakeList && (report.grammarMistakes || []).length > 0 && (
             <div className="mistakeList">
               <p className="mistakeListHead">
                 ข้อผิดพลาดทางไวยากรณ์ทั้งหมด ({(report.grammarMistakes || []).length} จุด)
@@ -2853,10 +2882,12 @@ const renderBandLadder = (
           {metTicks.length > 0 && (
             <ul className="ladderMetList">
               {metTicks.slice(0, 4).map((tick, idx) => {
-                // Show every item that satisfied the criterion, not one sample.
-                const evidence = (tick.evidence || [])
-                  .map((item) => stripOuterQuotes(item))
-                  .filter((item) => item.trim().length > 0)
+                // Show every item that satisfied the criterion, not one sample — but never one of
+                // the student's own mistakes as "proof" of a ✓.
+                const evidence = cleanTickEvidence(
+                  (tick.evidence || []).map((item) => stripOuterQuotes(item)).filter((item) => item.trim().length > 0),
+                  options.mistakes || []
+                )
                 return (
                   <li key={`${keyPrefix}-met-${idx}`}>
                     <span className="ladderMetMark">✓</span> {tick.requirement}
@@ -7360,6 +7391,8 @@ function App() {
     text: string
     icon: string
   } | null>(null)
+  // Mistakes the student flagged as "the system heard me wrong" (sent to the admin inbox).
+  const [reportedMishearings, setReportedMishearings] = useState<Set<string>>(() => new Set())
   const [speakingReportSaved, setSpeakingReportSaved] = useState(false)
   // Popup shown when a previously-failed speaking test is recovered in the background.
   const [recoveredReportNotice, setRecoveredReportNotice] = useState<{ topicTitle: string; count: number } | null>(null)
@@ -7863,6 +7896,39 @@ function App() {
           Authorization: `Bearer ${authSession.accessToken}`
         }
       : {}
+
+  /**
+   * "ระบบได้ยินผิด?" on a speaking mistake: the speech-to-text sometimes mishears a word and the
+   * grader then blames the student. Send it to the admin inbox and dim it for the student.
+   */
+  const reportSpeakingMishearing = async (heard: string, suggested: string) => {
+    const key = `${heard}→${suggested}`
+    if (!authSession?.accessToken || authSession.role !== 'student' || reportedMishearings.has(key)) return
+    setReportedMishearings((current) => new Set(current).add(key))
+    try {
+      await fetchJson<{ report: SupportReportRecord }>('/api/me/support-reports', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          category: 'content',
+          pageContext: 'speaking-report',
+          message: buildMishearingReport({ topic: activeTopic?.title || '', heard, suggested })
+        })
+      })
+      setReportActionToast({
+        icon: '👂',
+        title: 'ส่งให้พี่ดอยตรวจแล้ว',
+        text: 'ขอบคุณครับ ถ้าระบบได้ยินผิดจริง จุดนี้จะไม่นับเป็นข้อผิดพลาดของคุณ'
+      })
+    } catch {
+      setReportedMishearings((current) => {
+        const next = new Set(current)
+        next.delete(key)
+        return next
+      })
+      setReportActionToast({ icon: '⚠️', title: 'ส่งไม่สำเร็จ', text: 'ลองกดอีกครั้งนะครับ' })
+    }
+  }
 
   const buildNotebookSyncSignature = (entries: NotebookEntry[], sections: string[]) =>
     JSON.stringify({ entries, customSections: sections })
@@ -31165,7 +31231,105 @@ function App() {
                             highlightSummary.strengths.length > 0 ||
                             Boolean(highlightSummary.grammarWeakness) ||
                             Boolean(highlightSummary.vocabWeakness)
-                          const vocabSuggestions = activeReport.vocabularyLevelUpSuggestions || []
+                          // Student layout (Part 1 / 2 / 3): every mistake once, the top 3 first, the
+                          // answer shown with its mistakes marked. Full mocks keep their own sections.
+                          const useStudentLayout = !isMockFullReport
+                          const allGrammarMistakes: ReportMistake[] = (
+                            activeReport.componentReports?.grammar?.grammarMistakes || []
+                          ).map((mistake) => ({
+                            originalText: stripOuterQuotes(mistake.originalText),
+                            correctedText: stripOuterQuotes(mistake.correctedText),
+                            errorType: mistake.errorType,
+                            errorTypeThai: mistake.errorTypeThai,
+                            reasonThai: mistake.reasonThai
+                          }))
+                          const mistakeGroups = groupMistakes(allGrammarMistakes)
+                          const allVocabSuggestions = activeReport.vocabularyLevelUpSuggestions || []
+                          // The grader often files one slip twice (as grammar and as vocabulary).
+                          const uniqueVocabSuggestions = useStudentLayout
+                            ? filterVocabAgainstMistakes(allVocabSuggestions, allGrammarMistakes)
+                            : allVocabSuggestions
+                          const topFixes = useStudentLayout ? pickTopFixes(mistakeGroups) : []
+                          // Fewer than 3 grammar types: let the first vocabulary slip fill the gap.
+                          const topVocabFix =
+                            useStudentLayout && topFixes.length < 3 ? uniqueVocabSuggestions[0] || null : null
+                          const topFixQuotes = new Set(topFixes.map((item) => item.mistake.originalText))
+                          const otherMistakeGroups = mistakeGroups
+                            .map((group) => ({
+                              ...group,
+                              items: group.items.filter((mistake) => !topFixQuotes.has(mistake.originalText))
+                            }))
+                            .filter((group) => group.items.length > 0)
+                          const otherMistakeCount = otherMistakeGroups.reduce((sum, group) => sum + group.items.length, 0)
+                          const vocabSuggestions = topVocabFix
+                            ? uniqueVocabSuggestions.filter((item) => item !== topVocabFix)
+                            : uniqueVocabSuggestions
+                          const markableMistakes: ReportMistake[] = [
+                            ...allGrammarMistakes,
+                            ...uniqueVocabSuggestions.map((item) => ({
+                              originalText: stripOuterQuotes(item.sourcePhrase),
+                              correctedText: stripOuterQuotes(item.replacement),
+                              errorType: 'word-choice',
+                              reasonThai: item.reasonThai
+                            }))
+                          ]
+                          const ladderChecklistDeduper = createChecklistDeduper()
+                          const targetInfo = describeTarget(
+                            overallBand,
+                            highlightSummary.expectedBand,
+                            computeTargetBand(overallBand)
+                          )
+                          const answerItems =
+                            (activeReport.questionBreakdown || []).length > 0
+                              ? activeReport.questionBreakdown || []
+                              : activeReport.punctuatedTranscript
+                                ? [{ question: '', punctuatedTranscript: activeReport.punctuatedTranscript, rawTranscript: '' }]
+                                : []
+                          const canFlagMishearing = authSession?.role === 'student'
+                          const renderMistakeCard = (mistake: ReportMistake, key: string, typeLabel?: string) => {
+                            const flagKey = `${mistake.originalText}→${mistake.correctedText}`
+                            const flagged = reportedMishearings.has(flagKey)
+                            return (
+                              <article key={key} className={`rptMistake ${flagged ? 'is-flagged' : ''}`.trim()}>
+                                {typeLabel ? <span className="rptMistakeType">{typeLabel}</span> : null}
+                                <p className="ladderStepFrom">
+                                  <span className="ladderStepTag">คุณพูดว่า</span>
+                                  <s>{mistake.originalText}</s>
+                                </p>
+                                <p className="ladderStepTo">
+                                  <span className="ladderStepTag is-good">พูดแบบนี้แทน</span>
+                                  <span className="ladderStepToFixed">{mistake.correctedText}</span>
+                                </p>
+                                {mistake.reasonThai ? <p className="ladderStepWhy">{mistake.reasonThai}</p> : null}
+                                <div className="rptMistakeActions">
+                                  <button
+                                    type="button"
+                                    className="ladderSaveBtn"
+                                    onClick={() =>
+                                      savePlanToNotebook({
+                                        criterion: mistake.errorType === 'word-choice' ? 'Vocabulary' : 'Grammar',
+                                        quote: mistake.originalText,
+                                        fix: mistake.correctedText,
+                                        preferredSection: 'speaking'
+                                      })
+                                    }
+                                  >
+                                    ＋ บันทึกลง Notebook
+                                  </button>
+                                  {canFlagMishearing ? (
+                                    <button
+                                      type="button"
+                                      className="rptHeardWrongBtn"
+                                      disabled={flagged}
+                                      onClick={() => void reportSpeakingMishearing(mistake.originalText, mistake.correctedText)}
+                                    >
+                                      {flagged ? 'ส่งให้พี่ดอยตรวจแล้ว ✓' : 'ระบบได้ยินผิด?'}
+                                    </button>
+                                  ) : null}
+                                </div>
+                              </article>
+                            )
+                          }
                           const vocabLevelOrder = ['B1', 'B2', 'C1', 'C2', 'A2', 'A1']
                           const vocabByLevel: Record<string, typeof vocabSuggestions> = {}
                           for (const v of vocabSuggestions) {
@@ -31249,11 +31413,115 @@ function App() {
                                 </div>
                               )}
                               {notebookSaveNotice && <p className="meta authSuccess">{notebookSaveNotice}</p>}
-                              <section className="reportDisclaimerCard">
-                                <p>
-                                  คะแนนนี้เป็นเพียงการประเมินจากผลงานของคุณในวันนี้ครับ ตอนสอบจริง คุณอาจได้คะแนนสูงกว่าหรือต่ำกว่านี้ได้ เป้าหมายของ report นี้คือช่วยให้คุณเห็นจุดอ่อนของตัวเอง และเห็นแนวทางพัฒนาที่ทำได้จริงครับ
-                                </p>
-                              </section>
+                              <p className="rptDisclaimerLine">
+                                ⓘ คะแนนนี้ประเมินจากคำตอบวันนี้ ตอนสอบจริงอาจสูงหรือต่ำกว่านี้ได้ — report นี้มีไว้ช่วยให้เห็นจุดที่ต้องพัฒนาครับ
+                              </p>
+                              {useStudentLayout && !isTrialUser && (
+                                <nav className="rptActionBar" aria-label="ฝึกต่อ">
+                                  <button type="button" className="rptActionBtn is-primary" onClick={() => window.history.back()}>
+                                    🔄 ลองข้อนี้อีกครั้ง
+                                    {topFixes.length > 0 ? (
+                                      <small>โฟกัส: {topFixes.map((item) => item.label.split(' (')[0]).join(', ')}</small>
+                                    ) : null}
+                                  </button>
+                                  <button type="button" className="rptActionBtn" onClick={() => setActivePage('notebook')}>
+                                    📓 Notebook
+                                  </button>
+                                  <button type="button" className="rptActionBtn" onClick={() => window.history.back()}>
+                                    📚 เลือก Topic ใหม่
+                                  </button>
+                                </nav>
+                              )}
+                              {useStudentLayout && (topFixes.length > 0 || topVocabFix) && (
+                                <section className="rptTopFixes">
+                                  <header className="rptTopFixesHeader">
+                                    <h4>🎯 ฝึก {topFixes.length + (topVocabFix ? 1 : 0)} จุดนี้ก่อน</h4>
+                                    <span className={`rptTargetPill ${targetInfo.reached ? 'is-reached' : ''}`.trim()}>
+                                      {targetInfo.text}
+                                    </span>
+                                  </header>
+                                  <div className="rptTopFixesList">
+                                    {topFixes.map((item, idx) =>
+                                      renderMistakeCard(
+                                        item.mistake,
+                                        `top-fix-${idx}`,
+                                        item.count > 1 ? `${item.label} · พบ ${item.count} จุด` : item.label
+                                      )
+                                    )}
+                                    {topVocabFix
+                                      ? renderMistakeCard(
+                                          {
+                                            originalText: stripOuterQuotes(topVocabFix.sourcePhrase),
+                                            correctedText: stripOuterQuotes(topVocabFix.replacement),
+                                            errorType: 'word-choice',
+                                            reasonThai: [topVocabFix.thaiMeaning, topVocabFix.reasonThai].filter(Boolean).join(' ')
+                                          },
+                                          'top-fix-vocab',
+                                          `vocabulary${topVocabFix.level ? ` · ${topVocabFix.level}` : ''}`
+                                        )
+                                      : null}
+                                  </div>
+                                  {highlightSummary.strengths.length > 0 && (
+                                    <p className="rptStrengthsLine">
+                                      <strong>✓ ทำได้ดี:</strong>{' '}
+                                      {highlightSummary.strengths
+                                        .map((item) => `${highlightCriterionLabel(item.criterion)} — ${item.text}`)
+                                        .join(' · ')}
+                                    </p>
+                                  )}
+                                </section>
+                              )}
+                              {useStudentLayout && answerItems.length > 0 && (
+                                <section className="rptAnswer">
+                                  <header className="rptSectionHeader">
+                                    <h4>🗣️ คำตอบของน้อง</h4>
+                                    <span>ขีดเส้นใต้ = จุดที่ต้องแก้</span>
+                                  </header>
+                                  {answerItems.map((item, idx) => (
+                                    <article key={`answer-${idx}`} className="rptAnswerItem">
+                                      {item.question ? (
+                                        <p className="rptAnswerQuestion">
+                                          {answerItems.length > 1 ? `Q${idx + 1}: ` : ''}
+                                          {item.question}
+                                        </p>
+                                      ) : null}
+                                      <p className="rptAnswerText">
+                                        {segmentAnswerWithMistakes(
+                                          item.punctuatedTranscript || item.rawTranscript || '',
+                                          markableMistakes
+                                        ).map((segment, segIdx) =>
+                                          segment.mistake ? (
+                                            <span key={`seg-${idx}-${segIdx}`} className="rptAnswerMark">
+                                              <s>{segment.text}</s>
+                                              <ins>{segment.mistake.correctedText}</ins>
+                                            </span>
+                                          ) : (
+                                            <Fragment key={`seg-${idx}-${segIdx}`}>{segment.text}</Fragment>
+                                          )
+                                        )}
+                                      </p>
+                                    </article>
+                                  ))}
+                                </section>
+                              )}
+                              {useStudentLayout && otherMistakeCount > 0 && (
+                                <section className="rptAllMistakes">
+                                  <header className="rptSectionHeader">
+                                    <h4>ข้อผิดพลาดอื่น ๆ ({otherMistakeCount} จุด)</h4>
+                                    <span>รวมทั้งหมด {allGrammarMistakes.length} จุด</span>
+                                  </header>
+                                  {otherMistakeGroups.map((group) => (
+                                    <div key={`mistake-group-${group.type}`} className="rptMistakeGroup">
+                                      <p className="rptMistakeGroupTitle">
+                                        {group.label} <span>{group.items.length}</span>
+                                      </p>
+                                      {group.items.map((mistake, idx) =>
+                                        renderMistakeCard(mistake, `mistake-${group.type}-${idx}`)
+                                      )}
+                                    </div>
+                                  ))}
+                                </section>
+                              )}
                               {!isMockFullReport &&
                                 selectedTestMode === 'part3' &&
                                 (activeReport.part3AnswerCoaching || []).length > 0 && (
@@ -31280,7 +31548,7 @@ function App() {
                                     </div>
                                   </section>
                                 )}
-                              {hasHighlightSummary && (
+                              {!useStudentLayout && hasHighlightSummary && (
                                 <aside className="topFixesPanel highlightSummaryPanel">
                                   <header className="topFixesHeader">
                                     <h4>แก้ตรงนี้ก่อนเลย</h4>
@@ -31329,6 +31597,7 @@ function App() {
                                               onClick={() =>
                                                 savePlanToNotebook({
                                                   criterion: 'Grammar',
+                                                  preferredSection: 'speaking',
                                                   quote: highlightSummary.grammarWeakness?.originalText || '',
                                                   fix: highlightSummary.grammarWeakness?.correctedText || ''
                                                 })
@@ -31373,6 +31642,7 @@ function App() {
                                               onClick={() =>
                                                 savePlanToNotebook({
                                                   criterion: 'Vocabulary',
+                                                  preferredSection: 'speaking',
                                                   quote: highlightSummary.vocabWeakness?.sourcePhrase || '',
                                                   fix: highlightSummary.vocabWeakness?.replacement || '',
                                                   thaiMeaning: highlightSummary.vocabWeakness?.thaiMeaning
@@ -31388,19 +31658,9 @@ function App() {
                                   )}
                                 </aside>
                               )}
-                              <div className="notebookQuickAddBar">
-                                <p className="sectionLabel">Save +1 actions to notebook section</p>
-                                <select
-                                  value={selectedNotebookSection}
-                                  onChange={(event) => setSelectedNotebookSection(event.target.value)}
-                                >
-                                  {notebookSectionTabs.map((sectionName) => (
-                                    <option key={sectionName} value={sectionName}>
-                                      {sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
+                              {/* Every save from a Speaking report goes to the speaking notes tab, so the old
+                                  "Save +1 actions to notebook section" picker is gone (it shared its value with
+                                  the Notebook page and silently filed speaking tips under Writing). */}
                               {isMockFullReport && activeReport.mockFullReport ? (
                                 <>
                                   <section className="sectionV2 sectionV2Tone-warm">
@@ -31442,6 +31702,7 @@ function App() {
                                                   onClick={() =>
                                                     savePlanToNotebook({
                                                       criterion: 'Part 1 Grammar',
+                                                preferredSection: 'speaking',
                                                       quote: item.evidence || item.issue,
                                                       fix: item.suggestion || item.issue
                                                     })
@@ -31546,6 +31807,7 @@ function App() {
                                                       onClick={() =>
                                                         savePlanToNotebook({
                                                           criterion: label,
+                                                        preferredSection: 'speaking',
                                                           quote: plan.quote,
                                                           fix: plan.fix,
                                                           thaiMeaning: plan.thaiMeaning
@@ -31566,6 +31828,7 @@ function App() {
                                             (plan) =>
                                               savePlanToNotebook({
                                                 criterion: label,
+                                                        preferredSection: 'speaking',
                                                 quote: plan.originalText || plan.quote,
                                                 fix: plan.improvedText || plan.fix || ''
                                               })
@@ -31626,7 +31889,7 @@ function App() {
                                                       Band {report.band.toFixed(1)}
                                                     </span>
                                                     <span className="targetBandPill">
-                                                      เป้าหมาย {targetBand.toFixed(1)}
+                                                      ขั้นต่อไป {targetBand.toFixed(1)}
                                                     </span>
                                                   </div>
                                                 </header>
@@ -31642,12 +31905,16 @@ function App() {
                                                       className="bandGapMark"
                                                       style={{ left: `${(targetBand / 9) * 100}%` }}
                                                     >
-                                                      เป้าหมาย
+                                                      ขั้นต่อไป
                                                     </span>
                                                   </div>
                                                   <div className="insightV2">
                                                     {report.explanationThai && (
-                                                      <p>{report.explanationThai}</p>
+                                                      <p>
+                                                        {key === 'grammar' && useStudentLayout
+                                                          ? alignMistakeCount(report.explanationThai, allGrammarMistakes.length)
+                                                          : report.explanationThai}
+                                                      </p>
                                                     )}
                                                   </div>
                                                   {renderBandLadder(
@@ -31657,9 +31924,17 @@ function App() {
                                                     (plan) =>
                                                       savePlanToNotebook({
                                                         criterion: label,
+                                                        preferredSection: 'speaking',
                                                         quote: plan.originalText || plan.quote,
                                                         fix: plan.improvedText || plan.fix || ''
-                                                      })
+                                                      }),
+                                                    useStudentLayout
+                                                      ? {
+                                                          hideMistakeList: true,
+                                                          mistakes: markableMistakes,
+                                                          dedupeChecklist: ladderChecklistDeduper
+                                                        }
+                                                      : {}
                                                   )}
                                                 </div>
                                               </section>
@@ -31707,6 +31982,7 @@ function App() {
                                                 onClick={() =>
                                                   savePlanToNotebook({
                                                     criterion: 'Vocabulary Upgrade',
+                                                    preferredSection: 'speaking',
                                                     quote: item.sourcePhrase,
                                                     fix: `Use ${item.level}: ${item.replacement}`,
                                                     thaiMeaning: `${item.replacement} = ${item.thaiMeaning}`
@@ -31715,6 +31991,18 @@ function App() {
                                               >
                                                 Save
                                               </button>
+                                              {canFlagMishearing ? (
+                                                <button
+                                                  type="button"
+                                                  className="rptHeardWrongBtn"
+                                                  disabled={reportedMishearings.has(`${item.sourcePhrase}→${item.replacement}`)}
+                                                  onClick={() => void reportSpeakingMishearing(item.sourcePhrase, item.replacement)}
+                                                >
+                                                  {reportedMishearings.has(`${item.sourcePhrase}→${item.replacement}`)
+                                                    ? 'ส่งให้พี่ดอยตรวจแล้ว ✓'
+                                                    : 'ระบบได้ยินผิด?'}
+                                                </button>
+                                              ) : null}
                                             </article>
                                           ))}
                                         </div>
@@ -31730,7 +32018,8 @@ function App() {
                                   "english plan's database"
                                 )}
                               </p>
-                              {activeReport.punctuatedTranscript && (
+                              {/* Part 1 / 2 / 3 show the answer open near the top ("คำตอบของคุณ"). */}
+                              {!useStudentLayout && activeReport.punctuatedTranscript && (
                                 <details className="transcriptV2">
                                   <summary>
                                     <span>Question-by-Question Transcript</span>

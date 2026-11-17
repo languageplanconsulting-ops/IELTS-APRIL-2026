@@ -15,6 +15,7 @@ import {
   SPEAKING_MISTAKE_TYPE_KEYS,
   classifySpeakingMistake,
   cleanSpeechTranscript,
+  isLikelyMishearing,
   normalizeMistakeType
 } from './speakingMistakeQuality.mjs'
 import { HABIT_HISTORY_REPORTS, buildHabitDrills } from './speakingHabits.mjs'
@@ -10017,7 +10018,11 @@ const buildCustomVocabularySuggestions = async ({
       }),
       usageTracker
     )
-    return normalizeCustomVocabularySuggestions(payload, questionBreakdown, punctuatedTranscript).slice(0, 12)
+    // A one-word sound-alike swap ("closes" → "clothes") is the speech-to-text mishearing the
+    // learner, not a vocabulary mistake — the grammar list already drops these.
+    return normalizeCustomVocabularySuggestions(payload, questionBreakdown, punctuatedTranscript)
+      .filter((item) => !isLikelyMishearing(item?.sourcePhrase, item?.replacement))
+      .slice(0, 12)
   } catch {
     return []
   }

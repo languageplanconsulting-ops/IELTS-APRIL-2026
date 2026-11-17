@@ -3084,3 +3084,252 @@
     overflow: visible !important;
   }
 }
+
+/* ==========================================================================
+   12 · REPORT: STUDENT-FIRST LAYOUT (Nov 2026)
+   Score → action bar → top 3 fixes → the answer with its mistakes marked →
+   the other mistakes, once each → skill ladders → Vocabulary Lift.
+   ========================================================================== */
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptDisclaimerLine {
+  margin: 6px 2px 14px !important;
+  color: var(--c-muted) !important;
+  font-size: var(--c-t-sm) !important;
+  line-height: 1.5 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptActionBar {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: var(--c-s2) !important;
+  margin: 0 0 var(--c-s4) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptActionBtn {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 2px !important;
+  min-height: 44px !important;
+  padding: 8px 16px !important;
+  border: 1px solid var(--c-line-strong) !important;
+  border-radius: var(--c-r-pill) !important;
+  background: var(--c-white) !important;
+  color: var(--c-ink) !important;
+  font-size: var(--c-t-base) !important;
+  font-weight: 700 !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptActionBtn.is-primary {
+  border-color: var(--c-blue) !important;
+  background: var(--c-blue) !important;
+  color: var(--c-white) !important;
+  box-shadow: var(--c-btn-shadow) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptActionBtn small {
+  font-size: var(--c-t-micro) !important;
+  font-weight: 600 !important;
+  opacity: 0.85 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptTopFixes,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAnswer,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAllMistakes {
+  display: grid !important;
+  gap: var(--c-s3) !important;
+  margin: 0 0 var(--c-s4) !important;
+  padding: var(--c-s4) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r) !important;
+  background: var(--c-white) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptTopFixes {
+  border-color: var(--c-yellow-line) !important;
+  border-left: 6px solid var(--c-yellow) !important;
+  background: var(--c-yellow-tint) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptTopFixesHeader,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptSectionHeader {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--c-s2) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptTopFixesHeader h4,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptSectionHeader h4 {
+  margin: 0 !important;
+  font-size: var(--c-t-lg) !important;
+  color: var(--c-ink) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptSectionHeader > span {
+  color: var(--c-muted) !important;
+  font-size: var(--c-t-sm) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptTargetPill {
+  padding: 4px 12px !important;
+  border: 1px solid var(--c-blue-line) !important;
+  border-radius: var(--c-r-pill) !important;
+  background: var(--c-blue-tint) !important;
+  color: var(--c-blue) !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptTargetPill.is-reached {
+  border-color: #b8dfc9 !important;
+  background: #e8f6ee !important;
+  color: #13704a !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptTopFixesList,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptMistakeGroup {
+  display: grid !important;
+  gap: var(--c-s2) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptMistake {
+  display: grid !important;
+  gap: 6px !important;
+  padding: var(--c-s3) !important;
+  border: 1px solid var(--c-line) !important;
+  border-radius: var(--c-r-sm) !important;
+  background: var(--c-white) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptMistake.is-flagged {
+  opacity: 0.55 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptMistakeType {
+  justify-self: start !important;
+  padding: 2px 10px !important;
+  border-radius: var(--c-r-pill) !important;
+  background: var(--c-soft) !important;
+  color: var(--c-ink-2) !important;
+  font-size: var(--c-t-micro) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptMistakeActions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: var(--c-s2) !important;
+  align-items: center !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptHeardWrongBtn {
+  min-height: 32px !important;
+  padding: 4px 12px !important;
+  border: 1px dashed var(--c-line-strong) !important;
+  border-radius: var(--c-r-pill) !important;
+  background: transparent !important;
+  color: var(--c-muted) !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptHeardWrongBtn:disabled {
+  cursor: default !important;
+  border-style: solid !important;
+  color: #13704a !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptStrengthsLine {
+  margin: 0 !important;
+  color: var(--c-ink-2) !important;
+  font-size: var(--c-t-sm) !important;
+  line-height: 1.6 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAnswerItem {
+  display: grid !important;
+  gap: 6px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAnswerQuestion {
+  margin: 0 !important;
+  color: var(--c-muted) !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 700 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAnswerText {
+  margin: 0 !important;
+  white-space: pre-line !important;
+  color: var(--c-ink) !important;
+  font-size: var(--c-t-lg) !important;
+  line-height: 2 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAnswerMark s {
+  color: #b42318 !important;
+  text-decoration-color: rgba(180, 35, 24, 0.7) !important;
+  text-decoration-thickness: 2px !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAnswerMark ins {
+  margin-left: 4px !important;
+  padding: 1px 6px !important;
+  border-radius: 6px !important;
+  background: #e8f6ee !important;
+  color: #13704a !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptMistakeGroupTitle {
+  margin: var(--c-s2) 0 0 !important;
+  color: var(--c-ink-2) !important;
+  font-size: var(--c-t-sm) !important;
+  font-weight: 800 !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptMistakeGroupTitle span {
+  margin-left: 6px !important;
+  padding: 1px 8px !important;
+  border-radius: var(--c-r-pill) !important;
+  background: var(--c-soft) !important;
+}
+
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .ladderMistakeLink {
+  margin: 4px 0 8px !important;
+  color: var(--c-muted) !important;
+  font-size: var(--c-t-sm) !important;
+}
+
+@media (max-width: 640px) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptActionBtn {
+    flex: 1 1 100% !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptTopFixes,
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAnswer,
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAllMistakes {
+    padding: var(--c-s3) !important;
+  }
+
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .rptAnswerText {
+    font-size: var(--c-t-base) !important;
+  }
+}
+
+/* Phones: the report's prompt card and score card stack. A later desktop rule above
+   (minmax(200px, 0.55fr) 2.45fr, no media query) beat the 900px rule in §10 and pushed the
+   score card off the right edge of a 390px screen. */
+@media (max-width: 900px) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .reportShowcase {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
