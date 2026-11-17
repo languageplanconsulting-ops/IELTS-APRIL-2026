@@ -256,7 +256,8 @@ export function SpeakingPart2SamplePanel({ sample, className = '' }: SpeakingPar
       </div>
       <h4 className="speakingP2SampleTitle">{sample.topicLabel}</h4>
       <p className="speakingP2SampleLead">
-        Watch a model answer while you plan. Use it for ideas, structure, and natural linking — then speak in your own words.
+        ตัวอย่างนี้คือคำตอบระดับ Band 7–7.5 ครับ ลองสังเกตการใช้คำเชื่อม (connectors) คำศัพท์ (vocabulary) ไวยากรณ์
+        (grammar) และแพทเทิร์นที่เรียนในคลาส Speaking
       </p>
 
       <div className="speakingP2SampleFrame">
