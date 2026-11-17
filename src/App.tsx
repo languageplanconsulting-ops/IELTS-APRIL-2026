@@ -25,7 +25,10 @@ import { UsageOverview } from './admin/UsageOverview'
 import { LearnerDirectory, PackagePicker } from './admin/LearnerEnrollment'
 import { useEnrollmentRecords } from './admin/enrollmentApi'
 import './admin/LearnerEnrollment.css'
-import { hasLiveAccess } from './admin/enrollment'
+import './admin/AdminTheme.css'
+import { buildEnrollmentInbox, daysUntil, hasLiveAccess, type EnrollmentLearner } from './admin/enrollment'
+import { AdminToday } from './admin/AdminToday'
+import { AdminSupportInbox } from './admin/AdminSupportInbox'
 import { SPEAKING_PHRASE_THAI } from './speakingPhraseThai'
 import { LockedModuleNotice } from './LockedModuleNotice'
 import {
@@ -288,6 +291,7 @@ const getListeningFoundationAudioCacheKey = (set: ListeningFoundationSet) =>
 type Role = 'student' | 'admin' | 'trial'
 type AppPage = 'home' | 'workspace' | 'reading' | 'listening' | 'listening_foundation_exam' | 'listening_full_test_exam' | 'listening_builder_exam' | 'writing' | 'notebook' | 'admin' | 'examfeed' | 'course' | 'bitesize'
 type AdminWorkspaceSection =
+  | 'home'
   | 'landing'
   | 'reading'
   | 'learners'
@@ -3143,26 +3147,29 @@ const getReadingReleaseBadge = (exam: Pick<ReadingExamRecord, 'releaseAt' | 'par
   return Date.parse(releaseAt) > Date.now() ? `Scheduled: ${formatted}` : `Released: ${formatted}`
 }
 
+const ADMIN_WORKSPACE_GROUPS = ['Start', 'Students', 'Content', 'Tools'] as const
+
 const ADMIN_WORKSPACE_SECTIONS: Array<{
   id: AdminWorkspaceSection
   label: string
-  shortLabel: string
+  icon: string
   description: string
-  group: 'People & Insights' | 'Content Studio' | 'System'
+  group: (typeof ADMIN_WORKSPACE_GROUPS)[number]
 }> = [
-  { id: 'learners', label: 'Learners', shortLabel: 'LR', description: 'Access, credits, and expiry', group: 'People & Insights' },
-  { id: 'analytics', label: 'Analytics', shortLabel: 'AN', description: 'Engagement, journeys, and costs', group: 'People & Insights' },
-  { id: 'support', label: 'Support Inbox', shortLabel: 'SP', description: 'Student questions and issues', group: 'People & Insights' },
-  { id: 'reports', label: 'Speaking Reports', shortLabel: 'RP', description: 'Activity, scores, and full reports', group: 'People & Insights' },
-  { id: 'reading', label: 'Reading Generator', shortLabel: 'RD', description: 'Create and publish exams', group: 'Content Studio' },
-  { id: 'audio', label: 'Question Audio', shortLabel: 'AU', description: 'Manage the TTS library', group: 'Content Studio' },
-  { id: 'videos', label: 'Speaking Videos', shortLabel: 'VD', description: 'Record Part 2 samples', group: 'Content Studio' },
-  { id: 'video-studio', label: 'Video Studio', shortLabel: 'VS', description: 'Prepare AI-render video decks', group: 'Content Studio' },
-  { id: 'task1-qa', label: 'Task 1 QA Review', shortLabel: 'T1', description: 'Review essays against real charts', group: 'Content Studio' },
-  { id: 'placement', label: 'Placement Results', shortLabel: 'PL', description: 'Free test submissions to follow up', group: 'People & Insights' },
-  { id: 'ideas', label: 'Idea Garden', shortLabel: 'IG', description: 'Your pastel mindmap workspace', group: 'System' },
-  { id: 'landing', label: 'Landing Preview', shortLabel: 'LP', description: 'Preview the public landing page', group: 'System' },
-  { id: 'settings', label: 'Settings', shortLabel: 'ST', description: 'Topics and quality tools', group: 'System' }
+  { id: 'home', label: 'Today', icon: '🏠', description: 'What needs you right now', group: 'Start' },
+  { id: 'learners', label: 'Learners', icon: '👥', description: 'Enrol, renew, credits and access', group: 'Students' },
+  { id: 'support', label: 'Support Inbox', icon: '💬', description: 'Messages and problems from students', group: 'Students' },
+  { id: 'reports', label: 'Speaking Reports', icon: '🎙️', description: 'Every speaking test and its report', group: 'Students' },
+  { id: 'placement', label: 'Placement Results', icon: '📝', description: 'Free placement tests to follow up', group: 'Students' },
+  { id: 'analytics', label: 'Analytics', icon: '📊', description: 'Usage, time spent and costs', group: 'Students' },
+  { id: 'reading', label: 'Reading Generator', icon: '📖', description: 'Create and publish reading exams', group: 'Content' },
+  { id: 'audio', label: 'Question Audio', icon: '🔊', description: 'Spoken questions library', group: 'Content' },
+  { id: 'videos', label: 'Speaking Videos', icon: '🎬', description: 'Record Part 2 sample answers', group: 'Content' },
+  { id: 'video-studio', label: 'Video Studio', icon: '🎞️', description: 'Prepare video decks', group: 'Content' },
+  { id: 'task1-qa', label: 'Task 1 QA Review', icon: '✅', description: 'Check Task 1 essays against charts', group: 'Content' },
+  { id: 'ideas', label: 'Idea Garden', icon: '🌱', description: 'Your mind-map workspace', group: 'Tools' },
+  { id: 'landing', label: 'Landing Preview', icon: '🌐', description: 'Preview the public landing page', group: 'Tools' },
+  { id: 'settings', label: 'Settings', icon: '⚙️', description: 'Topics and grading test tools', group: 'Tools' }
 ]
 
 const READING_MONTHLY_EXAM_LEAD =
@@ -7366,11 +7373,14 @@ function App() {
   const [adminLearnerRoleInput, setAdminLearnerRoleInput] = useState<Role>('student')
   const [adminLearnerEnabledModulesInput, setAdminLearnerEnabledModulesInput] = useState<SkillModule[]>(DEFAULT_ENABLED_MODULES)
   const [adminPanelMessage, setAdminPanelMessage] = useState('')
-  const [adminWorkspaceSection, setAdminWorkspaceSection] = useState<AdminWorkspaceSection>('learners')
+  const [adminWorkspaceSection, setAdminWorkspaceSection] = useState<AdminWorkspaceSection>('home')
   const [adminLearnerSearchInput, setAdminLearnerSearchInput] = useState('')
   const [adminLearnerPackageIdInput, setAdminLearnerPackageIdInput] = useState('')
   // Packages, per-student history and dismissed to-do items for Admin → Learners.
   const enrollmentRecords = useEnrollmentRecords(authSession?.role === 'admin' ? authSession.accessToken : '')
+  const [adminTodayNow] = useState(() => Date.now())
+  const [adminShowCreateLearner, setAdminShowCreateLearner] = useState(false)
+  const [adminExpandedReportLearners, setAdminExpandedReportLearners] = useState<Set<string>>(() => new Set())
   const [adminTtsSearchInput, setAdminTtsSearchInput] = useState('')
   const [adminAnalyticsLearnerSearchInput, setAdminAnalyticsLearnerSearchInput] = useState('')
   const [adminUserDetailView, setAdminUserDetailView] = useState<{ userId: string; name: string; email: string } | null>(null)
@@ -8220,7 +8230,7 @@ function App() {
   const switchAdminWorkspaceSection = (section: AdminWorkspaceSection) => {
     setAdminWorkspaceSection(section)
     window.requestAnimationFrame(() => {
-      document.querySelector('.adminMainColumn')?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+      document.querySelector('.adminPanelPage')?.scrollIntoView({ block: 'start', behavior: 'smooth' })
     })
   }
 
@@ -9493,6 +9503,15 @@ function App() {
     () => adminSupportReports.filter((report) => report.status === 'open').length,
     [adminSupportReports]
   )
+  const adminUnresolvedSupportCount = useMemo(
+    () => adminSupportReports.filter((report) => report.status === 'open' || report.status === 'in_progress').length,
+    [adminSupportReports]
+  )
+  // The same to-do list the Learners page shows; drives the badges and the Today page.
+  const adminEnrollmentInbox = useMemo(
+    () => buildEnrollmentInbox(managedLearners as EnrollmentLearner[], enrollmentRecords.records),
+    [managedLearners, enrollmentRecords.records]
+  )
   const adminSpeakingCostLast7Days = useMemo(
     () => buildAdminCostSeries(adminAssessmentReports, 7),
     [adminAssessmentReports]
@@ -9594,10 +9613,6 @@ function App() {
   const adminSpeakingMonthlyCostPath = useMemo(
     () => buildAdminCostLinePath(adminSpeakingCostLast30Days.map((item) => item.cost)),
     [adminSpeakingCostLast30Days]
-  )
-  const activeSupportReportCount = useMemo(
-    () => adminSupportReports.filter((report) => ['open', 'in_progress'].includes(report.status)).length,
-    [adminSupportReports]
   )
   const adminTtsQuestionLibrary = useMemo(
     () =>
@@ -26092,107 +26107,107 @@ function App() {
         )
       ) : activePage === 'admin' ? (
           <section className="adminPanelPage" data-admin-section={adminWorkspaceSection}>
-            <div className="adminHero adminControlHeader">
-              <div>
-                <p className="sectionLabel">Administration</p>
-                <h2>Admin control center</h2>
-                <p className="meta">
-                  Everything is grouped by purpose. Choose a section from the menu to manage people, content, or system tools.
-                </p>
+            <header className="admTopBar">
+              <div className="admTopTitle">
+                <span className="admTopLogo" aria-hidden="true">EP</span>
+                <div>
+                  <h2>Admin</h2>
+                  <p>English Plan</p>
+                </div>
               </div>
-              <div className="adminStatGrid">
-                <button type="button" className="adminStatCard adminStatCard-button" onClick={() => switchAdminWorkspaceSection('learners')}>
-                  <span className="adminStatLabel">Learners</span>
-                  <strong>{managedLearners.length}</strong>
+              <div className="admTopChips">
+                <button type="button" className={`admChip ${adminEnrollmentInbox.length ? 'is-alert' : ''}`} onClick={() => switchAdminWorkspaceSection('learners')}>
+                  To do <strong>{adminEnrollmentInbox.length}</strong>
                 </button>
-                <button type="button" className="adminStatCard adminStatCard-button" onClick={() => switchAdminWorkspaceSection('learners')}>
-                  <span className="adminStatLabel">Active</span>
-                  <strong>{managedLearners.filter((learner) => hasLiveAccess(learner)).length}</strong>
+                <button type="button" className={`admChip ${adminUnresolvedSupportCount ? 'is-alert' : ''}`} onClick={() => switchAdminWorkspaceSection('support')}>
+                  Messages to answer <strong>{adminUnresolvedSupportCount}</strong>
                 </button>
-                <button type="button" className="adminStatCard adminStatCard-button" onClick={() => switchAdminWorkspaceSection('audio')}>
-                  <span className="adminStatLabel">Audio Ready</span>
-                  <strong>{generatedAdminTtsLibrary.length}</strong>
-                </button>
-                <button type="button" className="adminStatCard adminStatCard-button" onClick={() => switchAdminWorkspaceSection('support')}>
-                  <span className="adminStatLabel">Open Issues</span>
-                  <strong>{openSupportReportCount}</strong>
+                <button type="button" className="admChip" onClick={() => switchAdminWorkspaceSection('learners')}>
+                  Students with access <strong>{managedLearners.filter((learner) => hasLiveAccess(learner)).length}</strong>
                 </button>
               </div>
-            </div>
+            </header>
 
             {(adminPanelMessage || authError) && (
-              <div className="panel adminSectionCard">
-                <div className="adminSectionHeader">
-                  <div>
-                    <p className="sectionLabel">Admin Status</p>
-                    <h3>Upload & Access Messages</h3>
-                  </div>
-                </div>
-                {adminPanelMessage && <p className="meta authSuccess">{adminPanelMessage}</p>}
-                {authError && <p className="error authError">{authError}</p>}
+              <div className={`admNotice ${authError ? 'is-error' : ''}`} role="status">
+                {adminPanelMessage ? <span>{adminPanelMessage}</span> : null}
+                {authError ? <span>{authError}</span> : null}
               </div>
             )}
 
             <div className="adminLayout">
-              <aside className="adminNavRail" aria-label="Admin navigation">
-                <div className="adminNavBrand">
-                  <span className="adminNavBrandIcon">EP</span>
-                  <div>
-                    <strong>Workspace</strong>
-                    <small>English Plan Admin</small>
-                  </div>
-                </div>
-                {(['People & Insights', 'Content Studio', 'System'] as const).map((group) => (
-                  <div key={`admin-nav-${group}`} className="adminNavGroup">
-                    <p className="adminNavGroupLabel">{group}</p>
-                    <div className="adminNavList">
-                      {ADMIN_WORKSPACE_SECTIONS.filter((section) => section.group === group).map((section) => (
+              <aside className="adminNavRail admNav" aria-label="Admin navigation">
+                {ADMIN_WORKSPACE_GROUPS.map((group) => (
+                  <div key={`admin-nav-${group}`} className="admNavGroup">
+                    {group !== 'Start' ? <p className="admNavGroupLabel">{group}</p> : null}
+                    {ADMIN_WORKSPACE_SECTIONS.filter((section) => section.group === group).map((section) => {
+                      const badge =
+                        section.id === 'learners'
+                          ? adminEnrollmentInbox.length
+                          : section.id === 'support'
+                            ? adminUnresolvedSupportCount
+                            : 0
+                      return (
                         <button
                           key={section.id}
                           type="button"
-                          className={adminWorkspaceSection === section.id ? 'active' : ''}
+                          className={`admNavItem ${adminWorkspaceSection === section.id ? 'is-on' : ''}`}
                           aria-current={adminWorkspaceSection === section.id ? 'page' : undefined}
                           onClick={() => switchAdminWorkspaceSection(section.id)}
-                          title={`${section.label} — ${section.description}`}
+                          title={section.description}
                         >
-                          <span className="adminNavIcon">{section.shortLabel}</span>
-                          <span className="adminNavCopy">
-                            <span>{section.label}</span>
-                            <small>{section.description}</small>
+                          <span className="admNavIcon" aria-hidden="true">
+                            {section.icon}
                           </span>
+                          <span className="admNavLabel">{section.label}</span>
+                          {badge ? <span className="admNavBadge">{badge}</span> : null}
                         </button>
-                      ))}
-                    </div>
+                      )
+                    })}
                   </div>
                 ))}
               </aside>
               <div className="adminMainColumn">
-                <div className="adminWorkspaceWindowHeader">
-                  <div className="adminWorkspaceTitle">
-                    <span className="adminWorkspaceSectionMark" aria-hidden="true">
-                      {activeAdminWorkspaceSection.shortLabel}
-                    </span>
-                    <div>
-                      <p className="sectionLabel">{activeAdminWorkspaceSection.group}</p>
-                      <h3>{activeAdminWorkspaceSection.label}</h3>
-                      <p className="meta">{activeAdminWorkspaceSection.description}</p>
-                    </div>
+                <div className="admPageHead">
+                  <div>
+                    <h2>
+                      <span aria-hidden="true">{activeAdminWorkspaceSection.icon}</span> {activeAdminWorkspaceSection.label}
+                    </h2>
+                    <p>{activeAdminWorkspaceSection.description}</p>
                   </div>
-                  <label className="adminSectionSelectLabel">
-                    <span>Go to section</span>
+                  <label className="admSectionSelect">
+                    <span>Go to</span>
                     <select
                       value={adminWorkspaceSection}
                       onChange={(event) => switchAdminWorkspaceSection(event.target.value as AdminWorkspaceSection)}
                     >
                       {ADMIN_WORKSPACE_SECTIONS.map((section) => (
                         <option key={`admin-mobile-${section.id}`} value={section.id}>
-                          {section.label}
+                          {section.icon} {section.label}
                         </option>
                       ))}
                     </select>
                   </label>
-                  <span className="adminWindowStatus">Current section</span>
                 </div>
+
+                <div className="panel adminSectionCard adminOnly-home">
+                  <AdminToday
+                    todoCount={adminEnrollmentInbox.length}
+                    todoPreview={adminEnrollmentInbox.slice(0, 5).map((item) => `${item.icon} ${item.title}`)}
+                    liveStudents={managedLearners.filter((learner) => hasLiveAccess(learner)).length}
+                    endingThisWeek={
+                      managedLearners.filter((learner) => {
+                        const left = daysUntil(learner.expiresAt)
+                        return learner.status === 'active' && left !== null && left > 0 && left <= 7
+                      }).length
+                    }
+                    openSupport={adminSupportReports.filter((report) => report.status === 'open' || report.status === 'in_progress')}
+                    reports={adminAssessmentReports}
+                    now={adminTodayNow}
+                    onOpen={(section) => switchAdminWorkspaceSection(section)}
+                  />
+                </div>
+
                 <div className="panel adminSectionCard adminOnly-landing">
                   <div className="adminSectionHeader">
                     <div>
@@ -26273,11 +26288,47 @@ function App() {
                 <div className="panel adminSectionCard adminOnly-learners">
                   <div className="adminSectionHeader">
                     <div>
-                      <p className="sectionLabel">Access Control</p>
-                      <h3>Grant Course Access</h3>
+                      <p className="sectionLabel">Learner Directory</p>
+                      <h3>Learners</h3>
                     </div>
-                    {adminPanelMessage && <span className="adminInlineStatus">{adminPanelMessage}</span>}
+                    {enrollmentRecords.error ? <span className="adminInlineStatus">{enrollmentRecords.error}</span> : null}
                   </div>
+                  <LearnerDirectory
+                    accessToken={authSession?.accessToken || ''}
+                    learners={managedLearners}
+                    records={enrollmentRecords.records}
+                    setRecords={enrollmentRecords.setRecords}
+                    search={adminLearnerSearchInput}
+                    onSearchChange={setAdminLearnerSearchInput}
+                    onLearnerUpdated={(learner) =>
+                      setManagedLearners((current) =>
+                        current.map((item) => (item.id === learner.id ? (learner as ManagedLearnerRecord) : item))
+                      )
+                    }
+                    quickUpdate={(learner, updates) =>
+                      handleAdminQuickUpdate(learner as ManagedLearnerRecord, updates as Partial<ManagedLearnerRecord>)
+                    }
+                    onView={(learner) => void openAdminUserDetail(learner as ManagedLearnerRecord)}
+                  />
+                </div>
+
+                <div className="panel adminSectionCard adminOnly-learners">
+                  <div className="adminSectionHeader">
+                    <div>
+                      <p className="sectionLabel">Add by hand</p>
+                      <h3>Add a student yourself</h3>
+                    </div>
+                    <button
+                      type="button"
+                      className="admBtn admBtn-ghost"
+                      aria-expanded={adminShowCreateLearner}
+                      onClick={() => setAdminShowCreateLearner((open) => !open)}
+                    >
+                      {adminShowCreateLearner ? 'Close' : '＋ Add a student'}
+                    </button>
+                  </div>
+                  {adminShowCreateLearner ? (
+                    <>
                   <p className="meta">
                     Create or renew learner access, set the role, define the expiry date, and preload credits in one
                     place.
@@ -26400,126 +26451,29 @@ function App() {
                     </button>
                     <p className="meta">Tip: pick a package first and it fills skills, credits and the end date for you. If Access Until is blank, access lasts 3 months.</p>
                   </div>
-                </div>
-
-                <div className="panel adminSectionCard adminOnly-learners">
-                  <div className="adminSectionHeader">
-                    <div>
-                      <p className="sectionLabel">Learner Directory</p>
-                      <h3>Learners</h3>
-                    </div>
-                    {enrollmentRecords.error ? <span className="adminInlineStatus">{enrollmentRecords.error}</span> : null}
-                  </div>
-                  <LearnerDirectory
-                    accessToken={authSession?.accessToken || ''}
-                    learners={managedLearners}
-                    records={enrollmentRecords.records}
-                    setRecords={enrollmentRecords.setRecords}
-                    search={adminLearnerSearchInput}
-                    onSearchChange={setAdminLearnerSearchInput}
-                    onLearnerUpdated={(learner) =>
-                      setManagedLearners((current) =>
-                        current.map((item) => (item.id === learner.id ? (learner as ManagedLearnerRecord) : item))
-                      )
-                    }
-                    quickUpdate={(learner, updates) =>
-                      handleAdminQuickUpdate(learner as ManagedLearnerRecord, updates as Partial<ManagedLearnerRecord>)
-                    }
-                    onView={(learner) => void openAdminUserDetail(learner as ManagedLearnerRecord)}
-                  />
+                    </>
+                  ) : (
+                    <p className="meta">Most students arrive by sign-up or Thinkific. Use this only to add someone by hand.</p>
+                  )}
                 </div>
 
                 <div className="panel adminSectionCard adminOnly-support">
-                  <div className="adminSectionHeader">
-                    <div>
-                      <p className="sectionLabel">Client Support</p>
-                      <h3>Problem Reports Inbox</h3>
-                    </div>
-                    <span className="adminInlineStatus">{activeSupportReportCount} active</span>
-                  </div>
-                  <p className="meta">
-                    Every student report lands here. Update the status, leave an internal note, and keep track of what has already been resolved.
-                  </p>
-                  <div className="subscriptionList adminLearnerList">
-                    {adminSupportReports.length === 0 ? (
-                      <p className="meta">No client issues have been reported yet.</p>
-                    ) : (
-                      adminSupportReports.map((report) => (
-                        <article key={report.id} className="subscriptionCard adminLearnerCard supportAdminCard">
-                          <div className="subscriptionTopRow">
-                            <div>
-                              <h3>{report.reporterName}</h3>
-                              <p className="subscriptionEmail">{report.reporterEmail}</p>
-                            </div>
-                            <div className="adminLearnerBadges">
-                              <span className="bandPill">{SUPPORT_REPORT_CATEGORY_LABELS[report.category]}</span>
-                              <span className={`adminStatusPill adminStatusPill-${report.status}`}>{SUPPORT_REPORT_STATUS_LABELS[report.status]}</span>
-                            </div>
-                          </div>
-                          <div className="adminLearnerMetaGrid">
-                            <p className="meta">Page: {report.pageContext}</p>
-                            <p className="meta">Created: {report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Unknown'}</p>
-                            <p className="meta">Updated: {report.updatedAt ? new Date(report.updatedAt).toLocaleString() : 'Unknown'}</p>
-                            <p className="meta">Resolved: {report.resolvedAt ? new Date(report.resolvedAt).toLocaleString() : 'Not resolved yet'}</p>
-                          </div>
-                          <div className="supportAdminBody">
-                            <label>
-                              Client message
-                              <textarea value={report.message} readOnly rows={4} />
-                            </label>
-                            <div className="supportAdminControls">
-                              <label>
-                                Status
-                                <select
-                                  value={report.status}
-                                  onChange={(event) =>
-                                    void handleAdminSupportReportUpdate(report.id, {
-                                      status: event.target.value as SupportReportStatus
-                                    })
-                                  }
-                                >
-                                  {(Object.entries(SUPPORT_REPORT_STATUS_LABELS) as Array<[SupportReportStatus, string]>).map(([value, label]) => (
-                                    <option key={`${report.id}-${value}`} value={value}>
-                                      {label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </label>
-                              <label>
-                                Admin note
-                                <textarea
-                                  value={report.adminNote}
-                                  rows={4}
-                                  onChange={(event) =>
-                                    setAdminSupportReports((current) =>
-                                      current.map((item) =>
-                                        item.id === report.id ? { ...item, adminNote: event.target.value } : item
-                                      )
-                                    )
-                                  }
-                                  placeholder="Internal note for follow-up, fix status, or what you told the client..."
-                                />
-                              </label>
-                            </div>
-                            <div className="adminActionRow">
-                              <button
-                                type="button"
-                                className="secondary"
-                                onClick={() =>
-                                  void handleAdminSupportReportUpdate(report.id, {
-                                    status: report.status,
-                                    adminNote: report.adminNote
-                                  })
-                                }
-                              >
-                                Save Admin Update
-                              </button>
-                            </div>
-                          </div>
-                        </article>
-                      ))
-                    )}
-                  </div>
+                  <AdminSupportInbox
+                    items={adminSupportReports}
+                    categoryLabels={SUPPORT_REPORT_CATEGORY_LABELS}
+                    statusLabels={SUPPORT_REPORT_STATUS_LABELS}
+                    onNoteChange={(id, note) =>
+                      setAdminSupportReports((current) =>
+                        current.map((item) => (item.id === id ? { ...item, adminNote: note } : item))
+                      )
+                    }
+                    onSave={(id, patch) =>
+                      handleAdminSupportReportUpdate(id, {
+                        status: patch.status as SupportReportStatus,
+                        adminNote: patch.adminNote
+                      })
+                    }
+                  />
                 </div>
 
                 <div className="panel adminSectionCard adminOnly-analytics adminEngagementSection">
@@ -26783,7 +26737,7 @@ function App() {
                             <p className="meta">Estimated cost: {formatUsdCost(learner.totalCostUsd)}</p>
                           </div>
                           <div className="adminSpeakingAttemptList">
-                            {learner.attempts.map((report) => (
+                            {(adminExpandedReportLearners.has(learner.key) ? learner.attempts : learner.attempts.slice(0, 3)).map((report) => (
                               <div key={`speaking-attempt-${report.id}`} className="adminSpeakingAttemptRow">
                                 <div>
                                   <strong>
@@ -26804,6 +26758,24 @@ function App() {
                                 </button>
                               </div>
                             ))}
+                            {learner.attempts.length > 3 ? (
+                              <button
+                                type="button"
+                                className="admLink"
+                                onClick={() =>
+                                  setAdminExpandedReportLearners((current) => {
+                                    const next = new Set(current)
+                                    if (next.has(learner.key)) next.delete(learner.key)
+                                    else next.add(learner.key)
+                                    return next
+                                  })
+                                }
+                              >
+                                {adminExpandedReportLearners.has(learner.key)
+                                  ? 'Show only the latest 3'
+                                  : `Show all ${learner.attempts.length} tests`}
+                              </button>
+                            ) : null}
                           </div>
                         </article>
                       ))

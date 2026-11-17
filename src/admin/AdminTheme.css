@@ -1,0 +1,810 @@
+/* ==========================================================================
+   ADMIN THEME (Nov 2026) — one clean, calm look for the whole admin area.
+   Loaded after App.css. Selectors start with `.workspace .adminPanelPage` so they outrank
+   the older admin layers (which use `.workspace .x !important`).
+
+   Deliberately NOT restyled (their own designed UIs; restyling risks breaking recording
+   and editing): Speaking Videos (.adminOnly-videos), Video Studio (.adminOnly-video-studio),
+   Idea Garden (.adminOnly-ideas). Generic rules below skip them with :not().
+   ========================================================================== */
+
+.workspace .adminPanelPage {
+  --adm-bg: #f5f7fb;
+  --adm-card: #ffffff;
+  --adm-line: #e3e8f0;
+  --adm-line-strong: #cbd5e1;
+  --adm-ink: #0f172a;
+  --adm-ink-2: #334155;
+  --adm-muted: #5b6475;
+  --adm-blue: #004aad;
+  --adm-blue-soft: #e8f0ff;
+  --adm-yellow: #ffcc00;
+  --adm-red: #b42318;
+  --adm-red-soft: #fdecea;
+  --adm-green: #137a4b;
+  --adm-green-soft: #e6f6ee;
+  display: grid !important;
+  gap: 16px !important;
+  padding: 16px 0 40px !important;
+  background: transparent !important;
+  color: var(--adm-ink) !important;
+}
+
+/* ── top bar ─────────────────────────────────────────────────────────────────────────── */
+.workspace .adminPanelPage .admTopBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--adm-line);
+  border-radius: 14px !important;
+  background: var(--adm-card);
+}
+
+.workspace .adminPanelPage .admTopTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.workspace .adminPanelPage .admTopLogo {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px !important;
+  background: var(--adm-blue);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.workspace .adminPanelPage .admTopTitle h2 {
+  margin: 0 !important;
+  color: var(--adm-ink) !important;
+  font-size: 1.15rem !important;
+  line-height: 1.2 !important;
+}
+
+.workspace .adminPanelPage .admTopTitle p {
+  margin: 0;
+  color: var(--adm-muted);
+  font-size: 0.78rem;
+}
+
+.workspace .adminPanelPage .admTopChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workspace .adminPanelPage button.admChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 6px 12px !important;
+  border: 1px solid var(--adm-line) !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: var(--adm-ink-2) !important;
+  box-shadow: none !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transform: none !important;
+}
+
+.workspace .adminPanelPage button.admChip strong {
+  color: var(--adm-ink);
+  font-size: 0.95rem;
+}
+
+.workspace .adminPanelPage button.admChip.is-alert {
+  border-color: #f5d76e !important;
+  background: #fff8db !important;
+}
+
+.workspace .adminPanelPage .admNotice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px !important;
+  background: var(--adm-green-soft);
+  color: var(--adm-green);
+  font-weight: 600;
+}
+
+.workspace .adminPanelPage .admNotice.is-error {
+  background: var(--adm-red-soft);
+  color: var(--adm-red);
+}
+
+/* ── layout + sidebar ────────────────────────────────────────────────────────────────── */
+.workspace .adminPanelPage .adminLayout {
+  display: grid !important;
+  grid-template-columns: 228px minmax(0, 1fr) !important;
+  gap: 20px !important;
+  align-items: start !important;
+}
+
+.workspace .adminPanelPage .adminNavRail.admNav {
+  position: sticky !important;
+  top: 12px !important;
+  display: grid !important;
+  gap: 14px !important;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  padding: 12px 10px !important;
+  border: 1px solid var(--adm-line) !important;
+  border-radius: 14px !important;
+  background: var(--adm-card) !important;
+  box-shadow: none !important;
+}
+
+.workspace .adminPanelPage .admNavGroup {
+  display: grid;
+  gap: 2px;
+}
+
+.workspace .adminPanelPage .admNavGroupLabel {
+  margin: 4px 10px 4px;
+  color: #98a2b3;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workspace .adminPanelPage button.admNavItem {
+  display: grid !important;
+  grid-template-columns: 26px minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  padding: 6px 10px !important;
+  border: 0 !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  color: var(--adm-ink-2) !important;
+  box-shadow: none !important;
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  cursor: pointer;
+  transform: none !important;
+}
+
+.workspace .adminPanelPage button.admNavItem:hover {
+  background: #f1f5f9 !important;
+}
+
+.workspace .adminPanelPage button.admNavItem.is-on {
+  background: var(--adm-blue-soft) !important;
+  color: var(--adm-blue) !important;
+  font-weight: 800 !important;
+}
+
+.workspace .adminPanelPage .admNavIcon {
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.workspace .adminPanelPage .admNavLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace .adminPanelPage .admNavBadge {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px !important;
+  background: var(--adm-yellow);
+  color: var(--adm-ink);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.workspace .adminPanelPage .adminMainColumn {
+  display: grid !important;
+  gap: 16px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ── page title ──────────────────────────────────────────────────────────────────────── */
+.workspace .adminPanelPage .admPageHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 2px 0;
+}
+
+.workspace .adminPanelPage .admPageHead h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 !important;
+  color: var(--adm-ink) !important;
+  font-size: 1.5rem !important;
+  line-height: 1.2 !important;
+}
+
+.workspace .adminPanelPage .admPageHead p {
+  margin: 4px 0 0;
+  color: var(--adm-muted);
+  font-size: 0.92rem;
+}
+
+.workspace .adminPanelPage .admSectionSelect {
+  display: none;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--adm-muted);
+}
+
+.workspace .adminPanelPage .admSectionSelect select {
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 1px solid var(--adm-line-strong);
+  border-radius: 9px !important;
+  background: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--adm-ink);
+}
+
+/* "Today" is hidden unless chosen, like every other section. */
+.workspace .adminPanelPage .adminOnly-home {
+  display: none !important;
+}
+
+.workspace .adminPanelPage[data-admin-section='home'] .adminOnly-home {
+  display: block !important;
+}
+
+/* ── one calm card style for every admin section (except the 3 studios) ──────────────── */
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) {
+  padding: 20px !important;
+  border: 1px solid var(--adm-line) !important;
+  border-radius: 14px !important;
+  background: var(--adm-card) !important;
+  box-shadow: none !important;
+  color: var(--adm-ink) !important;
+}
+
+.workspace .adminPanelPage .adminOnly-home.adminSectionCard,
+.workspace .adminPanelPage .adminOnly-support.adminSectionCard {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) .adminSectionHeader h3 {
+  margin: 0 !important;
+  color: var(--adm-ink) !important;
+  font-size: 1.1rem !important;
+  line-height: 1.3 !important;
+}
+
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) .sectionLabel {
+  margin: 0 0 2px !important;
+  color: var(--adm-muted) !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+}
+
+/* The grey notes were huge in places ("Last attempt: …", "Paste a transcript…"). */
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) .meta {
+  color: var(--adm-muted) !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  line-height: 1.55 !important;
+}
+
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) .subscriptionCard {
+  padding: 14px 16px !important;
+  border: 1px solid var(--adm-line) !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) .subscriptionCard h3 {
+  font-size: 1rem !important;
+}
+
+/* Buttons: one primary (blue) and one secondary (outline) style, no chunky shadows. */
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) :is(.controls, .adminActionRow, .adminCardActions) > button {
+  min-height: 38px !important;
+  padding: 8px 14px !important;
+  border: 1px solid var(--adm-blue) !important;
+  border-radius: 9px !important;
+  background: var(--adm-blue) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  transform: none !important;
+}
+
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) :is(.controls, .adminActionRow, .adminCardActions) > button.secondary {
+  border-color: var(--adm-line-strong) !important;
+  background: #fff !important;
+  color: var(--adm-ink) !important;
+}
+
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) :is(.controls, .adminActionRow, .adminCardActions) > button:disabled {
+  opacity: 0.5 !important;
+}
+
+/* Form fields */
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']), select, textarea) {
+  border: 1px solid var(--adm-line-strong) !important;
+  border-radius: 9px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  color: var(--adm-ink) !important;
+  font-size: 0.93rem !important;
+}
+
+.workspace .adminPanelPage .adminSectionCard:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) :is(.bandPill, .adminStatusPill, .adminInlineStatus) {
+  border: 0 !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  font-size: 0.74rem !important;
+}
+
+/* ── Today page ──────────────────────────────────────────────────────────────────────── */
+.workspace .adminPanelPage .admToday {
+  display: grid;
+  gap: 16px;
+}
+
+.workspace .adminPanelPage .admTodayStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.workspace .adminPanelPage button.admStat {
+  display: grid !important;
+  gap: 4px !important;
+  min-height: 0 !important;
+  padding: 16px !important;
+  border: 1px solid var(--adm-line) !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  color: var(--adm-ink) !important;
+  box-shadow: none !important;
+  text-align: left !important;
+  cursor: pointer;
+  transform: none !important;
+}
+
+.workspace .adminPanelPage button.admStat:hover {
+  border-color: var(--adm-blue) !important;
+}
+
+.workspace .adminPanelPage button.admStat span {
+  color: var(--adm-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.workspace .adminPanelPage button.admStat strong {
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.workspace .adminPanelPage button.admStat small {
+  color: var(--adm-muted);
+  font-size: 0.8rem;
+}
+
+.workspace .adminPanelPage button.admStat.is-alert {
+  border-color: #f5d76e !important;
+  background: #fffbea !important;
+}
+
+.workspace .adminPanelPage .admTodayCols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.workspace .adminPanelPage .admCard {
+  padding: 16px 18px;
+  border: 1px solid var(--adm-line);
+  border-radius: 14px !important;
+  background: #fff;
+}
+
+.workspace .adminPanelPage .admCard-wide {
+  grid-column: 1 / -1;
+}
+
+.workspace .adminPanelPage .admCardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.workspace .adminPanelPage .admCardHead h3 {
+  margin: 0 !important;
+  font-size: 1.05rem !important;
+  color: var(--adm-ink) !important;
+}
+
+.workspace .adminPanelPage button.admLink {
+  padding: 4px 0 !important;
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  color: var(--adm-blue) !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  transform: none !important;
+}
+
+.workspace .adminPanelPage .admLines {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+}
+
+.workspace .adminPanelPage .admLines li {
+  padding: 8px 10px;
+  border-radius: 9px !important;
+  background: #f8fafc;
+}
+
+.workspace .adminPanelPage .admLines p {
+  margin: 2px 0 0;
+}
+
+.workspace .adminPanelPage .admMuted {
+  color: var(--adm-muted);
+  font-size: 0.85rem;
+}
+
+.workspace .adminPanelPage .admClamp {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--adm-ink-2);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.workspace .adminPanelPage .admEmpty {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 9px !important;
+  background: var(--adm-green-soft);
+  color: var(--adm-green);
+  font-weight: 700;
+}
+
+.workspace .adminPanelPage .admTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.workspace .adminPanelPage .admTable th {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--adm-line);
+  color: var(--adm-muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.workspace .adminPanelPage .admTable td {
+  padding: 9px 8px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+/* ── Support inbox ───────────────────────────────────────────────────────────────────── */
+.workspace .adminPanelPage .admInbox {
+  display: grid;
+  gap: 12px;
+}
+
+.workspace .adminPanelPage .admTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.workspace .adminPanelPage button.admTab {
+  min-height: 34px !important;
+  padding: 4px 12px !important;
+  border: 1px solid var(--adm-line-strong) !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: var(--adm-ink) !important;
+  box-shadow: none !important;
+  font-size: 0.86rem !important;
+  font-weight: 700 !important;
+  transform: none !important;
+}
+
+.workspace .adminPanelPage button.admTab span {
+  margin-left: 4px;
+  color: var(--adm-muted);
+}
+
+.workspace .adminPanelPage button.admTab.is-on {
+  border-color: var(--adm-ink) !important;
+  background: var(--adm-ink) !important;
+  color: #fff !important;
+}
+
+.workspace .adminPanelPage button.admTab.is-on span {
+  color: #cbd5e1;
+}
+
+.workspace .adminPanelPage .admInboxList {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.workspace .adminPanelPage .admInboxItem {
+  border: 1px solid var(--adm-line);
+  border-radius: 12px !important;
+  background: #fff;
+  overflow: hidden;
+}
+
+.workspace .adminPanelPage .admInboxItem.is-open {
+  border-color: #b9cdf5;
+}
+
+.workspace .adminPanelPage button.admInboxRow {
+  display: grid !important;
+  grid-template-columns: auto minmax(120px, 0.9fr) minmax(0, 2fr) auto auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-height: 52px !important;
+  padding: 10px 14px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--adm-ink) !important;
+  box-shadow: none !important;
+  font-size: 0.92rem !important;
+  font-weight: 500 !important;
+  text-align: left !important;
+  cursor: pointer;
+  transform: none !important;
+}
+
+.workspace .adminPanelPage button.admInboxRow:hover {
+  background: #f8fafc !important;
+}
+
+.workspace .adminPanelPage .admInboxWho {
+  display: grid;
+  min-width: 0;
+}
+
+.workspace .adminPanelPage .admInboxWho small {
+  color: var(--adm-muted);
+  font-size: 0.78rem;
+}
+
+.workspace .adminPanelPage .admInboxPreview {
+  overflow: hidden;
+  color: var(--adm-ink-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace .adminPanelPage .admDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50% !important;
+  background: #cbd5e1;
+}
+
+.workspace .adminPanelPage .admDot-open { background: var(--adm-red); }
+.workspace .adminPanelPage .admDot-in_progress { background: var(--adm-yellow); }
+.workspace .adminPanelPage .admDot-resolved { background: var(--adm-green); }
+
+.workspace .adminPanelPage .admPill {
+  padding: 2px 9px;
+  border-radius: 999px !important;
+  background: #eef1f5;
+  color: var(--adm-ink-2);
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.workspace .adminPanelPage .admPill-open { background: var(--adm-red-soft); color: var(--adm-red); }
+.workspace .adminPanelPage .admPill-in_progress { background: #fff6d1; color: #8a6200; }
+.workspace .adminPanelPage .admPill-resolved { background: var(--adm-green-soft); color: var(--adm-green); }
+
+.workspace .adminPanelPage .admInboxDetail {
+  display: grid;
+  gap: 10px;
+  padding: 4px 16px 16px;
+  border-top: 1px solid #eef2f7;
+}
+
+.workspace .adminPanelPage .admInboxDetail > .admMuted {
+  margin: 10px 0 0;
+}
+
+.workspace .adminPanelPage .admMessage {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 4px solid #b9cdf5;
+  border-radius: 0 10px 10px 0 !important;
+  background: #f8fafc;
+  color: var(--adm-ink);
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+}
+
+.workspace .adminPanelPage .admInboxControls {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.workspace .adminPanelPage .admInboxControls label {
+  display: grid;
+  gap: 4px;
+  color: var(--adm-ink-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.workspace .adminPanelPage .admInboxControls :is(select, textarea) {
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--adm-line-strong);
+  border-radius: 9px !important;
+  background: #fff;
+  color: var(--adm-ink);
+  font: inherit;
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+
+.workspace .adminPanelPage .admRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.workspace .adminPanelPage button.admBtn {
+  min-height: 38px !important;
+  padding: 8px 14px !important;
+  border: 1px solid var(--adm-blue) !important;
+  border-radius: 9px !important;
+  background: var(--adm-blue) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  transform: none !important;
+}
+
+.workspace .adminPanelPage button.admBtn.admBtn-ghost {
+  border-color: var(--adm-line-strong) !important;
+  background: #fff !important;
+  color: var(--adm-ink) !important;
+}
+
+/* ── smaller screens ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 1080px) {
+  .workspace .adminPanelPage .adminLayout {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* The sidebar becomes a row of buttons you can scroll sideways. */
+  .workspace .adminPanelPage .adminNavRail.admNav {
+    position: static !important;
+    display: flex !important;
+    gap: 6px !important;
+    max-height: none;
+    overflow-x: auto;
+    padding: 8px !important;
+  }
+
+  .workspace .adminPanelPage .admNavGroup {
+    display: flex;
+    gap: 6px;
+  }
+
+  .workspace .adminPanelPage .admNavGroupLabel {
+    display: none;
+  }
+
+  .workspace .adminPanelPage button.admNavItem {
+    width: auto !important;
+    white-space: nowrap;
+  }
+
+  .workspace .adminPanelPage .admTodayStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .workspace .adminPanelPage .adminNavRail.admNav {
+    display: none !important;
+  }
+
+  .workspace .adminPanelPage .admSectionSelect {
+    display: grid;
+    width: 100%;
+  }
+
+  .workspace .adminPanelPage .admTodayCols,
+  .workspace .adminPanelPage .admInboxControls {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace .adminPanelPage button.admInboxRow {
+    grid-template-columns: auto minmax(0, 1fr) auto !important;
+  }
+
+  .workspace .adminPanelPage button.admInboxRow .admInboxPreview,
+  .workspace .adminPanelPage button.admInboxRow .admPill:not([class*='admPill-']) {
+    display: none;
+  }
+
+  .workspace .adminPanelPage .admPageHead h2 {
+    font-size: 1.25rem !important;
+  }
+}
+
+/* No more "01 / 02 / 03" number boxes on every card. */
+.workspace .adminPanelPage .adminMainColumn > .adminSectionCard > .adminSectionHeader::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Today and Support Inbox draw their own cards; no extra frame around them. */
+.workspace .adminPanelPage.adminPanelPage .adminSectionCard.adminOnly-home:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas),
+.workspace .adminPanelPage.adminPanelPage .adminSectionCard.adminOnly-support:not(.adminOnly-videos):not(.adminOnly-video-studio):not(.adminOnly-ideas) {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.workspace .adminPanelPage .adminSpeakingAttemptList > button.admLink {
+  justify-self: start;
+  margin-top: 4px;
+}
