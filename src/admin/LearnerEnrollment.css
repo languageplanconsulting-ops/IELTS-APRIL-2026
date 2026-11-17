@@ -1,0 +1,613 @@
+/* Admin → Learners: to-do inbox, packages, filtered list, enrol/renew window.
+   Everything is scoped under .enr / .enrDialogBackdrop so other admin pages are untouched. */
+.enr {
+  --enr-ink: #0f172a;
+  --enr-muted: #5b6475;
+  --enr-line: #dbe3ef;
+  --enr-blue: #004aad;
+  --enr-blue-soft: #e8f0ff;
+  --enr-green: #137a4b;
+  --enr-green-soft: #e6f6ee;
+  --enr-yellow: #8a6200;
+  --enr-yellow-soft: #fff6d1;
+  --enr-red: #b42318;
+  --enr-red-soft: #fdecea;
+  --enr-grey-soft: #eef1f5;
+  display: grid;
+  gap: 16px;
+  color: var(--enr-ink);
+}
+
+.enr .enrMuted,
+.enrDialog .enrMuted {
+  color: var(--enr-muted, #5b6475);
+  font-size: 0.86rem;
+}
+
+.enr .enrBtn,
+.enrDialog .enrBtn {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid #004aad;
+  border-radius: 9px;
+  background: #004aad;
+  color: #fff;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.enr .enrBtn:disabled,
+.enrDialog .enrBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.enr .enrBtn.enrBtn-ghost,
+.enrDialog .enrBtn.enrBtn-ghost {
+  border-color: #cbd5e1;
+  background: #fff;
+  color: #0f172a;
+}
+
+.enr .enrLinkBtn,
+.enrDialog .enrLinkBtn {
+  border: 0;
+  background: none;
+  color: #004aad;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+
+.enr .enrLinkBtn.enrDanger {
+  color: #b42318;
+}
+
+/* to-do inbox */
+.enr .enrInbox {
+  padding: 16px;
+  border: 2px solid var(--enr-blue);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.enr .enrInbox header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.enr .enrInbox header p {
+  margin: 2px 0 10px;
+}
+
+.enr .enrCount {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #ffcc00;
+  color: #0f172a;
+  font-size: 0.85rem;
+}
+
+.enr .enrInbox ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.enr .enrTask {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--enr-line);
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.enr .enrTaskIcon {
+  font-size: 1.3rem;
+}
+
+.enr .enrTaskText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.enr .enrTaskText .enrMuted {
+  overflow-wrap: anywhere;
+}
+
+.enr .enrTaskActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.enr .enrDone {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--enr-green-soft);
+  color: var(--enr-green);
+  font-weight: 700;
+}
+
+/* packages */
+.enr .enrPanel {
+  border: 1px solid var(--enr-line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.enr .enrPanelToggle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 0;
+  background: none;
+  color: var(--enr-ink);
+  font: inherit;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+
+.enr .enrPanelToggle small {
+  color: var(--enr-muted);
+  font-weight: 500;
+}
+
+.enr .enrPackages {
+  display: grid;
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.enr .enrPackageRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--enr-line);
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.enr .enrPackageRow .enrField-wide {
+  grid-column: 1 / -1;
+}
+
+.enr .enrPackageFoot,
+.enr .enrPackageActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.enr .enrPackageFoot {
+  grid-column: 1 / -1;
+  justify-content: space-between;
+}
+
+.enr .enrChecks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+.enr .enrChecks label,
+.enr .enrPackageFoot label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.enr .enrField,
+.enrDialog .enrField {
+  display: grid;
+  gap: 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.enr .enrField input,
+.enrDialog .enrField input,
+.enrDialog .enrField select,
+.enr .enrSearch,
+.enrDialog .enrNoteRow input {
+  min-height: 38px;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+/* filters + list */
+.enr .enrListHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.enr .enrFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.enr .enrChip {
+  min-height: 34px;
+  padding: 4px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #fff;
+  color: #0f172a;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.enr .enrChip span {
+  margin-left: 4px;
+  color: var(--enr-muted);
+}
+
+.enr .enrChip.is-on {
+  border-color: #0f172a;
+  background: #0f172a;
+  color: #fff;
+}
+
+.enr .enrChip.is-on span {
+  color: #cbd5e1;
+}
+
+.enr .enrSearch {
+  width: min(320px, 100%);
+}
+
+.enr .enrList {
+  display: grid;
+  gap: 8px;
+}
+
+.enr .enrCard {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--enr-line);
+  border-left: 5px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.enr .enrCard-active { border-left-color: var(--enr-green); }
+.enr .enrCard-ending,
+.enr .enrCard-no-end { border-left-color: #ffcc00; }
+.enr .enrCard-expired { border-left-color: var(--enr-red); }
+.enr .enrCard-waiting { border-left-color: var(--enr-blue); }
+
+.enr .enrCardTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.enr .enrCardTop h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.enr .enrCardTop p {
+  margin: 0;
+}
+
+.enr .enrBadges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.enr .enrStatus,
+.enr .enrPkg {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.enr .enrPkg {
+  background: var(--enr-grey-soft);
+  color: #334155;
+  font-weight: 700;
+}
+
+.enr .enrTone-green { background: var(--enr-green-soft); color: var(--enr-green); }
+.enr .enrTone-yellow { background: var(--enr-yellow-soft); color: var(--enr-yellow); }
+.enr .enrTone-red { background: var(--enr-red-soft); color: var(--enr-red); }
+.enr .enrTone-blue { background: var(--enr-blue-soft); color: var(--enr-blue); }
+.enr .enrTone-grey { background: var(--enr-grey-soft); color: var(--enr-muted); }
+
+.enr .enrFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.enr .enrSkills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.enr .enrSkill {
+  min-height: 30px;
+  padding: 2px 10px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 7px;
+  background: #fff;
+  color: #94a3b8;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.enr .enrSkill.is-on {
+  border: 1px solid var(--enr-blue);
+  background: var(--enr-blue-soft);
+  color: var(--enr-blue);
+}
+
+.enr .enrCardActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.enr .enrCardActions .enrDanger {
+  margin-left: auto;
+}
+
+/* "Grant Course Access" form: package dropdown */
+.enrPackagePicker {
+  grid-column: 1 / -1;
+}
+
+/* enrol / renew window */
+.enrDialogBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.enrDialog {
+  width: min(560px, 100%);
+  margin: auto 0;
+  border-radius: 16px;
+  background: #fff;
+  color: #0f172a;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.3);
+}
+
+.enrDialogHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.enrDialogHead h3 {
+  margin: 2px 0 0;
+  font-size: 1.2rem;
+}
+
+.enrDialogHead p {
+  margin: 0;
+}
+
+.enrEyebrow {
+  margin: 0;
+  color: #004aad;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.enrIconBtn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #fff;
+  color: #0f172a;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.enrDialogBody {
+  display: grid;
+  gap: 14px;
+  padding: 16px 20px 20px;
+}
+
+.enrSegment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 10px;
+  background: #eef1f5;
+}
+
+.enrSegment button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #334155;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.enrSegment button.is-on {
+  background: #fff;
+  color: #004aad;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.15);
+}
+
+.enrDates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.enrPreview {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f8fafc;
+  list-style: none;
+}
+
+.enrPreview li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.enrPreview li span {
+  color: #5b6475;
+}
+
+.enrPreview .enrPreviewNote {
+  color: #137a4b;
+  font-weight: 700;
+}
+
+.enrWarn,
+.enrError {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+.enrWarn { background: #fff6d1; color: #8a6200; }
+.enrError { background: #fdecea; color: #b42318; }
+
+.enrDialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.enrHistory {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.enrHistory h4 {
+  margin: 0;
+}
+
+.enrNoteRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
+.enrHistory ol {
+  display: grid;
+  gap: 8px;
+  max-height: 260px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.enrHistory li {
+  padding: 8px 10px;
+  border-left: 3px solid #bfdbfe;
+  border-radius: 0 8px 8px 0;
+  background: #f8fafc;
+}
+
+.enrHistory li p {
+  margin: 2px 0 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+  .enr .enrTask {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .enr .enrTaskActions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .enr .enrPackageRow {
+    grid-template-columns: 1fr;
+  }
+
+  .enr .enrCardActions .enrDanger {
+    margin-left: 0;
+  }
+}

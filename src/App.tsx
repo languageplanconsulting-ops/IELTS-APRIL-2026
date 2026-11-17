@@ -22,6 +22,10 @@ import {
   type EngagementActorDetail
 } from './admin/UserEngagementAnalytics'
 import { UsageOverview } from './admin/UsageOverview'
+import { LearnerDirectory, PackagePicker } from './admin/LearnerEnrollment'
+import { useEnrollmentRecords } from './admin/enrollmentApi'
+import './admin/LearnerEnrollment.css'
+import { hasLiveAccess } from './admin/enrollment'
 import { SPEAKING_PHRASE_THAI } from './speakingPhraseThai'
 import { LockedModuleNotice } from './LockedModuleNotice'
 import {
@@ -3765,9 +3769,6 @@ Paraphrased Vocabulary: สรุป keyword/paraphrase ที่สำคัญ
   ]
 }
 
-const formatAccessDate = (value: string | null) =>
-  value ? new Date(value).toLocaleDateString() : 'Not set'
-
 // Rough USD→THB rate for the admin cost estimate. This is a manual approximation
 // for display only (not a live FX conversion) — update it when the rate drifts.
 const USD_TO_THB = 33
@@ -7367,6 +7368,9 @@ function App() {
   const [adminPanelMessage, setAdminPanelMessage] = useState('')
   const [adminWorkspaceSection, setAdminWorkspaceSection] = useState<AdminWorkspaceSection>('learners')
   const [adminLearnerSearchInput, setAdminLearnerSearchInput] = useState('')
+  const [adminLearnerPackageIdInput, setAdminLearnerPackageIdInput] = useState('')
+  // Packages, per-student history and dismissed to-do items for Admin → Learners.
+  const enrollmentRecords = useEnrollmentRecords(authSession?.role === 'admin' ? authSession.accessToken : '')
   const [adminTtsSearchInput, setAdminTtsSearchInput] = useState('')
   const [adminAnalyticsLearnerSearchInput, setAdminAnalyticsLearnerSearchInput] = useState('')
   const [adminUserDetailView, setAdminUserDetailView] = useState<{ userId: string; name: string; email: string } | null>(null)
@@ -9476,15 +9480,6 @@ function App() {
         }),
     []
   )
-  const filteredManagedLearners = useMemo(() => {
-    const query = adminLearnerSearchInput.trim().toLowerCase()
-    if (!query) return managedLearners
-    return managedLearners.filter((learner) =>
-      [learner.name, learner.email, learner.role, learner.status].some((value) =>
-        String(value || '').toLowerCase().includes(query)
-      )
-    )
-  }, [adminLearnerSearchInput, managedLearners])
   const filteredAnalyticsLearners = useMemo(() => {
     const query = adminAnalyticsLearnerSearchInput.trim().toLowerCase()
     if (!query) return managedLearners
@@ -18657,10 +18652,13 @@ function App() {
           expiresAt: adminLearnerExpiresAtInput ? new Date(adminLearnerExpiresAtInput).toISOString() : null,
           feedbackCredits: adminLearnerFeedbackCreditsInput,
           fullMockCredits: adminLearnerFullMockCreditsInput,
-          enabledModules: adminLearnerEnabledModulesInput
+          enabledModules: adminLearnerEnabledModulesInput,
+          packageId: adminLearnerPackageIdInput || undefined
         })
       })
       setManagedLearners((current) => [payload.learner, ...current.filter((item) => item.id !== payload.learner.id)])
+      setAdminLearnerPackageIdInput('')
+      void enrollmentRecords.reload()
       setAdminLearnerNameInput('')
       setAdminLearnerEmailInput('')
       setAdminLearnerPasswordInput('')
@@ -26109,7 +26107,7 @@ function App() {
                 </button>
                 <button type="button" className="adminStatCard adminStatCard-button" onClick={() => switchAdminWorkspaceSection('learners')}>
                   <span className="adminStatLabel">Active</span>
-                  <strong>{managedLearners.filter((learner) => learner.status === 'active').length}</strong>
+                  <strong>{managedLearners.filter((learner) => hasLiveAccess(learner)).length}</strong>
                 </button>
                 <button type="button" className="adminStatCard adminStatCard-button" onClick={() => switchAdminWorkspaceSection('audio')}>
                   <span className="adminStatLabel">Audio Ready</span>
@@ -26285,14 +26283,40 @@ function App() {
                     place.
                   </p>
                   <div className="adminFormGrid">
+                    <PackagePicker
+                      packages={enrollmentRecords.records.packages}
+                      value={adminLearnerPackageIdInput}
+                      onPick={(pkg) => {
+                        setAdminLearnerPackageIdInput(pkg?.id || '')
+                        if (!pkg) return
+                        setAdminLearnerEnabledModulesInput(pkg.enabledModules)
+                        setAdminLearnerFeedbackCreditsInput(pkg.feedbackCredits)
+                        setAdminLearnerFullMockCreditsInput(pkg.fullMockCredits)
+                        setAdminLearnerStatusInput('active')
+                        if (pkg.months > 0) {
+                          const end = new Date()
+                          end.setMonth(end.getMonth() + pkg.months)
+                          setAdminLearnerExpiresAtInput(end.toISOString().slice(0, 10))
+                        } else {
+                          setAdminLearnerExpiresAtInput('')
+                        }
+                      }}
+                    />
                     <label>
                       Name
-                      <input value={adminLearnerNameInput} onChange={(event) => setAdminLearnerNameInput(event.target.value)} />
+                      <input
+                        autoComplete="off"
+                        value={adminLearnerNameInput}
+                        onChange={(event) => setAdminLearnerNameInput(event.target.value)}
+                      />
                     </label>
                     <label>
                       Email
+                      {/* autoComplete off: Chrome was filling in the admin's own saved login here. */}
                       <input
                         type="email"
+                        name="new-student-email"
+                        autoComplete="off"
                         value={adminLearnerEmailInput}
                         onChange={(event) => setAdminLearnerEmailInput(event.target.value)}
                       />
@@ -26301,6 +26325,8 @@ function App() {
                       Password
                       <input
                         type="password"
+                        name="new-student-password"
+                        autoComplete="new-password"
                         value={adminLearnerPasswordInput}
                         onChange={(event) => setAdminLearnerPasswordInput(event.target.value)}
                       />
@@ -26372,7 +26398,7 @@ function App() {
                     <button type="button" onClick={() => void handleAdminCreateLearner()}>
                       Save Learner Access
                     </button>
-                    <p className="meta">Tip: if Access Until is blank when you grant access, the app will default it to 3 months from the access date.</p>
+                    <p className="meta">Tip: pick a package first and it fills skills, credits and the end date for you. If Access Until is blank, access lasts 3 months.</p>
                   </div>
                 </div>
 
@@ -26382,132 +26408,25 @@ function App() {
                       <p className="sectionLabel">Learner Directory</p>
                       <h3>Learners</h3>
                     </div>
-                    <label className="adminSearchField">
-                      <span>Search learners</span>
-                      <input
-                        type="search"
-                        value={adminLearnerSearchInput}
-                        onChange={(event) => setAdminLearnerSearchInput(event.target.value)}
-                        placeholder="Search by name, email, role, or status"
-                      />
-                    </label>
+                    {enrollmentRecords.error ? <span className="adminInlineStatus">{enrollmentRecords.error}</span> : null}
                   </div>
-                  <div className="subscriptionList adminLearnerList">
-                    {filteredManagedLearners.length === 0 ? (
-                      <p className="meta">No learners match this search yet.</p>
-                    ) : (
-                      filteredManagedLearners
-                        .slice()
-                        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                        .map((learner) => (
-                          <article key={learner.id} className="subscriptionCard adminLearnerCard">
-                            <div className="subscriptionTopRow">
-                              <div>
-                                <h3>{learner.name}</h3>
-                                <p className="subscriptionEmail">{learner.email}</p>
-                              </div>
-                              <div className="adminLearnerBadges">
-                                <span className="bandPill">{learner.role}</span>
-                                <span className={`adminStatusPill adminStatusPill-${learner.status}`}>{learner.status}</span>
-                              </div>
-                            </div>
-                            <div className="adminLearnerMetaGrid">
-                              <p className="meta">Joined: {new Date(learner.createdAt).toLocaleDateString()}</p>
-                              <p className="meta">Access: {formatAccessDate(learner.startsAt)} to {formatAccessDate(learner.expiresAt)}</p>
-                              <p className="meta">Feedback: {learner.feedbackRemaining}</p>
-                              <p className="meta">Full Mock: {learner.fullMockRemaining}</p>
-                            </div>
-                            <div className="adminLearnerSkillPills">
-                              {SKILL_MODULES.map((module) => {
-                                const isEnabled = learner.enabledModules.includes(module.key)
-                                return (
-                                  <button
-                                    key={module.key}
-                                    type="button"
-                                    className={`adminSkillPill ${isEnabled ? 'adminSkillPill-on' : 'adminSkillPill-off'}`}
-                                    onClick={() =>
-                                      void handleAdminQuickUpdate(learner, {
-                                        enabledModules: isEnabled
-                                          ? learner.enabledModules.filter((key) => key !== module.key)
-                                          : [...learner.enabledModules, module.key]
-                                      })
-                                    }
-                                  >
-                                    {module.label}
-                                  </button>
-                                )
-                              })}
-                            </div>
-                            <div className="controls adminCardActions">
-                              <button
-                                type="button"
-                                className="secondary"
-                                onClick={() =>
-                                  void handleAdminQuickUpdate(learner, {
-                                    status: learner.status === 'active' ? 'inactive' : 'active',
-                                    ...(learner.status === 'active'
-                                      ? {}
-                                      : {
-                                          feedbackRemaining:
-                                            learner.feedbackRemaining > 0 ? learner.feedbackRemaining : DEFAULT_FEEDBACK_CREDITS,
-                                          fullMockRemaining:
-                                            learner.fullMockRemaining > 0 ? learner.fullMockRemaining : DEFAULT_FULL_MOCK_CREDITS
-                                        })
-                                  })
-                                }
-                              >
-                                {learner.status === 'active' ? 'Deactivate' : 'Grant Access'}
-                              </button>
-                              <button
-                                type="button"
-                                className="secondary"
-                                onClick={() =>
-                                  void handleAdminQuickUpdate(learner, {
-                                    feedbackRemaining: learner.feedbackRemaining + 10
-                                  })
-                                }
-                              >
-                                +10 Feedback
-                              </button>
-                              <button
-                                type="button"
-                                className="secondary"
-                                onClick={() =>
-                                  void handleAdminQuickUpdate(learner, {
-                                    fullMockRemaining: learner.fullMockRemaining + 5
-                                  })
-                                }
-                              >
-                                +5 Full Mock
-                              </button>
-                              <button
-                                type="button"
-                                className="secondary"
-                                onClick={() => {
-                                  const nextDate = window.prompt(
-                                    'New expiry date (YYYY-MM-DD)',
-                                    learner.expiresAt ? learner.expiresAt.slice(0, 10) : ''
-                                  )
-                                  if (!nextDate) return
-                                  void handleAdminQuickUpdate(learner, {
-                                    expiresAt: new Date(nextDate).toISOString()
-                                  })
-                                }}
-                              >
-                                Change Expiry
-                              </button>
-                              <button
-                                type="button"
-                                className="secondary"
-                                onClick={() => void openAdminUserDetail(learner)}
-                              >
-                                View
-                              </button>
-                            </div>
-                          </article>
-                        ))
-                    )}
-                  </div>
+                  <LearnerDirectory
+                    accessToken={authSession?.accessToken || ''}
+                    learners={managedLearners}
+                    records={enrollmentRecords.records}
+                    setRecords={enrollmentRecords.setRecords}
+                    search={adminLearnerSearchInput}
+                    onSearchChange={setAdminLearnerSearchInput}
+                    onLearnerUpdated={(learner) =>
+                      setManagedLearners((current) =>
+                        current.map((item) => (item.id === learner.id ? (learner as ManagedLearnerRecord) : item))
+                      )
+                    }
+                    quickUpdate={(learner, updates) =>
+                      handleAdminQuickUpdate(learner as ManagedLearnerRecord, updates as Partial<ManagedLearnerRecord>)
+                    }
+                    onView={(learner) => void openAdminUserDetail(learner as ManagedLearnerRecord)}
+                  />
                 </div>
 
                 <div className="panel adminSectionCard adminOnly-support">

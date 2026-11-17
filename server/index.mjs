@@ -18,6 +18,17 @@ import {
 } from './speakingMistakeQuality.mjs'
 import { HABIT_HISTORY_REPORTS, buildHabitDrills } from './speakingHabits.mjs'
 import {
+  ENROLLMENT_RECORDS_PATH,
+  appendEnrollmentEvent,
+  computeEnrollmentAccess,
+  describeAccessChange,
+  dismissInboxItem,
+  normalizePackages,
+  normalizeRecords,
+  pickActivationExpiry,
+  resolveThinkificPackage
+} from './enrollmentRecords.mjs'
+import {
   formatMonthKey,
   isMissingUsageFunctionError,
   parseUsageMonths,
@@ -2299,6 +2310,68 @@ const ensureAssessmentReportsBucket = async () => {
   assessmentReportsBucketReady = true
 }
 
+// ── Enrollment packages + history (one JSON file in the reports bucket) ────────────────
+let enrollmentRecordsCache = null
+
+const loadEnrollmentRecords = async ({ forceRefresh = false } = {}) => {
+  if (enrollmentRecordsCache && !forceRefresh) return enrollmentRecordsCache
+  await ensureAssessmentReportsBucket()
+  let raw = null
+  try {
+    const response = await supabaseRequest(
+      `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(ENROLLMENT_RECORDS_PATH)}`,
+      { headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false }) }
+    )
+    raw = await parseJsonSafe(response)
+  } catch (error) {
+    if (!error?.storageRestricted && error?.status !== 400 && error?.status !== 404) throw error
+  }
+  enrollmentRecordsCache = normalizeRecords(raw)
+  return enrollmentRecordsCache
+}
+
+const saveEnrollmentRecords = async (records) =>
+  withStorageFallback(async () => {
+    await ensureAssessmentReportsBucket()
+    await supabaseRequest(
+      `/storage/v1/object/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}/${encodeStorageObjectPath(ENROLLMENT_RECORDS_PATH)}`,
+      {
+        method: 'POST',
+        headers: {
+          ...buildSupabaseHeaders({ serviceRole: true, includeJson: false }),
+          'Content-Type': 'application/json',
+          'x-upsert': 'true',
+          'cache-control': 'no-cache'
+        },
+        body: JSON.stringify(records)
+      }
+    )
+    enrollmentRecordsCache = records
+  })
+
+const accessSnapshot = (profile) => ({
+  status: String(profile?.learner_access?.status || 'inactive'),
+  startsAt: profile?.learner_access?.starts_at || null,
+  expiresAt: profile?.learner_access?.expires_at || null,
+  feedbackCredits: Number(profile?.learner_access?.feedback_credits ?? 0),
+  fullMockCredits: Number(profile?.learner_access?.full_mock_credits ?? 0),
+  enabledModules: Array.isArray(profile?.learner_access?.enabled_modules) ? profile.learner_access.enabled_modules : []
+})
+
+/** Add a line to a student's history. Never lets a history problem break the real change. */
+const recordEnrollmentEvent = async (userId, event) => {
+  if (!userId) return
+  try {
+    const records = await loadEnrollmentRecords({ forceRefresh: true })
+    appendEnrollmentEvent(records, userId, event)
+    await saveEnrollmentRecords(records)
+  } catch (error) {
+    console.error('Could not save enrollment history:', error)
+  }
+}
+
+const adminActorLabel = (req) => String(req?.auth?.profile?.full_name || req?.auth?.user?.email || 'Admin')
+
 const loadAssessmentReportsIndex = async ({ forceRefresh = false } = {}) => {
   if (assessmentReportsIndexCache && !forceRefresh) return assessmentReportsIndexCache
   await ensureAssessmentReportsBucket()
@@ -3239,7 +3312,10 @@ const activateLearnerAccess = async ({ userId }) => {
         userId,
         status: 'active',
         startsAt: activatedWindow.startsAt,
-        expiresAt: before?.learner_access?.expires_at || activatedWindow.expiresAt,
+        expiresAt: pickActivationExpiry({
+          currentExpiresAt: before?.learner_access?.expires_at,
+          fallbackExpiresAt: activatedWindow.expiresAt
+        }),
         feedbackCredits: initialCredits.feedbackCredits,
         fullMockCredits: initialCredits.fullMockCredits,
         enabledModules: before?.learner_access?.enabled_modules
@@ -7451,10 +7527,21 @@ const provisionThinkificEnrollmentAccess = async ({ req, enrollment }) => {
     })
   })
 
+  // A package mapped to this Thinkific course decides length, credits and skills. Without one,
+  // the old env-based defaults apply exactly as before.
+  const enrollmentRecords = await loadEnrollmentRecords().catch(() => null)
+  const mappedPackage = resolveThinkificPackage(enrollmentRecords?.packages, enrollment.courseId)
   const accessWindow = buildThinkificAccessWindow({
     startsAt: enrollment.startsAt,
-    expiresAt: enrollment.expiresAt
+    expiresAt:
+      enrollment.expiresAt ||
+      (mappedPackage
+        ? mappedPackage.months > 0
+          ? addMonthsUtc(enrollment.startsAt || new Date().toISOString(), mappedPackage.months)
+          : null
+        : undefined)
   })
+  const existingModules = existingProfile?.learner_access?.enabled_modules
   await supabaseRequest('/rest/v1/learner_access', {
     method: 'POST',
     headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
@@ -7465,16 +7552,25 @@ const provisionThinkificEnrollmentAccess = async ({ req, enrollment }) => {
         startsAt: accessWindow.startsAt,
         expiresAt: accessWindow.expiresAt,
         feedbackCredits: Math.max(
-          THINKIFIC_FEEDBACK_CREDITS,
+          mappedPackage ? mappedPackage.feedbackCredits : THINKIFIC_FEEDBACK_CREDITS,
           Number(existingProfile?.learner_access?.feedback_credits ?? 0)
         ),
         fullMockCredits: Math.max(
-          THINKIFIC_FULL_MOCK_CREDITS,
+          mappedPackage ? mappedPackage.fullMockCredits : THINKIFIC_FULL_MOCK_CREDITS,
           Number(existingProfile?.learner_access?.full_mock_credits ?? 0)
         ),
-        enabledModules: existingProfile?.learner_access?.enabled_modules
+        // Never take a skill away: a second purchase only adds the package's skills.
+        enabledModules: mappedPackage
+          ? [...new Set([...(Array.isArray(existingModules) ? existingModules : []), ...mappedPackage.enabledModules])]
+          : existingModules
       })
     )
+  })
+  await recordEnrollmentEvent(userId, {
+    type: 'thinkific',
+    text: `Thinkific purchase: ${enrollment.courseName || enrollment.courseId || 'course'}${mappedPackage ? ` → ${mappedPackage.name}` : ''}`,
+    by: 'Thinkific',
+    ...(mappedPackage ? { packageId: mappedPackage.id } : {})
   })
 
   const profile = await loadUserProfileWithAccess(userId)
@@ -7558,6 +7654,9 @@ app.get('/api/admin/approve-signup', async (req, res) => {
     }
 
     const activation = await activateLearnerAccess({ userId: verified.userId })
+    if (!activation.wasActive) {
+      await recordEnrollmentEvent(verified.userId, { type: 'approved', text: 'Approved from the email link (3 months)', by: 'Email link' })
+    }
     const learnerName = escapeHtml(activation.learner?.full_name || activation.learner?.email || 'Student')
     const learnerEmail = escapeHtml(activation.learner?.email || '')
     const baseUrl = resolveAppBaseUrl(req)
@@ -12126,6 +12225,7 @@ app.post('/api/auth/signup', async (req, res) => {
     } catch (emailError) {
       console.error('Could not send new signup notification email:', emailError)
     }
+    await recordEnrollmentEvent(userId, { type: 'signup', text: 'Signed up in the app · waiting for approval', by: 'Student' })
 
     return res.status(201).json({
       success: true,
@@ -12768,6 +12868,124 @@ app.get('/api/admin/learners', requireAdmin, async (_req, res) => {
   }
 })
 
+const enrollmentErrorResponse = (res, error, type) =>
+  res.status(error?.status || 500).json({
+    error: {
+      status: error?.status || 500,
+      type: error?.status === 400 ? 'validation_error' : type,
+      message: error instanceof Error ? error.message : 'Something went wrong.'
+    }
+  })
+
+const badRequest = (message) => {
+  const error = new Error(message)
+  error.status = 400
+  return error
+}
+
+// Packages, per-student history and dismissed inbox items for the admin Learners page.
+app.get('/api/admin/enrollment', requireAdmin, async (_req, res) => {
+  try {
+    const records = await loadEnrollmentRecords({ forceRefresh: true })
+    return res.json(records)
+  } catch (error) {
+    return enrollmentErrorResponse(res, error, 'admin_enrollment_error')
+  }
+})
+
+app.put('/api/admin/enrollment/packages', requireAdmin, async (req, res) => {
+  try {
+    const packages = normalizePackages(req.body?.packages)
+    if (!packages.length) throw badRequest('Keep at least one package.')
+    const records = await loadEnrollmentRecords({ forceRefresh: true })
+    records.packages = packages
+    await saveEnrollmentRecords(records)
+    return res.json(records)
+  } catch (error) {
+    return enrollmentErrorResponse(res, error, 'admin_enrollment_packages_error')
+  }
+})
+
+// Enrol (switch on) or renew one student with a package. Dates and credits come from the
+// package; an explicit expiresAt from the admin wins.
+app.post('/api/admin/learners/:userId/enroll', requireAdmin, async (req, res) => {
+  try {
+    const userId = String(req.params.userId || '').trim()
+    if (!userId) throw badRequest('Learner id is required.')
+    const mode = req.body?.mode === 'renew' ? 'renew' : 'start'
+    const records = await loadEnrollmentRecords({ forceRefresh: true })
+    const pkg =
+      records.packages.find((item) => item.id === String(req.body?.packageId || '')) ||
+      records.packages.find((item) => item.isDefault)
+    if (!pkg) throw badRequest('Choose a package.')
+    const beforeProfile = await loadUserProfileWithAccess(userId)
+    if (!beforeProfile) throw badRequest('Learner not found.')
+    const before = accessSnapshot(beforeProfile)
+    const access = computeEnrollmentAccess({
+      pkg,
+      mode,
+      current: before,
+      startsAt: req.body?.startsAt || undefined,
+      expiresAt: req.body?.expiresAt || undefined
+    })
+    await supabaseRequest('/rest/v1/learner_access', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true, prefer: 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify(buildLearnerAccessPayload({ userId, ...access }))
+    })
+    const profile = await loadUserProfileWithAccess(userId)
+    if (profile && before.status !== 'active') {
+      try {
+        await sendAccessGrantedEmail({ learner: profile })
+      } catch (emailError) {
+        console.error('Could not send access granted email:', emailError)
+      }
+    }
+    const changes = describeAccessChange(before, accessSnapshot(profile))
+    const note = String(req.body?.note || '').trim()
+    appendEnrollmentEvent(records, userId, {
+      type: mode === 'renew' ? 'renewed' : 'enrolled',
+      text: [`${mode === 'renew' ? 'Renewed' : 'Enrolled'}: ${pkg.name}`, ...changes, note ? `Note: ${note}` : '']
+        .filter(Boolean)
+        .join(' · '),
+      by: adminActorLabel(req),
+      packageId: pkg.id
+    })
+    await saveEnrollmentRecords(records)
+    return res.json({ learner: mapLearnerRecord(profile), record: records.learners[userId] })
+  } catch (error) {
+    return enrollmentErrorResponse(res, error, 'admin_enroll_error')
+  }
+})
+
+app.post('/api/admin/learners/:userId/note', requireAdmin, async (req, res) => {
+  try {
+    const userId = String(req.params.userId || '').trim()
+    const text = String(req.body?.text || '').trim()
+    if (!userId || !text) throw badRequest('Write a note first.')
+    const records = await loadEnrollmentRecords({ forceRefresh: true })
+    appendEnrollmentEvent(records, userId, { type: 'note', text, by: adminActorLabel(req) })
+    await saveEnrollmentRecords(records)
+    return res.json({ record: records.learners[userId] })
+  } catch (error) {
+    return enrollmentErrorResponse(res, error, 'admin_enrollment_note_error')
+  }
+})
+
+// Hide one to-do item for a while ("Let it end", "Not now").
+app.post('/api/admin/enrollment/dismiss', requireAdmin, async (req, res) => {
+  try {
+    const key = String(req.body?.key || '').trim()
+    if (!key) throw badRequest('Missing item.')
+    const records = await loadEnrollmentRecords({ forceRefresh: true })
+    dismissInboxItem(records, key, req.body?.days)
+    await saveEnrollmentRecords(records)
+    return res.json({ dismissed: records.dismissed })
+  } catch (error) {
+    return enrollmentErrorResponse(res, error, 'admin_enrollment_dismiss_error')
+  }
+})
+
 app.post('/api/admin/learners', requireAdmin, async (req, res) => {
   try {
     const name = String(req.body?.name || '').trim()
@@ -12853,6 +13071,16 @@ app.post('/api/admin/learners', requireAdmin, async (req, res) => {
         console.error('Could not send access granted email:', emailError)
       }
     }
+    {
+      const records = await loadEnrollmentRecords().catch(() => null)
+      const pkg = records?.packages.find((item) => item.id === String(req.body?.packageId || ''))
+      await recordEnrollmentEvent(userId, {
+        type: 'created',
+        text: `${existingProfile?.id ? 'Access set up by admin' : 'Account created by admin'}${pkg ? ` · ${pkg.name}` : ''}`,
+        by: adminActorLabel(req),
+        ...(pkg ? { packageId: pkg.id } : {})
+      })
+    }
     return res.json({
       learner: mapLearnerRecord(profile)
     })
@@ -12884,8 +13112,14 @@ app.patch('/api/admin/learners/:userId', requireAdmin, async (req, res) => {
     const previousStatus = String(beforeProfile?.learner_access?.status || 'inactive')
     const requestedStatus = String(req.body?.status || previousStatus || 'inactive') === 'inactive' ? 'inactive' : 'active'
     const activatingNow = previousStatus !== 'active' && requestedStatus === 'active'
+    // Switching someone back on with their old, already-passed end date left them locked out,
+    // so treat a past end date like no end date and give a fresh 3-month window.
+    const requestedExpiryInPast =
+      Boolean(req.body?.expiresAt) && new Date(req.body.expiresAt).getTime() < Date.now()
     const activationWindow =
-      activatingNow && !req.body?.expiresAt ? buildDefaultAccessWindow(new Date().toISOString()) : null
+      activatingNow && (!req.body?.expiresAt || requestedExpiryInPast)
+        ? buildDefaultAccessWindow(new Date().toISOString())
+        : null
     const requestedCredits = applyInitialAccessCredits({
       isActivating: activatingNow,
       feedbackCredits: req.body?.feedbackCredits,
@@ -12924,7 +13158,7 @@ app.patch('/api/admin/learners/:userId', requireAdmin, async (req, res) => {
         userId,
         status: requestedStatus,
         startsAt: activationWindow?.startsAt || req.body?.startsAt,
-        expiresAt: req.body?.expiresAt || activationWindow?.expiresAt || null,
+        expiresAt: (activationWindow ? activationWindow.expiresAt : req.body?.expiresAt) || null,
         feedbackCredits: requestedCredits.feedbackCredits,
         fullMockCredits: requestedCredits.fullMockCredits,
         enabledModules: req.body?.enabledModules ?? beforeProfile?.learner_access?.enabled_modules
@@ -12932,6 +13166,10 @@ app.patch('/api/admin/learners/:userId', requireAdmin, async (req, res) => {
     })
 
     const profile = await loadUserProfileWithAccess(userId)
+    const changes = describeAccessChange(accessSnapshot(beforeProfile), accessSnapshot(profile))
+    if (changes.length) {
+      await recordEnrollmentEvent(userId, { type: 'change', text: changes.join(' · '), by: adminActorLabel(req) })
+    }
     const nextStatus = String(profile?.learner_access?.status || 'inactive')
     if (profile && previousStatus !== 'active' && nextStatus === 'active') {
       try {
