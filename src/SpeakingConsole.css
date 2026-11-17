@@ -2987,3 +2987,100 @@
   border-radius: var(--c-r-sm) !important;
   border-color: var(--c-line) !important;
 }
+
+/* ==========================================================================
+   11 · SCROLL SAFETY (Nov 2026)
+   Learners reported they could not scroll in the Speaking journey. Causes:
+   - Pinned popups (expected score, answer review, script review, loading,
+     exam launch, paused) were centred with no scrolling, so a popup taller
+     than the window was cut off — buttons included.
+   - The band list in the expected-score popup was forced to overflow:hidden
+     above (to keep its rounded border), so Band 7+ was unreachable on
+     shorter screens.
+   - The live-exam question card and the prep note grid scroll inside
+     themselves with overscroll-behavior: contain, so once they reached their
+     end the page would not move under the mouse.
+   Rules here only restore scrolling; they change no colours or layout.
+   ========================================================================== */
+
+/* A popup scrolls as a whole when it is taller than the window. margin:auto
+   keeps it centred when it fits and lets it start at the top when it doesn't
+   (align-items:center would push its top off-screen where it can't be reached). */
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay,
+.examLaunchOverlay.examLaunchOverlay.examLaunchOverlay,
+.examPausedOverlay.examPausedOverlay.examPausedOverlay {
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  align-items: flex-start !important;
+}
+
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreCard,
+.answerReviewOverlay.answerReviewOverlay.answerReviewOverlay .answerReviewCard,
+.scriptReviewOverlay.scriptReviewOverlay.scriptReviewOverlay .scriptReviewCard,
+.loadingModalOverlay.loadingModalOverlay.loadingModalOverlay .loadingModalCard,
+.examLaunchOverlay.examLaunchOverlay.examLaunchOverlay .examLaunchCard,
+.examPausedOverlay.examPausedOverlay.examPausedOverlay .examPausedCard {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+  flex-shrink: 0 !important;
+}
+
+/* Expected score: the band list and the tips panel each scroll on their own.
+   Grid children need min-height:0 or they grow past the card and get clipped. */
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreBody,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreBandRail,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreDetailPanel {
+  min-height: 0 !important;
+}
+
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreBandRail,
+.expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreDetailPanel {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+/* Short windows (laptops, a phone held sideways): one scroll for the whole
+   popup instead of two cramped inner ones, with Back / I'm Ready kept in view. */
+@media (max-height: 760px) {
+  .expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreCard {
+    max-height: none !important;
+    overflow: visible !important;
+    grid-template-rows: auto auto auto !important;
+  }
+
+  .expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreBody,
+  .expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreBandRail,
+  .expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreDetailPanel {
+    overflow: visible !important;
+  }
+
+  .expectedScoreOverlay.expectedScoreOverlay.expectedScoreOverlay .expectedScoreActions {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 2 !important;
+    margin: 0 -20px -20px !important;
+    padding: 12px 20px 20px !important;
+    background: #ffffff !important;
+    border-top: 1px solid var(--c-line) !important;
+  }
+}
+
+/* Inner scroll areas hand the scroll back to the page when they reach the end. */
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingStageWrap:has(.globalProgressBar) .speakingPromptCard,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordion[open] .questionNoteGrid,
+.speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .prepAccordion[open] .part2NoteWrap {
+  overscroll-behavior: auto !important;
+}
+
+/* When the exam columns stack (narrow screens), the question card is no longer
+   a box-in-a-box: it grows with its content and the page does the scrolling. */
+@media (max-width: 900px) {
+  .speakingFlowTheme.speakingFlowTheme.speakingFlowTheme .speakingStageWrap:has(.globalProgressBar) .speakingPromptCard {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
