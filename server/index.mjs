@@ -1572,6 +1572,37 @@ const isSupabaseMissingResourceError = (error) => {
   return error?.status === 404 || /bucket not[_ ]found|not[_ ]found|resource/.test(text)
 }
 
+// Make sure a private Storage bucket exists. Supabase reports a missing bucket as
+// HTTP 400 "Bucket not found" (the 404 is only inside the body), so the old
+// "create it only on a 404" probe never created one — every save into a bucket
+// that didn't exist yet failed. Returns false while Storage is quota-restricted
+// so the caller can try again later instead of caching "ready".
+const ensurePrivateStorageBucket = async (bucketName) => {
+  ensureSupabaseConfigured()
+  try {
+    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(bucketName)}`, {
+      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
+    })
+    return true
+  } catch (error) {
+    if (error?.storageRestricted) return false
+    if (!isSupabaseMissingResourceError(error)) throw error
+  }
+  try {
+    await supabaseRequest('/storage/v1/bucket', {
+      method: 'POST',
+      headers: buildSupabaseHeaders({ serviceRole: true }),
+      body: JSON.stringify({ id: bucketName, name: bucketName, public: false })
+    })
+  } catch (error) {
+    if (error?.storageRestricted) return false
+    const text = `${error?.message || ''} ${JSON.stringify(error?.payload || {})}`.toLowerCase()
+    // Another request created it first — that's fine.
+    if (error?.status !== 409 && !/exist|duplicate|already/.test(text)) throw error
+  }
+  return true
+}
+
 const normalizeSignedStorageUrl = (signedUrl) => {
   const value = String(signedUrl || '').trim()
   if (!value) return ''
@@ -2291,25 +2322,7 @@ const saveQuestionAudioManifest = async (manifest) => {
 
 const ensureAssessmentReportsBucket = async () => {
   if (assessmentReportsBucketReady) return
-  ensureSupabaseConfigured()
-  try {
-    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_REPORTS_BUCKET)}`, {
-      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
-    })
-  } catch (error) {
-    if (error?.storageRestricted) return
-    if (error?.status !== 404) throw error
-    await supabaseRequest('/storage/v1/bucket', {
-      method: 'POST',
-      headers: buildSupabaseHeaders({ serviceRole: true }),
-      body: JSON.stringify({
-        id: SUPABASE_REPORTS_BUCKET,
-        name: SUPABASE_REPORTS_BUCKET,
-        public: false
-      })
-    })
-  }
-  assessmentReportsBucketReady = true
+  if (await ensurePrivateStorageBucket(SUPABASE_REPORTS_BUCKET)) assessmentReportsBucketReady = true
 }
 
 // ── Enrollment packages + history (one JSON file in the reports bucket) ────────────────
@@ -2446,25 +2459,7 @@ const loadAssessmentReportJson = async (objectPath) =>
 
 const ensureReadingPdoyProgressBucket = async () => {
   if (readingPdoyProgressBucketReady) return
-  ensureSupabaseConfigured()
-  try {
-    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_READING_PDOY_PROGRESS_BUCKET)}`, {
-      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
-    })
-  } catch (error) {
-    if (error?.storageRestricted) return
-    if (error?.status !== 404) throw error
-    await supabaseRequest('/storage/v1/bucket', {
-      method: 'POST',
-      headers: buildSupabaseHeaders({ serviceRole: true }),
-      body: JSON.stringify({
-        id: SUPABASE_READING_PDOY_PROGRESS_BUCKET,
-        name: SUPABASE_READING_PDOY_PROGRESS_BUCKET,
-        public: false
-      })
-    })
-  }
-  readingPdoyProgressBucketReady = true
+  if (await ensurePrivateStorageBucket(SUPABASE_READING_PDOY_PROGRESS_BUCKET)) readingPdoyProgressBucketReady = true
 }
 
 const loadReadingPdoyProgressIndex = async ({ forceRefresh = false } = {}) => {
@@ -2539,25 +2534,7 @@ const loadReadingPdoyProgressJson = async (objectPath) =>
 
 const ensureReadingAttemptsBucket = async () => {
   if (readingAttemptsBucketReady) return
-  ensureSupabaseConfigured()
-  try {
-    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_READING_ATTEMPTS_BUCKET)}`, {
-      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
-    })
-  } catch (error) {
-    if (error?.storageRestricted) return
-    if (error?.status !== 404) throw error
-    await supabaseRequest('/storage/v1/bucket', {
-      method: 'POST',
-      headers: buildSupabaseHeaders({ serviceRole: true }),
-      body: JSON.stringify({
-        id: SUPABASE_READING_ATTEMPTS_BUCKET,
-        name: SUPABASE_READING_ATTEMPTS_BUCKET,
-        public: false
-      })
-    })
-  }
-  readingAttemptsBucketReady = true
+  if (await ensurePrivateStorageBucket(SUPABASE_READING_ATTEMPTS_BUCKET)) readingAttemptsBucketReady = true
 }
 
 const buildReadingAttemptsObjectPath = (userId) => `users/${normalizeOptionalUuid(userId) || 'unknown'}.json`
@@ -2599,25 +2576,7 @@ const loadReadingAttemptsJson = async (objectPath) =>
 
 const ensureListeningAttemptsBucket = async () => {
   if (listeningAttemptsBucketReady) return
-  ensureSupabaseConfigured()
-  try {
-    await fetchSupabaseJson(`/storage/v1/bucket/${encodeURIComponent(SUPABASE_LISTENING_ATTEMPTS_BUCKET)}`, {
-      headers: buildSupabaseHeaders({ serviceRole: true, includeJson: false })
-    })
-  } catch (error) {
-    if (error?.storageRestricted) return
-    if (error?.status !== 404) throw error
-    await supabaseRequest('/storage/v1/bucket', {
-      method: 'POST',
-      headers: buildSupabaseHeaders({ serviceRole: true }),
-      body: JSON.stringify({
-        id: SUPABASE_LISTENING_ATTEMPTS_BUCKET,
-        name: SUPABASE_LISTENING_ATTEMPTS_BUCKET,
-        public: false
-      })
-    })
-  }
-  listeningAttemptsBucketReady = true
+  if (await ensurePrivateStorageBucket(SUPABASE_LISTENING_ATTEMPTS_BUCKET)) listeningAttemptsBucketReady = true
 }
 
 const buildListeningAttemptsObjectPath = (userId) => `users/${normalizeOptionalUuid(userId) || 'unknown'}.json`
