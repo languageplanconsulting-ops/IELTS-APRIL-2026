@@ -263,6 +263,15 @@ import {
 import { estimateReadingBand, formatReadingBand } from './readingBandScore'
 import { sanitizeReadingVocabPairs } from './intensiveJourneyVocabPairs'
 import { lookupReadingVocabBridge, type ReadingVocabBridgePair } from './readingPassage3VocabBridge'
+import {
+  READING_RELATION_LABELS,
+  inferReadingPairRelation,
+  lookupReadingJudgementContrast,
+  type ReadingJudgementContrast,
+  type ReadingParaphraseNote,
+  type ReadingParaphraseRelation
+} from './readingParaphrase'
+import { highlightPhrasesInText } from './PastelHighlight'
 import { getReadingPassageVocab, type ReadingPassageVocabItem } from './readingPassageVocab'
 
 const LISTENING_BUILDER_EXAM_SETS = [
@@ -712,6 +721,8 @@ type NotebookEntry = {
   sourceQuestion?: string
   thaiMeaning?: string
   personalNote?: string
+  /** Reading paraphrase pair (question words ↔ passage words) — drives the pair card. */
+  paraphrase?: ReadingParaphraseNote
   savedReportSnapshot?: SavedReportSnapshot | WritingReportSnapshot | WritingTask2ReportSnapshot
   createdAt: string
 }
@@ -10439,9 +10450,100 @@ function App() {
     readingAttemptHistory[activeReadingExam?.id || '']?.timeTakenSeconds ?? readingLastTimeTakenSeconds
   const jumpToReadingReportQuestion = (questionNumber: number) => {
     const alreadyVisible = visibleReadingReportItems.some((item) => item.number === questionNumber)
-    if (!alreadyVisible) setReadingReportWrongOnly(false)
+    if (!alreadyVisible) {
+      // "Mistake review" only lists wrong answers — switch to the full report so a
+      // correct question can still be opened from the recap.
+      if (readingAttemptStage === 'review') setReadingAttemptStage('report')
+      setReadingReportWrongOnly(false)
+    }
     setReadingReportPendingJumpTo(questionNumber)
   }
+  /**
+   * The paraphrase pairs behind one report question, each tagged = (same meaning),
+   * ≠ contradicts (FALSE / NO) or ≠ not given — plus the NOT GIVEN contrast when we have one.
+   */
+  const getReadingReportParaphraseInfo = (item: ReadingReportItem) => {
+    const reportPassage =
+      activeReadingPassages.find((passage) => passage.questions.some((question) => question.number === item.number)) ||
+      null
+    const isJudgement = isReadingJudgementQuestion(item)
+    // NOT GIVEN → what the passage never says; FALSE / NO → what the passage contradicts.
+    const judgementContrast: ReadingJudgementContrast | null = isJudgement
+      ? lookupReadingJudgementContrast(item.prompt, item.correctAnswer)
+      : null
+    const vocabBridge = lookupReadingVocabBridge(item.answerGroup, item.number)
+    const bridgePairs = sanitizeReadingVocabPairs(vocabBridge?.pairs)
+    const basePairs = bridgePairs.length ? bridgePairs : sanitizeReadingVocabPairs(item.pairs)
+    const relationContext = {
+      correctAnswer: isJudgement ? item.correctAnswer : 'ANSWER',
+      contrastQuestionPhrase: judgementContrast?.q
+    }
+    const rows = basePairs.map((pair) => ({ pair, relation: inferReadingPairRelation(pair, relationContext) }))
+    const evidence = getReadingQuestionHintExcerpt(reportPassage, item) || item.exactPortion
+    return { reportPassage, judgementContrast, vocabBridge, bridgePairs, rows, evidence, relationContext }
+  }
+  /**
+   * Quick recap of the paraphrases behind every WRONG answer, for the "คำที่พลาด" list.
+   * NOT GIVEN contrasts come first in their question; Cambridge items without word pairs
+   * fall back to their single "question = passage" bridge when it parses cleanly.
+   */
+  const readingMissedParaphraseGroups = readingReportItems
+    .filter((item) => !item.isCorrect)
+    .map((item) => {
+      const info = getReadingReportParaphraseInfo(item)
+      const rows: Array<{ pair: ReadingVocabBridgePair; relation: ReadingParaphraseRelation }> = [...info.rows]
+      const contrast = info.judgementContrast
+      if (contrast && !rows.some((row) => row.relation === contrast.relation)) {
+        rows.unshift({
+          pair: {
+            q: contrast.q,
+            p: contrast.p,
+            th: `โจทย์: ${contrast.qTh} · บทความ: ${contrast.pTh}`,
+            note: contrast.why
+          },
+          relation: contrast.relation
+        })
+      }
+      if (!rows.length) {
+        const bridge = parseParaphraseBridge(item.paraphrasedVocabulary)
+        if (bridge && bridge.questionKeyword.length <= 60 && bridge.passageKeyword.length <= 80) {
+          rows.push({
+            pair: {
+              q: bridge.questionKeyword,
+              p: bridge.passageKeyword,
+              th: lookupReadingThaiMeaning(bridge.questionKeyword) || lookupReadingThaiMeaning(bridge.passageKeyword) || ''
+            },
+            relation: 'same'
+          })
+        }
+      }
+      return { item, info, rows }
+    })
+    .filter((group) => group.rows.length > 0)
+  const readingPairSaveContext = (
+    item: ReadingReportItem,
+    relation: ReadingParaphraseRelation,
+    evidence: string
+  ) => ({
+    questionNumber: item.number,
+    answerGroup: activeReadingExam?.title || item.answerGroup || 'Reading',
+    relation,
+    questionText: item.prompt,
+    passageText: evidence
+  })
+  /** Every question (not just the visible ones), grouped by passage, for the recap at the top of the report. */
+  const readingReportRecapGroups = activeReadingPassages
+    .map((passage) => ({
+      passage,
+      items: readingReportItems
+        .filter((item) => passage.questions.some((question) => question.number === item.number))
+        .map((item) => ({
+          item,
+          typeLabel:
+            READING_REPORT_TYPE_LABELS.find(({ key }) => key === classifyReadingReportItemType(passage, item))?.label || ''
+        }))
+    }))
+    .filter((group) => group.items.length > 0)
   const readingReportByPassage = activeReadingPassages.map((passage) => {
     const items = visibleReadingReportItems.filter((item) =>
       passage.questions.some((question) => question.number === item.number)
@@ -12518,6 +12620,11 @@ function App() {
     const target = document.getElementById(`reading-report-q-${readingReportPendingJumpTo}`)
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      // Brief glow so the student sees which explanation they landed on.
+      target.classList.remove('is-jumpFlash')
+      void target.offsetWidth
+      target.classList.add('is-jumpFlash')
+      window.setTimeout(() => target.classList.remove('is-jumpFlash'), 1800)
       setReadingReportPendingJumpTo(null)
     }
   }, [readingReportPendingJumpTo, visibleReadingReportItems])
@@ -12839,17 +12946,7 @@ function App() {
     setNewCustomSectionName('')
   }
 
-  const savePlanToNotebook = ({
-    criterion,
-    quote,
-    fix,
-    thaiMeaning,
-    preferredSection,
-    topicTitle: explicitTopicTitle,
-    sourceQuestion,
-    successNotice = 'Added to notebook',
-    suppressNotice = false
-  }: {
+  type NotebookSavePayload = {
     criterion: string
     quote: string
     fix: string
@@ -12860,43 +12957,85 @@ function App() {
      *  be open — which is how vocabulary ended up filed under "Topic: Art". */
     topicTitle?: string
     sourceQuestion?: string
+    /** Reading paraphrase pair — the notebook shows it as a question ↔ passage card. */
+    paraphrase?: ReadingParaphraseNote
     successNotice?: string
     suppressNotice?: boolean
-  }) => {
-    const chosenSection =
-      preferredSection ||
-      (selectedNotebookSection === 'custom' ? ('speaking' as const) : selectedNotebookSection)
-    const isBuiltIn = ['speaking', 'writing', 'listening', 'reading'].includes(chosenSection)
-    const section = (isBuiltIn ? chosenSection : 'custom') as NotebookSection
-    const customSectionName = section === 'custom' ? chosenSection : undefined
-    const topicTitle =
-      explicitTopicTitle ||
-      (preferredSection === 'reading'
-        ? activeReadingExam?.title || activeReadingPdoyExam?.title || 'Reading lesson'
-        : preferredSection === 'writing'
-          ? ''
-          : activeTopic?.title || 'Untitled topic')
+  }
 
-    const nextEntry: NotebookEntry = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      section,
-      customSectionName,
-      topicTitle,
-      criterion,
-      quote,
-      fix,
-      sourceQuestion,
-      thaiMeaning: thaiMeaning || '',
-      personalNote: '',
-      createdAt: new Date().toISOString()
-    }
-    const nextEntries = [nextEntry, ...notebookEntriesRef.current]
+  /**
+   * Save one or more entries in ONE state update + ONE account sync. Calling the
+   * single-entry save in a loop would lose all but the last entry, because each
+   * call starts from notebookEntriesRef, which only catches up after a render.
+   * Entries already in the same notebook tab with the same quote are skipped.
+   */
+  const saveEntriesToNotebook = (payloads: NotebookSavePayload[]) => {
+    if (!payloads.length) return 0
+    const createdAt = new Date().toISOString()
+    const existing = notebookEntriesRef.current
+    const fresh: NotebookEntry[] = []
+    payloads.forEach((payload, index) => {
+      const {
+        criterion,
+        quote,
+        fix,
+        thaiMeaning,
+        preferredSection,
+        topicTitle: explicitTopicTitle,
+        sourceQuestion,
+        paraphrase
+      } = payload
+      const chosenSection =
+        preferredSection ||
+        (selectedNotebookSection === 'custom' ? ('speaking' as const) : selectedNotebookSection)
+      const isBuiltIn = ['speaking', 'writing', 'listening', 'reading'].includes(chosenSection)
+      const section = (isBuiltIn ? chosenSection : 'custom') as NotebookSection
+      const customSectionName = section === 'custom' ? chosenSection : undefined
+      if (
+        payloads.length > 1 &&
+        [...fresh, ...existing].some(
+          (entry) =>
+            entry.section === section &&
+            entry.customSectionName === customSectionName &&
+            entry.quote === quote
+        )
+      ) {
+        return
+      }
+      const topicTitle =
+        explicitTopicTitle ||
+        (preferredSection === 'reading'
+          ? activeReadingExam?.title || activeReadingPdoyExam?.title || 'Reading lesson'
+          : preferredSection === 'writing'
+            ? ''
+            : activeTopic?.title || 'Untitled topic')
+      fresh.push({
+        id: `${Date.now()}-${index}-${Math.random().toString(36).slice(2, 8)}`,
+        section,
+        customSectionName,
+        topicTitle,
+        criterion,
+        quote,
+        fix,
+        sourceQuestion,
+        thaiMeaning: thaiMeaning || '',
+        personalNote: '',
+        ...(paraphrase ? { paraphrase } : {}),
+        createdAt
+      })
+    })
+    if (!fresh.length) return 0
+    const nextEntries = [...fresh, ...existing]
+    notebookEntriesRef.current = nextEntries
     setNotebookEntries(nextEntries)
-    setSelectedNotebookSection(customSectionName || section)
+    const last = fresh[fresh.length - 1]
+    setSelectedNotebookSection(last.customSectionName || last.section)
+    const first = payloads[0]
+    const suppressNotice = payloads.every((payload) => payload.suppressNotice)
     const resolvedSuccessNotice =
-      preferredSection === 'reading' || section === 'reading'
+      first.preferredSection === 'reading' || last.section === 'reading'
         ? 'Added to notebook · saved to #reading'
-        : successNotice
+        : first.successNotice || 'Added to notebook'
     if (!suppressNotice) {
       setNotebookSaveNotice(resolvedSuccessNotice)
     }
@@ -12905,6 +13044,11 @@ function App() {
       sections: customSectionsRef.current,
       successNotice: suppressNotice ? undefined : resolvedSuccessNotice
     })
+    return fresh.length
+  }
+
+  const savePlanToNotebook = (payload: NotebookSavePayload) => {
+    saveEntriesToNotebook([payload])
   }
 
   const saveFullReportToNotebook = (report: AssessmentReport, options?: { auto?: boolean }) => {
@@ -19555,22 +19699,68 @@ function App() {
   // report card. Lands in a "พี่ดอยสอน Vocab" tab so paraphrase pairs collect
   // in one curated word list separate from the per-question #reading saves.
   const PDOY_VOCAB_SECTION = 'พี่ดอยสอน Vocab'
-  const saveVocabPairToNotebook = (
+  type ReadingPairSaveContext = {
+    questionNumber: number
+    answerGroup: string
+    relation?: ReadingParaphraseRelation
+    /** Full question sentence and the passage sentence, so the notebook card shows the words in context. */
+    questionText?: string
+    passageText?: string
+  }
+  const buildVocabPairNotebookPayload = (
     pair: ReadingVocabBridgePair,
-    context: { questionNumber: number; answerGroup: string }
-  ) => {
+    context: ReadingPairSaveContext
+  ): NotebookSavePayload => {
+    const relation = context.relation || 'same'
+    return {
+      criterion: `${context.answerGroup} · Q${context.questionNumber}`,
+      quote: `${pair.q}  ${READING_RELATION_LABELS[relation].sign}  ${pair.p}`,
+      fix: pair.p,
+      thaiMeaning: pair.th,
+      preferredSection: PDOY_VOCAB_SECTION,
+      topicTitle: context.answerGroup,
+      sourceQuestion: context.questionText,
+      paraphrase: {
+        q: pair.q,
+        p: pair.p,
+        th: pair.th,
+        ...(pair.note ? { note: pair.note } : {}),
+        relation,
+        ...(context.questionText ? { questionText: context.questionText } : {}),
+        ...(context.passageText ? { passageText: context.passageText } : {})
+      },
+      successNotice: 'บันทึกลง พี่ดอยสอน Vocab แล้ว',
+      suppressNotice: true
+    }
+  }
+  const ensurePdoyVocabSection = () => {
     if (!customSectionsRef.current.includes(PDOY_VOCAB_SECTION)) {
       setCustomSections((current) =>
         current.includes(PDOY_VOCAB_SECTION) ? current : [...current, PDOY_VOCAB_SECTION]
       )
     }
-    handlePracticeSaveToNotebook({
-      criterion: `${context.answerGroup} · Q${context.questionNumber}`,
-      quote: `${pair.q}  =  ${pair.p}`,
-      fix: pair.note || pair.p,
-      thaiMeaning: pair.th,
-      preferredSection: PDOY_VOCAB_SECTION,
-      successNotice: 'บันทึกลง พี่ดอยสอน Vocab แล้ว'
+  }
+  const saveVocabPairToNotebook = (pair: ReadingVocabBridgePair, context: ReadingPairSaveContext) => {
+    ensurePdoyVocabSection()
+    saveEntriesToNotebook([buildVocabPairNotebookPayload(pair, context)])
+    setPracticeActionToast({
+      id: Date.now(),
+      message: 'บันทึกคู่ paraphrase ลง “พี่ดอยสอน Vocab” แล้ว — อย่าลืมทบทวนนะ :)',
+      variant: 'notebook'
+    })
+  }
+  const saveVocabPairsToNotebook = (
+    rows: Array<{ pair: ReadingVocabBridgePair; context: ReadingPairSaveContext }>
+  ) => {
+    if (!rows.length) return
+    ensurePdoyVocabSection()
+    const saved = saveEntriesToNotebook(rows.map(({ pair, context }) => buildVocabPairNotebookPayload(pair, context)))
+    setPracticeActionToast({
+      id: Date.now(),
+      message: saved
+        ? `บันทึก ${saved} คู่ paraphrase ลง “พี่ดอยสอน Vocab” แล้ว`
+        : 'คู่ paraphrase ทั้งหมดนี้อยู่ใน notebook แล้ว',
+      variant: 'notebook'
     })
   }
 
@@ -20662,8 +20852,8 @@ function App() {
       <button
         type="button"
         className={`readingHintBtn ${compact ? 'readingHintBtn-compact' : ''} ${isHinting ? 'is-active' : ''}`.trim()}
-        title={isHinting ? 'Hide hint in passage' : 'Show hint in passage'}
-        aria-label={isHinting ? 'Hide hint in passage' : 'Show hint in passage'}
+        title={isHinting ? 'ซ่อนคำใบ้ในบทความ' : 'ดูคำใบ้ในบทความ'}
+        aria-label={isHinting ? 'ซ่อนคำใบ้ในบทความ' : 'ดูคำใบ้ในบทความ'}
         aria-pressed={isHinting}
         onClick={() => {
           setReadingHintQuestionNumber((current) => (current === questionNumber ? null : questionNumber))
@@ -20815,7 +21005,7 @@ function App() {
         </div>
         {isHinting && (
           <div className="readingHintBox">
-            <strong>Hint:</strong> evidence highlighted in the passage.
+            <strong>คำใบ้:</strong> ไฮไลต์หลักฐานไว้ในบทความแล้ว
           </div>
         )}
       </article>
@@ -21046,7 +21236,7 @@ function App() {
 
         {set.questions.some((q) => q.number === readingHintQuestionNumber) && (
           <div className="readingHintBox">
-            <strong>Hint:</strong> evidence highlighted in the passage.
+            <strong>คำใบ้:</strong> ไฮไลต์หลักฐานไว้ในบทความแล้ว
           </div>
         )}
       </article>
@@ -21418,7 +21608,7 @@ function App() {
         })()}
         {group.questions.some((question) => question.number === readingHintQuestionNumber) && (
           <div className="readingHintBox">
-            <strong>Hint:</strong> evidence highlighted in the passage.
+            <strong>คำใบ้:</strong> ไฮไลต์หลักฐานไว้ในบทความแล้ว
           </div>
         )}
       </article>
@@ -21659,7 +21849,7 @@ function App() {
                 )}
                 {isHinting && (
                   <p className="readingMatchingInfoHintNote">
-                    <strong>Hint:</strong> evidence highlighted in the passage.
+                    <strong>คำใบ้:</strong> ไฮไลต์หลักฐานไว้ในบทความแล้ว
                   </p>
                 )}
               </div>
@@ -21839,7 +22029,7 @@ function App() {
         </div>
         {group.questions.some((question) => question.number === readingHintQuestionNumber) && (
           <div className="readingHintBox">
-            <strong>Hint:</strong> evidence highlighted in the passage.
+            <strong>คำใบ้:</strong> ไฮไลต์หลักฐานไว้ในบทความแล้ว
           </div>
         )}
       </article>
@@ -25123,7 +25313,7 @@ function App() {
                     </div>
                     {activeReadingHint?.exactPortion && (
                       <div className="readingHintBox">
-                        <strong>Hint active:</strong> highlighted in the passage
+                        <strong>เปิดคำใบ้อยู่:</strong> ไฮไลต์ไว้ในบทความแล้ว
                       </div>
                     )}
                   </div>
@@ -25434,7 +25624,7 @@ function App() {
                           </div>
                           {isHinting && !isJudgementQuestion && (
                             <div className="readingHintBox">
-                              <strong>Hint:</strong> evidence highlighted in the passage.
+                              <strong>คำใบ้:</strong> ไฮไลต์หลักฐานไว้ในบทความแล้ว
                             </div>
                           )}
                           <div className="readingAnswerField">
@@ -25602,6 +25792,168 @@ function App() {
           {readingWorkspaceMode === 'bank' && (readingAttemptStage === 'report' || readingAttemptStage === 'review') && activeReadingExam && (
             <div className="readingReportWrap">
               {(() => {
+                // Recap first: every question as a ✓ / ✗ chip. Tap a chip → scroll to its explanation.
+                const recapCorrect = readingReportItems.filter((item) => item.isCorrect).length
+                const recapBlank = readingReportItems.filter(
+                  (item) => !item.isCorrect && !String(item.userAnswer || '').trim()
+                ).length
+                const recapWrong = readingReportItems.length - recapCorrect - recapBlank
+                return (
+                  <section id="reading-report-recap" className="readingRecap" aria-label="สรุปผลรายข้อ">
+                    <div className="readingRecapHead">
+                      <div className="readingRecapTitle">
+                        <p className="sectionLabel">
+                          {READING_CATEGORY_LABELS[activeReadingExam.category]} ·{' '}
+                          {readingAttemptStage === 'review' ? 'ทบทวนข้อผิด' : 'สรุปผล'}
+                        </p>
+                        <h3>{activeReadingExam.title}</h3>
+                        {readingReportTimeTakenSeconds !== null && readingReportTimeTakenSeconds !== undefined && (
+                          <p className="meta">ใช้เวลา {formatReadingElapsedTime(readingReportTimeTakenSeconds)}</p>
+                        )}
+                      </div>
+                      <div className="readingRecapScore">
+                        <strong>
+                          {recapCorrect}/{readingReportItems.length}
+                        </strong>
+                        <span>ข้อที่ถูก</span>
+                      </div>
+                    </div>
+                    <div className="readingRecapLegend">
+                      <span className="readingRecapLegendItem is-right">✓ ถูก {recapCorrect}</span>
+                      <span className="readingRecapLegendItem is-wrong">✗ ผิด {recapWrong}</span>
+                      {recapBlank > 0 && (
+                        <span className="readingRecapLegendItem is-blank">— ไม่ได้ตอบ {recapBlank}</span>
+                      )}
+                    </div>
+                    {readingReportRecapGroups.map((group) => {
+                      const groupCorrect = group.items.filter(({ item }) => item.isCorrect).length
+                      return (
+                        <div key={`reading-recap-${group.passage.number}`} className="readingRecapGroup">
+                          {readingReportRecapGroups.length > 1 && (
+                            <p className="readingRecapGroupLabel">
+                              Passage {group.passage.number} · ถูก {groupCorrect}/{group.items.length}
+                            </p>
+                          )}
+                          <div className="readingRecapGrid">
+                            {group.items.map(({ item, typeLabel }) => {
+                              const status = item.isCorrect
+                                ? 'right'
+                                : String(item.userAnswer || '').trim()
+                                  ? 'wrong'
+                                  : 'blank'
+                              return (
+                                <button
+                                  key={`reading-recap-q-${item.number}`}
+                                  type="button"
+                                  className={`readingRecapChip is-${status}`}
+                                  onClick={() => jumpToReadingReportQuestion(item.number)}
+                                  aria-label={`ข้อ ${item.number} ${
+                                    status === 'right' ? 'ถูก' : status === 'wrong' ? 'ผิด' : 'ไม่ได้ตอบ'
+                                  } — ดูคำอธิบาย`}
+                                >
+                                  <span className="readingRecapChipNo">{item.number}</span>
+                                  <span className="readingRecapChipMark" aria-hidden="true">
+                                    {status === 'right' ? '✓' : status === 'wrong' ? '✗' : '—'}
+                                  </span>
+                                  {typeLabel && <span className="readingRecapChipType">{typeLabel}</span>}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )
+                    })}
+                    <p className="readingRecapTip">👆 กดที่เลขข้อ เพื่อเลื่อนลงไปดูคำอธิบายข้อนั้น</p>
+                  </section>
+                )
+              })()}
+              {readingMissedParaphraseGroups.length > 0 && (
+                <section className="readingMissedVocab" aria-label="คำ paraphrase ในข้อที่ผิด">
+                  <div className="readingMissedVocabHead">
+                    <div>
+                      <p className="sectionLabel">ทบทวนเร็ว ๆ</p>
+                      <h4>คำ paraphrase ในข้อที่ผิด</h4>
+                      <p className="meta">
+                        ข้อที่ผิดส่วนใหญ่เพราะจับคู่คำไม่ได้ — โจทย์ใช้คำหนึ่ง บทความใช้อีกคำที่ความหมายเดียวกัน
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="readingMissedVocabSaveAll"
+                      onClick={() =>
+                        saveVocabPairsToNotebook(
+                          readingMissedParaphraseGroups.flatMap(({ item, info, rows }) =>
+                            rows.map(({ pair, relation }) => ({
+                              pair,
+                              context: readingPairSaveContext(item, relation, info.evidence)
+                            }))
+                          )
+                        )
+                      }
+                    >
+                      ＋ บันทึกทั้งหมด (
+                      {readingMissedParaphraseGroups.reduce((total, group) => total + group.rows.length, 0)} คู่)
+                    </button>
+                  </div>
+                  <div className="readingMissedVocabLegend" aria-hidden="true">
+                    <span className="pp-q">❓ คำในโจทย์</span>
+                    <span className="pp-p">📖 คำในบทความ</span>
+                    <span>= ความหมายเดียวกัน</span>
+                    <span>≠ ไม่ตรงกัน</span>
+                  </div>
+                  <ul className="readingMissedVocabList">
+                    {readingMissedParaphraseGroups.map(({ item, info, rows }) => (
+                      <li key={`missed-vocab-${item.number}`} className="readingMissedVocabGroup">
+                        <button
+                          type="button"
+                          className="readingMissedVocabQ"
+                          onClick={() => jumpToReadingReportQuestion(item.number)}
+                          title="ดูคำอธิบายข้อนี้"
+                        >
+                          Q{item.number}
+                          {isReadingJudgementQuestion(item) ? <small>{item.correctAnswer}</small> : null}
+                        </button>
+                        <div className="readingMissedVocabRows">
+                          {rows.map(({ pair, relation }, rowIndex) => (
+                            <div
+                              key={`missed-vocab-${item.number}-${rowIndex}`}
+                              className={`readingMissedVocabRow is-${relation}`}
+                            >
+                              <div className="ppPairLine">
+                                <span className="ppChip pp-q">{pair.q}</span>
+                                <span
+                                  className={`ppSign is-${relation}`}
+                                  title={READING_RELATION_LABELS[relation].text}
+                                >
+                                  {READING_RELATION_LABELS[relation].sign}
+                                </span>
+                                <span className="ppChip pp-p">{pair.p}</span>
+                              </div>
+                              {relation !== 'same' && (
+                                <p className={`ppRelationNote is-${relation}`}>
+                                  {READING_RELATION_LABELS[relation].text}
+                                </p>
+                              )}
+                              {pair.th && <p className="ppThai">{pair.th}</p>}
+                              {relation !== 'same' && pair.note && <p className="ppWhy">💡 {pair.note}</p>}
+                              <button
+                                type="button"
+                                className="ppSaveBtn"
+                                onClick={() =>
+                                  saveVocabPairToNotebook(pair, readingPairSaveContext(item, relation, info.evidence))
+                                }
+                              >
+                                ＋ บันทึก
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+              {(() => {
                 const summary = readingAttemptHistory[activeReadingExam.id]
                 if (!summary || !summary.attemptCount || summary.attemptCount <= 1) return null
                 const current = readingReportItems.length
@@ -25623,20 +25975,8 @@ function App() {
                   </div>
                 )
               })()}
-              <div className="readingAttemptToolbar">
-                <div>
-                  <p className="sectionLabel">{READING_CATEGORY_LABELS[activeReadingExam.category]}</p>
-                  <h3>{activeReadingExam.title} {readingAttemptStage === 'review' ? 'ทบทวนข้อผิด' : 'สรุปผล'}</h3>
-                  <p className="meta">
-                    Score: {readingReportItems.filter((item) => item.isCorrect).length}/{readingReportItems.length}
-                    {isReadingFullTestExamId(activeReadingExam.id)
-                      ? ` · ${activeReadingPassages.length} passages · 40 questions total`
-                      : ''}
-                    {readingReportTimeTakenSeconds !== null && readingReportTimeTakenSeconds !== undefined
-                      ? ` · ใช้เวลา ${formatReadingElapsedTime(readingReportTimeTakenSeconds)}`
-                      : ''}
-                  </p>
-                </div>
+              {/* Title + score now live in the recap at the top; this row keeps the actions. */}
+              <div className="readingAttemptToolbar readingAttemptToolbar-actionsOnly">
                 <div className="controls">
                   <button
                     type="button"
@@ -25693,22 +26033,6 @@ function App() {
                     เริ่มใหม่ทั้งชุด
                   </button>
                 </div>
-              </div>
-
-              <div className="readingReportJumpBar" role="navigation" aria-label="สลับไปข้อที่ต้องการ">
-                {(readingAttemptStage === 'review'
-                  ? readingReportItems.filter((item) => !item.isCorrect)
-                  : readingReportItems
-                ).map((item) => (
-                  <button
-                    key={`reading-report-jump-${item.number}`}
-                    type="button"
-                    className={`readingReportJumpBtn ${item.isCorrect ? '' : 'is-wrong'}`}
-                    onClick={() => jumpToReadingReportQuestion(item.number)}
-                  >
-                    {item.number}
-                  </button>
-                ))}
               </div>
 
               <div className="readingSummaryStrip">
@@ -25776,6 +26100,20 @@ function App() {
                   const reportBlockquote = reportEvidenceExcerpt || item.exactPortion
                   const sanitizedVocabBridgePairs = sanitizeReadingVocabPairs(vocabBridge?.pairs)
                   const sanitizedItemPairs = sanitizeReadingVocabPairs(item.pairs)
+                  const paraphraseInfo = getReadingReportParaphraseInfo(item)
+                  const judgementContrast = paraphraseInfo.judgementContrast
+                  const cardPairs = sanitizedVocabBridgePairs.length ? sanitizedVocabBridgePairs : sanitizedItemPairs
+                  const pairRelation = (pair: ReadingVocabBridgePair) =>
+                    inferReadingPairRelation(pair, paraphraseInfo.relationContext)
+                  // Pastel marks: question words in the prompt, passage words in the evidence sentence.
+                  const questionMarks = [
+                    ...(judgementContrast ? [{ text: judgementContrast.q, className: 'pp-q is-ng' }] : []),
+                    ...cardPairs.map((pair) => ({ text: pair.q, className: 'pp-q' }))
+                  ]
+                  const passageMarks = [
+                    ...(judgementContrast ? [{ text: judgementContrast.p, className: 'pp-p is-ng' }] : []),
+                    ...cardPairs.map((pair) => ({ text: pair.p, className: 'pp-p' }))
+                  ]
                   const isMcqReportItem =
                     item.answerType === 'multiple-choice' &&
                     !(reportPassage && isReadingMatchingQuestion(reportPassage, item))
@@ -25811,7 +26149,10 @@ function App() {
                           <p className="readingQuestionPrompt">
                             {reportPassage && isReadingMatchingHeadingQuestion(reportPassage, item)
                               ? getReadingHeadingParagraphStatement(reportPassage, item)
-                              : getReadingQuestionDisplayPrompt(reportPassage, item) || item.prompt}
+                              : highlightPhrasesInText(
+                                  getReadingQuestionDisplayPrompt(reportPassage, item) || item.prompt,
+                                  questionMarks
+                                )}
                           </p>
                         </div>
                         <span className={`readingAnswerStatus ${item.isCorrect ? 'readingAnswerStatus-correct' : 'readingAnswerStatus-wrong'}`}>
@@ -25858,6 +26199,55 @@ function App() {
 
                       {/* Evidence / explanation */}
                       <div className="readingReportEvidence">
+                        {judgementContrast && (
+                          <div className={`ngContrast is-${judgementContrast.relation}`}>
+                            <div className="readingReportRuleBanner">
+                              <span className="readingReportRuleAns">{item.correctAnswer}</span>
+                              <span className="readingReportRuleText">
+                                {judgementContrast.relation === 'not-given'
+                                  ? 'บทความ “ไม่ได้พูดถึง” เรื่องนี้ — ไม่ได้ขัด แค่ไม่มีข้อมูล'
+                                  : 'บทความ “ขัด” กับโจทย์ — ไม่ใช่แค่ไม่พูดถึง (ถ้าไม่พูดถึงเลย จะเป็น NOT GIVEN)'}
+                              </span>
+                            </div>
+                            <p className="ngContrastTitle">
+                              {judgementContrast.relation === 'not-given' ? 'คำที่ไม่ตรงกัน' : 'คำที่ขัดกัน'}
+                              <span className="ngContrastGap">{judgementContrast.gapLabel}</span>
+                            </p>
+                            <div className="ngContrastRow">
+                              <div className="ngContrastSide">
+                                <span className="ngContrastLabel">❓ โจทย์บอกว่า</span>
+                                <span className="ppChip pp-q">{judgementContrast.q}</span>
+                                <span className="ngContrastTh">{judgementContrast.qTh}</span>
+                              </div>
+                              <span className="ngContrastNe" aria-label="ไม่ตรงกับ">≠</span>
+                              <div className="ngContrastSide">
+                                <span className="ngContrastLabel">
+                                  {judgementContrast.relation === 'not-given' ? '📖 บทความบอกแค่ว่า' : '📖 แต่บทความบอกว่า'}
+                                </span>
+                                <span className="ppChip pp-p">{judgementContrast.p}</span>
+                                <span className="ngContrastTh">{judgementContrast.pTh}</span>
+                              </div>
+                            </div>
+                            <p className="ngContrastWhy">💡 {judgementContrast.why}</p>
+                            <button
+                              type="button"
+                              className="ppSaveBtn"
+                              onClick={() =>
+                                saveVocabPairToNotebook(
+                                  {
+                                    q: judgementContrast.q,
+                                    p: judgementContrast.p,
+                                    th: `โจทย์: ${judgementContrast.qTh} · บทความ: ${judgementContrast.pTh}`,
+                                    note: judgementContrast.why
+                                  },
+                                  readingPairSaveContext(item, judgementContrast.relation, paraphraseInfo.evidence)
+                                )
+                              }
+                            >
+                              ＋ บันทึกคู่นี้
+                            </button>
+                          </div>
+                        )}
                         {vocabBridge && (
                           <div className="vbWrap">
                             <p className="vbBrandTitle"><span className="vbBrandMark">พี่ดอย</span>สอน Vocab</p>
@@ -25870,30 +26260,38 @@ function App() {
                                   <span className="vbPairHd vbPairHd-p">📖 ในบทความ</span>
                                   <span className="vbPairHd vbPairHd-save" />
                                 </li>
-                                {sanitizedVocabBridgePairs.map((pair, pairIdx) => (
-                                  <li key={`vbpair-${item.number}-${pairIdx}`} className="vbPairRow">
-                                    <div className="vbPairMain">
-                                      <span className="vbPairQ">{pair.q}</span>
-                                      <span className="vbPairEq">=</span>
-                                      <span className="vbPairP">{pair.p}</span>
-                                      <button
-                                        type="button"
-                                        className="vbPairSave"
-                                        title="บันทึกคู่ศัพท์นี้ลง พี่ดอยสอน Vocab"
-                                        onClick={() =>
-                                          saveVocabPairToNotebook(pair, {
-                                            questionNumber: item.number,
-                                            answerGroup: item.answerGroup || 'Reading'
-                                          })
-                                        }
-                                      >
-                                        ＋ บันทึกศัพท์
-                                      </button>
-                                    </div>
-                                    <div className="vbPairTh">{pair.th}</div>
-                                    {pair.note && <div className="vbPairNote">{pair.note}</div>}
-                                  </li>
-                                ))}
+                                {sanitizedVocabBridgePairs.map((pair, pairIdx) => {
+                                  const relation = pairRelation(pair)
+                                  return (
+                                    <li key={`vbpair-${item.number}-${pairIdx}`} className={`vbPairRow is-${relation}`}>
+                                      <div className="vbPairMain">
+                                        <span className="vbPairQ">{pair.q}</span>
+                                        <span className={`vbPairEq is-${relation}`} title={READING_RELATION_LABELS[relation].text}>
+                                          {READING_RELATION_LABELS[relation].sign}
+                                        </span>
+                                        <span className="vbPairP">{pair.p}</span>
+                                        <button
+                                          type="button"
+                                          className="vbPairSave"
+                                          title="บันทึกคู่ศัพท์นี้ลง พี่ดอยสอน Vocab"
+                                          onClick={() =>
+                                            saveVocabPairToNotebook(
+                                              pair,
+                                              readingPairSaveContext(item, relation, paraphraseInfo.evidence)
+                                            )
+                                          }
+                                        >
+                                          ＋ บันทึกศัพท์
+                                        </button>
+                                      </div>
+                                      {relation !== 'same' && (
+                                        <div className={`ppRelationNote is-${relation}`}>{READING_RELATION_LABELS[relation].text}</div>
+                                      )}
+                                      <div className="vbPairTh">{pair.th}</div>
+                                      {pair.note && <div className="vbPairNote">{pair.note}</div>}
+                                    </li>
+                                  )
+                                })}
                               </ul>
                             ) : (
                               <div className="vbGrid">
@@ -25945,34 +26343,42 @@ function App() {
                                 <span className="vbPairHd vbPairHd-p">📖 ในบทความ</span>
                                 <span className="vbPairHd vbPairHd-save" />
                               </li>
-                              {sanitizedItemPairs.map((pair, pairIdx) => (
-                                <li key={`vbpair-normal-${item.number}-${pairIdx}`} className="vbPairRow">
-                                  <div className="vbPairMain">
-                                    <span className="vbPairQ">{pair.q}</span>
-                                    <span className="vbPairEq">=</span>
-                                    <span className="vbPairP">{pair.p}</span>
-                                    <button
-                                      type="button"
-                                      className="vbPairSave"
-                                      title="บันทึกคู่ศัพท์นี้ลง พี่ดอยสอน Vocab"
-                                      onClick={() =>
-                                        saveVocabPairToNotebook(pair, {
-                                          questionNumber: item.number,
-                                          answerGroup: activeReadingExam?.title || item.answerGroup || 'Normal Reading'
-                                        })
-                                      }
-                                    >
-                                      ＋ บันทึกศัพท์
-                                    </button>
-                                  </div>
-                                  <div className="vbPairTh">{pair.th}</div>
-                                  {pair.note && <div className="vbPairNote">{pair.note}</div>}
-                                </li>
-                              ))}
+                              {sanitizedItemPairs.map((pair, pairIdx) => {
+                                const relation = pairRelation(pair)
+                                return (
+                                  <li key={`vbpair-normal-${item.number}-${pairIdx}`} className={`vbPairRow is-${relation}`}>
+                                    <div className="vbPairMain">
+                                      <span className="vbPairQ">{pair.q}</span>
+                                      <span className={`vbPairEq is-${relation}`} title={READING_RELATION_LABELS[relation].text}>
+                                        {READING_RELATION_LABELS[relation].sign}
+                                      </span>
+                                      <span className="vbPairP">{pair.p}</span>
+                                      <button
+                                        type="button"
+                                        className="vbPairSave"
+                                        title="บันทึกคู่ศัพท์นี้ลง พี่ดอยสอน Vocab"
+                                        onClick={() =>
+                                          saveVocabPairToNotebook(
+                                            pair,
+                                            readingPairSaveContext(item, relation, paraphraseInfo.evidence)
+                                          )
+                                        }
+                                      >
+                                        ＋ บันทึกศัพท์
+                                      </button>
+                                    </div>
+                                    {relation !== 'same' && (
+                                      <div className={`ppRelationNote is-${relation}`}>{READING_RELATION_LABELS[relation].text}</div>
+                                    )}
+                                    <div className="vbPairTh">{pair.th}</div>
+                                    {pair.note && <div className="vbPairNote">{pair.note}</div>}
+                                  </li>
+                                )
+                              })}
                             </ul>
                           </div>
                         )}
-                        {!vocabBridge && sanitizedItemPairs.length === 0 && paraphraseEquation && (() => {
+                        {!judgementContrast && !vocabBridge && sanitizedItemPairs.length === 0 && paraphraseEquation && (() => {
                           const isIntensive = Boolean(parseIntensiveExplanationEquation(item.explanationThai))
                           const hasMeaningfulBridge = isIntensive || Boolean(parseParaphraseBridge(item.paraphrasedVocabulary))
                           const isJudgement = isReadingJudgementQuestion(item)
@@ -26077,21 +26483,22 @@ function App() {
                             </div>
                           )
                         })()}
-                        {!vocabBridge && !paraphraseEquation && item.explanationThai && (
+                        {!judgementContrast && !vocabBridge && !paraphraseEquation && item.explanationThai && (
                           <p className="readingReportThaiExplanation">{item.explanationThai}</p>
                         )}
-                        {!vocabBridge && paraphraseEquation && item.explanationThai && !parseIntensiveExplanationEquation(item.explanationThai) && (
+                        {!judgementContrast && !vocabBridge && paraphraseEquation && item.explanationThai && !parseIntensiveExplanationEquation(item.explanationThai) && (
                           <p className="readingReportThaiExplanation">{item.explanationThai}</p>
                         )}
-                        {!vocabBridge && isNotGivenReport && (
+                        {!judgementContrast && !vocabBridge && isNotGivenReport && (
                           <p className="meta" style={{fontSize: '0.78rem', color: '#64748b', margin: 0}}>หมายเหตุ: ข้อนี้เกี่ยวข้องกับหัวข้อแต่บทความไม่ได้ระบุชัดเจน (NOT GIVEN)</p>
                         )}
-                        <blockquote>{reportBlockquote}</blockquote>
+                        <p className="readingReportEvidenceLabel">📖 ประโยคในบทความ (คำที่ไฮไลต์ = คำที่ใช้ paraphrase)</p>
+                        <blockquote>{highlightPhrasesInText(reportBlockquote, passageMarks)}</blockquote>
                       </div>
 
                       {/* Actions */}
                       <div className="readingParaphraseCard readingParaphraseCard-report">
-                        {!vocabBridge && !parseIntensiveExplanationEquation(item.explanationThai) && (item.paraphrasedVocabulary || vocabSupport?.meaning) && (
+                        {!judgementContrast && !vocabBridge && !parseIntensiveExplanationEquation(item.explanationThai) && (item.paraphrasedVocabulary || vocabSupport?.meaning) && (
                           <>
                             <p className="sectionLabel">คำ / วลีสำคัญ</p>
                             {item.paraphrasedVocabulary && <p>{item.paraphrasedVocabulary}</p>}
@@ -26122,6 +26529,17 @@ function App() {
                           }
                         />
                       </div>
+                      <button
+                        type="button"
+                        className="readingReportBackToRecap"
+                        onClick={() =>
+                          document
+                            .getElementById('reading-report-recap')
+                            ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        }
+                      >
+                        ↑ กลับไปดูสรุปผล
+                      </button>
                     </article>
                   )
                 })}

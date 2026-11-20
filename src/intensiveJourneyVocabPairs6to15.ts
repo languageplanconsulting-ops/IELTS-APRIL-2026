@@ -1118,7 +1118,7 @@ export const INTENSIVE_PAIRS_STAGE_6_15: Record<number, Record<1 | 2, Record<num
   15: {
     1: {
       1: [
-        { q: "ganat", p: "ganat method", th: "วิธีกานัต (ระบบขุดอุโมงค์ส่งน้ำ)" },
+        { q: "qanat", p: "qanat method", th: "วิธีกานัต (ระบบขุดอุโมงค์ส่งน้ำ)" },
         { q: "introduced", p: "introduced", th: "นำมาใช้/เริ่มใช้" },
         { q: "placing posts", p: "placing posts over a hill in a straight line", th: "วางเสาเป็นแนวตรงเหนือเนินเขา", note: "ข้อความระบุ \"placing posts over a hill in a straight line\" ตรงกับช่องว่างในแผนภาพ → คำตอบคือ posts" },
       ],
@@ -1164,8 +1164,8 @@ export const INTENSIVE_PAIRS_STAGE_6_15: Record<number, Record<1 | 2, Record<num
       ],
       10: [
         { q: "counter-excavation method", p: "counter-excavation method", th: "วิธีขุดสวนทางจากสองด้าน" },
-        { q: "completely replaced", p: "when the ganat method was not a practical alternative", th: "ใช้เมื่อวิธีกานัตไม่เหมาะ (ไม่ใช่แทนที่ทั้งหมด)" },
-        { q: "qanat method", p: "ganat method", th: "วิธีกานัต", note: "ข้อความบอกว่าวิธีนี้ใช้ \"when the ganat method was not a practical alternative\" คือใช้เสริมเฉพาะกรณี ไม่ได้แทนที่อย่างสมบูรณ์ → FALSE" },
+        { q: "completely replaced", p: "when the qanat method was not a practical alternative", th: "ใช้เมื่อวิธีกานัตไม่เหมาะ (ไม่ใช่แทนที่ทั้งหมด)" },
+        { q: "qanat method", p: "qanat method", th: "วิธีกานัต", note: "ข้อความบอกว่าวิธีนี้ใช้ \"when the qanat method was not a practical alternative\" คือใช้เสริมเฉพาะกรณี ไม่ได้แทนที่อย่างสมบูรณ์ → FALSE" },
       ],
       11: [
         { q: "experienced builders", p: "advanced knowledge of surveying, mathematics and geometry", th: "ความรู้ขั้นสูงด้านการรังวัด คณิตศาสตร์ และเรขาคณิต" },

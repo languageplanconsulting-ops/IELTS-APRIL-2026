@@ -1,3 +1,10 @@
+import { highlightPhrasesInText } from './PastelHighlight'
+import {
+  READING_RELATION_LABELS,
+  parseLegacyParaphraseEntry,
+  type ReadingParaphraseNote
+} from './readingParaphrase'
+
 type NotebookEntryLike = {
   id: string
   section: string
@@ -9,6 +16,7 @@ type NotebookEntryLike = {
   sourceQuestion?: string
   thaiMeaning?: string
   personalNote?: string
+  paraphrase?: ReadingParaphraseNote
   savedReportSnapshot?: unknown
   createdAt: string
 }
@@ -95,6 +103,85 @@ export function NotebookEntriesView({
             const label = entry.section === 'custom' ? entry.customSectionName || 'Custom' : entry.section
             const tone = sectionTone(String(label))
             const hasReport = Boolean(entry.savedReportSnapshot)
+            // Reading paraphrase pairs get their own card: question words ↔ passage words.
+            const pair: ReadingParaphraseNote | null =
+              !hasReport && entry.paraphrase?.q && entry.paraphrase?.p
+                ? entry.paraphrase
+                : !hasReport
+                  ? parseLegacyParaphraseEntry(entry)
+                  : null
+            if (pair) {
+              const relation = pair.relation || 'same'
+              const relationLabel = READING_RELATION_LABELS[relation]
+              const thai = pair.th || entry.thaiMeaning || ''
+              return (
+                <article key={entry.id} className={`notebookEntry notebookEntry-${tone} notebookEntry-paraphrase`}>
+                  <div className="notebookEntryMeta">
+                    <span className="notebookEntryBadge">{label}</span>
+                    <span className="notebookEntryDate">{new Date(entry.createdAt).toLocaleString()}</span>
+                  </div>
+                  <p className="notebookEntryCriterion">{entry.criterion}</p>
+
+                  <div className={`ppCard is-${relation}`}>
+                    <div className="ppCardSide">
+                      <span className="ppCardSideLabel">❓ คำในโจทย์</span>
+                      <span className="ppChip pp-q">{pair.q}</span>
+                    </div>
+                    <div className={`ppCardSign is-${relation}`}>
+                      <strong aria-hidden="true">{relationLabel.sign}</strong>
+                      <span>{relationLabel.text}</span>
+                    </div>
+                    <div className="ppCardSide">
+                      <span className="ppCardSideLabel">📖 คำในบทความ</span>
+                      <span className="ppChip pp-p">{pair.p}</span>
+                    </div>
+                  </div>
+
+                  {thai ? (
+                    <p className="notebookEntryThai">
+                      <span>ความหมาย</span> {thai}
+                    </p>
+                  ) : null}
+                  {pair.note ? <p className="ppWhy">💡 {pair.note}</p> : null}
+
+                  {pair.questionText || pair.passageText ? (
+                    <details className="notebookEntryQuestion">
+                      <summary>ดูคำนี้ในประโยคจริง</summary>
+                      {pair.questionText ? (
+                        <p className="ppContext">
+                          <span className="ppContextLabel">❓ โจทย์</span>
+                          {highlightPhrasesInText(pair.questionText, [{ text: pair.q, className: 'pp-q' }])}
+                        </p>
+                      ) : null}
+                      {pair.passageText ? (
+                        <p className="ppContext">
+                          <span className="ppContextLabel">📖 บทความ</span>
+                          {highlightPhrasesInText(pair.passageText, [{ text: pair.p, className: 'pp-p' }])}
+                        </p>
+                      ) : null}
+                    </details>
+                  ) : null}
+
+                  {!readOnly ? (
+                    <>
+                      <label className="noteFieldLabel">
+                        โน้ตของฉัน
+                        <textarea
+                          value={entry.personalNote || ''}
+                          onChange={(event) => onUpdateNote?.(entry.id, event.target.value)}
+                          placeholder="ลองแต่งประโยคเองด้วยคำคู่นี้ หรือจดคำอื่นที่ความหมายเหมือนกัน..."
+                        />
+                      </label>
+                      <button type="button" className="removeNotebookBtn" onClick={() => onRemoveEntry?.(entry.id)}>
+                        Remove
+                      </button>
+                    </>
+                  ) : entry.personalNote ? (
+                    <p className="notebookEntryThai">Note: {entry.personalNote}</p>
+                  ) : null}
+                </article>
+              )
+            }
             return (
               <article
                 key={entry.id}

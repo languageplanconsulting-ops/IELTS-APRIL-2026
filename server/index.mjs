@@ -3470,6 +3470,24 @@ const sanitizeSavedReportSnapshot = (value) => {
   }
 }
 
+// Reading paraphrase pair saved with a notebook entry (question words ↔ passage words).
+const NOTEBOOK_PARAPHRASE_RELATIONS = new Set(['same', 'contradicts', 'not-given'])
+const sanitizeNotebookParaphrase = (value) => {
+  if (!value || typeof value !== 'object') return null
+  const q = String(value.q || '').trim().slice(0, 300)
+  const p = String(value.p || '').trim().slice(0, 300)
+  if (!q || !p) return null
+  return {
+    q,
+    p,
+    ...(value.th ? { th: String(value.th).slice(0, 600) } : {}),
+    ...(value.note ? { note: String(value.note).slice(0, 1200) } : {}),
+    ...(NOTEBOOK_PARAPHRASE_RELATIONS.has(value.relation) ? { relation: value.relation } : {}),
+    ...(value.questionText ? { questionText: String(value.questionText).slice(0, 1200) } : {}),
+    ...(value.passageText ? { passageText: String(value.passageText).slice(0, 2000) } : {})
+  }
+}
+
 const sanitizeNotebookEntries = (value) =>
   (Array.isArray(value) ? value : []).slice(0, 1000).map((entry) => ({
     id: String(entry?.id || randomUUID()),
@@ -3481,6 +3499,8 @@ const sanitizeNotebookEntries = (value) =>
     fix: String(entry?.fix || '').slice(0, 4000),
     ...(entry?.thaiMeaning ? { thaiMeaning: String(entry.thaiMeaning).slice(0, 4000) } : {}),
     ...(entry?.personalNote ? { personalNote: String(entry.personalNote).slice(0, 8000) } : {}),
+    ...(entry?.sourceQuestion ? { sourceQuestion: String(entry.sourceQuestion).slice(0, 4000) } : {}),
+    ...(sanitizeNotebookParaphrase(entry?.paraphrase) ? { paraphrase: sanitizeNotebookParaphrase(entry.paraphrase) } : {}),
     ...(entry?.savedReportSnapshot ? { savedReportSnapshot: sanitizeSavedReportSnapshot(entry.savedReportSnapshot) } : {}),
     createdAt: String(entry?.createdAt || new Date().toISOString())
   }))

@@ -2190,7 +2190,7 @@ export const USER_PROVIDED_READING_PRACTICE_CAMBRIDGE_12_EXAMS = [
             },
             {
               "number": 11,
-              "prompt": "Label the diagram (Questions 20-26): write ONE WORD ONLY from the passage for question 11",
+              "prompt": "Nowadays, most glass is produced by large international manufacturers.",
               "correctAnswer": "NOT GIVEN",
               "acceptedAnswers": [
                 "NOT GIVEN"
